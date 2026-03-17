@@ -525,3 +525,20 @@ body{
   background:transparent;color:var(--text3);font-size:11px;font-weight:600;
   cursor:pointer;font-family:inherit;white-space:nowrap;
 }
+
+/* Exertion Rating */
+.exertion{
+  margin-top:10px;padding:10px;background:var(--card2);border-radius:var(--r);
+  border:1px solid var(--border);
+}
+.exertion-label{font-size:11px;font-weight:700;color:var(--text2);display:block;margin-bottom:8px;text-align:center}
+.exertion-btns{display:flex;gap:4px;justify-content:center}
+.exertion-btn{
+  display:flex;flex-direction:column;align-items:center;gap:2px;
+  padding:6px 8px;border-radius:6px;border:2px solid var(--border);
+  background:transparent;cursor:pointer;transition:.15s;flex:1;
+}
+.exertion-emoji{font-size:20px}
+.exertion-txt{font-size:8px;color:var(--text3);font-weight:600;letter-spacing:.3px}
+.exertion-on{border-color:var(--red);background:rgba(212,25,32,.12)}
+.exertion-on .exertion-txt{color:var(--red)}
