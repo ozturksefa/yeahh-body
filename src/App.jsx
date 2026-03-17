@@ -334,8 +334,8 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
 
       // PR detection — is this weight higher than all history?
       if (!wasDone && next[i].weight > 0 && history.length > 0) {
-        const histMax = Math.max(...history.flatMap(h => h.sets.map(s => s.weight || 0)));
-        if (next[i].weight > histMax) {
+        const histWeights = history.flatMap(h => h.sets.map(s => s.weight || 0)).filter(w => w > 0);
+        if (histWeights.length > 0 && next[i].weight > Math.max(...histWeights)) {
           setPrFlash(i);
           if (navigator.vibrate) navigator.vibrate([50, 50, 100]);
           setTimeout(() => setPrFlash(null), 3000);
@@ -855,6 +855,9 @@ export default function App() {
     flowRestoredRef.current = true;
     loadFlow().then(saved => {
       if (!saved) return;
+      // CRITICAL: Update prevDayRef BEFORE setDay — otherwise day change effect
+      // sees prevDayRef(0) !== saved.day and wipes all restored state
+      prevDayRef.current = saved.day;
       // Apply restored state
       setDay(saved.day);
       setWorkoutActive(true);
