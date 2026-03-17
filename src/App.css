@@ -65,11 +65,11 @@ body{
 /* ═══ NAV ═══ */
 .page-nav{display:flex;gap:3px;margin:10px 0 8px;background:var(--card);border-radius:var(--r);padding:3px}
 .page-tab{
-  flex:1;padding:9px;border:none;border-radius:6px;
+  flex:1;padding:9px 4px;border:none;border-radius:6px;
   background:transparent;color:var(--text3);
-  font-size:13px;font-weight:600;cursor:pointer;
+  font-size:12px;font-weight:600;cursor:pointer;
   text-align:center;transition:.2s;
-  font-family:inherit;
+  font-family:inherit;white-space:nowrap;
 }
 .page-tab-active{background:var(--red);color:#fff}
 

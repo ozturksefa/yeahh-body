@@ -4,6 +4,7 @@ import { getGifUrl } from "./videoMap";
 import { saveExerciseSets, loadExerciseSets, saveWorkout, loadWorkout, markWorkoutDone, resetWorkout, suggestWeight, getHistory, getWeeklyStats, getDashboardStats } from "./tracker";
 import { supabase } from "./supabaseClient";
 import { saveFlow, loadFlow, clearFlow } from "./flowStore";
+import NutritionTracker from "./Nutrition";
 import "./App.css";
 
 function AuthScreen({ onAuth }) {
@@ -1357,6 +1358,8 @@ export default function App() {
             onClick={() => setPage("program")}>🏋️ Program</button>
           <button className={`page-tab ${page === "dashboard" ? "page-tab-active" : ""}`}
             onClick={() => setPage("dashboard")}>📊 İlerleme</button>
+          <button className={`page-tab ${page === "nutrition" ? "page-tab-active" : ""}`}
+            onClick={() => setPage("nutrition")}>🍽 Beslenme</button>
         </div>
         {page === "program" && (
         <div className="tabs">
@@ -1376,6 +1379,10 @@ export default function App() {
       {page === "dashboard" ? (
         <main className="main">
           <Dashboard />
+        </main>
+      ) : page === "nutrition" ? (
+        <main className="main">
+          <NutritionTracker />
         </main>
       ) : (
       <>
