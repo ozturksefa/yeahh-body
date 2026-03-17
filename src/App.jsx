@@ -841,6 +841,12 @@ export default function App() {
   const [openBlocks, setOpenBlocks] = useState({});
   const [globalAllDone, setGlobalAllDone] = useState(false);
   const [workoutElapsed, setWorkoutElapsed] = useState(0);
+  const [streak, setStreak] = useState(0);
+
+  // Load streak
+  useEffect(() => {
+    if (user) getDashboardStats().then(s => setStreak(s.streak || 0)).catch(() => {});
+  }, [user]);
 
   // Session restore from IndexedDB — runs ONCE after auth resolves
   const flowRestoredRef = useRef(false);
@@ -1114,7 +1120,7 @@ export default function App() {
           <button className="logout-btn" onClick={logout}>Çıkış</button>
         </div>
         <div className="prog-title">Kişisel Antrenman Programı</div>
-        <div className="prog-sub">Rehabilitasyon Temelli · Macfit Uyumlu</div>
+        {streak > 0 && <div className="streak-badge">🔥 {streak} antrenman üst üste</div>}
         <div className="page-nav">
           <button className={`page-tab ${page === "program" ? "page-tab-active" : ""}`}
             onClick={() => setPage("program")}>🏋️ Program</button>
