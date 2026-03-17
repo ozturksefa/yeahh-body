@@ -173,18 +173,19 @@ function getRestDuration(blockName, exerciseName) {
 function RestTimer({ seconds, exerciseName, isTransition, onDismiss, onAdjust }) {
   const [remaining, setRemaining] = useState(seconds);
   const [done, setDone] = useState(false);
+  const [mini, setMini] = useState(false);
 
   useEffect(() => {
     setRemaining(seconds);
     setDone(false);
+    setMini(false);
   }, [seconds, exerciseName]);
 
   useEffect(() => {
     if (remaining <= 0) {
       setDone(true);
-      // Titreşim
+      setMini(false); // Expand when done
       if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
-      // Ses
       try {
         const ctx = new (window.AudioContext || window.webkitAudioContext)();
         const osc = ctx.createOscillator();
@@ -203,6 +204,23 @@ function RestTimer({ seconds, exerciseName, isTransition, onDismiss, onAdjust })
   const mins = Math.floor(remaining / 60);
   const secs = remaining % 60;
   const pct = seconds > 0 ? ((seconds - remaining) / seconds) * 100 : 100;
+  const timeStr = `${mins}:${String(secs).padStart(2, "0")}`;
+
+  if (mini && !done) {
+    return (
+      <div className="rest-mini" onClick={() => setMini(false)}>
+        <div className="rest-mini-ring">
+          <svg width="48" height="48" viewBox="0 0 48 48">
+            <circle cx="24" cy="24" r="21" fill="none" stroke="#333" strokeWidth="3" />
+            <circle cx="24" cy="24" r="21" fill="none" stroke="var(--red)" strokeWidth="3"
+              strokeDasharray={`${(pct / 100) * 132} 132`}
+              strokeLinecap="round" transform="rotate(-90 24 24)" />
+          </svg>
+          <span className="rest-mini-time">{timeStr}</span>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className={`rest-timer ${done ? "rest-timer-done" : ""}`}>
@@ -214,7 +232,7 @@ function RestTimer({ seconds, exerciseName, isTransition, onDismiss, onAdjust })
         </div>
         <div className="rest-right">
           {!done && (
-            <div className="rest-countdown">{mins}:{String(secs).padStart(2, "0")}</div>
+            <div className="rest-countdown" onClick={() => setMini(true)} style={{cursor:"pointer"}}>{timeStr}</div>
           )}
           <div className="rest-actions">
             {!done && (
@@ -607,6 +625,53 @@ function VolumeChart({ data }) {
   );
 }
 
+function MuscleChart({ data }) {
+  const entries = Object.entries(data).sort((a, b) => b[1] - a[1]);
+  const max = entries.length > 0 ? entries[0][1] : 1;
+  const colors = { 'Sırt': '#4FC3F7', 'Göğüs': '#FF7043', 'Bacak': '#66BB6A', 'Kalça': '#AB47BC', 'Biceps': '#FFA726', 'Triceps': '#EF5350', 'Omuz': '#26C6DA', 'Core': '#FFEE58', 'Diğer': '#78909C' };
+  return (
+    <div className="muscle-chart">
+      {entries.map(([name, vol]) => (
+        <div key={name} className="muscle-row">
+          <span className="muscle-name">{name}</span>
+          <div className="muscle-bar-wrap">
+            <div className="muscle-bar" style={{ width: `${(vol / max) * 100}%`, background: colors[name] || '#666' }} />
+          </div>
+          <span className="muscle-vol">{vol > 999 ? `${(vol/1000).toFixed(1)}k` : vol}</span>
+        </div>
+      ))}
+    </div>
+  );
+}
+
+function ExerciseProgressList({ data }) {
+  // Top 8 exercises by number of data points
+  const sorted = Object.entries(data)
+    .filter(([_, pts]) => pts.length >= 2)
+    .sort((a, b) => b[1].length - a[1].length)
+    .slice(0, 8);
+  if (sorted.length === 0) return <div style={{fontSize:12,color:'#666',padding:8}}>En az 2 antrenman sonrası ilerleme görünecek</div>;
+  return (
+    <div className="ex-progress-list">
+      {sorted.map(([name, pts]) => {
+        const rev = [...pts].reverse();
+        const first = rev[0]?.weight || 0;
+        const last = rev[rev.length - 1]?.weight || 0;
+        const diff = last - first;
+        const diffStr = diff > 0 ? `+${diff}kg` : diff < 0 ? `${diff}kg` : "=";
+        const diffColor = diff > 0 ? "#4CAF50" : diff < 0 ? "#FF5252" : "#666";
+        return (
+          <div key={name} className="ex-progress-row">
+            <span className="ex-prog-name">{name}</span>
+            <span className="ex-prog-pts">{rev.map(p => p.weight).join(" → ")}</span>
+            <span className="ex-prog-diff" style={{color: diffColor}}>{diffStr}</span>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -653,6 +718,20 @@ function Dashboard() {
               <span className="pr-date">{pr.date?.slice(5)}</span>
             </div>
           ))}
+        </div>
+      )}
+
+      {Object.keys(stats.muscleVolumes || {}).length > 0 && (
+        <div className="dash-section">
+          <div className="dash-section-title">💪 Kas Grubu Dağılımı</div>
+          <MuscleChart data={stats.muscleVolumes} />
+        </div>
+      )}
+
+      {Object.keys(stats.exerciseProgress || {}).length > 0 && (
+        <div className="dash-section">
+          <div className="dash-section-title">📈 Egzersiz İlerleme (En Ağır Set)</div>
+          <ExerciseProgressList data={stats.exerciseProgress} />
         </div>
       )}
 

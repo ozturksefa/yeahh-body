@@ -10,6 +10,22 @@ async function getUser() {
   return data?.user || null;
 }
 
+// Kas grubu eşleşme (egzersiz adından)
+function getMuscleGroup(name) {
+  const n = name.toLowerCase();
+  if (n.includes('pull up') || n.includes('pulldown') || n.includes('row') || n.includes('lat')) return 'Sırt';
+  if (n.includes('press') || n.includes('push up') || n.includes('chest') || n.includes('fly')) return 'Göğüs';
+  if (n.includes('squat') || n.includes('leg') || n.includes('lunge') || n.includes('goblet')) return 'Bacak';
+  if (n.includes('deadlift') || n.includes('rdl') || n.includes('romanian') || n.includes('hip')) return 'Kalça';
+  if (n.includes('curl') || n.includes('bicep')) return 'Biceps';
+  if (n.includes('tricep') || n.includes('extension') || n.includes('dip')) return 'Triceps';
+  if (n.includes('shoulder') || n.includes('face pull') || n.includes('raise') || n.includes('rotation')) return 'Omuz';
+  if (n.includes('core') || n.includes('plank') || n.includes('dead bug') || n.includes('knee raise') || n.includes('crunch')) return 'Core';
+  if (n.includes('calf') || n.includes('ankle')) return 'Bacak';
+  if (n.includes('row')) return 'Sırt';
+  return 'Diğer';
+}
+
 // ─── PUBLIC API ────────────────────────────────────
 
 export async function saveExerciseSets(dayIndex, exerciseName, sets) {
@@ -205,19 +221,31 @@ export async function getDashboardStats() {
   let totalVolume = 0;
   const exerciseBests = {}; // PR takibi
   const dateSet = new Set();
+  const muscleVolumes = {}; // Kas grubu hacim dağılımı
+  const exerciseProgress = {}; // Egzersiz bazlı ilerleme
 
   for (const w of data) {
     if (w.completed) dateSet.add(w.workout_date);
     for (const [name, sets] of Object.entries(w.exercises || {})) {
       if (!Array.isArray(sets)) continue;
+      let exMaxWeight = 0;
       for (const s of sets) {
         if (s.done && s.weight && s.reps) {
-          totalVolume += s.weight * s.reps;
-          const vol = s.weight;
-          if (!exerciseBests[name] || vol > exerciseBests[name].weight) {
-            exerciseBests[name] = { weight: vol, reps: s.reps, date: w.workout_date };
+          const vol = s.weight * s.reps;
+          totalVolume += vol;
+          if (s.weight > exMaxWeight) exMaxWeight = s.weight;
+          if (!exerciseBests[name] || s.weight > exerciseBests[name].weight) {
+            exerciseBests[name] = { weight: s.weight, reps: s.reps, date: w.workout_date };
           }
+          // Kas grubu — basit eşleşme
+          const muscle = getMuscleGroup(name);
+          muscleVolumes[muscle] = (muscleVolumes[muscle] || 0) + vol;
         }
+      }
+      // Egzersiz ilerleme
+      if (exMaxWeight > 0) {
+        if (!exerciseProgress[name]) exerciseProgress[name] = [];
+        exerciseProgress[name].push({ date: w.workout_date, weight: exMaxWeight });
       }
     }
   }
@@ -283,6 +311,8 @@ export async function getDashboardStats() {
     streak,
     prs,
     weeklyVolumes,
+    muscleVolumes,
+    exerciseProgress,
   };
 }
 
