@@ -347,23 +347,30 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
 
       <div className="tracker-grid">
         <div className="tracker-grid-head">
-          <span>Set</span><span>Ağırlık (kg)</span><span>Tekrar</span><span></span>
+          <span>Set</span><span>Önceki</span><span>Ağırlık</span><span>Tekrar</span><span></span>
         </div>
-        {sets.map((s, i) => (
-          <div key={i} className={`tracker-row ${s.done ? "tracker-row-done" : ""}`}>
-            <span className="tracker-set-n">{i + 1}</span>
-            <input type="number" inputMode="decimal" className="tracker-input"
-              value={s.weight || ""} placeholder="kg"
-              onChange={e => updateSet(i, "weight", parseFloat(e.target.value) || 0)} />
-            <input type="number" inputMode="numeric" className="tracker-input"
-              value={s.reps || ""} placeholder={`${targetReps}`}
-              onChange={e => updateSet(i, "reps", parseInt(e.target.value) || 0)} />
-            <button className={`tracker-check ${s.done ? "tracker-check-on" : ""}`}
-              onClick={() => toggleDone(i)}>
-              {s.done ? "✓" : "○"}
-            </button>
-          </div>
-        ))}
+        {sets.map((s, i) => {
+          const prev = history.length > 0 && history[0].sets[i] ? history[0].sets[i] : null;
+          const prevStr = prev ? `${prev.weight || 0}×${prev.reps || 0}` : "—";
+          // Color: green if better, red if worse, gray if same/no data
+          const prevColor = !prev ? "#555" : (s.done && s.weight > (prev.weight||0)) ? "#4CAF50" : (s.done && s.weight < (prev.weight||0)) ? "#FF5252" : "#555";
+          return (
+            <div key={i} className={`tracker-row ${s.done ? "tracker-row-done" : ""}`}>
+              <span className="tracker-set-n">{i + 1}</span>
+              <span className="tracker-prev" style={{color: prevColor}}>{prevStr}</span>
+              <input type="number" inputMode="decimal" className="tracker-input"
+                value={s.weight || ""} placeholder={prev ? `${prev.weight}` : "kg"}
+                onChange={e => updateSet(i, "weight", parseFloat(e.target.value) || 0)} />
+              <input type="number" inputMode="numeric" className="tracker-input"
+                value={s.reps || ""} placeholder={`${targetReps}`}
+                onChange={e => updateSet(i, "reps", parseInt(e.target.value) || 0)} />
+              <button className={`tracker-check ${s.done ? "tracker-check-on" : ""}`}
+                onClick={() => toggleDone(i)}>
+                {s.done ? "✓" : "○"}
+              </button>
+            </div>
+          );
+        })}
       </div>
 
       {history.length > 0 && (
