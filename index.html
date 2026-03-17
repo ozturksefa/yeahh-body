@@ -1,0 +1,48 @@
+<!doctype html>
+<html lang="tr">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta http-equiv="Content-Security-Policy" 
+      content="default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data:; 
+               frame-src https://www.youtube.com https://www.youtube-nocookie.com;
+               img-src 'self' data: https://*.ytimg.com https://*.ggpht.com https://static.exercisedb.dev;
+               script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com;
+               style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+               font-src https://fonts.gstatic.com;
+               connect-src 'self' https://www.youtube.com https://*.supabase.co https://ljonlnnhkpznmvjdicze.supabase.co;">
+    <title>Yeahh Body</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Be+Vietnam+Pro:wght@400;500;600;700;800;900&family=JetBrains+Mono:wght@600;700;800&display=swap" rel="stylesheet">
+    <link rel="icon" type="image/png" href="/icon-192.png" />
+    <link rel="apple-touch-icon" href="/icon-192.png" />
+    <link rel="manifest" href="/manifest.json" />
+    <meta name="theme-color" content="#E02020" />
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+  </head>
+  <body>
+    <div id="root"></div>
+    <script>
+      // Force clear old service workers and caches
+      if ('serviceWorker' in navigator) {
+        navigator.serviceWorker.getRegistrations().then(regs => {
+          regs.forEach(r => r.unregister());
+        });
+      }
+      if ('caches' in window) {
+        caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+      }
+      // Global error recovery — never show blank screen
+      window.addEventListener('error', function(e) {
+        console.error('App crash:', e.error);
+        if (document.getElementById('root')?.innerHTML === '') {
+          localStorage.removeItem('yb_flow');
+          document.getElementById('root').innerHTML = '<div style="color:#fff;text-align:center;padding:40px;font-family:sans-serif"><h2>Bir hata oluştu</h2><button onclick="localStorage.clear();location.reload()" style="padding:12px 24px;background:#D41920;color:#fff;border:none;border-radius:8px;font-size:16px;margin-top:16px;cursor:pointer">Yeniden Başlat</button></div>';
+        }
+      });
+    </script>
+    <script type="module" src="/src/main.jsx"></script>
+  </body>
+</html>
