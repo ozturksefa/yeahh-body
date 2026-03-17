@@ -294,6 +294,7 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
   const [suggestion, setSuggestion] = useState(null);
   const [history, setHistoryData] = useState([]);
   const [loaded, setLoaded] = useState(false);
+  const [prFlash, setPrFlash] = useState(null); // set index that just hit PR
 
   useEffect(() => {
     let cancelled = false;
@@ -330,6 +331,16 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       
       // Haptic feedback on check
       if (!wasDone && navigator.vibrate) navigator.vibrate(30);
+
+      // PR detection — is this weight higher than all history?
+      if (!wasDone && next[i].weight > 0 && history.length > 0) {
+        const histMax = Math.max(...history.flatMap(h => h.sets.map(s => s.weight || 0)));
+        if (next[i].weight > histMax) {
+          setPrFlash(i);
+          if (navigator.vibrate) navigator.vibrate([50, 50, 100]);
+          setTimeout(() => setPrFlash(null), 3000);
+        }
+      }
 
       // Set tamamlandıysa dinlenme zamanlayıcısını başlat
       if (!wasDone && onStartRest) {
@@ -371,6 +382,10 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
         <span className="tracker-title">📝 SET TAKİBİ</span>
         {allDone && <span className="tracker-done-badge">✓ Tamamlandı</span>}
       </div>
+
+      {prFlash !== null && (
+        <div className="pr-flash">🏆 YENİ REKOR!</div>
+      )}
 
       {suggestion && (
         <div className={`tracker-suggest ${suggestion.type === "up" ? "suggest-up" : "suggest-same"}`}>

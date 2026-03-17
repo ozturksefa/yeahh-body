@@ -542,3 +542,12 @@ body{
 .exertion-txt{font-size:8px;color:var(--text3);font-weight:600;letter-spacing:.3px}
 .exertion-on{border-color:var(--red);background:rgba(212,25,32,.12)}
 .exertion-on .exertion-txt{color:var(--red)}
+
+/* PR Flash */
+.pr-flash{
+  text-align:center;padding:10px;margin:6px 0;
+  background:linear-gradient(135deg,#FFD700,#FF8C00);
+  color:#000;font-weight:900;font-size:14px;letter-spacing:1px;
+  border-radius:var(--r);animation:prPulse 0.5s ease;
+}
+@keyframes prPulse{0%{transform:scale(0.8);opacity:0}50%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
