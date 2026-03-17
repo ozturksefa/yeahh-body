@@ -292,6 +292,9 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       next[i] = { ...next[i], done: !wasDone };
       saveExerciseSets(dayIndex, ex.name, next);
       
+      // Haptic feedback on check
+      if (!wasDone && navigator.vibrate) navigator.vibrate(30);
+
       // Set tamamlandıysa dinlenme zamanlayıcısını başlat
       if (!wasDone && onStartRest) {
         const doneCount = next.filter(s => s.done).length;
@@ -1179,6 +1182,14 @@ export default function App() {
             ) : (
               <div className="advance-bar-hint">Setleri tamamla ✓</div>
             )}
+            {currentFlat && (() => {
+              const nextBlockIdx = currentFlat.blockIdx + 1;
+              const nextBlockFirst = flatExercises.find(f => f.blockIdx === nextBlockIdx);
+              if (!nextBlockFirst) return null;
+              const remaining = flatExercises.filter(f => f.blockIdx === currentFlat.blockIdx && flatExercises.indexOf(f) > currentExIndex).length;
+              if (remaining <= 0) return null;
+              return <button className="advance-skip-btn" onClick={() => openExercise(nextBlockFirst.key)}>Bloğu Atla ⏭</button>;
+            })()}
           </div>
         </div>
       )}

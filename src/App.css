@@ -260,7 +260,8 @@ body{
   display:flex;align-items:center;justify-content:center;
   transition:.15s;font-family:inherit;
 }
-.tracker-check-on{background:var(--red);border-color:var(--red);color:#fff}
+.tracker-check-on{background:var(--red);border-color:var(--red);color:#fff;animation:checkPop .3s ease}
+@keyframes checkPop{0%{transform:scale(1)}40%{transform:scale(1.25)}100%{transform:scale(1)}}
 
 .tracker-history{margin-top:10px;display:flex;flex-wrap:wrap;gap:4px;align-items:center}
 .tracker-hist-label{font-size:10px;color:var(--text3);font-weight:600}
@@ -518,4 +519,9 @@ body{
 .advance-bar-hint{
   flex:1;text-align:center;padding:14px;
   color:var(--text3);font-size:13px;font-weight:600;
+}
+.advance-skip-btn{
+  padding:8px 12px;border-radius:var(--r);border:1px solid var(--border);
+  background:transparent;color:var(--text3);font-size:11px;font-weight:600;
+  cursor:pointer;font-family:inherit;white-space:nowrap;
 }
