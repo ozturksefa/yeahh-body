@@ -672,6 +672,105 @@ function ExerciseProgressList({ data }) {
   );
 }
 
+function WeeklySummaryCard({ stats }) {
+  const thisWeek = stats.weeklyVolumes?.[stats.weeklyVolumes.length - 1];
+  const lastWeek = stats.weeklyVolumes?.[stats.weeklyVolumes.length - 2];
+  if (!thisWeek || thisWeek.volume === 0) return <div style={{fontSize:12,color:'#666',padding:8}}>Bu hafta henüz antrenman yok</div>;
+
+  const volDiff = lastWeek && lastWeek.volume > 0 ? thisWeek.volume - lastWeek.volume : null;
+  const volPct = lastWeek && lastWeek.volume > 0 ? Math.round(((thisWeek.volume - lastWeek.volume) / lastWeek.volume) * 100) : null;
+  const topPr = stats.prs?.[0];
+
+  return (
+    <div className="summary-card">
+      <div className="summary-row">
+        <span className="summary-label">Bu hafta antrenman</span>
+        <span className="summary-val">{thisWeek.workouts}x</span>
+      </div>
+      <div className="summary-row">
+        <span className="summary-label">Toplam hacim</span>
+        <span className="summary-val">{thisWeek.volume > 999 ? `${(thisWeek.volume/1000).toFixed(1)}k` : thisWeek.volume} kg</span>
+      </div>
+      {volDiff !== null && (
+        <div className="summary-row">
+          <span className="summary-label">Geçen haftaya göre</span>
+          <span className="summary-val" style={{color: volDiff >= 0 ? '#4CAF50' : '#FF5252'}}>
+            {volDiff >= 0 ? '↑' : '↓'} {Math.abs(volPct)}%
+          </span>
+        </div>
+      )}
+      {topPr && (
+        <div className="summary-row">
+          <span className="summary-label">En ağır lift</span>
+          <span className="summary-val" style={{color:'#FFD700'}}>{topPr.weight}kg {topPr.name.split(' ').slice(0,2).join(' ')}</span>
+        </div>
+      )}
+      <div className="summary-row">
+        <span className="summary-label">Seri</span>
+        <span className="summary-val">🔥 {stats.streak}</span>
+      </div>
+    </div>
+  );
+}
+
+function NotesLog() {
+  const [notes, setNotes] = useState(() => {
+    try { return JSON.parse(localStorage.getItem("yb_notes") || "[]"); } catch { return []; }
+  });
+  const [input, setInput] = useState("");
+  const [filter, setFilter] = useState("");
+
+  const addNote = () => {
+    const text = input.trim();
+    if (!text) return;
+    const entry = { id: Date.now(), text, date: new Date().toISOString().slice(0, 10), time: new Date().toLocaleTimeString('tr-TR', { hour: '2-digit', minute: '2-digit' }) };
+    const next = [entry, ...notes].slice(0, 100);
+    setNotes(next);
+    try { localStorage.setItem("yb_notes", JSON.stringify(next)); } catch {}
+    setInput("");
+  };
+
+  const deleteNote = (id) => {
+    const next = notes.filter(n => n.id !== id);
+    setNotes(next);
+    try { localStorage.setItem("yb_notes", JSON.stringify(next)); } catch {}
+  };
+
+  const filtered = filter
+    ? notes.filter(n => n.text.toLowerCase().includes(filter.toLowerCase()))
+    : notes;
+
+  return (
+    <div className="notes-log">
+      <div className="notes-input-row">
+        <input className="notes-input" value={input} onChange={e => setInput(e.target.value)}
+          placeholder="Not ekle... (ör: sol omuz ağrıdı, squat formu düzeldi)"
+          onKeyDown={e => e.key === 'Enter' && addNote()} />
+        <button className="notes-add-btn" onClick={addNote}>+</button>
+      </div>
+      {notes.length > 3 && (
+        <input className="notes-search" value={filter} onChange={e => setFilter(e.target.value)}
+          placeholder="🔍 Ara... (ör: omuz, diz, ağrı)" />
+      )}
+      {filtered.length === 0 && notes.length === 0 && (
+        <div style={{fontSize:12,color:'#666',padding:8}}>Henüz not yok. Antrenman sırasında veya sonrasında not ekle.</div>
+      )}
+      {filtered.length === 0 && notes.length > 0 && filter && (
+        <div style={{fontSize:12,color:'#666',padding:8}}>"{filter}" ile eşleşen not bulunamadı</div>
+      )}
+      <div className="notes-list">
+        {filtered.slice(0, 20).map(n => (
+          <div key={n.id} className="note-item">
+            <div className="note-meta">{n.date} · {n.time}</div>
+            <div className="note-text">{n.text}</div>
+            <button className="note-del" onClick={() => deleteNote(n.id)}>✕</button>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Dashboard() {
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -735,9 +834,58 @@ function Dashboard() {
         </div>
       )}
 
+      {stats.workoutCount > 0 && (
+        <div className="dash-section">
+          <div className="dash-section-title">📋 Haftalık Özet</div>
+          <WeeklySummaryCard stats={stats} />
+        </div>
+      )}
+
+      <div className="dash-section">
+        <div className="dash-section-title">📝 Notlar & Sakatlık Günlüğü</div>
+        <NotesLog />
+      </div>
+
       {stats.workoutCount === 0 && (
         <div className="dash-empty">
           Henüz antrenman verisi yok. İlk antrenmanını tamamla — burada istatistiklerin görünecek!
+        </div>
+      )}
+    </div>
+  );
+}
+
+function ExerciseNote({ exerciseName }) {
+  const key = `yb_exnote_${exerciseName}`;
+  const [note, setNote] = useState(() => {
+    try { return localStorage.getItem(key) || ""; } catch { return ""; }
+  });
+  const [editing, setEditing] = useState(false);
+
+  const save = (val) => {
+    setNote(val);
+    try {
+      if (val) localStorage.setItem(key, val);
+      else localStorage.removeItem(key);
+    } catch {}
+  };
+
+  if (!editing && !note) {
+    return <button className="exnote-add" onClick={() => setEditing(true)}>+ Not ekle</button>;
+  }
+
+  return (
+    <div className="exnote">
+      {editing ? (
+        <div className="exnote-edit">
+          <textarea className="exnote-textarea" value={note} onChange={e => save(e.target.value)}
+            placeholder="Bu harekete not ekle... (ör: sağ omuz ağrıdı, 20kg rahat geldi)" rows={2} autoFocus />
+          <button className="exnote-done" onClick={() => setEditing(false)}>✓</button>
+        </div>
+      ) : (
+        <div className="exnote-view" onClick={() => setEditing(true)}>
+          <span className="exnote-icon">📝</span>
+          <span className="exnote-text">{note}</span>
         </div>
       )}
     </div>
@@ -803,6 +951,7 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
           <ExerciseGif name={displayName} />
 
           <SetTracker ex={ex} dayIndex={dayIndex} blockName={blockName} onStartRest={onStartRest} onAllDone={onAllSetsDone} />
+          <ExerciseNote exerciseName={displayName} />
 
           <div className="section">
             <div className="section-label" style={{ color: blockColor }}>YAPILIŞ</div>
