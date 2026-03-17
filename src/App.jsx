@@ -3,6 +3,7 @@ import { PROGRAM } from "./data";
 import { getGifUrl } from "./videoMap";
 import { saveExerciseSets, loadExerciseSets, saveWorkout, loadWorkout, markWorkoutDone, resetWorkout, suggestWeight, getHistory, getWeeklyStats, getDashboardStats } from "./tracker";
 import { supabase } from "./supabaseClient";
+import { saveFlow, loadFlow, clearFlow } from "./flowStore";
 import "./App.css";
 
 function AuthScreen({ onAuth }) {
@@ -776,7 +777,55 @@ export default function App() {
   const [globalAllDone, setGlobalAllDone] = useState(false);
   const [workoutElapsed, setWorkoutElapsed] = useState(0);
 
-  useEffect(() => { setExpandedEx(null); setWorkoutActive(false); setOpenBlocks({}); setGlobalAllDone(false); }, [day]);
+  // Session restore from IndexedDB — runs ONCE after auth resolves
+  const flowRestoredRef = useRef(false);
+  useEffect(() => {
+    if (user === undefined || user === null || flowRestoredRef.current) return;
+    flowRestoredRef.current = true;
+    loadFlow().then(saved => {
+      if (!saved) return;
+      // Apply restored state
+      setDay(saved.day);
+      setWorkoutActive(true);
+      setExpandedEx(saved.expandedEx);
+      const bi = parseInt(saved.expandedEx.split("-")[0]);
+      setOpenBlocks({ [bi]: true });
+      // Scroll to restored exercise after DOM renders
+      setTimeout(() => {
+        const tryScroll = (attempts) => {
+          if (attempts <= 0) return;
+          const openBody = document.querySelector('.ex-body');
+          if (!openBody) { setTimeout(() => tryScroll(attempts - 1), 200); return; }
+          const card = openBody.closest('.ex-wrap');
+          if (!card) return;
+          const hdrH = document.querySelector('.hdr')?.offsetHeight || 0;
+          const top = card.getBoundingClientRect().top + window.scrollY;
+          window.scrollTo({ top: top - hdrH - 8, behavior: "smooth" });
+        };
+        tryScroll(8);
+      }, 300);
+    });
+  }, [user]);
+
+  // Persist flow state to IndexedDB on changes
+  useEffect(() => {
+    if (!flowRestoredRef.current) return; // Don't save before restore completes
+    if (workoutActive && expandedEx) {
+      saveFlow({ day, expandedEx, workoutActive: true });
+    } else if (!workoutActive) {
+      clearFlow();
+    }
+  }, [workoutActive, expandedEx, day]);
+
+  // Day change — reset flow
+  const prevDayRef = useRef(day);
+  useEffect(() => {
+    if (prevDayRef.current !== day) {
+      prevDayRef.current = day;
+      setExpandedEx(null); setWorkoutActive(false); setOpenBlocks({}); setGlobalAllDone(false);
+      clearFlow();
+    }
+  }, [day]);
 
   // Flat exercise list: [{key: "0-0", blockIdx: 0, exIdx: 0}, ...]
   const flatExercises = [];
@@ -854,6 +903,7 @@ export default function App() {
       setOpenBlocks({});
       if (timerRef.current) timerRef.current();
       releaseWakeLock();
+      clearFlow();
       return;
     }
     openExercise(flatExercises[nextIdx].key);
@@ -897,6 +947,7 @@ export default function App() {
     setExpandedEx(null);
     setOpenBlocks({});
     releaseWakeLock();
+    clearFlow();
   };
 
   // Auth loading
