@@ -1,147 +1,106 @@
 /* ═══ NUTRITION ═══ */
-.nutrition{padding:8px 0}
-
-/* Macro Rings */
-.nutri-rings{display:flex;justify-content:space-around;padding:8px 0 12px}
-.macro-ring{position:relative;display:flex;flex-direction:column;align-items:center}
-.macro-ring svg{display:block}
-.macro-ring-inner{
-  position:absolute;top:10px;left:50%;transform:translateX(-50%);
-  display:flex;flex-direction:column;align-items:center;justify-content:center;
-  width:56px;height:48px;
-}
-.macro-ring-val{font-size:14px;font-weight:800;color:#fff;font-family:var(--mono)}
-.macro-ring-unit{font-size:8px;color:#888;font-family:var(--mono)}
-.macro-ring-label{font-size:10px;color:#888;font-weight:600;margin-top:2px}
-
-/* Progress Bars */
-.nutri-bars{display:flex;flex-direction:column;gap:6px;padding:0 0 12px}
-.nutri-bar-row{display:flex;align-items:center;gap:8px}
-.nutri-bar-label{width:48px;font-size:10px;font-weight:600;color:#888;text-align:right}
-.nutri-bar-track{flex:1;height:8px;background:#1a1a1e;border-radius:4px;overflow:hidden}
-.nutri-bar-fill{height:100%;border-radius:4px;transition:width .5s ease}
-.nutri-bar-val{font-size:10px;font-weight:700;font-family:var(--mono);min-width:80px}
-
-/* Quick Add */
-.nutri-quick-toggle,.nutri-manual-toggle{
-  display:block;width:100%;padding:12px;border-radius:8px;
-  border:none;font-size:13px;font-weight:700;cursor:pointer;
-  font-family:inherit;margin-bottom:6px;
-}
-.nutri-quick-toggle{background:#D41920;color:#fff}
-.nutri-manual-toggle{background:#1a1a1e;color:#aaa;border:1px solid #2a2a30}
-
-.nutri-quick{margin-bottom:8px}
-.nutri-search{
-  width:100%;background:#0A0A0C;border:2px solid #2a2a30;border-radius:6px;
-  color:#fff;font-size:13px;padding:10px 12px;outline:none;
-  font-family:inherit;margin-bottom:6px;
-}
-.nutri-search:focus{border-color:#D41920}
-.nutri-search::placeholder{color:#555}
-
-.nutri-food-list{display:flex;flex-direction:column;gap:3px;max-height:240px;overflow-y:auto}
-.nutri-food-btn{
-  display:flex;justify-content:space-between;align-items:center;
-  width:100%;padding:10px 12px;background:#131316;border:1px solid #222;
-  border-radius:6px;cursor:pointer;font-family:inherit;text-align:left;
-}
-.nutri-food-btn:active{background:#1a1a1e}
-.nutri-food-name{font-size:13px;color:#ddd;font-weight:500}
-.nutri-food-macros{font-size:11px;color:#888;font-family:var(--mono)}
-
-/* Manual Add */
-.nutri-manual{display:flex;flex-direction:column;gap:6px;margin-bottom:8px}
-.nutri-m-input{
-  width:100%;background:#0A0A0C;border:2px solid #2a2a30;border-radius:6px;
-  color:#fff;font-size:13px;padding:10px 12px;outline:none;font-family:inherit;
-}
-.nutri-m-input:focus{border-color:#D41920}
-.nutri-m-row{display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:4px}
-.nutri-m-num{
-  background:#0A0A0C;border:2px solid #2a2a30;border-radius:6px;
-  color:#fff;font-size:13px;padding:8px 6px;outline:none;text-align:center;
-  font-family:var(--mono);-moz-appearance:textfield;
-}
-.nutri-m-num::-webkit-inner-spin-button,.nutri-m-num::-webkit-outer-spin-button{-webkit-appearance:none}
-.nutri-m-num:focus{border-color:#D41920}
-.nutri-m-num::placeholder{color:#555;font-size:11px}
-.nutri-m-save{
-  padding:10px;background:#D41920;border:none;border-radius:6px;
-  color:#fff;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
-}
-
-/* Today's Log */
-.nutri-log{margin-top:8px}
-.nutri-log-title{font-size:10px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;padding:8px 0 4px}
-.nutri-entry{
-  display:flex;justify-content:space-between;align-items:center;
-  padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04);
-}
-.nutri-entry:last-child{border-bottom:none}
-.nutri-entry-left{display:flex;gap:8px;align-items:center;flex:1;min-width:0}
-.nutri-entry-time{font-size:10px;color:#555;font-family:var(--mono);flex-shrink:0}
-.nutri-entry-name{font-size:12px;color:#ccc;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
-.nutri-entry-right{display:flex;align-items:center;gap:6px;flex-shrink:0}
-.nutri-entry-cal{font-size:12px;font-weight:700;color:#FF6B35;font-family:var(--mono)}
-.nutri-entry-del{background:none;border:none;color:#555;cursor:pointer;font-size:12px;padding:2px 4px}
+.nutrition { padding: 8px 0; }
 
 /* Tarih Nav */
-.nutri-date-nav{display:flex;align-items:center;justify-content:center;gap:16px;padding:8px 0 12px}
-.nutri-date-btn{background:#1a1a1e;border:1px solid #2a2a30;color:#aaa;width:36px;height:36px;border-radius:8px;font-size:20px;cursor:pointer;display:flex;align-items:center;justify-content:center}
-.nutri-date-btn:active{background:#2a2a30}
-.nutri-date-label{font-size:15px;font-weight:700;color:#fff;min-width:80px;text-align:center}
+.nutri-date-nav { display: flex; align-items: center; justify-content: center; gap: 16px; padding: 8px 0 12px; }
+.nutri-date-btn { background: #1a1a1e; border: 1px solid #2a2a30; color: #aaa; width: 36px; height: 36px; border-radius: 8px; font-size: 20px; cursor: pointer; display: flex; align-items: center; justify-content: center; }
+.nutri-date-btn:active { background: #2a2a30; }
+.nutri-date-label { font-size: 15px; font-weight: 700; color: #fff; min-width: 80px; text-align: center; }
+
+/* Macro Rings */
+.nutri-rings { display: flex; justify-content: space-around; padding: 8px 0 12px; }
+.macro-ring { position: relative; display: flex; flex-direction: column; align-items: center; }
+.macro-ring svg { display: block; }
+.macro-ring-inner { position: absolute; top: 10px; left: 50%; transform: translateX(-50%); display: flex; flex-direction: column; align-items: center; justify-content: center; width: 56px; height: 48px; }
+.macro-ring-val { font-size: 14px; font-weight: 800; color: #fff; font-family: var(--mono); }
+.macro-ring-unit { font-size: 8px; color: #888; font-family: var(--mono); }
+.macro-ring-label { font-size: 10px; color: #888; font-weight: 600; margin-top: 2px; }
+
+/* Progress Bars */
+.nutri-bars { display: flex; flex-direction: column; gap: 6px; padding: 0 0 12px; }
+.nutri-bar-row { display: flex; align-items: center; gap: 8px; }
+.nutri-bar-label { width: 48px; font-size: 10px; font-weight: 600; color: #888; text-align: right; }
+.nutri-bar-track { flex: 1; height: 8px; background: #1a1a1e; border-radius: 4px; overflow: hidden; }
+.nutri-bar-fill { height: 100%; border-radius: 4px; transition: width .5s ease; }
+.nutri-bar-val { font-size: 10px; font-weight: 700; font-family: var(--mono); min-width: 80px; }
+
+/* Akıllı Öneri */
+.nutri-smart { background: #131316; border: 1px solid #2a2a30; border-radius: 10px; padding: 12px; margin-bottom: 10px; }
+.nutri-smart-title { font-size: 10px; font-weight: 700; color: #888; letter-spacing: 1px; text-transform: uppercase; margin-bottom: 8px; }
+.nutri-smart-item { border-radius: 8px; padding: 8px; margin-bottom: 6px; }
+.nutri-smart-item:last-child { margin-bottom: 0; }
+.nutri-smart-good { background: rgba(0,200,83,.08); border: 1px solid rgba(0,200,83,.2); }
+.nutri-smart-warn { background: rgba(212,25,32,.08); border: 1px solid rgba(212,25,32,.2); }
+.nutri-smart-info { background: rgba(79,195,247,.08); border: 1px solid rgba(79,195,247,.2); }
+.nutri-smart-meal { background: rgba(255,167,38,.08); border: 1px solid rgba(255,167,38,.2); }
+.nutri-smart-row { display: flex; align-items: center; gap: 8px; }
+.nutri-smart-icon { font-size: 16px; flex-shrink: 0; }
+.nutri-smart-text { font-size: 12px; color: #ccc; }
+.nutri-smart-foods { display: flex; flex-direction: column; gap: 4px; margin-top: 8px; padding-left: 24px; }
+.nutri-smart-food { display: flex; justify-content: space-between; align-items: center; padding: 7px 10px; background: #0A0A0C; border: 1px solid #2a2a30; border-radius: 6px; cursor: pointer; font-family: inherit; text-align: left; }
+.nutri-smart-food:active { background: #1a1a1e; }
+.nutri-smart-food span:first-child { font-size: 12px; color: #ddd; }
+.nutri-smart-food-meta { font-size: 11px; color: #888; font-family: var(--mono); }
+
+/* Miktar seçici overlay */
+.nutri-mult-overlay { position: fixed; inset: 0; background: rgba(0,0,0,.7); z-index: 100; display: flex; align-items: flex-end; justify-content: center; padding-bottom: 24px; }
+.nutri-mult-box { background: #131316; border: 1px solid #2a2a30; border-radius: 16px; padding: 20px; width: calc(100% - 32px); max-width: 400px; }
+.nutri-mult-name { font-size: 15px; font-weight: 700; color: #fff; margin-bottom: 4px; }
+.nutri-mult-macros { font-size: 12px; color: #888; font-family: var(--mono); margin-bottom: 16px; }
+.nutri-mult-btns { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 12px; }
+.nutri-mult-btn { padding: 12px 0; background: #1a1a1e; border: 2px solid #2a2a30; border-radius: 8px; color: #aaa; font-size: 15px; font-weight: 700; cursor: pointer; font-family: var(--mono); }
+.nutri-mult-active { border-color: var(--red); color: var(--red); background: rgba(212,25,32,.1); }
+.nutri-mult-add { width: 100%; padding: 14px; background: var(--red); border: none; border-radius: 10px; color: #fff; font-size: 15px; font-weight: 700; cursor: pointer; font-family: inherit; }
+
+/* Quick Add */
+.nutri-quick-toggle, .nutri-manual-toggle { display: block; width: 100%; padding: 12px; border-radius: 8px; border: none; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; margin-bottom: 6px; }
+.nutri-quick-toggle { background: #D41920; color: #fff; }
+.nutri-manual-toggle { background: #1a1a1e; color: #aaa; border: 1px solid #2a2a30; }
+.nutri-quick { margin-bottom: 8px; }
+.nutri-search { width: 100%; background: #0A0A0C; border: 2px solid #2a2a30; border-radius: 6px; color: #fff; font-size: 13px; padding: 10px 12px; outline: none; font-family: inherit; margin-bottom: 6px; box-sizing: border-box; }
+.nutri-search:focus { border-color: #D41920; }
+.nutri-search::placeholder { color: #555; }
 
 /* Kategori tabs */
-.nutri-cat-tabs{display:flex;gap:4px;overflow-x:auto;padding:4px 0 8px;scrollbar-width:none}
-.nutri-cat-tabs::-webkit-scrollbar{display:none}
-.nutri-cat-tab{flex-shrink:0;padding:5px 10px;border-radius:20px;border:1px solid #2a2a30;background:#131316;color:#888;font-size:11px;font-weight:600;cursor:pointer;font-family:inherit}
-.nutri-cat-active{background:#D41920;color:#fff;border-color:#D41920}
+.nutri-cat-tabs { display: flex; gap: 4px; overflow-x: auto; padding: 4px 0 8px; scrollbar-width: none; }
+.nutri-cat-tabs::-webkit-scrollbar { display: none; }
+.nutri-cat-tab { flex-shrink: 0; padding: 5px 10px; border-radius: 20px; border: 1px solid #2a2a30; background: #131316; color: #888; font-size: 11px; font-weight: 600; cursor: pointer; font-family: inherit; }
+.nutri-cat-active { background: #D41920; color: #fff; border-color: #D41920; }
 
-/* AI Panel */
-.nutri-ai-section{margin-bottom:10px;padding:12px;background:#131316;border-radius:10px;border:1px solid #2a2a30}
-.nutri-ai-row{display:flex;gap:6px;margin-bottom:6px}
-.nutri-ai-input{
-  flex:1;background:#0A0A0C;border:2px solid #2a2a30;border-radius:8px;
-  color:#fff;font-size:13px;padding:10px 12px;outline:none;font-family:inherit;
-}
-.nutri-ai-input:focus{border-color:#8B5CF6}
-.nutri-ai-input::placeholder{color:#555}
-.nutri-ai-send{
-  width:42px;height:42px;background:#8B5CF6;border:none;border-radius:8px;
-  color:#fff;font-size:18px;cursor:pointer;flex-shrink:0;display:flex;align-items:center;justify-content:center;
-}
-.nutri-ai-send:disabled{opacity:0.4;cursor:default}
-.nutri-ai-advice-btn{
-  width:100%;padding:10px;background:#1a1a1e;border:1px solid #8B5CF6;border-radius:8px;
-  color:#8B5CF6;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit;
-}
-.nutri-ai-advice-btn:disabled{opacity:0.5;cursor:default}
+.nutri-food-list { display: flex; flex-direction: column; gap: 3px; max-height: 260px; overflow-y: auto; }
+.nutri-food-btn { display: flex; justify-content: space-between; align-items: center; width: 100%; padding: 10px 12px; background: #131316; border: 1px solid #222; border-radius: 6px; cursor: pointer; font-family: inherit; text-align: left; }
+.nutri-food-btn:active { background: #1a1a1e; }
+.nutri-food-left { display: flex; align-items: center; gap: 6px; }
+.nutri-food-name { font-size: 13px; color: #ddd; font-weight: 500; }
+.nutri-food-freq { font-size: 10px; color: #D41920; font-weight: 700; background: rgba(212,25,32,.1); border-radius: 4px; padding: 1px 5px; }
+.nutri-food-macros { font-size: 11px; color: #888; font-family: var(--mono); flex-shrink: 0; }
 
-.nutri-ai-error{font-size:12px;color:#FF5252;padding:6px 0}
+/* Manuel Add */
+.nutri-manual { display: flex; flex-direction: column; gap: 6px; margin-bottom: 8px; }
+.nutri-m-input { width: 100%; background: #0A0A0C; border: 2px solid #2a2a30; border-radius: 6px; color: #fff; font-size: 13px; padding: 10px 12px; outline: none; font-family: inherit; box-sizing: border-box; }
+.nutri-m-input:focus { border-color: #D41920; }
+.nutri-m-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 4px; }
+.nutri-m-num { background: #0A0A0C; border: 2px solid #2a2a30; border-radius: 6px; color: #fff; font-size: 13px; padding: 8px 6px; outline: none; text-align: center; font-family: var(--mono); -moz-appearance: textfield; }
+.nutri-m-num::-webkit-inner-spin-button, .nutri-m-num::-webkit-outer-spin-button { -webkit-appearance: none; }
+.nutri-m-num:focus { border-color: #D41920; }
+.nutri-m-num::placeholder { color: #555; font-size: 11px; }
+.nutri-m-save { padding: 10px; background: #D41920; border: none; border-radius: 6px; color: #fff; font-size: 13px; font-weight: 700; cursor: pointer; font-family: inherit; }
 
-.nutri-ai-result{margin-top:8px;padding:10px;background:#0A0A0C;border-radius:8px;border:1px solid #2a2a30}
-.nutri-ai-result-title{font-size:10px;font-weight:700;color:#8B5CF6;letter-spacing:1px;text-transform:uppercase;margin-bottom:6px}
-.nutri-ai-food-row{display:flex;justify-content:space-between;padding:5px 0;border-bottom:1px solid #1a1a1e}
-.nutri-ai-food-row:last-of-type{border-bottom:none}
-.nutri-ai-food-name{font-size:13px;color:#ddd}
-.nutri-ai-food-macro{font-size:11px;color:#888;font-family:var(--mono)}
-.nutri-ai-comment{font-size:12px;color:#aaa;padding:6px 0;font-style:italic}
-.nutri-ai-actions{display:flex;gap:6px;margin-top:8px}
-.nutri-ai-confirm{flex:1;padding:9px;background:#00C853;border:none;border-radius:6px;color:#000;font-size:13px;font-weight:700;cursor:pointer;font-family:inherit}
-.nutri-ai-cancel{padding:9px 14px;background:#1a1a1e;border:1px solid #333;border-radius:6px;color:#888;font-size:13px;cursor:pointer;font-family:inherit}
+/* Log */
+.nutri-log { margin-top: 8px; }
+.nutri-log-title { font-size: 10px; font-weight: 700; color: #888; letter-spacing: 1px; text-transform: uppercase; padding: 8px 0 6px; }
+.nutri-meal-group { margin-bottom: 10px; }
+.nutri-meal-label { font-size: 10px; font-weight: 700; color: #555; text-transform: uppercase; letter-spacing: 1px; padding: 4px 0 2px; border-bottom: 1px solid #1a1a1e; margin-bottom: 4px; }
+.nutri-entry { display: flex; justify-content: space-between; align-items: center; padding: 8px 0; border-bottom: 1px solid rgba(255,255,255,.03); }
+.nutri-entry:last-child { border-bottom: none; }
+.nutri-entry-left { display: flex; gap: 8px; align-items: center; flex: 1; min-width: 0; }
+.nutri-entry-time { font-size: 10px; color: #555; font-family: var(--mono); flex-shrink: 0; }
+.nutri-entry-name { font-size: 12px; color: #ccc; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
+.nutri-entry-right { display: flex; align-items: center; gap: 6px; flex-shrink: 0; }
+.nutri-entry-macro { font-size: 11px; color: #4FC3F7; font-family: var(--mono); }
+.nutri-entry-cal { font-size: 12px; font-weight: 700; color: #FF6B35; font-family: var(--mono); }
+.nutri-entry-del { background: none; border: none; color: #555; cursor: pointer; font-size: 12px; padding: 2px 4px; }
 
-.nutri-ai-status{font-size:13px;font-weight:700;padding:8px 0 4px}
-.nutri-ai-status-iyi{color:#00C853}
-.nutri-ai-status-dikkat{color:#FFA726}
-.nutri-ai-status-eksik{color:#FF5252}
-.nutri-ai-suggestions{display:flex;flex-direction:column;gap:4px;padding:4px 0}
-.nutri-ai-suggestion-item{font-size:12px;color:#ccc;padding:3px 0}
-.nutri-ai-warning{font-size:12px;color:#FF5252;padding:6px 0;font-weight:600}
-
-/* Entry makro */
-.nutri-entry-macro{font-size:11px;color:#4FC3F7;font-family:var(--mono);margin-right:4px}
-
-/* Empty state */
-.nutri-empty{font-size:12px;color:#555;padding:12px 8px;text-align:center}
-.nutri-empty-day{font-size:13px;color:#555;padding:24px 0;text-align:center}
+/* Empty */
+.nutri-empty { font-size: 12px; color: #555; padding: 12px 8px; text-align: center; }
+.nutri-empty-day { font-size: 13px; color: #555; padding: 24px 0; text-align: center; }

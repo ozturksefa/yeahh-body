@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect } from "react";
 import "./Nutrition.css";
 
 const TARGETS = { calories: 2200, protein: 150, carbs: 250, fat: 70 };
@@ -79,18 +79,35 @@ const QUICK_FOODS = [
   { name: "Protein shake (hazır)", cal: 160, pro: 30, carb: 8, fat: 3, cat: "İçecek" },
 ];
 
-const CATEGORIES = ["Tümü", "Kahvaltı", "Protein", "Karb", "Türk", "Meyve", "Yağ", "İçecek"];
+const CATEGORIES = ["Tümü", "Son Yenenler", "Kahvaltı", "Protein", "Karb", "Türk", "Meyve", "Yağ", "İçecek"];
+
+const MULTIPLIERS = [
+  { label: "½", val: 0.5 },
+  { label: "1×", val: 1 },
+  { label: "1½", val: 1.5 },
+  { label: "2×", val: 2 },
+];
 
 function todayStr() {
   return new Date().toISOString().slice(0, 10);
 }
 
+function getMealLabel() {
+  const h = new Date().getHours();
+  if (h < 10) return "Kahvaltı";
+  if (h < 13) return "Öğle Öncesi";
+  if (h < 15) return "Öğle";
+  if (h < 18) return "İkindi";
+  if (h < 21) return "Akşam";
+  return "Gece";
+}
+
 function formatDate(dateStr) {
-  const d = new Date(dateStr + "T12:00:00");
   const today = todayStr();
   const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
   if (dateStr === today) return "Bugün";
   if (dateStr === yesterday) return "Dün";
+  const d = new Date(dateStr + "T12:00:00");
   return d.toLocaleDateString("tr-TR", { day: "numeric", month: "long" });
 }
 
@@ -102,6 +119,72 @@ function saveEntries(dateStr, entries) {
   try { localStorage.setItem("yb_nutrition_" + dateStr, JSON.stringify(entries)); } catch {}
 }
 
+// Son 7 günden en sık eklenen yemekler
+function getRecentFoods() {
+  const counts = {};
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+    const entries = loadEntries(d);
+    entries.forEach(e => {
+      const key = e.name;
+      if (!counts[key]) counts[key] = { food: e, count: 0 };
+      counts[key].count++;
+    });
+  }
+  return Object.values(counts)
+    .sort((a, b) => b.count - a.count)
+    .slice(0, 8)
+    .map(x => ({ ...x.food, count: x.count }));
+}
+
+// Makroya göre akıllı öneriler üret
+function getSmartSuggestions(totals) {
+  const remProtein = TARGETS.protein - totals.protein;
+  const remCalories = TARGETS.calories - totals.calories;
+  const remCarbs = TARGETS.carbs - totals.carbs;
+  const suggestions = [];
+
+  if (remCalories <= 0) {
+    suggestions.push({ icon: "✅", text: "Kalori hedefine ulaştın!", type: "good" });
+  } else if (remCalories < 300) {
+    suggestions.push({ icon: "🎯", text: `${remCalories}kcal kaldı — hafif bir şey ekle`, type: "info" });
+  }
+
+  if (remProtein > 50) {
+    const best = QUICK_FOODS.filter(f => f.cat === "Protein")
+      .sort((a, b) => (b.pro / b.cal) - (a.pro / a.cal))
+      .slice(0, 3);
+    suggestions.push({
+      icon: "💪",
+      text: `${remProtein}g protein eksik`,
+      type: "warn",
+      foods: best,
+    });
+  } else if (remProtein > 0) {
+    suggestions.push({ icon: "💪", text: `Proteine yaklaştın, ${remProtein}g kaldı`, type: "info" });
+  } else {
+    suggestions.push({ icon: "💪", text: "Protein hedefini tamamladın!", type: "good" });
+  }
+
+  if (remCarbs > 100 && remCalories > 200) {
+    const best = QUICK_FOODS.filter(f => f.cat === "Karb" || f.cat === "Meyve")
+      .sort((a, b) => b.carb - a.carb)
+      .slice(0, 3);
+    suggestions.push({ icon: "⚡", text: `${remCarbs}g karbonhidrat kaldı — enerji için ekle`, type: "info", foods: best });
+  }
+
+  // Öğün bazlı
+  const hour = new Date().getHours();
+  if (hour >= 6 && hour < 10 && totals.calories < 200) {
+    suggestions.push({ icon: "🌅", text: "Sabah — güçlü bir kahvaltı başlangıç için önemli", type: "meal" });
+  }
+  if (hour >= 17 && hour < 20) {
+    suggestions.push({ icon: "🏋️", text: "Antrenman sonrası protein + karb kombinasyonu ideal", type: "meal" });
+  }
+
+  return suggestions;
+}
+
 export default function NutritionTracker() {
   const [activeDate, setActiveDate] = useState(todayStr());
   const [entries, setEntries] = useState(() => loadEntries(todayStr()));
@@ -110,14 +193,16 @@ export default function NutritionTracker() {
   const [showQuick, setShowQuick] = useState(false);
   const [manualOpen, setManualOpen] = useState(false);
   const [manual, setManual] = useState({ name: "", cal: "", pro: "", carb: "", fat: "" });
-  const [aiInput, setAiInput] = useState("");
-  const [aiLoading, setAiLoading] = useState(false);
-  const [aiSuggestion, setAiSuggestion] = useState(null);
-  const [aiError, setAiError] = useState(null);
+  const [pendingFood, setPendingFood] = useState(null); // { food, multiplier }
+  const [recentFoods, setRecentFoods] = useState([]);
 
   useEffect(() => {
     setEntries(loadEntries(activeDate));
   }, [activeDate]);
+
+  useEffect(() => {
+    setRecentFoods(getRecentFoods());
+  }, [entries]);
 
   const totals = entries.reduce((acc, e) => ({
     calories: acc.calories + (e.cal || 0),
@@ -126,16 +211,33 @@ export default function NutritionTracker() {
     fat: acc.fat + (e.fat || 0),
   }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
 
-  const addFood = (food) => {
+  const suggestions = getSmartSuggestions(totals);
+
+  const addFood = (food, multiplier = 1) => {
+    const scaled = {
+      name: multiplier !== 1 ? `${food.name} ×${multiplier}` : food.name,
+      cal: Math.round((food.cal || 0) * multiplier),
+      pro: Math.round((food.pro || 0) * multiplier),
+      carb: Math.round((food.carb || 0) * multiplier),
+      fat: Math.round((food.fat || 0) * multiplier),
+      cat: food.cat,
+    };
     const next = [...entries, {
-      ...food, id: Date.now(),
-      time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" })
+      ...scaled,
+      id: Date.now(),
+      time: new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" }),
+      meal: getMealLabel(),
     }];
     setEntries(next);
     saveEntries(activeDate, next);
+    setPendingFood(null);
     setSearch("");
     setShowQuick(false);
     if (navigator.vibrate) navigator.vibrate(15);
+  };
+
+  const handleFoodTap = (food) => {
+    setPendingFood({ food, multiplier: 1 });
   };
 
   const addManual = () => {
@@ -161,93 +263,21 @@ export default function NutritionTracker() {
   const pct = (val, target) => Math.min((val / target) * 100, 100);
   const isToday = activeDate === todayStr();
 
-  const filtered = QUICK_FOODS.filter(f => {
-    const matchCat = activeCat === "Tümü" || f.cat === activeCat;
-    const matchSearch = !search || f.name.toLowerCase().includes(search.toLowerCase());
-    return matchCat && matchSearch;
-  });
-
-  // AI: doğal dil ile yemek ekle
-  const handleAiParse = async () => {
-    const text = aiInput.trim();
-    if (!text || aiLoading) return;
-    setAiLoading(true);
-    setAiError(null);
-    setAiSuggestion(null);
-    const remaining = {
-      calories: Math.max(0, TARGETS.calories - totals.calories),
-      protein: Math.max(0, TARGETS.protein - totals.protein),
-    };
-    try {
-      const res = await fetch("/api/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-opus-4-6",
-          max_tokens: 1000,
-          system: `Spor beslenmesi uzmanısın. Kullanıcı ne yediğini Türkçe anlatır, sen JSON çıkar.
-Hedefler: ${TARGETS.calories}kcal, ${TARGETS.protein}g protein, ${TARGETS.carbs}g karb, ${TARGETS.fat}g yağ.
-Tüketilen: ${totals.calories}kcal, ${totals.protein}g protein. Kalan: ${remaining.calories}kcal, ${remaining.protein}g protein.
-Kullanıcı: Sefa, 26 yaş, antrenman yapıyor, sağ omuz rotator cuff yırtığı var.
-SADECE JSON döndür:
-{"foods":[{"name":"yemek","cal":0,"pro":0,"carb":0,"fat":0}],"comment":"kısa türkçe yorum"}
-Öneri istiyorsa foods boş dizi, comment'e öneri yaz.`,
-          messages: [{ role: "user", content: text }],
-        }),
+  const listFoods = activeCat === "Son Yenenler"
+    ? recentFoods
+    : QUICK_FOODS.filter(f => {
+        const matchCat = activeCat === "Tümü" || f.cat === activeCat;
+        const matchSearch = !search || f.name.toLowerCase().includes(search.toLowerCase());
+        return matchCat && matchSearch;
       });
-      const data = await res.json();
-      const raw = data.content?.[0]?.text || "";
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      if (parsed.foods?.length > 0) {
-        setAiSuggestion({ type: "foods", foods: parsed.foods, comment: parsed.comment });
-      } else {
-        setAiSuggestion({ type: "comment", comment: parsed.comment });
-      }
-    } catch {
-      setAiError("Hata oluştu. Tekrar dene.");
-    }
-    setAiLoading(false);
-  };
 
-  // AI: günlük analiz
-  const handleAiAdvice = async () => {
-    setAiLoading(true);
-    setAiError(null);
-    setAiSuggestion(null);
-    const todayLog = entries.map(e => `${e.name} (${e.cal}kcal, ${e.pro}g P)`).join(", ") || "Henüz hiçbir şey yenmedi";
-    try {
-      const res = await fetch("/api/ai", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          model: "claude-opus-4-6",
-          max_tokens: 1000,
-          system: `Spor beslenmesi uzmanısın. Kısa pratik Türkçe öneriler ver.
-Kullanıcı: Sefa, 26 yaş, 4 gün/hafta antrenman (rehabilitasyon + kalistenik). Sağ omuz rotator cuff, diz menisküs, skolyoz.
-Hedef: ${TARGETS.calories}kcal, ${TARGETS.protein}g protein, ${TARGETS.carbs}g karb, ${TARGETS.fat}g yağ.
-Tüketilen: ${totals.calories}kcal, ${totals.protein}g P, ${totals.carbs}g K, ${totals.fat}g Y.
-Yenenler: ${todayLog}
-SADECE JSON döndür:
-{"status":"iyi|dikkat|eksik","summary":"1 cümle","suggestions":["öneri1","öneri2","öneri3"],"warning":null}`,
-          messages: [{ role: "user", content: "Analiz et." }],
-        }),
-      });
-      const data = await res.json();
-      const raw = data.content?.[0]?.text || "";
-      const parsed = JSON.parse(raw.replace(/```json|```/g, "").trim());
-      setAiSuggestion({ type: "advice", ...parsed });
-    } catch {
-      setAiError("Analiz alınamadı.");
-    }
-    setAiLoading(false);
-  };
-
-  const confirmAiFoods = () => {
-    if (!aiSuggestion?.foods) return;
-    aiSuggestion.foods.forEach(f => addFood(f));
-    setAiInput("");
-    setAiSuggestion(null);
-  };
+  // Öğüne göre grupla
+  const grouped = entries.reduce((acc, e) => {
+    const key = e.meal || "Diğer";
+    if (!acc[key]) acc[key] = [];
+    acc[key].push(e);
+    return acc;
+  }, {});
 
   return (
     <div className="nutrition">
@@ -256,7 +286,8 @@ SADECE JSON döndür:
       <div className="nutri-date-nav">
         <button className="nutri-date-btn" onClick={() => navigateDay(-1)}>‹</button>
         <span className="nutri-date-label">{formatDate(activeDate)}</span>
-        <button className="nutri-date-btn" onClick={() => navigateDay(1)} disabled={isToday} style={{ opacity: isToday ? 0.3 : 1 }}>›</button>
+        <button className="nutri-date-btn" onClick={() => navigateDay(1)}
+          disabled={isToday} style={{ opacity: isToday ? 0.3 : 1 }}>›</button>
       </div>
 
       {/* Macro rings */}
@@ -278,113 +309,118 @@ SADECE JSON döndür:
           <div key={b.label} className="nutri-bar-row">
             <span className="nutri-bar-label">{b.label}</span>
             <div className="nutri-bar-track">
-              <div className="nutri-bar-fill" style={{ width: `${pct(b.val, b.target)}%`, background: b.val > b.target ? "#FF5252" : b.color }} />
+              <div className="nutri-bar-fill"
+                style={{ width: `${pct(b.val, b.target)}%`, background: b.val > b.target ? "#FF5252" : b.color }} />
             </div>
-            <span className="nutri-bar-val" style={{ color: b.val > b.target ? "#FF5252" : b.color }}>{b.val}/{b.target}{b.unit}</span>
+            <span className="nutri-bar-val" style={{ color: b.val > b.target ? "#FF5252" : b.color }}>
+              {b.val}/{b.target}{b.unit}
+            </span>
           </div>
         ))}
       </div>
 
-      {/* AI panel — sadece bugün */}
-      {isToday && (
-        <div className="nutri-ai-section">
-          <div className="nutri-ai-row">
-            <input
-              className="nutri-ai-input"
-              value={aiInput}
-              onChange={e => setAiInput(e.target.value)}
-              onKeyDown={e => e.key === "Enter" && handleAiParse()}
-              placeholder="Ne yedin? Yaz → AI eklesin... (ör: 2 yumurta ve ayran içtim)"
-              disabled={aiLoading}
-            />
-            <button className="nutri-ai-send" onClick={handleAiParse} disabled={aiLoading || !aiInput.trim()}>
-              {aiLoading ? "⏳" : "✦"}
+      {/* Akıllı öneri paneli — sadece bugün */}
+      {isToday && suggestions.length > 0 && (
+        <div className="nutri-smart">
+          <div className="nutri-smart-title">📊 Durum & Öneriler</div>
+          {suggestions.map((s, i) => (
+            <div key={i} className={`nutri-smart-item nutri-smart-${s.type}`}>
+              <div className="nutri-smart-row">
+                <span className="nutri-smart-icon">{s.icon}</span>
+                <span className="nutri-smart-text">{s.text}</span>
+              </div>
+              {s.foods && (
+                <div className="nutri-smart-foods">
+                  {s.foods.map((f, j) => (
+                    <button key={j} className="nutri-smart-food" onClick={() => handleFoodTap(f)}>
+                      <span>{f.name}</span>
+                      <span className="nutri-smart-food-meta">{f.cal}kcal · {f.pro}g P</span>
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+
+      {/* Miktar seçici popup */}
+      {pendingFood && (
+        <div className="nutri-mult-overlay" onClick={() => setPendingFood(null)}>
+          <div className="nutri-mult-box" onClick={e => e.stopPropagation()}>
+            <div className="nutri-mult-name">{pendingFood.food.name}</div>
+            <div className="nutri-mult-macros">
+              {Math.round(pendingFood.food.cal * pendingFood.multiplier)}kcal ·{" "}
+              {Math.round(pendingFood.food.pro * pendingFood.multiplier)}g P ·{" "}
+              {Math.round(pendingFood.food.carb * pendingFood.multiplier)}g K
+            </div>
+            <div className="nutri-mult-btns">
+              {MULTIPLIERS.map(m => (
+                <button key={m.val}
+                  className={`nutri-mult-btn ${pendingFood.multiplier === m.val ? "nutri-mult-active" : ""}`}
+                  onClick={() => setPendingFood(p => ({ ...p, multiplier: m.val }))}>
+                  {m.label}
+                </button>
+              ))}
+            </div>
+            <button className="nutri-mult-add" onClick={() => addFood(pendingFood.food, pendingFood.multiplier)}>
+              ✓ Ekle
             </button>
           </div>
-          <button className="nutri-ai-advice-btn" onClick={handleAiAdvice} disabled={aiLoading}>
-            {aiLoading && !aiInput ? "⏳ Analiz ediliyor..." : "✦ Günlük Analiz & Öneri"}
-          </button>
-
-          {aiError && <div className="nutri-ai-error">{aiError}</div>}
-
-          {aiSuggestion?.type === "foods" && (
-            <div className="nutri-ai-result">
-              <div className="nutri-ai-result-title">AI tespit etti:</div>
-              {aiSuggestion.foods.map((f, i) => (
-                <div key={i} className="nutri-ai-food-row">
-                  <span className="nutri-ai-food-name">{f.name}</span>
-                  <span className="nutri-ai-food-macro">{f.cal}kcal · {f.pro}g P</span>
-                </div>
-              ))}
-              {aiSuggestion.comment && <div className="nutri-ai-comment">{aiSuggestion.comment}</div>}
-              <div className="nutri-ai-actions">
-                <button className="nutri-ai-confirm" onClick={confirmAiFoods}>✓ Tümünü Ekle</button>
-                <button className="nutri-ai-cancel" onClick={() => { setAiSuggestion(null); setAiInput(""); }}>İptal</button>
-              </div>
-            </div>
-          )}
-
-          {aiSuggestion?.type === "comment" && (
-            <div className="nutri-ai-result">
-              <div className="nutri-ai-comment">{aiSuggestion.comment}</div>
-              <button className="nutri-ai-cancel" onClick={() => setAiSuggestion(null)}>Kapat</button>
-            </div>
-          )}
-
-          {aiSuggestion?.type === "advice" && (
-            <div className="nutri-ai-result">
-              <div className={`nutri-ai-status nutri-ai-status-${aiSuggestion.status}`}>
-                {aiSuggestion.status === "iyi" ? "✅" : aiSuggestion.status === "dikkat" ? "⚠️" : "❌"} {aiSuggestion.summary}
-              </div>
-              <div className="nutri-ai-suggestions">
-                {aiSuggestion.suggestions?.map((s, i) => (
-                  <div key={i} className="nutri-ai-suggestion-item">• {s}</div>
-                ))}
-              </div>
-              {aiSuggestion.warning && <div className="nutri-ai-warning">⚠ {aiSuggestion.warning}</div>}
-              <button className="nutri-ai-cancel" onClick={() => setAiSuggestion(null)}>Kapat</button>
-            </div>
-          )}
         </div>
       )}
 
       {/* Hızlı ekle — sadece bugün */}
       {isToday && (
         <>
-          <button className="nutri-quick-toggle" onClick={() => { setShowQuick(!showQuick); setManualOpen(false); }}>
+          <button className="nutri-quick-toggle"
+            onClick={() => { setShowQuick(!showQuick); setManualOpen(false); }}>
             {showQuick ? "✕ Kapat" : "🍽 Hızlı Ekle"}
           </button>
 
           {showQuick && (
             <div className="nutri-quick">
-              <input className="nutri-search" value={search} onChange={e => setSearch(e.target.value)}
-                placeholder="🔍 Yemek ara..." />
+              <input className="nutri-search" value={search}
+                onChange={e => { setSearch(e.target.value); setActiveCat("Tümü"); }}
+                placeholder="🔍 Yemek ara... (ör: tavuk, yulaf, pilav)" />
               <div className="nutri-cat-tabs">
                 {CATEGORIES.map(c => (
-                  <button key={c} className={`nutri-cat-tab ${activeCat === c ? "nutri-cat-active" : ""}`}
-                    onClick={() => setActiveCat(c)}>{c}</button>
+                  <button key={c}
+                    className={`nutri-cat-tab ${activeCat === c ? "nutri-cat-active" : ""}`}
+                    onClick={() => { setActiveCat(c); setSearch(""); }}>
+                    {c === "Son Yenenler" ? `⭐ Son` : c}
+                  </button>
                 ))}
               </div>
               <div className="nutri-food-list">
-                {filtered.map((f, i) => (
-                  <button key={i} className="nutri-food-btn" onClick={() => addFood(f)}>
-                    <span className="nutri-food-name">{f.name}</span>
+                {listFoods.length === 0 && (
+                  <div className="nutri-empty">
+                    {activeCat === "Son Yenenler" ? "Henüz geçmiş yok." : `"${search}" bulunamadı.`}
+                  </div>
+                )}
+                {listFoods.map((f, i) => (
+                  <button key={i} className="nutri-food-btn" onClick={() => handleFoodTap(f)}>
+                    <div className="nutri-food-left">
+                      <span className="nutri-food-name">{f.name}</span>
+                      {f.count && <span className="nutri-food-freq">{f.count}x</span>}
+                    </div>
                     <span className="nutri-food-macros">{f.cal}kcal · {f.pro}g P · {f.carb}g K</span>
                   </button>
                 ))}
-                {filtered.length === 0 && <div className="nutri-empty">"{search}" bulunamadı.</div>}
               </div>
             </div>
           )}
 
-          <button className="nutri-manual-toggle" onClick={() => { setManualOpen(!manualOpen); setShowQuick(false); }}>
+          <button className="nutri-manual-toggle"
+            onClick={() => { setManualOpen(!manualOpen); setShowQuick(false); }}>
             {manualOpen ? "✕ Kapat" : "✏️ Manuel Ekle"}
           </button>
 
           {manualOpen && (
             <div className="nutri-manual">
               <input className="nutri-m-input" value={manual.name}
-                onChange={e => setManual(p => ({ ...p, name: e.target.value }))} placeholder="Yemek adı" />
+                onChange={e => setManual(p => ({ ...p, name: e.target.value }))}
+                placeholder="Yemek adı" />
               <div className="nutri-m-row">
                 <input className="nutri-m-num" type="number" inputMode="numeric" value={manual.cal}
                   onChange={e => setManual(p => ({ ...p, cal: e.target.value }))} placeholder="kcal" />
@@ -401,21 +437,28 @@ SADECE JSON döndür:
         </>
       )}
 
-      {/* Günlük log */}
+      {/* Günlük log — öğüne göre gruplu */}
       {entries.length > 0 ? (
         <div className="nutri-log">
-          <div className="nutri-log-title">{formatDate(activeDate)} — {entries.length} öğün</div>
-          {entries.map(e => (
-            <div key={e.id} className="nutri-entry">
-              <div className="nutri-entry-left">
-                <span className="nutri-entry-time">{e.time}</span>
-                <span className="nutri-entry-name">{e.name}</span>
-              </div>
-              <div className="nutri-entry-right">
-                <span className="nutri-entry-macro">{e.pro}g P</span>
-                <span className="nutri-entry-cal">{e.cal}kcal</span>
-                {isToday && <button className="nutri-entry-del" onClick={() => removeEntry(e.id)}>✕</button>}
-              </div>
+          <div className="nutri-log-title">{formatDate(activeDate)} — {entries.length} öğün · {totals.calories}kcal</div>
+          {Object.entries(grouped).map(([meal, items]) => (
+            <div key={meal} className="nutri-meal-group">
+              <div className="nutri-meal-label">{meal}</div>
+              {items.map(e => (
+                <div key={e.id} className="nutri-entry">
+                  <div className="nutri-entry-left">
+                    <span className="nutri-entry-time">{e.time}</span>
+                    <span className="nutri-entry-name">{e.name}</span>
+                  </div>
+                  <div className="nutri-entry-right">
+                    <span className="nutri-entry-macro">{e.pro}g P</span>
+                    <span className="nutri-entry-cal">{e.cal}kcal</span>
+                    {isToday && (
+                      <button className="nutri-entry-del" onClick={() => removeEntry(e.id)}>✕</button>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           ))}
         </div>
