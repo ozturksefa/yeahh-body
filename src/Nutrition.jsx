@@ -179,7 +179,7 @@ export default function NutritionTracker() {
       protein: Math.max(0, TARGETS.protein - totals.protein),
     };
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -216,7 +216,7 @@ SADECE JSON döndür:
     setAiSuggestion(null);
     const todayLog = entries.map(e => `${e.name} (${e.cal}kcal, ${e.pro}g P)`).join(", ") || "Henüz hiçbir şey yenmedi";
     try {
-      const res = await fetch("https://api.anthropic.com/v1/messages", {
+      const res = await fetch("/api/ai", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
