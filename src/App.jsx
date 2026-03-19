@@ -10,6 +10,7 @@ import Dashboard, { WeeklyStats } from "./Dashboard";
 import RestTimer from "./RestTimer";
 import WorkoutTimer from "./WorkoutTimer";
 import BlockCard from "./BlockCard";
+import { parseSets } from "./SetTracker";
 import "./App.css";
 
 
