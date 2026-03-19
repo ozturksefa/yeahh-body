@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import ExerciseGif from "./Gif";
 import SetTracker from "./SetTracker";
 import ExerciseNote from "./ExerciseNote";
+import ErrorBoundary from "./ErrorBoundary";
 
 function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAdvance, workoutActive, isLastEx, onAllSetsDone }) {
   const cardRef = useRef(null);
@@ -119,18 +120,20 @@ function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartR
           {block.exercises.map((ex, ei) => {
             const key = `${blockIdx}-${ei}`;
             return (
-              <ExerciseCard key={key} ex={ex} blockColor={block.color}
-                isOpen={expandedEx === key}
-                onToggle={() => onExToggle(key)}
-                dayIndex={dayIndex}
-                blockName={block.name}
-                onStartRest={onStartRest}
-                swaps={swaps}
-                onSwap={onSwap}
-                onAdvance={onAdvance}
-                workoutActive={workoutActive}
-                isLastEx={isLastEx && ei === block.exercises.length - 1}
-                onAllSetsDone={expandedEx === key ? onAllSetsDone : null} />
+              <ErrorBoundary key={key}>
+                <ExerciseCard ex={ex} blockColor={block.color}
+                  isOpen={expandedEx === key}
+                  onToggle={() => onExToggle(key)}
+                  dayIndex={dayIndex}
+                  blockName={block.name}
+                  onStartRest={onStartRest}
+                  swaps={swaps}
+                  onSwap={onSwap}
+                  onAdvance={onAdvance}
+                  workoutActive={workoutActive}
+                  isLastEx={isLastEx && ei === block.exercises.length - 1}
+                  onAllSetsDone={expandedEx === key ? onAllSetsDone : null} />
+              </ErrorBoundary>
             );
           })}
         </div>
