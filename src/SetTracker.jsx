@@ -18,22 +18,25 @@ export function isUpper(exerciseName) {
 }
 
 function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
-  // Sadece kuvvet, calisthenics, core ve finisher bloklarında göster
   const trackBlocks = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER"];
   const showTracker = trackBlocks.some(b => blockName?.toUpperCase().includes(b));
-  if (!showTracker) return null;
-
   const parsed = parseSets(ex.sets);
-  if (!parsed || parsed.timed) return null;
+  const shouldRender = showTracker && parsed && !parsed.timed;
 
-  const { setCount, reps: targetReps } = parsed;
-  const [sets, setSets] = useState(Array.from({ length: setCount }, () => ({ weight: 0, reps: 0, done: false })));
+  const setCount = shouldRender ? parsed.setCount : 0;
+  const targetReps = shouldRender ? parsed.reps : 0;
+
+  // All hooks must be called unconditionally — no early returns before this point
+  const [sets, setSets] = useState(() =>
+    Array.from({ length: setCount || 1 }, () => ({ weight: 0, reps: 0, done: false }))
+  );
   const [suggestion, setSuggestion] = useState(null);
   const [history, setHistoryData] = useState([]);
   const [loaded, setLoaded] = useState(false);
-  const [prFlash, setPrFlash] = useState(null); // set index that just hit PR
+  const [prFlash, setPrFlash] = useState(null);
 
   useEffect(() => {
+    if (!shouldRender) return;
     let cancelled = false;
     (async () => {
       const [saved, sug, hist] = await Promise.all([
@@ -48,7 +51,17 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       setLoaded(true);
     })();
     return () => { cancelled = true; };
-  }, [dayIndex, ex.name]);
+  }, [dayIndex, ex.name, shouldRender]);
+
+  const allDone = sets.every(s => s.done);
+
+  useEffect(() => {
+    if (!shouldRender) return;
+    if (onAllDone) onAllDone(allDone);
+  }, [allDone, shouldRender]);
+
+  // Early return AFTER all hooks
+  if (!shouldRender) return null;
 
   const updateSet = (i, field, val) => {
     setSets(prev => {
@@ -66,10 +79,9 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       next[i] = { ...next[i], done: !wasDone };
       saveExerciseSets(dayIndex, ex.name, next);
 
-      // Haptic feedback on check
       if (!wasDone && navigator.vibrate) navigator.vibrate(30);
 
-      // PR detection — is this weight higher than all history?
+      // PR detection
       if (!wasDone && next[i].weight > 0 && history.length > 0) {
         const histWeights = history.flatMap(h => h.sets.map(s => s.weight || 0)).filter(w => w > 0);
         if (histWeights.length > 0 && next[i].weight > Math.max(...histWeights)) {
@@ -79,17 +91,13 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
         }
       }
 
-      // Set tamamlandıysa dinlenme zamanlayıcısını başlat
       if (!wasDone && onStartRest) {
         const doneCount = next.filter(s => s.done).length;
         const isLastSet = doneCount >= setCount;
         const baseRest = getRestDuration(blockName, ex.name);
-
         if (isLastSet) {
-          // Son set → hareket arası (daha uzun + farklı mesaj)
           onStartRest(baseRest + 60, ex.name, true);
         } else {
-          // Ortadaki set → set arası
           onStartRest(baseRest, ex.name, false);
         }
       }
@@ -104,12 +112,6 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       return next;
     });
   };
-
-  const allDone = sets.every(s => s.done);
-
-  useEffect(() => {
-    if (onAllDone) onAllDone(allDone);
-  }, [allDone]);
 
   if (!loaded) return <div className="tracker" style={{textAlign:"center",padding:12,color:"#555",fontSize:11}}>Yükleniyor...</div>;
 
@@ -143,7 +145,6 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
         {sets.map((s, i) => {
           const prev = history.length > 0 && history[0].sets[i] ? history[0].sets[i] : null;
           const prevStr = prev ? `${prev.weight || 0}×${prev.reps || 0}` : "—";
-          // Color: green if better, red if worse, gray if same/no data
           const prevColor = !prev ? "#555" : (s.done && s.weight > (prev.weight||0)) ? "#4CAF50" : (s.done && s.weight < (prev.weight||0)) ? "#FF5252" : "#555";
           return (
             <div key={i} className={`tracker-row ${s.done ? "tracker-row-done" : ""}`}>
