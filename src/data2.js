@@ -54,16 +54,11 @@ export const PROGRAM2 = {
           { name:"Half Kneeling Hip Flexor Stretch", sets:"2 × 30sn (her taraf)", muscle:"Hip flexor, kasık", how:["Diz yerde, kalçayı öne it","Pelvis aşağı — posterior tilt","Gövde dik tut"], avoid:"Gövdeyi öne eğme", warn:null, alts:["Couch Stretch","Standing Hip Flexor Stretch"] },
           { name:"Supine Hip Rotation", sets:"2 × 10 (her taraf)", muscle:"Kalça rotatorları, groin", how:["Sırt üstü yat, dizler bükülü","Dizi yana yatır","10 sn tut, geri gel","Yavaş ve kontrollü"], avoid:"Ağrı hissedersen daha az range", warn:null, alts:["90/90 Hip Stretch","Frog Pose (yatarak)"] },
         ]},
-        { name: "🔥 ISINMA B — Güne Özel (Sırt & Omuz)", color: "#CC5500", exercises: [
+        { name: "🔥 ISINMA B — Güne Özel (Sırt & Omuz Prehab)", color: "#CC5500", exercises: [
           { name:"Cat and Cow", sets:"2 × 10", muscle:"Omurga mobilite, torasik", how:["Dört ayak pozisyon","Cat: sırtı yuvarlat, çeneyi göğse","Cow: sırtı çukurlaştır, göğsü öne","Yavaş ve nefesle birlikte"], avoid:"Sadece belden yapma — tüm omurga", warn:"SKOLYOZ: Her tekrarda simetriyi hisset", alts:["Thread the Needle","Thoracic Rotation"] },
-          { name:"Thread the Needle", sets:"2 × 8 (her taraf)", muscle:"Torasik rotasyon", how:["Dört ayak","Bir kolu yere kaydır — karşı tarafın altından geç","Gözler kola baksın","Geri gel"], avoid:"Kalçayı kaydırma — sabit tut", warn:null, alts:["Seated Spinal Twist","Prone Thoracic Rotation"] },
-          { name:"Shoulder CARs", sets:"2 × 5 (her taraf)", muscle:"Glenohumeral mobilite, tüm omuz", how:["Kolu yavaşça tam daire çiz","İleri — yukarı — geri — aşağı","Mümkün olduğu kadar büyük daire","Çok yavaş — 5 sn bir tur"], avoid:"Gövdeyi hareket ettirme", warn:"ROTATOR CUFF: Ağrısız range'de kal", alts:["Arm Circles","Shoulder Pendulum"] },
-          { name:"Lat Stretch Chair", sets:"2 × 30sn (her taraf)", muscle:"Latissimus dorsi, yan germe", how:["Sandalyeye veya makineye yan dur","Koldan tut, kalçayı dışa it","Lat'ta gerilme hisset"], avoid:"Omurga yanal fleksiyonuna zorla", warn:null, alts:["Doorway Lat Stretch","Hanging Lat Stretch"] },
-        ]},
-        { name: "⚡ AKTİVASYON — Rotator Cuff Prehab", color: "#FF6B35", exercises: [
-          { name:"Band External Rotation", sets:"2 × 15 (her taraf)", muscle:"Infraspinatus, teres minor", how:["Dirsek 90° bükülü, yanında","Band dirseğin ön kısmından","Kolu dışa doğru döndür","Kontrollü geri"], avoid:"Dirseği kaldırma — sabit", warn:"ROTATOR CUFF REHABİLİTASYON — pull öncesi zorunlu", alts:["Side-lying External Rotation","Cable External Rotation"] },
-          { name:"Prone Y-T-W", sets:"2 × 10", muscle:"Alt trapez, rhomboid, rotator cuff", how:["Yüzüstü yat veya incline bench","Y: kollar 135° yukarı — kaldır","T: kollar yana — kaldır","W: dirsekler bükülü, dışa dön"], avoid:"Boyunu sıkıştırma", warn:"Omuz cerrahisi riski olan için en iyi prehab", alts:["Cable Y-T-W","Band Y-T-W"] },
-          { name:"Scapula Push Up", sets:"2 × 12", muscle:"Serratus anterior, scapula kontrolü", how:["Push up pozisyonu — kollar düz","Kürek kemiklerini ayır — sırt yükselir","Kürek kemiklerini birleştir — sırt çöker","Kollar hiç bükülmez"], avoid:"Dirsekleri bükme", warn:null, alts:["Wall Scapula Push Up","Serratus Punch"] },
+          { name:"Shoulder CARs", sets:"2 × 5 (her taraf)", muscle:"Glenohumeral mobilite, tüm omuz", how:["Kolu yavaşça tam daire çiz","İleri — yukarı — geri — aşağı","Çok yavaş — 5 sn bir tur"], avoid:"Gövdeyi hareket ettirme", warn:"ROTATOR CUFF: Ağrısız range'de kal", alts:["Arm Circles","Shoulder Pendulum"] },
+          { name:"Band External Rotation", sets:"2 × 15 (her taraf)", muscle:"Infraspinatus, teres minor — rotator cuff", how:["Dirsek 90° bükülü, yanında","Kolu dışa doğru döndür","Kontrollü geri"], avoid:"Dirseği kaldırma — sabit", warn:"ROTATOR CUFF REHABİLİTASYON — pull öncesi zorunlu", alts:["Side-lying External Rotation","Cable ER"] },
+          { name:"Prone Y-T-W", sets:"2 × 10", muscle:"Alt trapez, rhomboid, rotator cuff", how:["Yüzüstü yat veya incline bench","Y: kollar 135° yukarı — kaldır","T: kollar yana — kaldır","W: dirsekler bükülü, dışa dön"], avoid:"Boyunu sıkıştırma", warn:"Omuz cerrahisi riski olan için en iyi prehab", alts:["Band Y-T-W","Cable Y-T-W"] },
         ]},
         { name: "🏋️ PRIMARY — Pull", color: "#1A3A5C", exercises: [
           { name:"Machine Lat Pulldown", sets:"4 × 8", muscle:"Latissimus dorsi, teres major", how:["Geniş tutuş — omuz genişliğinden fazla","Göğsü aç, hafif geriye yaslan","Dirseği aşağı ve arkaya çek","3 sn geri ver — lat'ı hisset"], avoid:"Vücudu öne arkaya sallama", warn:"Pull-up için temel güç hareketi", alts:["Cable Pulldown","Assisted Pull Up","Straight Arm Pulldown"] },
@@ -72,10 +67,8 @@ export const PROGRAM2 = {
           { name:"Straight Arm Pulldown", sets:"3 × 12", muscle:"Lat izolasyon, serratus", how:["Kablo yukarıda, kollar uzun","Kolları düz tut — dirsek hafif bükük","Aşağı çek — kalçaya doğru","Lat'ı sıkıştır"], avoid:"Dirsekleri bükme", warn:null, alts:["Pullover Machine","DB Pullover"] },
           { name:"Face Pull", sets:"3 × 15", muscle:"Arka delt, rotator cuff", how:["Kablo göz hizasında","İki elle rope attachment","Yüze doğru çek — dirsekler yüksek","1 sn tut — dışa dön"], avoid:"Dirseği düşürme", warn:"Her Pull günü zorunlu — posterior delt zayıflığı skolyozu artırır", alts:["Band Face Pull","Reverse Fly"] },
         ]},
-        { name: "💪 SECONDARY — Biceps & Omuz (Hafif)", color: "#6C63FF", exercises: [
+        { name: "💪 SECONDARY — Biceps (Hafif)", color: "#6C63FF", exercises: [
           { name:"Incline Dumbbell Curl", sets:"3 × 12 (her taraf)", muscle:"Biceps uzun baş izolasyon", how:["45° incline bench — kollar serbest sarkar","Avuç yukarı — supinasyon","Kontrollü kıvır — tepe noktada sıkıştır","3 sn yavaşça indir — tam germe"], avoid:"Dirsekleri öne atmayı — sabit kalacak", warn:"Pull günü biceps hacmini dengeler — triceps dengesizliğini giderir", alts:["Standing DB Curl","Cable Curl","Hammer Curl"] },
-          { name:"Standing Dumbbell Hammer Curl", sets:"3 × 12 (her taraf)", muscle:"Biceps brachii, brachialis, önkol", how:["Nötr tutuş — başparmak yukarı","Dirseği yanında tut — sabit","Kontrollü kıvır","3 sn indir"], avoid:"Gövdeyi arkaya eğme", warn:null, alts:["Cross Body Hammer Curl","Cable Hammer Curl"] },
-          { name:"DB Lateral Raise", sets:"2 × 15", muscle:"Orta delt izolasyon", how:["Hafif öne eğik — 10°","Yanlara kaldır — omuz hizası","Kontrollü indir — 3 sn"], avoid:"Momentum kullanma", warn:null, alts:["Cable Lateral Raise"] },
         ]},
         { name: "🤸 CALİSTHENİCS SKILL — Pull", color: "#E76F51", exercises: [
           { name:"Dead Hang", sets:"3 × 30sn", muscle:"Lat, ön kol, grip, omuz dekompresyon", how:["Bardan sarkıl — tam ağırlık","Omuzları kulağa çekme — aktif omuz","Nefes al — omurgayı uzat","30 sn tut"], avoid:"Pasif asılma — omuzlar aktif olacak", warn:"Pull-up yolunun temeli — asla atlama", alts:["Scapula Pull","Flexed Arm Hang"] },
@@ -102,7 +95,7 @@ export const PROGRAM2 = {
     {
       id: 2, title: "GÜN 2", sub: "PERŞEMBE", focus: "Push Focus", duration: "~75 dk", color: "#E76F51",
       type: "training",
-      injury: "⚠️ ROTATOR CUFF: Prehab bloğunu asla atlama. Overhead press'te ağrıda ROM azalt veya geç. Diz: Alt secondary'de squat yok.",
+      injury: "⚠️ ROTATOR CUFF: Isınma B'deki ER hareketleri asla atlama — Push öncesi zorunlu. Overhead press'te ağrıda ROM azalt.",
       blocks: [
         { name: "🔥 ISINMA A — Postür Rutini", color: "#CC5500", exercises: [
           { name:"Chin Tuck", sets:"3 × 12", muscle:"Boyun fleksörleri", how:["Dik dur","Çeneni geri it","2 sn tut"], avoid:"Başı aşağı eğme", warn:null, alts:["Wall Chin Tuck"] },
@@ -111,15 +104,12 @@ export const PROGRAM2 = {
           { name:"Half Kneeling Hip Flexor Stretch", sets:"2 × 30sn (her taraf)", muscle:"Hip flexor", how:["Diz yerde, kalçayı öne it","Gövde dik"], avoid:"Gövdeyi öne eğme", warn:null, alts:["Couch Stretch"] },
           { name:"Supine Hip Rotation", sets:"2 × 10 (her taraf)", muscle:"Kalça rotatorları", how:["Sırt üstü, dizler bükülü","Dizi yana yatır, 10 sn"], avoid:"Ağrıda daha az range", warn:null, alts:["90/90 Hip Stretch"] },
         ]},
-        { name: "🔥 ISINMA B — Güne Özel (Göğüs & Omuz)", color: "#CC5500", exercises: [
+        { name: "🔥 ISINMA B — Güne Özel (Göğüs & Omuz Prehab)", color: "#CC5500", exercises: [
           { name:"Shoulder CARs", sets:"2 × 5 (her taraf)", muscle:"Glenohumeral tam mobilite", how:["Kolu yavaşça tam daire çiz","İleri — yukarı — geri — aşağı","5 sn bir tur — çok yavaş"], avoid:"Gövdeyi hareket ettirme", warn:"ROTATOR CUFF: Ağrısız range'de kal", alts:["Arm Circles"] },
-          { name:"Dynamic Chest Stretch", sets:"2 × 10", muscle:"Pektoralis, ön delt", how:["Kolları yanlara aç — göğüs gerilir","Öne getir — çarpraz","Ritimli — dinamik"], avoid:"Ani sert hareket", warn:null, alts:["Doorway Stretch","Band Chest Stretch"] },
-          { name:"Wrist Circle", sets:"2 × 10 (her yön)", muscle:"Bilek eklem mobilitesi", how:["Her iki bileği tam daire çiz","İleri 10, geri 10","Push Up öncesi kritik"], avoid:null, warn:null, alts:["Wrist Flexion/Extension"] },
-        ]},
-        { name: "⚡ AKTİVASYON — Rotator Cuff Prehab", color: "#FF6B35", exercises: [
-          { name:"Band External Rotation", sets:"2 × 15 (her taraf)", muscle:"Infraspinatus, teres minor", how:["Dirsek 90° yanında","Kolu dışa döndür","Kontrollü geri"], avoid:"Dirseği kaldırma", warn:"PUSH ÖNCESI ZORUNLU — rotator cuff koruma", alts:["Side-lying External Rotation","Cable ER"] },
+          { name:"Band External Rotation", sets:"2 × 15 (her taraf)", muscle:"Infraspinatus, teres minor — rotator cuff", how:["Dirsek 90° yanında","Kolu dışa döndür","Kontrollü geri"], avoid:"Dirseği kaldırma", warn:"PUSH ÖNCESİ ZORUNLU — rotator cuff koruma", alts:["Side-lying External Rotation","Cable ER"] },
           { name:"Side-lying External Rotation", sets:"2 × 12 (her taraf)", muscle:"Infraspinatus izolasyon", how:["Yana yat — alttaki taraf çalışır","Dirsek 90° — yanında","Küçük dumbbell ile yavaşça dışa döndür","Kontrollü geri"], avoid:"Momentum kullanma", warn:"ROTATOR CUFF YIRTIGI: En önemli rehab hareketi", alts:["Band ER","Cable ER"] },
-          { name:"Prone Y-T-W", sets:"2 × 10", muscle:"Alt trapez, rhomboid, posterior delt", how:["Yüzüstü incline bench","Y pozisyon — kaldır","T pozisyon — kaldır","W pozisyon — kaldır"], avoid:"Boyun sıkışması", warn:"Her Push günü — asla atlama", alts:["Band Y-T-W","Cable Y-T-W"] },
+          { name:"Dynamic Chest Stretch", sets:"2 × 10", muscle:"Pektoralis, ön delt", how:["Kolları yanlara aç — göğüs gerilir","Öne getir — çarpraz","Ritimli — dinamik"], avoid:"Ani sert hareket", warn:null, alts:["Doorway Stretch"] },
+          { name:"Wrist Circle", sets:"2 × 10 (her yön)", muscle:"Bilek eklem mobilitesi", how:["Her iki bileği tam daire çiz","Push Up öncesi kritik"], avoid:null, warn:null, alts:["Wrist Flexion/Extension"] },
         ]},
         { name: "🏋️ PRIMARY — Push", color: "#8B0000", exercises: [
           { name:"Incline Dumbbell Press", sets:"4 × 8", muscle:"Üst göğüs, ön delt, triceps", how:["30-45° incline","Dumbbell omuz hizasında — dirsekler 45°","Kontrollü in — göğsü hisset","It — tam uzama yok"], avoid:"Dirseği tam kilitleyerek uzatma", warn:"ROTATOR CUFF: Ağrıda ROM azalt, ağırlığı düşür", alts:["Flat DB Press","Machine Chest Press"] },
@@ -128,9 +118,8 @@ export const PROGRAM2 = {
           { name:"DB Lateral Raise", sets:"3 × 15", muscle:"Orta delt", how:["Hafif öne eğik 10°","Yanlara kaldır — omuz hizası","Başparmak hafif aşağı","Kontrollü indir"], avoid:"Trapezi kullanma — sallama yok", warn:null, alts:["Cable Lateral Raise","Machine Lateral Raise"] },
           { name:"Cable Overhead Triceps Extension", sets:"3 × 12", muscle:"Triceps uzun baş", how:["Kablo başın üstünde","Dirsekler kulaklara yakın — sabit","Kolları yukarı uzat","Kontrollü bükerek in"], avoid:"Dirsekleri açma", warn:null, alts:["Skull Crusher","DB Overhead Ext"] },
         ]},
-        { name: "💪 SECONDARY — Pull Activation (Hafif)", color: "#2A9D8F", exercises: [
+        { name: "💪 SECONDARY — Posterior Delt (Hafif)", color: "#2A9D8F", exercises: [
           { name:"Face Pull", sets:"3 × 15", muscle:"Arka delt, rotator cuff", how:["Kablo göz hizası","Yüze doğru çek — dirsekler yüksek","Dışa döndür — 1 sn tut"], avoid:"Dirseği düşürme", warn:"Push günü posterior dengelemesi — şart", alts:["Band Face Pull","Reverse Fly"] },
-          { name:"Band Pull Apart", sets:"3 × 15", muscle:"Rhomboid, arka omuz", how:["Bandı önde tut","Yanlara aç — tam gerin","1 sn tut"], avoid:"Omuzları kaldırma", warn:null, alts:["Cable Reverse Fly"] },
         ]},
         { name: "🤸 CALİSTHENİCS SKILL — Push & Dip", color: "#E76F51", exercises: [
           { name:"Pike Push Up", sets:"3 × 8", muscle:"Ön delt, triceps — overhead push", how:["Ters V pozisyonu — kalça yukarıda","Başı yere doğru indir","Patlayıcı yukarı it","Omuz hareketi — göğüs değil"], avoid:"Kalçayı düşürme", warn:"Handstand push up'a giden yol", alts:["Wall Pike Push Up","Elevated Pike"] },
