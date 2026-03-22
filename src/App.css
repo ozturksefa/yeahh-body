@@ -837,3 +837,93 @@ body{
   font-weight: 700;
   font-family: var(--mono);
 }
+
+/* ═══ ÖĞÜN ÖNERİ SİSTEMİ ═══ */
+.meal-rec-toggle {
+  width: 100%; padding: 12px; border-radius: var(--r);
+  border: 1px dashed var(--border); background: transparent;
+  color: var(--text2); font-size: 14px; font-weight: 700;
+  cursor: pointer; font-family: inherit; text-align: center;
+}
+.meal-rec-toggle:active { opacity: .7; }
+
+.meal-rec { margin-top: 8px; }
+
+.meal-summary {
+  background: var(--card2); border: 1px solid var(--border);
+  border-radius: var(--r); padding: 14px; margin-bottom: 12px;
+}
+.meal-summary-header {
+  display: flex; justify-content: space-between;
+  align-items: flex-start; gap: 8px; margin-bottom: 6px;
+  flex-wrap: wrap;
+}
+.meal-summary-label {
+  font-size: 13px; font-weight: 800; color: var(--text);
+}
+.meal-summary-kcal {
+  font-size: 11px; color: var(--warn); font-weight: 700;
+  font-family: var(--mono);
+}
+.meal-summary-protein {
+  font-size: 12px; color: #4FC3F7; margin-bottom: 8px;
+}
+.meal-summary-tips { display: flex; flex-direction: column; gap: 4px; }
+.meal-summary-tip {
+  font-size: 11px; color: var(--text3); line-height: 1.4;
+}
+
+.meal-rec-title {
+  font-size: 11px; font-weight: 700; color: var(--text3);
+  text-transform: uppercase; letter-spacing: .06em;
+  margin-bottom: 8px;
+}
+.meal-card {
+  border: 1px solid var(--border); border-radius: var(--r);
+  background: var(--card2); margin-bottom: 8px; overflow: hidden;
+}
+.meal-card-top { border-color: #4FC3F744; }
+
+.meal-card-head {
+  width: 100%; display: flex; align-items: center;
+  justify-content: space-between; gap: 10px;
+  padding: 12px 14px; background: transparent;
+  border: none; cursor: pointer; font-family: inherit;
+  text-align: left;
+}
+.meal-card-left { display: flex; align-items: flex-start; gap: 10px; flex: 1; }
+.meal-rank { font-size: 18px; flex-shrink: 0; }
+.meal-name { font-size: 14px; font-weight: 800; color: var(--text); }
+.meal-desc { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.meal-card-right {
+  display: flex; align-items: center; gap: 10px; flex-shrink: 0;
+}
+.meal-total-cal {
+  font-size: 13px; font-weight: 800; color: var(--warn);
+  font-family: var(--mono);
+}
+.meal-toggle { color: var(--text3); font-size: 16px; }
+
+.meal-card-body { padding: 0 14px 14px; }
+.meal-macros { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.meal-macro-pill {
+  font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 600;
+}
+.meal-foods { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.meal-food-row {
+  display: flex; justify-content: space-between; align-items: center;
+  font-size: 12px; gap: 8px;
+}
+.meal-food-name { color: var(--text2); flex: 1; }
+.meal-food-macros { display: flex; gap: 6px; flex-shrink: 0; }
+.meal-food-cal { color: var(--warn); font-weight: 700; font-family: var(--mono); font-size: 11px; }
+.meal-food-pro { color: #4FC3F7; font-weight: 600; font-size: 11px; }
+.meal-tip {
+  font-size: 11px; color: #66BB6A; background: rgba(102,187,106,.08);
+  padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(102,187,106,.2);
+  line-height: 1.4;
+}
+.meal-rec-note {
+  font-size: 11px; color: var(--text3); text-align: center;
+  padding: 8px; margin-top: 4px;
+}

@@ -187,6 +187,9 @@ function getSmartSuggestions(totals, targets) {
   return suggestions;
 }
 
+import MealRecommendation from "./MealRecommendation";
+import { PROGRAM3 } from "./data3";
+
 export default function NutritionTracker() {
   const [targets, setTargets] = useState(loadTargets);
   const [showTargets, setShowTargets] = useState(false);
@@ -199,6 +202,16 @@ export default function NutritionTracker() {
   const [manual, setManual] = useState({ name: "", cal: "", pro: "", carb: "", fat: "" });
   const [pendingFood, setPendingFood] = useState(null); // { food, multiplier }
   const [recentFoods, setRecentFoods] = useState([]);
+  const [showMealRec, setShowMealRec] = useState(false);
+
+  // Aktif programdan bugünün günü
+  const todayDay = (() => {
+    const days = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
+    const todayName = days[new Date().getDay()];
+    const dayMap = { 'Salı': 1, 'Perşembe': 2, 'Cumartesi': 3, 'Pazar': 4 };
+    const dayId = dayMap[todayName];
+    return dayId ? PROGRAM3.days.find(d => d.id === dayId) : PROGRAM3.days.find(d => d.type === 'offday');
+  })();
 
   useEffect(() => {
     setEntries(loadEntries(activeDate));
