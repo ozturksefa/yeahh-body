@@ -99,15 +99,21 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
           )}
           {ex.alts?.length > 0 && (
             <div className="section">
-              <div className="section-label" style={{ color: "var(--purple)" }}>ALTERNATİF — değiştirmek için dokun</div>
+              <div className="section-label" style={{ color: "var(--purple)" }}>ALTERNATİF — seç ve değiştir</div>
               {ex.alts.map((a, i) => {
                 const isActive = swappedName === a;
+                const reason = ex.alt_reasons?.[i];
                 return (
                   <button key={i} className={`alt-btn ${isActive ? "alt-btn-active" : ""}`}
                     onClick={() => isActive ? handleRevert() : handleSwap(a)}>
-                    <span className="alt-n">{isActive ? "✓" : `${i + 1}.`}</span>
-                    <span className="alt-name">{a}</span>
-                    <span className="alt-action">{isActive ? "Geri Al" : "Değiştir"}</span>
+                    <div className="alt-btn-inner">
+                      <div className="alt-btn-top">
+                        <span className="alt-n">{isActive ? "✓" : `${i + 1}.`}</span>
+                        <span className="alt-name">{a}</span>
+                        <span className="alt-action">{isActive ? "Geri Al" : "Seç"}</span>
+                      </div>
+                      {reason && <div className="alt-reason">{reason}</div>}
+                    </div>
                   </button>
                 );
               })}

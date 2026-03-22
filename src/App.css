@@ -798,3 +798,19 @@ body{
   content: '';
   display: none;
 }
+
+/* ═══ ALT REASON ═══ */
+.alt-btn-inner { width: 100%; text-align: left; }
+.alt-btn-top {
+  display: flex; align-items: center; gap: 8px;
+}
+.alt-reason {
+  font-size: 11px;
+  color: #ff9944;
+  margin-top: 5px;
+  padding-top: 5px;
+  border-top: 1px solid rgba(255,255,255,.06);
+  font-weight: 600;
+  line-height: 1.4;
+}
+.alt-btn-active .alt-reason { color: #aaa; }
