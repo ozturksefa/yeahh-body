@@ -354,7 +354,7 @@ export const PROGRAM3 = {
         ]},
 
         { name: "🎯 CORE — Anti-Rotasyon & Stabilite", color: "#6C63FF", exercises: [
-          { name:"Dead Bug", sets:"3 × 10 (her taraf)", muscle:"Transversus abdominis, core anti-extension", how:["Sırt üstü yat — kollar tavana dik, dizler 90° havada", "BEL YERDE — tüm hareket boyunca değişmemeli", "Sağ kolu geri, sol bacağı öne uzat — aynı anda", "Geri gel, sol kol — sağ bacak uzat", "Nefes verirken uzat, alırken geri gel"], avoid:"Beli yerden kaldırma — bu hareketin tek amacı beli yerde tutmak", warn:"SKOLYOZ: En etkili lumbar stabilizasyon egzersizi", alts:["Bird Dog","Hollow Body Hold"] },
+          { name:"Dead Bug", sets:"3 × 10 (her taraf)", muscle:"Transversus abdominis, core anti-extension", how:["Sırt üstü yat — kollar kulakların yanında düz uzatılmış", "Bacaklar düz, yerden 20-30cm yukarıda — açı küçük tutulur", "Alt sırt yere basılı — bel yerde kalacak, bu kritik", "20sn tut — nefes almayı kesme, kısa nefesler al", "Titreme normaldir — devam et, sadece bel kalkmayacak"], avoid:"Beli yerden kaldırma — bu hareketin tek kuralı", warn:"Muscle-up, handstand, L-sit — tüm ileri kalisteniğin çekirdek gücü buradan gelir", alts:["Bird Dog","Hollow Body Hold"] },
           { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique, quadratus lumborum", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
           { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
         ]},
@@ -478,11 +478,11 @@ export const PROGRAM3 = {
           { name:"Bird Dog", sets:"3 × 10 (her taraf)", muscle:"Erector spinae, glute, core stabilite", how:["Sırt üstü yat — kollar tavana dik, dizler 90° havada", "BEL YERDE — tüm hareket boyunca değişmemeli", "Sağ kolu geri, sol bacağı öne uzat — aynı anda", "Geri gel, sol kol — sağ bacak uzat", "Nefes verirken uzat, alırken geri gel"], avoid:"Beli yerden kaldırma — bu hareketin tek amacı beli yerde tutmak", warn:"SKOLYOZ: En etkili lumbar stabilizasyon egzersizi", alts:["Dead Bug"] },
           { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
           { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
-          { name:"Hollow Body Hold", sets:"3 × 20sn", muscle:"Anterior core zinciri", how:["Sırt üstü","Kollar kulakların yanında","Bacaklar 45° — bel yerde"], avoid:"Beli kaldırma", warn:null, alts:["Tuck Hold"] },
+          { name:"Hollow Body Hold", sets:"3 × 20sn", muscle:"Anterior core zinciri", how:["Sırt üstü yat — kollar kulakların yanında düz uzatılmış", "Bacaklar düz, yerden 20-30cm yukarıda — açı küçük tutulur", "Alt sırt yere basılı — bel yerde kalacak, bu kritik", "20sn tut — nefes almayı kesme, kısa nefesler al", "Titreme normaldir — devam et, sadece bel kalkmayacak"], avoid:"Beli yerden kaldırma — bu hareketin tek kuralı", warn:"Muscle-up, handstand, L-sit — tüm ileri kalisteniğin çekirdek gücü buradan gelir", alts:["Tuck Hold"] },
         ]},
 
         { name: "⚡ KONDİSYON — AMRAP Circuit", color: "#990000", exercises: [
-          { name:"AMRAP 8 Dakika", sets:"8 dakika × maksimum tur", muscle:"Full body — aerobik + anaerobik kondisyon", how:["5 Push Up","5 Inverted Row / Band Pull","10 Glute Bridge","15 Jump Rope veya Jumping Jack","Dinlenmeden — tur sayısını not al","Her hafta 1 tur daha hedefle"], avoid:"Tempoyu düşürme — sürekli hareket", warn:"İtfaiye/askeri dayanıklılık standardı bu tür circuitlerle ölçülür", alts:["Tabata","5 tur sabit süre"] },
+          { name:"AMRAP 8 Dakika", sets:"8 dakika × maksimum tur", muscle:"Full body — aerobik + anaerobik kondisyon", how:["Saat başladığında dur: 5 Push Up", "Sonra: 5 Inverted Row veya Band Pull Apart", "Sonra: 10 Glute Bridge", "Durmadan başa dön — kaç tur tamamladığını say", "Her hafta 1 tur daha hedefle — bu kondisyon gelişiminin göstergesi"], avoid:"Tempo düşürme — yavaşla ama durma", warn:"İtfaiye ve askeri kondisyon testi bu tür circuitlerle yapılır — tur sayısı seni tanımlar", alts:["Tabata","5 tur sabit süre"] },
         ]},
 
         { name: "❄️ SOĞUMA", color: "#2A9D8F", exercises: [
@@ -615,8 +615,8 @@ export const PROGRAM3 = {
           { name:"Dead Bug", sets:"3 × 10 (her taraf)", muscle:"Core stabilite", how:["Sırt üstü yat — kollar tavana dik, dizler 90° havada", "BEL YERDE — tüm hareket boyunca değişmemeli", "Sağ kolu geri, sol bacağı öne uzat — aynı anda", "Geri gel, sol kol — sağ bacak uzat", "Nefes verirken uzat, alırken geri gel"], avoid:"Beli yerden kaldırma — bu hareketin tek amacı beli yerde tutmak", warn:"SKOLYOZ: En etkili lumbar stabilizasyon egzersizi", alts:[] },
           { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
           { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
-          { name:"Copenhagen Plank Left", sets:"2 × 20sn", muscle:"Adduktör, lateral core", how:["Yana yat — üst ayak bench'te","Alt bacak havada — kaldır"], avoid:"Kalçayı düşürme", warn:null, alts:[] },
-          { name:"Copenhagen Plank Right", sets:"2 × 20sn", muscle:"Her iki taraf eşit", how:["Her iki taraf eşit"], avoid:"Kalçayı düşürme", warn:null, alts:[] },
+          { name:"Copenhagen Plank Left", sets:"2 × 20sn", muscle:"Adduktör, lateral core", how:["Sol yana yat — üst ayağı (sol) bench veya sandalye kenarına koy", "Alt bacağı (sağ) yerden kaldır — iki bacak arasında boşluk", "Dirsek omuz altında — kalça yukarı it", "Vücut düz çizgi — 20sn tut", "Her iki taraf eşit süre"], avoid:"Kalçanın düşmesi — lateral zincir boyunca gerilme hissedeceksin", warn:"Adduktör + lateral core birlikte — diz stabilitesi ve kalça sağlığı için kritik", alts:[] },
+          { name:"Copenhagen Plank Right", sets:"2 × 20sn", muscle:"Her iki taraf eşit", how:["Sağ yana yat — üst ayağı (sağ) bench kenarına koy", "Alt bacağı (sol) yerden kaldır", "Dirsek omuz altında — kalça yukarı", "20sn tut — her iki taraf eşit"], avoid:"Kalçanın düşmesi", warn:"SKOLYOZ: Her iki taraf mutlaka eşit süre", alts:[] },
         ]},
 
         { name: "⚡ KONDİSYON — Yük Taşıma Devresi", color: "#990000", exercises: [
@@ -739,11 +739,14 @@ export const PROGRAM3 = {
                         "sets": "2 set × maksimum",
                         "muscle": "Triceps, alt göğüs",
                         "how": [
-                                "Tam range — tam aşağı, tam yukarı",
-                                "Sayı not al"
+                                "Paralel bar — tam üst pozisyondan başla",
+                                "Yavaşça in — 90° dirsek açısına kadar",
+                                "Patlayıcı it — tam yukarı",
+                                "Form bozulunca dur — o son tekrar sayılmaz",
+                                "Tekrar sayısını not al — haftalık takip"
                         ],
-                        "avoid": "Kısmi tekrar",
-                        "warn": "Hedef: 15+ dip",
+                        "avoid": "Kısmi range — tam aşağı inmeden sayma",
+                        "warn": "Hedef: 15+ dip = güçlü pressing temeli",
                         "alts": []
                 },
                 {

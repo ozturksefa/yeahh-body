@@ -306,6 +306,13 @@ const GIF_MAP = {
   // ══ PROGRAM 3 ATLETİK + GENEL EKSİKLER ══
 
 
+
+  // ══ ATLETİK KALİSTENİK EK ══
+  "Assisted Pull-up": "kiJ4Z2K",
+  "Full Dip": "9WTm7dq",
+  "Wall Handstand Hold": "XooAdhl",
+  "Muscle-up Prep": "pM07UxU",
+  "Support Hold": "jTkSc6o",
   // ══ DATASET DOĞRULANMIŞ — Program 2 & 3 ══
   "Hip Flexor Stretch": "2LQkNPW",  // dataset verified
   "Ankle Circle": "uL9CsKm",  // dataset verified
