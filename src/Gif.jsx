@@ -17,7 +17,7 @@ const MULTI_LABELS = {
   "Dumbbell Deadlift": ["Dumbbell", "Barbell"],
 };
 
-function SingleGif({ url, label }) {
+function SingleGif({ url, label, exerciseName }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [src, setSrc] = useState(url);
@@ -61,7 +61,25 @@ function SingleGif({ url, label }) {
           onError={() => { setLoading(false); setError(true); }}
         />
       )}
+      {error && exerciseName && (
+        <YtFallback name={exerciseName} />
+      )}
+      {error && !exerciseName && (
+        <div className="gif-error-fallback"><span>⚠️ GIF yüklenemedi</span></div>
+      )}
       {label && !loading && !error && <div className="gif-label">{label}</div>}
+    </div>
+  );
+}
+
+function YtFallback({ name }) {
+  const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " exercise form")}`;
+  return (
+    <div className="gif-wrap gif-fallback">
+      <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="gif-yt-link">
+        <span className="gif-yt-icon">▶</span>
+        <span className="gif-yt-text">{name}<br/><small>YouTube'da izle</small></span>
+      </a>
     </div>
   );
 }
@@ -70,16 +88,7 @@ function ExerciseGif({ name }) {
   const gifUrl = getGifUrl(name);
 
   if (!gifUrl) {
-    // GIF yoksa YouTube arama linki göster
-    const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " exercise form")}`;
-    return (
-      <div className="gif-wrap gif-fallback">
-        <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="gif-yt-link">
-          <span className="gif-yt-icon">▶</span>
-          <span className="gif-yt-text">{name}<br/><small>YouTube'da izle</small></span>
-        </a>
-      </div>
-    );
+    return <YtFallback name={name} />;
   }
 
   if (Array.isArray(gifUrl)) {
@@ -87,7 +96,7 @@ function ExerciseGif({ name }) {
     return (
       <div className="gif-wrap gif-multi">
         {gifUrl.map((url, i) => (
-          <SingleGif key={i} url={url} label={labels[i] || null} />
+          <SingleGif key={i} url={url} label={labels[i] || null} exerciseName={i === 0 ? name : null} />
         ))}
       </div>
     );
@@ -95,7 +104,7 @@ function ExerciseGif({ name }) {
 
   return (
     <div className="gif-wrap">
-      <SingleGif url={gifUrl} />
+      <SingleGif url={gifUrl} exerciseName={name} />
     </div>
   );
 }
