@@ -31,6 +31,7 @@ import "./App.css";
 export default function App() {
   const [user, setUser] = useState(undefined);
   const [page, setPage] = useState("program");
+  const [showScrollTop, setShowScrollTop] = useState(false);
   const [programMode, setProgramMode] = useState(() => {
     try { return localStorage.getItem("yb_program_mode") || "classic"; } catch { return "classic"; }
   });
@@ -73,6 +74,13 @@ export default function App() {
   const [globalAllDone, setGlobalAllDone] = useState(false);
   const [workoutElapsed, setWorkoutElapsed] = useState(0);
   const [streak, setStreak] = useState(0);
+
+  // Scroll-to-top button visibility
+  useEffect(() => {
+    const onScroll = () => setShowScrollTop(window.scrollY > 300);
+    window.addEventListener('scroll', onScroll, { passive: true });
+    return () => window.removeEventListener('scroll', onScroll);
+  }, []);
 
   // Load streak
   useEffect(() => {
@@ -510,7 +518,10 @@ export default function App() {
                 {isLastExGlobal ? "✅ Bitir" : "Sonraki →"}
               </button>
             ) : (
-              <div className="advance-bar-hint">Setleri tamamla ✓</div>
+              <div className="advance-bar-hint-wrap">
+                <span className="advance-bar-hint">Setleri tamamla ✓</span>
+                <button className="advance-bar-quit" onClick={handleWorkoutFinish}>🛑 Bitir</button>
+              </div>
             )}
             {currentFlat && (() => {
               const nextBlockIdx = currentFlat.blockIdx + 1;
@@ -522,6 +533,15 @@ export default function App() {
             })()}
           </div>
         </div>
+      )}
+      {showScrollTop && (
+        <button
+          className="scroll-top-btn"
+          onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}
+          aria-label="Yukarı çık"
+        >
+          ↑
+        </button>
       )}
     </div>
   );

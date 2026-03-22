@@ -453,7 +453,10 @@ export default function Program2View({ user }) {
                         {isLastExGlobal ? "✅ Bitir" : "Sonraki →"}
                       </button>
                     ) : (
-                      <div className="advance-bar-hint">Setleri tamamla ✓</div>
+                      <div className="advance-bar-hint-wrap">
+                        <span className="advance-bar-hint">Setleri tamamla ✓</span>
+                        <button className="advance-bar-quit" onClick={handleWorkoutFinish}>🛑 Bitir</button>
+                      </div>
                     )}
                     {currentFlat && (() => {
                       const nextBlockIdx = currentFlat.blockIdx + 1;
