@@ -936,3 +936,30 @@ body{
   border: 1px solid var(--border);
 }
 .meal-workout-timer strong { color: var(--red2); }
+
+/* ═══ FASTED MODU ═══ */
+.meal-fasted {
+  text-align: center; padding: 20px 16px;
+  background: var(--card2); border-radius: var(--r);
+  border: 1px solid var(--border);
+}
+.meal-fasted-icon { font-size: 32px; margin-bottom: 8px; }
+.meal-fasted-title {
+  font-size: 16px; font-weight: 800; color: var(--text);
+  margin-bottom: 4px;
+}
+.meal-fasted-desc {
+  font-size: 13px; color: var(--text2); margin-bottom: 14px;
+}
+.meal-fasted-desc strong { color: var(--green); }
+.meal-fasted-tips {
+  text-align: left; background: var(--card3);
+  border-radius: 8px; padding: 12px 14px;
+  display: flex; flex-direction: column; gap: 6px;
+  font-size: 13px; color: var(--text2); margin-bottom: 12px;
+}
+.meal-fasted-note {
+  font-size: 11px; color: var(--text3);
+  border-top: 1px solid var(--border); padding-top: 10px;
+  line-height: 1.5;
+}

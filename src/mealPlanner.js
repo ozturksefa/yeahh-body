@@ -27,18 +27,18 @@ function getWorkoutHour() {
 
 function getMealTime() {
   const h = new Date().getHours();
-  const wh = getWorkoutHour(); // antrenman saati
+  const wh = getWorkoutHour();
 
-  // Antrenman öncesi: 2 saat öncesinden başlar
-  if (h >= wh - 2 && h < wh) return 'pre_workout';
+  // Antrenman öncesi + sırası: yemek yok — sadece su
+  if (h >= wh - 2 && h < wh + 1) return 'fasted';
 
-  // Antrenman sonrası: antrenman saatinden 2 saat sonraya kadar
-  if (h >= wh && h < wh + 2) return 'post_workout';
+  // Antrenman sonrası ilk öğün penceresi (1-3 saat sonra)
+  if (h >= wh + 1 && h < wh + 3) return 'post_workout';
 
-  // Sabah erken (pre-workout öncesi)
+  // Sabah erken (antrenman öncesi değil, önceki gece geç yemişse)
   if (h < wh - 2) return 'morning';
 
-  // Öğle-akşam arası
+  // Öğleden akşama
   if (h < 20) return 'dinner';
 
   return 'evening';
@@ -50,7 +50,7 @@ export function getWorkoutSchedule() {
   const wh = isWeekend ? 9 : 7;
   const h = new Date().getHours();
   const minsToWorkout = (wh - h) * 60 - new Date().getMinutes();
-  return { hour: wh, isWeekend, minsToWorkout };
+  return { hour: wh, isWeekend, minsToWorkout, fastsUntil: wh + 1 };
 }
 
 // ─── ÖĞÜN ŞABLONLARI ───────────────────────────────────────────
@@ -109,45 +109,8 @@ const MEALS = {
     },
   ],
 
-  // ANTRENMAN ÖNCESİ (öğle üstü)
-  pre_workout: [
-    {
-      name: "Antrenman Öncesi Hafif Öğün",
-      desc: "Mideyi zorlamadan enerji — 1-1.5 saat öncesi",
-      foods: [
-        { name: "Bulgur pilavı (150g)", cal: 165, pro: 5, carb: 34, fat: 1 },
-        { name: "Tavuk göğsü ızgara (150g)", cal: 230, pro: 43, carb: 0, fat: 5 },
-        { name: "Cacık (200g)", cal: 80, pro: 4, carb: 6, fat: 5 },
-      ],
-      total: { cal: 475, pro: 52, carb: 40, fat: 11 },
-      tags: ['strength', 'calisthenics', 'functional'],
-      tip: "Sabah antrenmanı 07:00 ise 05:30-06:00'da ye — tam 2 saat mide boşalma süresi"
-    },
-    {
-      name: "Hafif Öğle — Kondisyon Öncesi",
-      desc: "Ağır yemek kondisyonu mahveder",
-      foods: [
-        { name: "Yulaf + yoğurt (150g)", cal: 280, pro: 17, carb: 35, fat: 7 },
-        { name: "Muz (1 adet)", cal: 105, pro: 1, carb: 27, fat: 0 },
-        { name: "Ton balığı konserve (100g)", cal: 130, pro: 26, carb: 0, fat: 3 },
-      ],
-      total: { cal: 515, pro: 44, carb: 62, fat: 10 },
-      tags: ['cardio'],
-      tip: "09:00 haftasonu antrenmanı için 07:00-07:30'da ye"
-    },
-    {
-      name: "Mercimek Çorbası + Protein",
-      desc: "Ucuz, evde her zaman var, tok tutar",
-      foods: [
-        { name: "Mercimek çorbası (2 kase)", cal: 360, pro: 20, carb: 56, fat: 6 },
-        { name: "Kuru fasulye (200g pişmiş)", cal: 240, pro: 16, carb: 40, fat: 1 },
-        { name: "Tam buğday ekmek (1 dilim)", cal: 80, pro: 3, carb: 15, fat: 1 },
-      ],
-      total: { cal: 680, pro: 39, carb: 111, fat: 8 },
-      tags: ['strength', 'rest'],
-      tip: "Haftasonu 09:00 antrenmanı öncesi 07:00'de ye"
-    },
-  ],
+  // ORUÇ (antrenman öncesi + sırası) — öğün önerilmez
+  fasted: [],
 
   // ANTRENMAN SONRASI
   post_workout: [
@@ -160,7 +123,7 @@ const MEALS = {
       ],
       total: { cal: 483, pro: 42, carb: 62, fat: 9 },
       tags: ['strength', 'calisthenics', 'functional', 'cardio'],
-      tip: "Antrenman sonrası ilk 45dk — protein sentezi dorukta"
+      tip: "Aç karnına antrenman sonrası ilk öğün — protein sentezi en yüksek bu pencerede. Hemen ye."
     },
     {
       name: "Tavuklu Pirinç — Klasik Kas Öğünü",
@@ -172,7 +135,7 @@ const MEALS = {
       ],
       total: { cal: 657, pro: 64, carb: 68, fat: 12 },
       tags: ['strength', 'calisthenics', 'functional'],
-      tip: "Büyük öğün — antrenman sonrası 1-2 saat içinde ye"
+      tip: "Fasted antrenman sonrası en iyi öğün — glikojen + protein aynı anda yenilenir"
     },
     {
       name: "Ton Balıklı Makarna",
@@ -184,7 +147,7 @@ const MEALS = {
       ],
       total: { cal: 685, pro: 64, carb: 60, fat: 22 },
       tags: ['strength', 'calisthenics'],
-      tip: "15 dakikada hazır — kas protein gereksinimi karşılanır"
+      tip: "Fasted antrenman sonrası hızlı protein — 15 dakikada hazır"
     },
     {
       name: "Kondisyon Sonrası Recovery",
@@ -196,7 +159,7 @@ const MEALS = {
       ],
       total: { cal: 644, pro: 30, carb: 73, fat: 23 },
       tags: ['cardio'],
-      tip: "Sprint/AMRAP sonrası — glikojen yenileme öncelik"
+      tip: "Kondisyon sonrası aç karnına ilk öğün — elektrolit + hızlı karb + protein şart"
     },
   ],
 
@@ -294,6 +257,21 @@ export function getMealPlan({ dayType, targets, totals, workoutKcal }) {
     ? targets.calories + Math.round(workoutKcal * 0.7) // yakılan kalorinin %70'ini geri al
     : targets.calories;
 
+  // Fasted — antrenman öncesi/sırası, yemek yok
+  if (mealTime === 'fasted') {
+    const { hour } = getWorkoutSchedule();
+    return {
+      meals: [],
+      summary: {
+        ...buildDaySummary({ dayType, targets, adjustedCal, workoutKcal, bodyWeight }),
+        fasted: true,
+        fastsUntil: hour + 1,
+      },
+      mealTime: 'fasted',
+      adjustedCal,
+    };
+  }
+
   // Zaman + antrenman tipine uygun öğünleri filtrele
   const pool = MEALS[mealTime] || MEALS.dinner;
   const relevant = pool.filter(m => m.tags.includes(dayType) || m.tags.includes('rest'));
@@ -330,29 +308,29 @@ function buildDaySummary({ dayType, targets, adjustedCal, workoutKcal, bodyWeigh
 
   const tips = {
     strength: [
-      `Protein hedefi: ~${proteinTarget}g (${bodyWeight}kg × 2.2)`,
-      'Antrenman öncesi karb yükü — pirinç, bulgur, patates',
-      'Antrenman sonrası 45dk içinde protein + hızlı karb',
+      `Antrenman öncesi yeme — sadece su veya siyah kahve`,
+      `İlk öğün antrenman sonrası: protein ~${proteinTarget}g hedefi için büyük öğün`,
+      'Akşam: pirinç/bulgur + tavuk/et — glikojen yenileme + protein sentezi',
     ],
     calisthenics: [
-      `Protein hedefi: ~${proteinTarget}g — kas onarımı için şart`,
-      'L-sit ve muscle-up için vücut yağını düşük tut',
-      'Uyku öncesi süzme yoğurt — gece recovery',
+      `Fasted antrenman → yağ yakımı yüksek — ilk öğünde ${proteinTarget}g protein al`,
+      'Vücut ağırlığı düşük = kalistenik kolaylaşır — kalori kontrolü önemli',
+      'Uyku öncesi süzme yoğurt — gece protein sentezi',
     ],
     cardio: [
-      'Karbonhidrat öncelikli — glikojen depoları dolu olmalı',
-      'Antrenman öncesi muz + yulaf ideal',
-      `Kalori: ~${adjustedCal}kcal — ${workoutKcal}kcal yakıldı, yerine koy`,
+      'Fasted kondisyon — yağ yakımı maksimum ama performans düşebilir',
+      `Antrenman sonrası ilk öğünde hızlı karb + protein: muz + whey veya pirinç + tavuk`,
+      `Günlük kalori: ~${adjustedCal}kcal — ${workoutKcal}kcal yaktın`,
     ],
     functional: [
-      'Taşıma ve dayanıklılık = yüksek enerji ihtiyacı',
-      `Protein hedefi: ~${proteinTarget}g — fonksiyonel güç için`,
-      'Su + elektrolit — tuz kaybı fazla',
+      `Fasted fonksiyonel antrenman — sonrasında büyük öğün: ${proteinTarget}g protein`,
+      'Carry ve devre = tuz kaybı fazla — su + elektrolit',
+      'Öğle ve akşam yüksek kalori — yakılanı geri al',
     ],
     rest: [
-      'Kaloriyi düşür — yağ fazlası yerine proteini koru',
-      `Protein: ~${Math.round(bodyWeight * 1.8)}g yeterli`,
-      'Sebze + yoğurt + hafif yağ — inflamasyon düşürücü',
+      `Kaloriyi düşür — yağ fazlası yerine proteini koru (~${Math.round(bodyWeight * 1.8)}g)`,
+      'Sebze + yoğurt + hafif yağ — recovery ve inflamasyon',
+      'Off day = az karbonhidrat, yüksek protein, çok sebze',
     ],
   };
 

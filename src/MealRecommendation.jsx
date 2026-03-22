@@ -76,6 +76,31 @@ export default function MealRecommendation({ day, targets, totals }) {
   if (!plan) return null;
   const { meals, summary } = plan;
 
+  // Fasted — antrenman öncesi/sırası
+  if (plan.mealTime === 'fasted') {
+    const { hour } = getWorkoutSchedule();
+    return (
+      <div className="meal-rec">
+        <div className="meal-fasted">
+          <div className="meal-fasted-icon">🚫🍽</div>
+          <div className="meal-fasted-title">Antrenman öncesi yeme</div>
+          <div className="meal-fasted-desc">
+            Antrenman bittikten sonra <strong>~{hour + 1}:00</strong>'de ilk öğünü ye.
+          </div>
+          <div className="meal-fasted-tips">
+            <div>✅ Su içebilirsin — bol su</div>
+            <div>✅ Siyah kahve veya yeşil çay — performans artırır</div>
+            <div>✅ Elektrolit tuz — terliyorsan ekle</div>
+            <div>✅ Antrenman biter bitmez protein + karb hazır olsun</div>
+          </div>
+          <div className="meal-fasted-note">
+            Fasted antrenman → insulin düşük → yağ yakımı yüksek. Antrenman sonrası ilk öğün kritik.
+          </div>
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="meal-rec">
       {/* Günlük özet */}
@@ -98,20 +123,19 @@ export default function MealRecommendation({ day, targets, totals }) {
                 ⏰ Antrenmana <strong>{minsToWorkout < 60
                   ? `${minsToWorkout} dk`
                   : `${Math.floor(minsToWorkout/60)}s ${minsToWorkout%60}dk`} kaldı</strong>
-                {" — "}{minsToWorkout > 90
-                  ? `Şimdi ye (${preEatHour}:${preEatMin} hedef)`
-                  : minsToWorkout > 45
-                    ? "Çok hafif bir şey ye veya geç"
-                    : "Artık yeme — sadece su"}
+                {" — "}Yeme, sadece su 💧
               </div>
             );
           }
-          if (minsToWorkout <= 0 && minsToWorkout > -120) {
-            return <div className="meal-workout-timer">✅ Antrenman bitti — protein + karb penceresi açık</div>;
+          if (minsToWorkout <= 0 && minsToWorkout > -60) {
+            return <div className="meal-workout-timer">🏋️ Antrenman sürüyor — biter bitmez ye</div>;
+          }
+          if (minsToWorkout <= -60 && minsToWorkout > -180) {
+            return <div className="meal-workout-timer">✅ Antrenman bitti — protein + karb penceresi açık, hemen ye!</div>;
           }
           return (
             <div className="meal-workout-timer">
-              🏋️ Antrenman: {isWeekend ? "09:00" : "07:00"} → Öğün: {preEatHour}:00-{preEatHour}:30
+              🏋️ Antrenman: {isWeekend ? "09:00" : "07:00"} — antrenman öncesi yemek yok
             </div>
           );
         })()}
