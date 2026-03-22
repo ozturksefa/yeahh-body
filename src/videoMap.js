@@ -308,6 +308,35 @@ const GIF_MAP = {
 
   // ══ PROGRAM 3 ATLETİK + GENEL EKSİKLER ══
 
+
+  // ══ DATASET DOĞRULANMIŞ — Program 2 & 3 ══
+  "Hip Flexor Stretch": "2LQkNPW",  // dataset verified
+  "Ankle Circle": "uL9CsKm",  // dataset verified
+  "Weighted Pull Up / Assisted": "kiJ4Z2K",  // dataset verified
+  "Barbell / DB Bent Over Row": "BJ0Hz5L",  // dataset verified
+  "Bulgarian Split Squat": "y8bYM8w",  // dataset verified
+  "Push Up Variations": "vptOQ4N",  // dataset verified
+  "Double Farmer Carry": "qPEzJjA",  // dataset verified
+  "Pull Up Ladder": "0V2YQjW",  // dataset verified
+  "Dip": "9WTm7dq",  // dataset verified
+  "Push Up to Row (DB)": "BJ0Hz5L",  // dataset verified
+  "Inverted Row": "bZGHsAZ",  // dataset verified
+  "Single Arm DB Press (Alternating)": "84RyJf8",  // dataset verified
+  "Bear Crawl": "0Yz8WdV",  // dataset verified
+  "Suitcase Carry (Tek El)": "qPEzJjA",  // dataset verified
+  "World Greatest Stretch": "DFGXwZr",  // dataset verified
+  "Single Arm DB Row (Ağır)": "BJ0Hz5L",  // dataset verified
+  "Floor Press": "vtusOWT",  // dataset verified
+  "L-sit Tuck Hold": "UpWmA5E",  // dataset verified
+  "Standing Quad Stretch": "tFGKm99",  // dataset verified
+  "KB Swing (Heavy)": "UHJlbu3",  // dataset verified
+  "Push Press": "84RyJf8",  // dataset verified
+  "Trap Bar / DB Shrug Carry Combo": "qPEzJjA",  // dataset verified
+  "Pull Up Max Test": "0V2YQjW",  // dataset verified
+  "Push Up Max Test": "vptOQ4N",  // dataset verified
+  "Dip Max Test": "9WTm7dq",  // dataset verified
+  "Glute Bridge": "u0cNiij",  // dataset verified
+
   // ══ KLASİK PROGRAM EK GIF'LER ══
   "Wall Sit":                            "dzz6BiV",  // ≈ squat hold (wall sit DB'de yok, statik squat pozisyonu)
   "Dumbbell Romanian Deadlift (Yavaş Tempo)": "rR0LJzx",  // RDL — aynı Dumbbell RDL GIF
