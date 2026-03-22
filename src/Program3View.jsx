@@ -49,6 +49,106 @@ function OffDayView({ day }) {
 }
 
 
+
+function SkillTracker3() {
+  const LS_KEY = 'yb_skill_levels_3';
+  const [levels, setLevels] = React.useState(() => {
+    try { return JSON.parse(localStorage.getItem(LS_KEY) || '{}'); } catch { return {}; }
+  });
+  const setLevel = (skill, level) => {
+    const next = { ...levels, [skill]: level };
+    setLevels(next);
+    try { localStorage.setItem(LS_KEY, JSON.stringify(next)); } catch {}
+  };
+  const paths = PROGRAM3.skillPaths || {};
+  return (
+    <div className="skill-tracker">
+      <div className="skill-tracker-title">🎯 Kalistenik Skill İlerleme</div>
+      {Object.entries(paths).map(([key, path]) => {
+        const current = levels[key] || 1;
+        const step = path.steps?.find(s => s.level === current);
+        const nextStep = path.steps?.find(s => s.level === current + 1);
+        return (
+          <div key={key} className="skill-card">
+            <div className="skill-card-header">
+              <span className="skill-name">{path.icon || '🤸'} {path.name}</span>
+              <span className="skill-level">Seviye {current}/{path.steps?.length}</span>
+            </div>
+            <div className="skill-progress-bar">
+              {path.steps?.map(s => (
+                <div key={s.level}
+                  className={'skill-step' + (s.level <= current ? ' skill-step-done' : '') + (s.level === current ? ' skill-step-current' : '')}
+                  onClick={() => setLevel(key, s.level)} />
+              ))}
+            </div>
+            <div className="skill-current">
+              <span className="skill-current-label">Şu an:</span>
+              <span className="skill-current-name">{step?.name}</span>
+              <span className="skill-current-target">{step?.target}</span>
+            </div>
+            {step?.detail && <div className="skill-detail" style={{fontSize:11,color:'#888',marginTop:4}}>{step.detail}</div>}
+            {nextStep && (
+              <div className="skill-next">
+                <span className="skill-next-label">Sonraki:</span>
+                <span className="skill-next-name">{nextStep.name} — {nextStep.target}</span>
+              </div>
+            )}
+            <div className="skill-level-btns">
+              <button onClick={() => setLevel(key, Math.max(1, current - 1))} disabled={current <= 1}>‹</button>
+              <span>Seviye güncelle</span>
+              <button onClick={() => setLevel(key, Math.min(path.steps?.length || 1, current + 1))} disabled={current >= (path.steps?.length || 1)}>›</button>
+            </div>
+          </div>
+        );
+      })}
+    </div>
+  );
+}
+
+function Prog3Stats() {
+  const prs = (() => { try { return JSON.parse(localStorage.getItem('yb_skill_prs') || '{}'); } catch { return {}; } })();
+  const fmt = (s) => String(Math.floor(s/60)).padStart(2,'0') + ':' + String(s%60).padStart(2,'0');
+  const [stats, setStats] = React.useState(null);
+  React.useEffect(() => {
+    import('./tracker').then(m => m.getDashboardStats()).then(s => setStats(s)).catch(()=>{});
+  }, []);
+  const prEntries = Object.entries(prs).sort((a,b)=>b[1]-a[1]);
+  return (
+    <div className="p2-stats">
+      <div className="p2-stats-title">📊 Atletik Dayanıklılık — İlerleme</div>
+      {stats && (
+        <div className="dash-cards" style={{marginBottom:16}}>
+          <div className="dash-card"><div className="dash-card-val">{stats.workoutCount}</div><div className="dash-card-label">Antrenman</div></div>
+          <div className="dash-card"><div className="dash-card-val">{stats.streak}</div><div className="dash-card-label">Seri 🔥</div></div>
+          <div className="dash-card"><div className="dash-card-val">{stats.totalVolume > 999 ? (stats.totalVolume/1000).toFixed(1)+"k" : stats.totalVolume}</div><div className="dash-card-label">Hacim</div></div>
+        </div>
+      )}
+      {prEntries.length > 0 && (
+        <div className="p2-skill-prs">
+          <div className="p2-section-title">🏆 Dayanıklılık Rekorları</div>
+          {prEntries.map(([key,sec]) => (
+            <div key={key} className="p2-pr-row">
+              <span className="p2-pr-name">{key.replace(/-/g,' ').replace(/\w/g,l=>l.toUpperCase())}</span>
+              <span className="p2-pr-time">{fmt(sec)}</span>
+            </div>
+          ))}
+        </div>
+      )}
+      <div className="p2-motivation">
+        <div className="p2-section-title">🎯 Faz 1 Hedefleri</div>
+        <div className="p2-targets">
+          <div className="p2-target-item"><span>Pull-up</span><span>10 temiz tekrar</span></div>
+          <div className="p2-target-item"><span>Push-up</span><span>30 temiz tekrar</span></div>
+          <div className="p2-target-item"><span>Dip</span><span>10 tekrar</span></div>
+          <div className="p2-target-item"><span>Handstand Hold</span><span>30sn</span></div>
+          <div className="p2-target-item"><span>L-sit</span><span>10sn full</span></div>
+          <div className="p2-target-item"><span>Muscle-up</span><span>3 temiz tekrar</span></div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
 export default function Program3View({ user }) {
   const trainingDays = PROGRAM3.days.filter(d => d.type === "training");
   const offDays = PROGRAM3.days.filter(d => d.type === "offday");
@@ -66,6 +166,7 @@ export default function Program3View({ user }) {
     try { return JSON.parse(localStorage.getItem(SWAPS_KEY) || "{}"); } catch { return {}; }
   });
   const [streak, setStreak] = useState(0);
+  const [showSkill, setShowSkill] = useState(false);
 
   const timerRef = useRef(null);
   const wakeLockRef = useRef(null);

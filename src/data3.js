@@ -14,6 +14,243 @@ export const PROGRAM3 = {
     "Yorgunlukta form bozuluyorsa dur — asla devam etme",
   ],
 
+
+  skillPaths: {
+    "pullup": {
+        "name": "Pull-up Yolu",
+        "icon": "🔝",
+        "description": "Omurga ve kol gücünün temeli",
+        "steps": [
+            {
+                "level": 1,
+                "name": "Dead Hang",
+                "target": "3 × 30sn",
+                "detail": "Aktif omuz — kulağa değil, aşağı çek"
+            },
+            {
+                "level": 2,
+                "name": "Scapula Pull",
+                "target": "3 × 12",
+                "detail": "Sadece kürek kemikleri — dirsek bükülmez"
+            },
+            {
+                "level": 3,
+                "name": "Chin-up Negative",
+                "target": "5 × 5 (5sn indir)",
+                "detail": "Üstten başla, 5 saniyede yavaşça in"
+            },
+            {
+                "level": 4,
+                "name": "Assisted Pull-up",
+                "target": "4 × 6",
+                "detail": "Bant veya makine — tam range"
+            },
+            {
+                "level": 5,
+                "name": "Full Chin-up",
+                "target": "4 × 5",
+                "detail": "Temiz form — göğüs bara"
+            },
+            {
+                "level": 6,
+                "name": "Full Pull-up",
+                "target": "4 × 5",
+                "detail": "Pronasyon tutuş — tam kontrol"
+            },
+            {
+                "level": 7,
+                "name": "Weighted Pull-up",
+                "target": "3 × 5 (+5kg)",
+                "detail": "Ağırlıklı — güç gelişimi"
+            },
+            {
+                "level": 8,
+                "name": "Archer Pull-up",
+                "target": "3 × 4 (her taraf)",
+                "detail": "Muscle-up öncesi hazırlık"
+            }
+        ]
+    },
+    "dip": {
+        "name": "Dip / Push Yolu",
+        "icon": "💪",
+        "description": "Triceps, göğüs ve omuz bütünsel gücü",
+        "steps": [
+            {
+                "level": 1,
+                "name": "Push Up",
+                "target": "3 × 15",
+                "detail": "Temiz form — göğüs yere değer"
+            },
+            {
+                "level": 2,
+                "name": "Diamond Push Up",
+                "target": "3 × 10",
+                "detail": "Triceps izolasyon"
+            },
+            {
+                "level": 3,
+                "name": "Pike Push Up",
+                "target": "3 × 10",
+                "detail": "Overhead push temeli"
+            },
+            {
+                "level": 4,
+                "name": "Dip Negative",
+                "target": "5 × 5 (5sn indir)",
+                "detail": "Üstten başla — yavaş in"
+            },
+            {
+                "level": 5,
+                "name": "Full Dip",
+                "target": "4 × 8",
+                "detail": "Tam aşağı — 90° dirsek"
+            },
+            {
+                "level": 6,
+                "name": "Weighted Dip",
+                "target": "3 × 6 (+5kg)",
+                "detail": "Ağırlıklı dip"
+            },
+            {
+                "level": 7,
+                "name": "Korean Dip",
+                "target": "3 × 5",
+                "detail": "Bar üzerinde arka dip — muscle-up geçişi"
+            }
+        ]
+    },
+    "handstand": {
+        "name": "Handstand Push-up Yolu",
+        "icon": "🙃",
+        "description": "Dikey itme gücü — omuz dominansı",
+        "steps": [
+            {
+                "level": 1,
+                "name": "Pike Push Up",
+                "target": "3 × 10",
+                "detail": "Temel — ters V pozisyonu"
+            },
+            {
+                "level": 2,
+                "name": "Elevated Pike Push Up",
+                "target": "3 × 8",
+                "detail": "Ayaklar yüksekte — daha dik açı"
+            },
+            {
+                "level": 3,
+                "name": "Wall Handstand Hold",
+                "target": "3 × 20sn",
+                "detail": "Duvara karşı el duruşu"
+            },
+            {
+                "level": 4,
+                "name": "Wall HSPU Negative",
+                "target": "3 × 5 (3sn indir)",
+                "detail": "Duvarda baş yere doğru yavaş in"
+            },
+            {
+                "level": 5,
+                "name": "Partial Wall HSPU",
+                "target": "3 × 5",
+                "detail": "Yarım range — baş yere iner"
+            },
+            {
+                "level": 6,
+                "name": "Full Wall HSPU",
+                "target": "3 × 5",
+                "detail": "Tam range — baştan ite"
+            }
+        ]
+    },
+    "lsit": {
+        "name": "L-sit Yolu",
+        "icon": "🪑",
+        "description": "Core + basınç gücü — kalisteniğin temeli",
+        "steps": [
+            {
+                "level": 1,
+                "name": "Support Hold",
+                "target": "3 × 20sn",
+                "detail": "Paralel bar — sadece vücut ağırlığı"
+            },
+            {
+                "level": 2,
+                "name": "Knee Tuck Hold",
+                "target": "3 × 15sn",
+                "detail": "Dizleri göğse çek — tut"
+            },
+            {
+                "level": 3,
+                "name": "One Leg L-sit",
+                "target": "3 × 10sn",
+                "detail": "Bir bacak uzatılmış"
+            },
+            {
+                "level": 4,
+                "name": "Full L-sit",
+                "target": "3 × 10sn",
+                "detail": "Her iki bacak uzatılmış"
+            },
+            {
+                "level": 5,
+                "name": "L-sit to Tuck",
+                "target": "3 × 6",
+                "detail": "Tuck-planche geçişi"
+            },
+            {
+                "level": 6,
+                "name": "Straddle L-sit",
+                "target": "3 × 10sn",
+                "detail": "Bacaklar açık — daha zor"
+            }
+        ]
+    },
+    "muscleup": {
+        "name": "Muscle-up Hazırlığı",
+        "icon": "🏆",
+        "description": "Pull + Push birleşimi — üst kalisteniğin zirvesi",
+        "steps": [
+            {
+                "level": 1,
+                "name": "Pull-up (chest to bar)",
+                "target": "3 × 5",
+                "detail": "Göğsü bara doğru çek — yüksek pull-up"
+            },
+            {
+                "level": 2,
+                "name": "Bar Dip",
+                "target": "3 × 8",
+                "detail": "Bar üzerinde dip"
+            },
+            {
+                "level": 3,
+                "name": "Kipping Pull-up",
+                "target": "3 × 8",
+                "detail": "Momentum ile — geçiş öğrenimi"
+            },
+            {
+                "level": 4,
+                "name": "Negative Muscle-up",
+                "target": "3 × 3",
+                "detail": "Üstten başla — yavaş in"
+            },
+            {
+                "level": 5,
+                "name": "Assisted Muscle-up",
+                "target": "3 × 3",
+                "detail": "Bant yardımıyla tam hareket"
+            },
+            {
+                "level": 6,
+                "name": "Full Muscle-up",
+                "target": "3 × 3",
+                "detail": "Temiz konsantrik muscle-up"
+            }
+        ]
+    }
+},
+
   days: [
     // ─────────────────────────────────────────────────
     {
@@ -39,9 +276,77 @@ export const PROGRAM3 = {
           { name:"Bulgarian Split Squat", sets:"3 × 6 (her bacak)", muscle:"Quad, glute, hip flexor — unilateral bütünsel", how:["Arka ayak bench'te — ön diz hizasında","Dikey olarak in — öne değil","Ön topuk yerde kalacak","Ön ayakla it — kalça öne"], avoid:"Ön dizi ayak ucunu geçirme", warn:"DİZ: Ağrıda reverse lunge'a geç — daha az knee dominant", alts:["Reverse Lunge","Step Down","Single Leg Squat to Box"] },
         ]},
 
-        { name: "🤸 KALİSTENİK — Push Skill", color: "#E76F51", exercises: [
-          { name:"Push Up Variations", sets:"4 × max (temiz form)", muscle:"Göğüs, triceps, ön delt, serratus, core", how:["Normal → Diamond → Pike sırasıyla","Her sette ulaşabildiğin en zor versiyona geç","Temiz form bozulunca dur — tekrar sayma","10 sn set arası dinlenme yok — direkt geç"], avoid:"Kalça yukarı ya da aşağı sarkmasın", warn:"Asker/itfaiye testi standardı — temiz tekrar sayılır", alts:["Incline Push Up","Archer Push Up"] },
-        ]},
+        {
+        "name": "🤸 KALİSTENİK — Pull-up Skill (Önce Yap)",
+        "color": "#2A9D8F",
+        "exercises": [
+        {
+        "name": "Dead Hang",
+        "sets": "3 × 30sn",
+        "muscle": "Lat, ön kol, grip, omurga dekompresyon",
+        "how": [
+        "Bardan asıl — overhand tutuş",
+        "Omuzları aktif tut — aşağı çek, kulağa değil",
+        "Vücut sakin — sallanma yok",
+        "Nefes al — omurgayı uzat"
+        ],
+        "avoid": "Tamamen pasif sarkma — omuzlar aktif olmalı",
+        "warn": "Pull-up yolunun temeli — her Salı buradan başla",
+        "alts": [
+        "Flexed Arm Hang",
+        "Active Hang"
+        ]
+        },
+        {
+        "name": "Scapula Pull Up",
+        "sets": "3 × 12",
+        "muscle": "Lat aktivasyon, scapula kontrol — pull-up motorunun ateşlenmesi",
+        "how": [
+        "Bardan asıl — kollar düz",
+        "Sadece kürek kemiklerini aşağı çek",
+        "Vücut hafifçe yukarı kalkar",
+        "Kontrollü geri sal"
+        ],
+        "avoid": "Dirsekleri bükme — sadece scapula hareketi",
+        "warn": "Pull-up'ta ilk hatırlatma: önce scapula, sonra dirsekler",
+        "alts": []
+        },
+        {
+        "name": "Chin-up Negative",
+        "sets": "5 × 5 (5sn indir)",
+        "muscle": "Biceps, lat — eccentric güç inşası",
+        "how": [
+        "Step veya zıplamayla üst pozisyona gel",
+        "5 saniyede yavaşça in — tempoyu say",
+        "Tam alta inince serbest bırak",
+        "Her tekrar temiz başla"
+        ],
+        "avoid": "Hızlı düşme — 5sn şart",
+        "warn": "Konsantrik yapamazsan negatifle güç kazan — en etkili yöntem",
+        "alts": [
+        "Assisted Chin Up",
+        "Band Pull Up"
+        ]
+        },
+        {
+        "name": "Assisted Pull-up",
+        "sets": "4 × 6",
+        "muscle": "Lat, teres major, biceps — tam hareket örüntüsü",
+        "how": [
+        "Bant veya makine yardımıyla",
+        "Tam aşağı — tam yukarı — tam range",
+        "Göğsü bara doğru çek",
+        "3sn indir — lat'ı hisset"
+        ],
+        "avoid": "Kısmi range — yarım tekrar saymaz",
+        "warn": "Seviyen ne olursa olsun — haftadan haftaya yardımı azalt",
+        "alts": [
+        "Lat Pulldown",
+        "Band Pull Up"
+        ]
+        }
+        ]
+        },
 
         { name: "🔄 KOMPLİMENTER — Hinge & Carry", color: "#1A3A5C", exercises: [
           { name:"Kettlebell Swing", sets:"4 × 15", muscle:"Glute, hamstring, core — patlayıcı hip extension", how:["Hip hinge — squat değil","KB bacaklar arasından geri götür","Kalçayı patlayıcı öne it — KB omuz hizasına","Nefes: it → dışarı, geri → içeri"], avoid:"Kollarla kaldırmaya çalışma — güç kalçadan gelir", warn:"DİZ: Diz bükme değil kalça hareketi — güvenli", alts:["Dumbbell Swing","Hip Hinge (hızlı)","Romanian DL (hızlı tempo)"] },
@@ -84,11 +389,79 @@ export const PROGRAM3 = {
           { name:"Supine Hip Rotation", sets:"2 × 8 (her taraf)", muscle:"Kalça rotatorları", how:["Sırt üstü yat — dizler bükülü, ayaklar yerde", "Sağ dizi yavaşça sağa yatır — 10 sn tut", "Geri gel, sol dizi sola yatır — 10 sn tut", "Ağrı varsa range'i azalt — zorla yapma"], avoid:"Kalçanın yerden kalkmasına izin verme", warn:"DİZ: Kalça rotatorlarını açar — menisküs stresi azalır", alts:[] },
         ]},
 
-        { name: "🤸 KALİSTENİK — Pull Skill Progressif", color: "#2A9D8F", exercises: [
-          { name:"Pull Up Ladder", sets:"5 tur: 1-2-3-2-1", muscle:"Lat, teres major, biceps, core — tüm çekme zinciri", how:["1 tekrar → dinlen 30sn → 2 tekrar → 30sn → 3 tekrar","Sonra 2 → 1 sırasıyla iner","Temiz form: göğsü bara çek, tam aşağı in","Yapamıyorsan mevcut seviyen kadar"], avoid:"Kısmi range — tam in, tam çık", warn:"Haftadan haftaya merdiven artar", alts:["Chin Up","Assisted Pull Up","Lat Pulldown"] },
-          { name:"Scapula Pull Up", sets:"3 × 12", muscle:"Lat aktivasyon, scapula kontrol", how:["Bardan asıl","Sadece kürek kemiklerini aşağı çek","Dirsek bükülmez"], avoid:"Dirsek bükme", warn:null, alts:[] },
-          { name:"Dip", sets:"3 × max", muscle:"Triceps, alt göğüs, ön delt", how:["Kolları tam uzat","Yavaşça in — 90° dirsek","Patlayıcı yukarı"], avoid:"Omuzları kulağa kaldırma", warn:"Ağrıda Dip Negative", alts:["Bench Dip","Dip Negative"] },
-        ]},
+        {
+        "name": "🤸 KALİSTENİK — Push/Dip Skill (Önce Yap)",
+        "color": "#E76F51",
+        "exercises": [
+        {
+        "name": "Push Up Variations",
+        "sets": "4 × max (temiz form)",
+        "muscle": "Göğüs, triceps, ön delt, serratus, core",
+        "how": [
+        "Normal → Diamond → Pike sırasıyla ilerle",
+        "Ulaşabildiğin en zor versiyondan başla",
+        "Form bozulunca dur — sonraki versiyona geç",
+        "Set arası 60sn — tam dinlen"
+        ],
+        "avoid": "Kalça yukarı veya aşağı — vücut düz çizgi",
+        "warn": "Askeri ve itfaiye testlerinde standart — temiz tekrar sayılır",
+        "alts": [
+        "Incline Push Up",
+        "Knee Push Up"
+        ]
+        },
+        {
+        "name": "Dip Negative",
+        "sets": "5 × 5 (5sn indir)",
+        "muscle": "Triceps, alt göğüs, ön delt — eccentric güç",
+        "how": [
+        "Paralel bar veya bench — üst pozisyondan başla",
+        "5sn yavaşça in — tempo say",
+        "90° dirsek açısına ulaş",
+        "Her tekrar için yukarı çık"
+        ],
+        "avoid": "Hızlı düşme",
+        "warn": "Full dip öncesi eccentric güç — omuz güvenleri",
+        "alts": [
+        "Bench Dip Negative"
+        ]
+        },
+        {
+        "name": "Full Dip",
+        "sets": "3 × max",
+        "muscle": "Triceps, alt göğüs, ön delt — pressing zinciri",
+        "how": [
+        "Kolları tam uzat — üst pozisyon",
+        "Göğüs hafif öne — dip için",
+        "Tam aşağı — 90° dirsek",
+        "Patlayıcı yukarı"
+        ],
+        "avoid": "Omuzları kulağa kaldırma",
+        "warn": "Ağrıda negatife geç",
+        "alts": [
+        "Bench Dip",
+        "Ring Dip"
+        ]
+        },
+        {
+        "name": "Pike Push Up",
+        "sets": "3 × 8",
+        "muscle": "Ön delt, triceps — overhead push skill",
+        "how": [
+        "Ters V pozisyonu — kalça yüksekte",
+        "Başı yere doğru yavaş indir",
+        "Patlayıcı it — omuz hareketi",
+        "Kalça düşmesin"
+        ],
+        "avoid": "Kalçayı düşürme — açı kaybolur",
+        "warn": "Handstand push-up'a giden yol",
+        "alts": [
+        "Elevated Pike Push Up",
+        "Wall Pike"
+        ]
+        }
+        ]
+        },
 
         { name: "🏋️ KUVVET — Press & Row Supersets", color: "#1A3A5C", exercises: [
           { name:"Push Up to Row (DB)", sets:"4 × 8 (her taraf)", muscle:"Göğüs + sırt + core — bütünsel stabilite", how:["Push up pozisyonu — her elde DB","1 push up yap","Sağ DB ile row çek","1 push up — sol DB ile row","= 1 tekrar"], avoid:"Kalçayı döndürme row sırasında — core sıkı", warn:"En fonksiyonel superset — fire/military standardı", alts:["Renegade Row","Push Up + Separate Row"] },
@@ -143,11 +516,96 @@ export const PROGRAM3 = {
           { name:"Floor Press", sets:"4 × 8", muscle:"Göğüs, triceps, ön delt — zeminde limitli range", how:["Sırt üstü yat — dizler bükülü","DB'leri yan tarafta — dirsekler yerde","Göğse doğru in — dirsekler yere değince dur","İt — tam uzatma"], avoid:"Bileği büküp bırakma", warn:"ROTATOR CUFF: En güvenli press — sınırlı range", alts:["Incline DB Press","Push Up Ağırlıklı"] },
         ]},
 
-        { name: "🤸 KALİSTENİK — Skill Transfer", color: "#E76F51", exercises: [
-          { name:"Chin Up", sets:"4 × max", muscle:"Biceps ağırlıklı pull — supinasyon gücü", how:["Supinasyon tutuş — avuç içe","Göğsü bara çek","3 sn indir — full range"], avoid:"Momentum", warn:null, alts:["Assisted Chin Up","Negative Chin Up"] },
-          { name:"Pike Push Up", sets:"3 × 10", muscle:"Ön delt, triceps — overhead push skill", how:["Ters V pozisyonu","Başı yere doğru indir","Patlayıcı yukarı"], avoid:"Kalçayı düşürme", warn:"HSPU'ya giden yol", alts:["Elevated Pike"] },
-          { name:"L-sit Tuck Hold", sets:"3 × 15sn", muscle:"Hip flexor, core, triceps — pozisyon gücü", how:["Parallel bar veya iki sandalye","Dizleri göğse çek","15 sn tut — nefes alma"], avoid:"Öne eğilme", warn:null, alts:["Knee Tuck Hold","Floor L-sit"] },
-        ]},
+        {
+        "name": "🤸 KALİSTENİK — L-sit & Handstand Skill (Önce Yap)",
+        "color": "#8338EC",
+        "exercises": [
+        {
+        "name": "Support Hold",
+        "sets": "3 × 20sn",
+        "muscle": "Triceps, ön delt, core basınç — L-sit'in temeli",
+        "how": [
+        "Paralel bar veya iki sandalye",
+        "Kolları düz it — vücut askıda",
+        "Core sıkı — hafifçe öne eğil",
+        "20sn tut — nefes al"
+        ],
+        "avoid": "Dirsekleri bükme",
+        "warn": "L-sit olmadan bu olmaz — asla atlama",
+        "alts": [
+        "Chair Support Hold",
+        "Floor Support"
+        ]
+        },
+        {
+        "name": "Knee Tuck Hold",
+        "sets": "4 × 15sn",
+        "muscle": "Hip flexor, core, triceps basınç",
+        "how": [
+        "Support pozisyonunda",
+        "Dizleri göğse çek — mümkün olduğu kadar yüksek",
+        "15sn tut — titreme normal",
+        "Kontrollü indir"
+        ],
+        "avoid": "Öne eğilme — gövde dik",
+        "warn": "L-sit progressionının 2. adımı",
+        "alts": [
+        "Hanging Knee Raise",
+        "Floor Tuck Hold"
+        ]
+        },
+        {
+        "name": "Hollow Body Hold",
+        "sets": "4 × 20sn",
+        "muscle": "Anterior core zinciri — kalisteniğin ana motoru",
+        "how": [
+        "Sırt üstü — kollar kulakların yanında uzatılmış",
+        "Bacaklar 45° — yerden 20cm",
+        "Bel yerde — lower back basısı",
+        "20sn tut — nefes almayı kesme"
+        ],
+        "avoid": "Beli yerden kaldırma",
+        "warn": "Muscle-up, handstand, L-sit — hepsinin temeli hollow body",
+        "alts": [
+        "Tuck Hold",
+        "Arch Hold"
+        ]
+        },
+        {
+        "name": "Pike Push Up",
+        "sets": "4 × 8",
+        "muscle": "Ön delt dominant — handstand push-up temeli",
+        "how": [
+        "Ters V — kalça yüksekte",
+        "Başı yere doğru indir — dirsekler dışa açılır",
+        "Patlayıcı it",
+        "Her sette biraz daha dik açı hedefle"
+        ],
+        "avoid": "Kalçayı düşürme",
+        "warn": "Ayaklarını giderek yükseltiyorsun — sonunda wall HSPU",
+        "alts": [
+        "Elevated Pike Push Up"
+        ]
+        },
+        {
+        "name": "Wall Handstand Hold",
+        "sets": "3 × 20sn",
+        "muscle": "Omuz stabilite, core, bilek — handstand temeli",
+        "how": [
+        "Duvara karşı ellerle yukarı çık",
+        "Vücut düz — core sıkı, kalça sıkıştır",
+        "Omuzları kulağa it — aktif omuz",
+        "20sn tut — nefes al"
+        ],
+        "avoid": "Beli çukurlaştırma — düz çizgi",
+        "warn": "Handstand push-up öncesi stabilite — haftalar alır",
+        "alts": [
+        "Box Handstand",
+        "Pike Hold on Box"
+        ]
+        }
+        ]
+        },
 
         { name: "🔄 FONKSİYONEL KOMPLİMENTER", color: "#8B4513", exercises: [
           { name:"Sandbag / DB Complex", sets:"3 tur × dinlenmeden", muscle:"Tüm vücut — fonksiyonel dayanıklılık", how:["1: RDL × 6","2: Bent Over Row × 6","3: High Pull × 6 — KB'yi çeneye doğru","4: Press × 6","Her hareketi bırakmadan yap","Tur arası 90 sn"], avoid:"Çok ağır — form bozulur", warn:"Hafif ağırlık al — full hareket önemli", alts:["KB Complex","Barbell Complex"] },
@@ -197,17 +655,117 @@ export const PROGRAM3 = {
           { name:"Trap Bar / DB Shrug Carry Combo", sets:"3 × 20m", muscle:"Trapez üst, rhomboid, core — yük altında postür", how:["DB'leri omuz hizasında (rack pozisyon)","20 metre yürü","Sonra Farmer Carry pozisyonuna al","20 metre daha yürü"], avoid:"Boynu büküp öne eğilme", warn:null, alts:["Farmer Carry","Yoked Carry"] },
         ]},
 
-        { name: "🤸 KALİSTENİK — Max Effort", color: "#E76F51", exercises: [
-          { name:"Pull Up Max Test", sets:"3 set × maksimum", muscle:"Tüm çekme zinciri", how:["Her sette maximum temiz tekrar","Set arası 3 dk tam dinlenme","Tekrar sayını not al — haftadan haftaya takip et","Bu progression göstergesi"], avoid:"Kısmi range tekrar sayma", warn:"Askeri fitness testlerinde standart ölçüm", alts:["Chin Up Max","Assisted Pull Up"] },
-          { name:"Push Up Max Test", sets:"3 set × maksimum", muscle:"Tüm itme zinciri", how:["Temiz form — göğüs yere değer","Set arası 3 dk","Sayı takibi"], avoid:"Kalça yukarı — geçersiz sayılır", warn:"Standart fitness testi", alts:["Knee Push Up"] },
-          { name:"Dip Max Test", sets:"2 set × maksimum", muscle:"Triceps, alt göğüs, ön delt", how:["Tam aşağı — tam yukarı","Tekrar sayısı takip et"], avoid:"Kısmi tekrar", warn:null, alts:["Bench Dip","Negative Dip"] },
-        ]},
+        {
+        "name": "🤸 KALİSTENİK — Pull-up Max & Progression Test",
+        "color": "#2A9D8F",
+        "exercises": [
+        {
+        "name": "Dead Hang",
+        "sets": "4 × max süre",
+        "muscle": "Grip, lat, omurga dekompresyon",
+        "how": [
+        "Bardan asıl — aktif omuz",
+        "Mümkün olduğu kadar uzan",
+        "Süreyi not al — her hafta kaydet",
+        "PR kır"
+        ],
+        "avoid": "Pasif sarkma",
+        "warn": "Grip gücü kalisteniğin gizli anahtarı — takip et",
+        "alts": []
+        },
+        {
+        "name": "Pull Up Max Test",
+        "sets": "3 set × maksimum",
+        "muscle": "Tüm çekme zinciri — haftalık ilerleme ölçümü",
+        "how": [
+        "Her sette maksimum temiz tekrar",
+        "Set arası 3dk tam dinlenme",
+        "Tekrar sayısını not al",
+        "Haftalık trend takip et"
+        ],
+        "avoid": "Kısmi range — geçersiz sayılır",
+        "warn": "Askeri fitness testlerinde standart ölçüm — bu sayı hedefini gösterir",
+        "alts": [
+        "Chin Up Max",
+        "Assisted Pull Up"
+        ]
+        },
+        {
+        "name": "Muscle-up Prep",
+        "sets": "3 × 5",
+        "muscle": "Pull + push geçişi — üst kalisteniğin zirvesi",
+        "how": [
+        "Yüksek pull-up: göğsü bara çek",
+        "Geçiş anında dirseği barın üstüne al",
+        "Dip pozisyonuna it",
+        "Yapamıyorsan band yardımıyla öğren"
+        ],
+        "avoid": "Sadece kollarla çekme — tüm vücut momentum",
+        "warn": "Henüz pull-up yapamıyorsan bu bloğu atla — önce pull-up",
+        "alts": [
+        "Assisted Muscle-up",
+        "Bar Transition Drill",
+        "Negative Muscle-up"
+        ]
+        }
+        ]
+        },
 
         { name: "⚡ KONDİSYON — Uzun Devre", color: "#990000", exercises: [
           { name:"20 Dakika Sürekli Devre", sets:"20 dakika sürekli", muscle:"Full body aerobik kapasite", how:["Her hareket 40 sn, arası 20 sn:","1. Jumping Jack / Jump Rope","2. Push Up","3. Inverted Row / Band Pull","4. Glute Bridge","5. Mountain Climber","6. Bear Crawl 10m ileri geri","Devre tamamlandı — başa dön","Kaç tur tamamladığını not al"], avoid:"Durmak — tempo düşür ama dur", warn:"Aerobik baz olmadan güç dayanıklılığa dönüşmez", alts:["Rowing Machine 20 dk","Run/Walk 20 dk"] },
         ]},
 
-        { name: "🎯 CORE — Haftalık Kapanış", color: "#6C63FF", exercises: [
+                {
+        "name": "🤸 KALİSTENİK — Push/Dip Max & Handstand",
+        "color": "#E76F51",
+        "exercises": [
+                {
+                        "name": "Push Up Max Test",
+                        "sets": "3 set × maksimum",
+                        "muscle": "Göğüs, triceps, core",
+                        "how": [
+                                "Maksimum temiz tekrar",
+                                "3dk set arası",
+                                "Sayı not al — trend takip"
+                        ],
+                        "avoid": "Kalça yukarı — geçersiz",
+                        "warn": "Standart fitness testi",
+                        "alts": [
+                                "Knee Push Up"
+                        ]
+                },
+                {
+                        "name": "Dip Max Test",
+                        "sets": "2 set × maksimum",
+                        "muscle": "Triceps, alt göğüs",
+                        "how": [
+                                "Tam range — tam aşağı, tam yukarı",
+                                "Sayı not al"
+                        ],
+                        "avoid": "Kısmi tekrar",
+                        "warn": "Hedef: 15+ dip",
+                        "alts": []
+                },
+                {
+                        "name": "Wall Handstand Hold",
+                        "sets": "3 × max süre",
+                        "muscle": "Omuz stabilite, core, bilek",
+                        "how": [
+                                "Duvara karşı el duruşu",
+                                "Vücut düz — core sıkı",
+                                "Süreyi not al"
+                        ],
+                        "avoid": "Beli çukurlaştırma",
+                        "warn": "Her hafta 5sn artır — hedefe gidiyorsun",
+                        "alts": [
+                                "Box Handstand",
+                                "Pike Hold"
+                        ]
+                }
+        ]
+},
+
+{ name: "🎯 CORE — Haftalık Kapanış", color: "#6C63FF", exercises: [
           { name:"Ab Wheel Rollout", sets:"3 × 8", muscle:"Core anterior zinciri — full", how:["Diz üstünde başla","Öne yuvarla — kontrollü","Geri çek"], avoid:"Beli sarkıtma", warn:null, alts:["Plank to Pike","Hollow Body"] },
           { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
           { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
