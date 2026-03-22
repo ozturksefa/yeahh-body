@@ -211,7 +211,7 @@ export default function Program2View() {
               <BlockCard key={bi} block={block} blockIdx={bi}
                 expandedEx={expandedEx}
                 onExToggle={k => setExpandedEx(p => p === k ? null : k)}
-                dayIndex={day.id - 1}
+                dayIndex={day.id + 9}
                 onStartRest={() => {}}
                 swaps={{}}
                 onSwap={() => {}}
