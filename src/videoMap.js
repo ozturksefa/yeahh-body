@@ -7,7 +7,7 @@ const GIF_MAP = {
   // POSTÜR RUTİNİ (her gün)
   // ══════════════════════════════════════════════════════
   "Chin Tuck":                          "oQRJYkC",  // ≈ side push neck stretch (DB'de chin tuck yok, en yakın boyun hareketi)
-  "Band Pull Apart":                    "sTfvVsG",  // band reverse fly
+  "Band Pull Apart":                    "r1XNRYB",  // band reverse fly
   "Foam Roller Upper Back Roll":        "isofgzg",  // roller back stretch
   "Half Kneeling Hip Flexor Stretch":   "2LQkNPW",  // exercise ball hip flexor stretch
   "Deep Sumo Squat":                    "dzz6BiV",  // ≈ smith sumo squat (DB'de BW sumo hold yok, aynı pozisyon)
@@ -20,7 +20,7 @@ const GIF_MAP = {
   "Shoulder Dislocates":                "TFA88iB",  // band front raise (≈ band üzerinden ark hareketin ilk yarısı)
 
   // Mobilite
-  "Cat and Cow":                        "qBcKorM",  // ≈ all fours stretch (DB'de cat-cow yok, aynı başlangıç pozisyonu)
+  "Cat and Cow": null,  // ≈ all fours stretch (DB'de cat-cow yok, aynı başlangıç pozisyonu)
   "Prayer Pose on Bench with Roller":   "f38OEuO",  // kneeling lat stretch
 
   // Aktivasyon
@@ -29,7 +29,7 @@ const GIF_MAP = {
   "Arms Internal Rotation Left":       "YPoVrBi",  // cable seated shoulder internal rotation
   "Arms Internal Rotation Right":      "YPoVrBi",
   "Straight Arm Pulldown":             ["x69MAlq","DT14T9T"],  // bar + rope attachment
-  "Scapula Push Up":                   "jV65tKx",  // scapula push-up
+  "Scapula Push Up":                    "jV65tKx",  // scapula push-up
 
   // Kuvvet
   "Assisted Pull Up":                  ["kiJ4Z2K","r1XNRYB"],  // makine + band destekli
@@ -120,7 +120,6 @@ const GIF_MAP = {
   // GÜN 4 — LOWER ATHLETIC
   // ══════════════════════════════════════════════════════
   // Isınma B
-  "Hip Hinge":                        "lHeUULr",  // band straight back stiff leg deadlift (hip hinge pattern)
   "Jefferson Squats":                 "pkSoCW9",  // barbell jefferson squat
   "Cossack Squat":                    "GWoKnIm",  // weighted cossack squats (male)
 
@@ -261,7 +260,7 @@ const GIF_MAP = {
   "Romanian Deadlift (hızlı tempo)": "wQ2c4XD",  // barbell romanian deadlift
   "Rowing Machine (omuz yorgunsa)":  "vpQaQkH",  // ski ergometer
   "SCM Stretch":                     "oQRJYkC",  // side push neck stretch
-  "Scapula Pull Up":                 "uTBt1HV",  // scapular pull-up
+  "Scapula Pull Up": "uTBt1HV",  // scapular pull-up
   "Side Plank Hip Dip":              "VO2qeJg",  // side plank hip adduction
   "Side Plank Leg Raise Left (MAC+)":  "5VXmnV5",  // bodyweight incline side plank
   "Side Plank Leg Raise Right (MAC+)": "5VXmnV5",  // bodyweight incline side plank
@@ -296,14 +295,12 @@ const GIF_MAP = {
   "Wide Push Up":                    "JmMVpR3",  // wide hand push up
   "Wrist Circles":                   "2zNKRUB",  // wrist circles
   "Wrist Flexion & Extension":       "82LxxkW",  // barbell wrist curl
-  "Bird Dog":                        "qBcKorM",  // all fours squad stretch
   "Clamshell":                       "c8f5cSY",  // side lying hip adduction
-  "Hollow Body Hold":                "iny3m5y",  // dead bug (aynı pozisyon)
+  "Hollow Body Hold": "iny3m5y",  // dead bug (aynı pozisyon)
   "Nordic Hamstring Curl":           "ZSY3MsL",  // self assisted inverse leg curl (on floor)
   "Doorway Chest Stretch":           "3uj0Ozg",  // dynamic chest stretch
   "Lateral Step Up":                 "76vfTdU",  // dumbbell step up single leg balance
   "Side Step with Band":             "O95afRA",  // monster walk
-  "Prone Y-T-W":                     "4GqRrAk",  // superman push-up
 
 
   // ══ PROGRAM 3 ATLETİK + GENEL EKSİKLER ══
@@ -330,7 +327,7 @@ const GIF_MAP = {
   "L-sit Tuck Hold": "UpWmA5E",  // dataset verified
   "Standing Quad Stretch": "tFGKm99",  // dataset verified
   "KB Swing (Heavy)": "UHJlbu3",  // dataset verified
-  "Push Press": "84RyJf8",  // dataset verified
+  "Push Press": "FS63wTN",  // dataset verified
   "Trap Bar / DB Shrug Carry Combo": "qPEzJjA",  // dataset verified
   "Pull Up Max Test": "0V2YQjW",  // dataset verified
   "Push Up Max Test": "vptOQ4N",  // dataset verified
@@ -342,31 +339,28 @@ const GIF_MAP = {
   "Dumbbell Romanian Deadlift (Yavaş Tempo)": "rR0LJzx",  // RDL — aynı Dumbbell RDL GIF
 
   // ══ PROGRAM 2 EK GIF'LER ══
-  "Shoulder CARs": "TFA88iB",
   "Band External Rotation": "FWdVhcW",
-  "Supine Hip Rotation": "2LQkNPW",
   "Wrist Circle": "uJmK7Z1",
-  "Thread the Needle": "qBcKorM",
-  "Lat Stretch Chair": "FJKGaKW",
-  "Chest Doorway Stretch": "FCu6nCj",
+  "Lat Stretch Chair": "f38OEuO",
+  "Chest Doorway Stretch": "QoHIhPl",
   "Child's Pose": "f38OEuO",
-  "Triceps Stretch": "YRVPJcA",
-  "Dead Hang": "pBMDnBu",
-  "Chin-up Negative": "zMSmrRF",
-  "Scapula Pull Up": "sTfvVsG",
-  "Dip Negative": "eGBfCB5",
-  "Parallel Bar Support Hold": "eGBfCB5",
-  "Hollow Body Hold": "3B6MqAb",
-  "DB Overhead Press": "wbNPCJ1",
-  "Cable Fly": "0p9Bm5V",
-  "DB Lateral Raise": "OlHKYFi",
-  "DB Row Single Arm": "ynVKlM2",
-  "Single Leg Glute Bridge (Sağ)": "4iVp5YU",
+  "Triceps Stretch": "Z5YStHW",
+  "Dead Hang": "PXTIwgu",
+  "Chin-up Negative": "7OeHptV",
+  "Scapula Pull Up": "uTBt1HV",
+  "Dip Negative": "PAgTVaK",
+  "Parallel Bar Support Hold": "9WTm7dq",
+  "Hollow Body Hold": "iny3m5y",
+  "DB Overhead Press": "84RyJf8",
+  "Cable Fly": "tBWXbIT",
+  "DB Lateral Raise": "DsgkuIt",
+  "DB Row Single Arm": "C0MA9bC",
+  "Single Leg Glute Bridge (Sağ)": "rmEukuS",
   "Side Plank Left": "5VXmnV5",
   "Side Plank Right": "5VXmnV5",
   "Copenhagen Plank Left": "5VXmnV5",
   "Copenhagen Plank Right": "5VXmnV5",
-  "Knee Tuck Hold": "eGBfCB5",
+  "Knee Tuck Hold": "UpWmA5E",
 };
 
 const GIF_BASE = "https://static.exercisedb.dev/media/";
