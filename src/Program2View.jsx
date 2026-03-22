@@ -71,82 +71,40 @@ function SkillTracker() {
 }
 
 // ─── Off Day View ────────────────────────────────────────────────
-function OffBlock({ block }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="block">
-      <button className="block-head" onClick={() => setOpen(o => !o)} style={{ background: block.color }}>
-        <div>
-          <div className="block-name">{block.name}</div>
-          <div className="block-count">{block.exercises.length} hareket</div>
-        </div>
-        <span style={{ color: "#fff", fontSize: 20, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "none" }}>▾</span>
-      </button>
-      {open && (
-        <div className="block-body" style={{ borderColor: block.color + "44" }}>
-          {block.exercises.map((ex, i) => (
-            <OffExercise key={i} ex={ex} color={block.color} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function OffExercise({ ex, color }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="ex-wrap">
-      <button className="ex-header" onClick={() => setOpen(o => !o)} style={{ borderLeft: `3px solid ${color}` }}>
-        <div className="ex-left">
-          <div className="ex-name">{ex.name}</div>
-          <div className="ex-meta">
-            <span className="ex-sets" style={{ background: color + "33", color }}>{ex.sets}</span>
-            <span className="ex-muscle">{ex.muscle}</span>
-          </div>
-        </div>
-        <span className="ex-toggle">{open ? "✕" : "+"}</span>
-      </button>
-      {open && (
-        <div className="ex-body">
-          <div className="section">
-            <div className="section-label" style={{ color }}>YAPILIŞ</div>
-            {ex.how.map((s, i) => (
-              <div key={i} className="step">
-                <span className="step-n" style={{ color }}>{i + 1}.</span>
-                <span className="step-t">{s}</span>
-              </div>
-            ))}
-          </div>
-          {ex.avoid && <div className="avoid-box"><strong>✕ YAPMA: </strong>{ex.avoid}</div>}
-          {ex.warn && <div className="warn-box">⚠ {ex.warn}</div>}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function OffDayView({ day }) {
+  const [expandedEx, setExpandedEx] = useState(null);
   return (
     <>
       <div className="day-hdr" style={{ borderColor: "#6C757D44", background: "#6C757D0D" }}>
         <div className="day-top">
           <div>
             <div className="day-focus" style={{ color: "#6C757D" }}>{day.focus}</div>
-            <div className="day-meta">{day.duration} · 🏠 Evde yapılabilir</div>
+            <div className="day-meta">{day.duration} · 🏠 Ekipman gerektirmez</div>
           </div>
           <div className="day-badge" style={{ background: "#6C757D" }}>{day.sub}</div>
         </div>
       </div>
       <main className="main">
-        {day.blocks.map((block, bi) => <OffBlock key={bi} block={block} />)}
-        <div className="footer">Off day aktif recovery — hafif tut, dinlenmeye izin ver</div>
+        {day.blocks.map((block, bi) => (
+          <BlockCard key={bi} block={block} blockIdx={bi}
+            expandedEx={expandedEx}
+            onExToggle={k => setExpandedEx(p => p === k ? null : k)}
+            dayIndex={-1}
+            onStartRest={() => {}}
+            swaps={{}}
+            onSwap={() => {}}
+            forceOpen={false}
+            workoutActive={false}
+            isLastEx={false}
+            onAllSetsDone={() => {}} />
+        ))}
+        <div className="footer">Off day — hafif tut, dinlenmeye izin ver 🌿</div>
       </main>
     </>
   );
 }
 
-// ─── Ana Program2View ────────────────────────────────────────────
+
 export default function Program2View({ user }) {
   const trainingDays = PROGRAM2.days.filter(d => d.type === "training");
   const offDays = PROGRAM2.days.filter(d => d.type === "offday");

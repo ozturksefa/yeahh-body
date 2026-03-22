@@ -15,125 +15,39 @@ const SWAPS_KEY = "yb_swaps3";
 const TRACK_BLOCKS = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER", "PRIMARY", "SECONDARY", "KALİSTENİK", "SKILL", "KOMPLİMENTER", "FULL BODY"];
 
 // ─── Off Day View ────────────────────────────────────────────────
-function OffBlock({ block }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="block">
-      <button className="block-head" onClick={() => setOpen(o => !o)} style={{ background: block.color }}>
-        <div>
-          <div className="block-name">{block.name}</div>
-          <div className="block-count">{block.exercises.length} hareket</div>
-        </div>
-        <span style={{ color: "#fff", fontSize: 20, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "none" }}>▾</span>
-      </button>
-      {open && (
-        <div className="block-body" style={{ borderColor: block.color + "44" }}>
-          {block.exercises.map((ex, i) => (
-            <OffExercise key={i} ex={ex} color={block.color} />
-          ))}
-        </div>
-      )}
-    </div>
-  );
-}
-
-function OffExercise({ ex, color }) {
-  const [open, setOpen] = useState(false);
-  return (
-    <div className="ex-wrap">
-      <button className="ex-header" onClick={() => setOpen(o => !o)} style={{ borderLeft: `3px solid ${color}` }}>
-        <div className="ex-left">
-          <div className="ex-name">{ex.name}</div>
-          <div className="ex-meta">
-            <span className="ex-sets" style={{ background: color + "33", color }}>{ex.sets}</span>
-            <span className="ex-muscle">{ex.muscle}</span>
-          </div>
-        </div>
-        <span className="ex-toggle">{open ? "✕" : "+"}</span>
-      </button>
-      {open && (
-        <div className="ex-body">
-          <div className="section">
-            <div className="section-label" style={{ color }}>YAPILIŞ</div>
-            {ex.how.map((s, i) => (
-              <div key={i} className="step">
-                <span className="step-n" style={{ color }}>{i + 1}.</span>
-                <span className="step-t">{s}</span>
-              </div>
-            ))}
-          </div>
-          {ex.avoid && <div className="avoid-box"><strong>✕ YAPMA: </strong>{ex.avoid}</div>}
-          {ex.warn && <div className="warn-box">⚠ {ex.warn}</div>}
-        </div>
-      )}
-    </div>
-  );
-}
-
 function OffDayView({ day }) {
+  const [expandedEx, setExpandedEx] = useState(null);
   return (
     <>
       <div className="day-hdr" style={{ borderColor: "#6C757D44", background: "#6C757D0D" }}>
         <div className="day-top">
           <div>
             <div className="day-focus" style={{ color: "#6C757D" }}>{day.focus}</div>
-            <div className="day-meta">{day.duration} · 🏠 Evde yapılabilir</div>
+            <div className="day-meta">{day.duration} · 🏠 Ekipman gerektirmez</div>
           </div>
           <div className="day-badge" style={{ background: "#6C757D" }}>{day.sub}</div>
         </div>
       </div>
       <main className="main">
-        {day.blocks.map((block, bi) => <OffBlock key={bi} block={block} />)}
-        <div className="footer">Off day aktif recovery — hafif tut, dinlenmeye izin ver</div>
+        {day.blocks.map((block, bi) => (
+          <BlockCard key={bi} block={block} blockIdx={bi}
+            expandedEx={expandedEx}
+            onExToggle={k => setExpandedEx(p => p === k ? null : k)}
+            dayIndex={-1}
+            onStartRest={() => {}}
+            swaps={{}}
+            onSwap={() => {}}
+            forceOpen={false}
+            workoutActive={false}
+            isLastEx={false}
+            onAllSetsDone={() => {}} />
+        ))}
+        <div className="footer">Off day — hafif tut, dinlenmeye izin ver 🌿</div>
       </main>
     </>
   );
 }
 
-// ─── Ana Program2View ────────────────────────────────────────────
-
-function Prog3Stats() {
-  const prs = (() => { try { return JSON.parse(localStorage.getItem("yb_skill_prs") || "{}"); } catch { return {}; } })();
-  const fmt = (s) => String(Math.floor(s/60)).padStart(2,"0") + ":" + String(s%60).padStart(2,"0");
-  const [stats, setStats] = React.useState(null);
-  React.useEffect(() => {
-    import("./tracker").then(m => m.getDashboardStats()).then(s => setStats(s)).catch(()=>{});
-  }, []);
-  const prEntries = Object.entries(prs).sort((a,b)=>b[1]-a[1]);
-  return (
-    <div className="p2-stats">
-      <div className="p2-stats-title">📊 Atletik Dayanıklılık — İlerleme</div>
-      {stats && (
-        <div className="dash-cards" style={{marginBottom:16}}>
-          <div className="dash-card"><div className="dash-card-val">{stats.workoutCount}</div><div className="dash-card-label">Antrenman</div></div>
-          <div className="dash-card"><div className="dash-card-val">{stats.streak}</div><div className="dash-card-label">Seri 🔥</div></div>
-          <div className="dash-card"><div className="dash-card-val">{stats.totalVolume > 999 ? (stats.totalVolume/1000).toFixed(1)+"k" : stats.totalVolume}</div><div className="dash-card-label">Hacim</div></div>
-        </div>
-      )}
-      {prEntries.length > 0 && (
-        <div className="p2-skill-prs">
-          <div className="p2-section-title">🏆 Dayanıklılık Rekorları</div>
-          {prEntries.map(([key,sec]) => (
-            <div key={key} className="p2-pr-row">
-              <span className="p2-pr-name">{key.replace(/-/g," ").replace(/\b\w/g,l=>l.toUpperCase())}</span>
-              <span className="p2-pr-time">{fmt(sec)}</span>
-            </div>
-          ))}
-        </div>
-      )}
-      <div className="p2-motivation">
-        <div className="p2-section-title">🎯 Faz 1 Hedefleri</div>
-        <div className="p2-targets">
-          <div className="p2-target-item"><span>Pull-up</span><span>10 temiz tekrar</span></div>
-          <div className="p2-target-item"><span>Push-up</span><span>30 temiz tekrar</span></div>
-          <div className="p2-target-item"><span>Dip</span><span>10 tekrar</span></div>
-          <div className="p2-target-item"><span>Farmer Carry</span><span>2× vücut ağırlığı × 30m</span></div>
-          <div className="p2-target-item"><span>Sprint 6×30sn</span><span>Hız düşmeden tamamla</span></div>
-        </div>
-      </div>
-    </div>
-  );
-}
 
 export default function Program3View({ user }) {
   const trainingDays = PROGRAM3.days.filter(d => d.type === "training");
