@@ -42,7 +42,7 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
           <div className="ex-name">
             {displayName}
             {swappedName && <span className="swap-badge">🔄</span>}
-            {ex.warn && /ROTATOR CUFF|DİZ:|DİZ :/i.test(ex.warn) && !swappedName && (
+            {ex.warn && /ROTATOR CUFF|DİZ:|BEL FITIĞI|BOYUN FITIĞI|🔴|🟡/i.test(ex.warn) && !swappedName && (
               <span className="injury-badge">⚠️</span>
             )}
           </div>
@@ -93,7 +93,7 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
             </div>
           )}
           {ex.warn && (
-            <div className={/ROTATOR CUFF|DİZ:|SKOLYOZ/i.test(ex.warn) ? "warn-box warn-box-injury" : "warn-box"}>
+            <div className={/ROTATOR CUFF|DİZ:|SKOLYOZ|BEL FITIĞI|BOYUN FITIĞI|🔴|🟡/i.test(ex.warn) ? "warn-box warn-box-injury" : "warn-box"}>
               ⚠ {ex.warn}
             </div>
           )}
