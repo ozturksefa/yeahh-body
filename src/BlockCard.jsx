@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import ExerciseGif from "./Gif";
 import SetTracker from "./SetTracker";
 import ExerciseNote from "./ExerciseNote";
+import SkillTimer from "./SkillTimer";
 import ErrorBoundary from "./ErrorBoundary";
 
 function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAdvance, workoutActive, isLastEx, onAllSetsDone }) {
@@ -63,6 +64,14 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
           <ExerciseGif name={displayName} />
 
           <SetTracker ex={ex} dayIndex={dayIndex} blockName={blockName} onStartRest={onStartRest} onAllDone={onAllSetsDone} />
+          {/* Timed skill hareketler için timer */}
+          {(() => {
+            const timedMatch = ex.sets.match(/\d+\s*[×x]\s*(\d+)\s*sn/i);
+            if (!timedMatch) return null;
+            const isSkill = /dead hang|chin.up|pull.up|dip|plank|tuck|hollow|l.sit|parallel bar|support hold|ab wheel/i.test(ex.name);
+            if (!isSkill) return null;
+            return <SkillTimer exerciseName={ex.name} targetSeconds={parseInt(timedMatch[1])} />;
+          })()}
           <ExerciseNote exerciseName={displayName} />
 
           <div className="section">

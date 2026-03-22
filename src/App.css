@@ -688,3 +688,39 @@ body{
 .skill-level-btns button { width:28px; height:28px; background:#1a1a1e; border:1px solid #2a2a30; border-radius:6px; color:#aaa; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
 .skill-level-btns button:disabled { opacity:.3; cursor:default; }
 .skill-level-btns span { flex:1; font-size:11px; color:#555; text-align:center; }
+
+/* ═══ SKILL TIMER ═══ */
+.skill-timer-widget{display:flex;flex-direction:column;align-items:center;padding:12px 0 8px;gap:8px}
+.skill-timer-ring-wrap{position:relative;width:100px;height:100px;display:flex;align-items:center;justify-content:center}
+.skill-timer-ring-wrap svg{position:absolute;top:0;left:0}
+.skill-timer-time{font-size:22px;font-weight:800;color:#fff;font-family:var(--mono);position:relative;z-index:1;margin-top:-8px}
+.skill-timer-target{font-size:11px;color:#555;font-family:var(--mono);position:relative;z-index:1}
+.skill-timer-pr{font-size:12px;color:#888;font-weight:600}
+.skill-timer-pr-new{color:#FFD700;animation:pr-flash 0.5s ease 3}
+@keyframes pr-flash{0%,100%{opacity:1}50%{opacity:0.3}}
+.skill-timer-controls{display:flex;flex-direction:column;align-items:center;gap:6px;width:100%}
+.skill-timer-btn{padding:10px 28px;border:none;border-radius:8px;font-size:14px;font-weight:700;cursor:pointer;font-family:inherit;width:100%;max-width:200px}
+.skill-timer-start{background:#8338EC;color:#fff}
+.skill-timer-stop{background:#D41920;color:#fff}
+.skill-timer-reset{background:#1a1a1e;color:#aaa;border:1px solid #2a2a30}
+.skill-timer-result{font-size:13px;color:#00C853;font-weight:700;text-align:center}
+
+/* ═══ PROGRAM2 STATS ═══ */
+.p2-stats{padding:8px 0 24px}
+.p2-stats-title{font-size:14px;font-weight:800;color:#fff;letter-spacing:1px;text-transform:uppercase;margin-bottom:12px}
+.p2-section-title{font-size:10px;font-weight:700;color:#888;letter-spacing:1px;text-transform:uppercase;margin-bottom:8px;padding-bottom:4px;border-bottom:1px solid #1a1a1e}
+.p2-skill-prs{margin-bottom:16px}
+.p2-pr-row{display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid rgba(255,255,255,.04)}
+.p2-pr-name{font-size:13px;color:#ddd}
+.p2-pr-time{font-size:14px;font-weight:700;color:#FFD700;font-family:var(--mono)}
+.p2-skill-progress{margin-bottom:16px}
+.p2-skill-bar-row{display:flex;align-items:center;gap:8px;margin-bottom:8px}
+.p2-skill-bar-name{font-size:12px;color:#aaa;width:120px;flex-shrink:0}
+.p2-skill-bar-track{flex:1;height:6px;background:#1a1a1e;border-radius:3px;overflow:hidden}
+.p2-skill-bar-fill{height:100%;background:#8338EC;border-radius:3px;transition:width .5s}
+.p2-skill-bar-val{font-size:11px;color:#8338EC;font-family:var(--mono);flex-shrink:0;width:70px;text-align:right}
+.p2-motivation{background:#131316;border:1px solid #2a2a30;border-radius:10px;padding:12px;margin-bottom:8px}
+.p2-motivation-text{font-size:12px;color:#888;line-height:1.6;margin-bottom:10px}
+.p2-targets{display:flex;flex-direction:column;gap:4px}
+.p2-target-item{display:flex;justify-content:space-between;font-size:12px;color:#aaa;padding:4px 0}
+.p2-target-item span:last-child{color:#555}

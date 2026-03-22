@@ -8,6 +8,8 @@ import NutritionTracker from "./Nutrition";
 import { saveFlow, loadFlow, clearFlow } from "./flowStore";
 import { getDashboardStats } from "./tracker";
 import { parseSets } from "./SetTracker";
+import SkillTimer from "./SkillTimer";
+import Program2Stats from "./Program2Stats";
 
 const FLOW_KEY = "session2";
 const SWAPS_KEY = "yb_swaps2";
@@ -361,6 +363,7 @@ export default function Program2View({ user }) {
       <div style={{ padding: "0 12px" }}>
         <div className="page-nav" style={{ marginBottom: 4 }}>
           <button className={`page-tab ${page2 === "program" ? "page-tab-active" : ""}`} onClick={() => setPage2("program")}>🏋️ Program</button>
+          <button className={`page-tab ${page2 === "stats" ? "page-tab-active" : ""}`} onClick={() => setPage2("stats")}>📊 İlerleme</button>
           <button className={`page-tab ${page2 === "nutrition" ? "page-tab-active" : ""}`} onClick={() => setPage2("nutrition")}>🍽 Beslenme</button>
         </div>
       </div>
