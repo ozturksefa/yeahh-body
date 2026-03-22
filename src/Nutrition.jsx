@@ -140,7 +140,7 @@ function getRecentFoods() {
 }
 
 // Makroya göre akıllı öneriler üret
-function getSmartSuggestions(totals) {
+function getSmartSuggestions(totals, targets) {
   const remProtein = targets.protein - totals.protein;
   const remCalories = targets.calories - totals.calories;
   const remCarbs = targets.carbs - totals.carbs;
@@ -215,7 +215,7 @@ export default function NutritionTracker() {
     fat: acc.fat + (e.fat || 0),
   }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
 
-  const suggestions = getSmartSuggestions(totals);
+  const suggestions = getSmartSuggestions(totals, targets);
 
   const saveTargets = (newTargets) => {
     setTargets(newTargets);
