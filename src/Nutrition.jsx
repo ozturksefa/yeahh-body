@@ -2,7 +2,7 @@ import { useState, useEffect } from "react";
 import "./Nutrition.css";
 
 function loadTargets() {
-  try { return JSON.parse(localStorage.getItem("yb_targets") || "null") || { calories: 2200, protein: 150, carbs: 250, fat: 70 }; } catch { return { calories: 2200, protein: 150, carbs: 250, fat: 70 }; }
+  try { return JSON.parse(localStorage.getItem("yb_targets") || "null") || { calories: 2200, protein: 150, carbs: 250, fat: 70, bodyWeight: 75 }; } catch { return { calories: 2200, protein: 150, carbs: 250, fat: 70, bodyWeight: 75 }; }
 }
 
 const QUICK_FOODS = [
@@ -317,7 +317,7 @@ export default function NutritionTracker() {
               <span className="nutri-target-unit">{f.unit}</span>
             </div>
           ))}
-          <button className="nutri-target-reset" onClick={() => saveTargets({ calories: 2200, protein: 150, carbs: 250, fat: 70 })}>
+          <button className="nutri-target-reset" onClick={() => saveTargets({ calories: 2200, protein: 150, carbs: 250, fat: 70, bodyWeight: 75 })}>
             Varsayılana Döndür
           </button>
         </div>

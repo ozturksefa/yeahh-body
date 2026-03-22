@@ -1,5 +1,6 @@
 import React, { useState, useEffect, useRef } from "react";
 import { PROGRAM3 } from "./data3";
+import { calcDayCalories, getUserWeight } from "./calorieCalc";
 import BlockCard from "./BlockCard";
 import WorkoutTimer from "./WorkoutTimer";
 import RestTimer from "./RestTimer";
@@ -408,6 +409,10 @@ export default function Program3View({ user }) {
                     <div className="day-focus" style={{ color: day.color }}>{day.focus}</div>
                     <div className="day-meta">
                       {day.duration} · {day.blocks.reduce((a, b) => a + b.exercises.length, 0)} egzersiz
+                      {(() => {
+                        const { total } = calcDayCalories(day, getUserWeight());
+                        return total > 0 ? <span className="day-kcal">· ~{total} kcal</span> : null;
+                      })()}
                       {streak > 0 && <span style={{ marginLeft: 8 }}>🔥 {streak} seri</span>}
                     </div>
                   </div>

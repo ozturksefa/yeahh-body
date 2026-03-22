@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import { calcExerciseCalories, calcBlockCalories, getUserWeight } from "./calorieCalc";
 import ExerciseGif from "./Gif";
 import SetTracker from "./SetTracker";
 import ExerciseNote from "./ExerciseNote";
@@ -49,6 +50,11 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
           <div className="ex-meta">
             <span className="ex-sets" style={{ background: blockColor + "33", color: blockColor }}>{ex.sets}</span>
             <span className="ex-muscle">{ex.muscle}</span>
+            {(() => {
+              const w = getUserWeight();
+              const { kcal } = calcExerciseCalories(ex, w);
+              return kcal > 0 ? <span className="ex-kcal">~{kcal} kcal</span> : null;
+            })()}
           </div>
         </div>
         <span className="ex-toggle">{isOpen ? "✕" : "+"}</span>
@@ -133,7 +139,14 @@ function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartR
       <button className="block-head" onClick={() => setManualOpen(o => !o)} style={{ background: block.color }}>
         <div>
           <div className="block-name">{block.name}</div>
-          <div className="block-count">{block.exercises.length} hareket</div>
+          <div className="block-count">
+            {block.exercises.length} hareket
+            {(() => {
+              const w = getUserWeight();
+              const { kcal, durationMin } = calcBlockCalories(block, w);
+              return kcal > 0 ? <span className="block-kcal"> · ~{kcal} kcal · ~{durationMin}dk</span> : null;
+            })()}
+          </div>
         </div>
         <span style={{ color: "#fff", fontSize: 20, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "none" }}>▾</span>
       </button>

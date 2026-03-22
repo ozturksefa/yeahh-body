@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { calcDayCalories, getUserWeight } from "./calorieCalc";
 import { PROGRAM2 } from "./data2";
 import BlockCard from "./BlockCard";
 import WorkoutTimer from "./WorkoutTimer";
@@ -79,7 +80,7 @@ function OffDayView({ day }) {
         <div className="day-top">
           <div>
             <div className="day-focus" style={{ color: "#6C757D" }}>{day.focus}</div>
-            <div className="day-meta">{day.duration} · 🏠 Ekipman gerektirmez</div>
+            <div className="day-meta">{day.duration} · 🏠 Ekipman gerektirmez {(() => { const {total} = calcDayCalories(day, getUserWeight()); return total>0 ? <span className="day-kcal"> · ~{total} kcal</span> : null; })()} </div>
           </div>
           <div className="day-badge" style={{ background: "#6C757D" }}>{day.sub}</div>
         </div>

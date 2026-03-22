@@ -1,4 +1,5 @@
 import { useState, useEffect, useRef } from "react";
+import { calcDayCalories, getUserWeight } from "./calorieCalc";
 import { PROGRAM } from "./data";
 
 import { getDashboardStats } from "./tracker";
@@ -429,7 +430,10 @@ export default function App() {
         <div className="day-top">
           <div>
             <div className="day-focus" style={{ color: d.color }}>{d.focus}</div>
-            <div className="day-meta">{d.duration} · {total} egzersiz</div>
+            <div className="day-meta">
+              {d.duration} · {total} egzersiz
+              {(() => { const {total: kcal} = calcDayCalories(d, getUserWeight()); return kcal>0 ? <span className="day-kcal"> · ~{kcal} kcal</span> : null; })()}
+            </div>
           </div>
           <div className="day-badge" style={{ background: d.color }}>{d.sub}</div>
         </div>
