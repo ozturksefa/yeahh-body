@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getMealPlan, getDayType } from "./mealPlanner";
+import { getMealPlan, getDayType, getWorkoutSchedule } from "./mealPlanner";
 import { calcDayCalories, getUserWeight } from "./calorieCalc";
 
 function MacroPill({ label, value, unit, color }) {
@@ -84,10 +84,37 @@ export default function MealRecommendation({ day, targets, totals }) {
           <span className="meal-summary-label">{summary.label}</span>
           {summary.workoutKcal > 0 && (
             <span className="meal-summary-kcal">
-              🔥 {summary.workoutKcal} kcal yakıldı → hedef ~{summary.adjustedCal} kcal
+              🔥 {summary.workoutKcal} kcal yakıldı → ~{summary.adjustedCal} kcal
             </span>
           )}
         </div>
+        {(() => {
+          const { hour, isWeekend, minsToWorkout } = getWorkoutSchedule();
+          const preEatHour = hour - 2;
+          const preEatMin = "00";
+          if (minsToWorkout > 0 && minsToWorkout < 180) {
+            return (
+              <div className="meal-workout-timer">
+                ⏰ Antrenmana <strong>{minsToWorkout < 60
+                  ? `${minsToWorkout} dk`
+                  : `${Math.floor(minsToWorkout/60)}s ${minsToWorkout%60}dk`} kaldı</strong>
+                {" — "}{minsToWorkout > 90
+                  ? `Şimdi ye (${preEatHour}:${preEatMin} hedef)`
+                  : minsToWorkout > 45
+                    ? "Çok hafif bir şey ye veya geç"
+                    : "Artık yeme — sadece su"}
+              </div>
+            );
+          }
+          if (minsToWorkout <= 0 && minsToWorkout > -120) {
+            return <div className="meal-workout-timer">✅ Antrenman bitti — protein + karb penceresi açık</div>;
+          }
+          return (
+            <div className="meal-workout-timer">
+              🏋️ Antrenman: {isWeekend ? "09:00" : "07:00"} → Öğün: {preEatHour}:00-{preEatHour}:30
+            </div>
+          );
+        })()}
         <div className="meal-summary-protein">
           Protein hedefi: <strong>{summary.proteinTarget}g</strong>
         </div>

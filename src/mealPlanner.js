@@ -18,14 +18,39 @@ export function getDayType(day) {
   return 'strength';
 }
 
-// Öğün zamanına göre label
+// Öğün zamanı — antrenman saatine göre
+// Haftiçi 07:00, haftasonu 09:00
+function getWorkoutHour() {
+  const day = new Date().getDay(); // 0=Paz, 6=Cmt
+  return (day === 0 || day === 6) ? 9 : 7;
+}
+
 function getMealTime() {
   const h = new Date().getHours();
-  if (h < 10) return 'morning';
-  if (h < 13) return 'pre_workout';
-  if (h < 16) return 'post_workout';
+  const wh = getWorkoutHour(); // antrenman saati
+
+  // Antrenman öncesi: 2 saat öncesinden başlar
+  if (h >= wh - 2 && h < wh) return 'pre_workout';
+
+  // Antrenman sonrası: antrenman saatinden 2 saat sonraya kadar
+  if (h >= wh && h < wh + 2) return 'post_workout';
+
+  // Sabah erken (pre-workout öncesi)
+  if (h < wh - 2) return 'morning';
+
+  // Öğle-akşam arası
   if (h < 20) return 'dinner';
+
   return 'evening';
+}
+
+export function getWorkoutSchedule() {
+  const day = new Date().getDay();
+  const isWeekend = day === 0 || day === 6;
+  const wh = isWeekend ? 9 : 7;
+  const h = new Date().getHours();
+  const minsToWorkout = (wh - h) * 60 - new Date().getMinutes();
+  return { hour: wh, isWeekend, minsToWorkout };
 }
 
 // ─── ÖĞÜN ŞABLONLARI ───────────────────────────────────────────
@@ -43,7 +68,7 @@ const MEALS = {
       ],
       total: { cal: 609, pro: 31, carb: 70, fat: 22 },
       tags: ['strength', 'calisthenics', 'functional'],
-      tip: "Antrenmandan 1.5-2 saat önce ye"
+      tip: "Haftiçi 05:00-05:30, haftasonu 07:00-07:30 — antrenman başlamadan 1.5 saat önce"
     },
     {
       name: "Hafif & Hızlı Kahvaltı",
@@ -55,7 +80,7 @@ const MEALS = {
       ],
       total: { cal: 455, pro: 26, carb: 56, fat: 17 },
       tags: ['cardio', 'rest'],
-      tip: "Kondisyon antrenmanından 1 saat önce ideal"
+      tip: "Sabah antrenmanı için 06:00'da hazır — mide rahat, enerji tam"
     },
     {
       name: "Türk Kahvaltısı",
@@ -68,7 +93,7 @@ const MEALS = {
       ],
       total: { cal: 576, pro: 30, carb: 42, fat: 31 },
       tags: ['strength', 'calisthenics', 'rest'],
-      tip: "Sabah ilk öğün — güne güçlü başlangıç"
+      tip: "Haftiçi 05:30, haftasonu 07:30 — antrenman öncesi son 1.5 saat"
     },
     {
       name: "Hızlı Protein Shake Kahvaltı",
@@ -80,15 +105,15 @@ const MEALS = {
       ],
       total: { cal: 545, pro: 41, carb: 72, fat: 11 },
       tags: ['strength', 'calisthenics', 'functional', 'cardio'],
-      tip: "Antrenman 30-60 dk öncesi — hızlı sindirim"
+      tip: "Vakti dar olanlar için: haftiçi 06:00, haftasonu 08:00 — 1 saat yeterli"
     },
   ],
 
   // ANTRENMAN ÖNCESİ (öğle üstü)
   pre_workout: [
     {
-      name: "Antrenman Öncesi Öğle",
-      desc: "Yavaş karb + protein — 2 saat enerji",
+      name: "Antrenman Öncesi Hafif Öğün",
+      desc: "Mideyi zorlamadan enerji — 1-1.5 saat öncesi",
       foods: [
         { name: "Bulgur pilavı (150g)", cal: 165, pro: 5, carb: 34, fat: 1 },
         { name: "Tavuk göğsü ızgara (150g)", cal: 230, pro: 43, carb: 0, fat: 5 },
@@ -96,7 +121,7 @@ const MEALS = {
       ],
       total: { cal: 475, pro: 52, carb: 40, fat: 11 },
       tags: ['strength', 'calisthenics', 'functional'],
-      tip: "Antrenmandan 2 saat önce ye — sindirim tamamlanır"
+      tip: "Sabah antrenmanı 07:00 ise 05:30-06:00'da ye — tam 2 saat mide boşalma süresi"
     },
     {
       name: "Hafif Öğle — Kondisyon Öncesi",
@@ -108,7 +133,7 @@ const MEALS = {
       ],
       total: { cal: 515, pro: 44, carb: 62, fat: 10 },
       tags: ['cardio'],
-      tip: "Sprint/AMRAP öncesi — hazım kolay, enerji yüksek"
+      tip: "09:00 haftasonu antrenmanı için 07:00-07:30'da ye"
     },
     {
       name: "Mercimek Çorbası + Protein",
@@ -120,7 +145,7 @@ const MEALS = {
       ],
       total: { cal: 680, pro: 39, carb: 111, fat: 8 },
       tags: ['strength', 'rest'],
-      tip: "Hem bitkisel protein hem de yavaş karb — ideal kombinasyon"
+      tip: "Haftasonu 09:00 antrenmanı öncesi 07:00'de ye"
     },
   ],
 
