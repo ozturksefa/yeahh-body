@@ -518,10 +518,7 @@ export default function App() {
                 {isLastExGlobal ? "✅ Bitir" : "Sonraki →"}
               </button>
             ) : (
-              <div className="advance-bar-hint-wrap">
-                <span className="advance-bar-hint">Setleri tamamla ✓</span>
-                <button className="advance-bar-quit" onClick={handleWorkoutFinish}>🛑 Bitir</button>
-              </div>
+              <div className="advance-bar-hint">Setleri tamamla ✓</div>
             )}
             {currentFlat && (() => {
               const nextBlockIdx = currentFlat.blockIdx + 1;
