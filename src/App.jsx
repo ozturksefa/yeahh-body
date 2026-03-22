@@ -377,14 +377,17 @@ export default function App() {
           </div>
         )}
 
-        <div className="page-nav">
-          <button className={`page-tab ${page === "program" ? "page-tab-active" : ""}`}
-            onClick={() => setPage("program")}>🏋️ Program</button>
-          <button className={`page-tab ${page === "dashboard" ? "page-tab-active" : ""}`}
-            onClick={() => setPage("dashboard")}>📊 İlerleme</button>
-          <button className={`page-tab ${page === "nutrition" ? "page-tab-active" : ""}`}
-            onClick={() => setPage("nutrition")}>🍽 Beslenme</button>
-        </div>
+        {/* Klasik modda App-level nav, Full/Atletik modda kendi nav'ları var */}
+        {programMode === "classic" && (
+          <div className="page-nav">
+            <button className={`page-tab ${page === "program" ? "page-tab-active" : ""}`}
+              onClick={() => setPage("program")}>🏋️ Program</button>
+            <button className={`page-tab ${page === "dashboard" ? "page-tab-active" : ""}`}
+              onClick={() => setPage("dashboard")}>📊 İlerleme</button>
+            <button className={`page-tab ${page === "nutrition" ? "page-tab-active" : ""}`}
+              onClick={() => setPage("nutrition")}>🍽 Beslenme</button>
+          </div>
+        )}
         {page === "program" && programMode === "classic" && (
         <div className="tabs">
           {PROGRAM.days.map((dd, i) => (
