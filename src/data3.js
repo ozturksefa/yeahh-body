@@ -228,43 +228,330 @@ export const PROGRAM3 = {
       id: 5, title: "OFF 1", sub: "PAZARTESİ", focus: "Aktif Recovery", duration: "~15 dk", color: "#6C757D",
       type: "offday",
       blocks: [
-        { name: "🌿 RECOVERY — Sabah Rutini", color: "#6C757D", exercises: [
-          { name:"Diaphragmatic Breathing", sets:"2 × 10 nefes", muscle:"Parasempatik aktivasyon", how:["Sırt üstü yat — dizler bükülü, ayaklar yerde", "Bir eli göğse, bir eli karna koy", "Burndan 4 sn nefes al — KARIN şişmeli, göğüs değil", "2 sn tut, ağızdan 6 sn yavaşça ver", "10 tekrar — her nefeste biraz daha derin"], avoid:"Göğüs yükseltme — nefes karna gitmeli", warn:"Parasempatik sistemi aktive eder — uyku kalitesini artırır, kortizolü düşürür", alts:[] },
-          { name:"Cat and Cow", sets:"2 × 15", muscle:"Omurga mobilite", how:["Dört ayak — bilekler omuz altında, dizler kalça altında", "Cat: nefes ver → sırtı yuvarlat, çeneyi göğse çek, pelvis içe döner", "Cow: nefes al → sırtı çukurlaştır, göğsü öne çık, kuyruğu kaldır", "Yavaş ve nefesle birlikte — 3-4 sn her pozisyon"], avoid:"Sadece boyun veya belden yapma — tüm omurga dalgalanmalı", warn:"SKOLYOZ: Her tekrarda sol-sağ simetriyi hisset", alts:[] },
-          { name:"Hip Flexor Stretch", sets:"2 × 45sn (her taraf)", muscle:"Hip flexor — oturma kasılması", how:["Yarım diz pozisyonu — sağ diz yerde, sol ayak önde", "Kalçayı öne it — arka bacak üzerinde gerilme hisset", "Posterior tilt yap — kalçanı altına tıkıştır", "Gövde dik — öne eğilme — 30-45 sn tut"], avoid:"Gövdeyi öne eğme — dik tut", warn:"Masa başı çalışıyorsan her gün şart — kısalmış hip flexor sırt ağrısına yol açar", alts:[] },
-          { name:"Child's Pose", sets:"2 × 60sn", muscle:"Full recovery pozisyonu", how:["Diz üstü otur, topuklarına otur", "Kolları öne uzat — yere koy", "Alnı yere koy veya mindere", "Tamamen bırak — pasif esneme — 45-60 sn"], avoid:"Zorla uzanma — yer çekimi işini yapsın", warn:"Diz ağrısı varsa topuklara oturmak yerine daha dik dur", alts:[] },
-          { name:"Supine Spinal Twist Right", sets:"1 × 60sn", muscle:"Sırt", how:["Sırt üstü yat — kollar yana T şeklinde açık", "Sağ dizi 90° büküp sol tarafa yatır", "Sağ omuz yerde kalsın — ters yöne bak", "45-60 sn tut — nefes alarak derinleştir"], avoid:"Omuzların yerden kalkmasına izin verme", warn:"SKOLYOZ: Her iki tarafa mutlaka eşit süre uygula", alts:[] },
-          { name:"Supine Spinal Twist Left", sets:"1 × 60sn", muscle:"Her taraf eşit", how:["Sırt üstü yat — kollar yana T şeklinde açık", "Sol dizi 90° büküp sağ tarafa yatır", "Sol omuz yerde kalsın — ters yöne bak", "Her iki taraf eşit süre — 45-60 sn"], avoid:"Omuzların yerden kalkmasına izin verme", warn:"SKOLYOZ: Her iki tarafa mutlaka eşit süre uygula", alts:[] },
-        ]},
-      ],
+        {
+                "name": "🌿 RECOVERY — Sabah Rutini",
+                "color": "#6C757D",
+                "exercises": [
+                        {
+                                "name": "Diaphragmatic Breathing",
+                                "sets": "2 × 10 nefes",
+                                "muscle": "Diyafram, parasempatik aktivasyon",
+                                "how": [
+                                        "Sırt üstü yat — bir el göğse, bir el karna",
+                                        "Burndan 4 sn al — karin şişmeli",
+                                        "2 sn tut",
+                                        "Ağızdan 6 sn ver",
+                                        "10 tekrar"
+                                ],
+                                "avoid": "Göğüs yükseltme",
+                                "warn": "Kortizol düşürür, kas onarımını hızlandırır — sabah ilk iş yap",
+                                "alts": []
+                        },
+                        {
+                                "name": "Cat and Cow",
+                                "sets": "2 × 15",
+                                "muscle": "Tüm omurga mobilite",
+                                "how": [
+                                        "Dört ayak — bilekler omuz altında",
+                                        "Cat: nefes ver → sırtı yuvarlat",
+                                        "Cow: nefes al → sırtı çukurlaştır",
+                                        "Yavaş — 3-4 sn her pozisyon"
+                                ],
+                                "avoid": "Sadece belden yapma",
+                                "warn": "Sabah uyanışında ilk 5 dk — omurga açılır",
+                                "alts": []
+                        },
+                        {
+                                "name": "Hip Flexor Stretch",
+                                "sets": "2 × 45sn (her taraf)",
+                                "muscle": "Hip flexor, kasık",
+                                "how": [
+                                        "Yarım diz — diz yerde, ayak önde",
+                                        "Kalçayı öne it, posterior tilt",
+                                        "Gövde dik — 45 sn",
+                                        "Her iki taraf"
+                                ],
+                                "avoid": "Gövdeyi öne eğme",
+                                "warn": "Pazar antrenman sonrası hip flexor sıkışır — aç",
+                                "alts": []
+                        },
+                        {
+                                "name": "Child's Pose",
+                                "sets": "2 × 60sn",
+                                "muscle": "Sırt, omuz, kalça",
+                                "how": [
+                                        "Diz üstü otur — topuklara otur",
+                                        "Kolları öne uzat, alnı yere",
+                                        "Tamamen bırak — 60 sn"
+                                ],
+                                "avoid": "Zorla uzanma",
+                                "warn": null,
+                                "alts": []
+                        },
+                        {
+                                "name": "Supine Spinal Twist Right",
+                                "sets": "1 × 60sn",
+                                "muscle": "Torasik rotasyon, sırt",
+                                "how": [
+                                        "Sırt üstü — kollar yana",
+                                        "Sağ dizi büküp sol tarafa yatır",
+                                        "Sağ omuz yerde — sola bak",
+                                        "60 sn"
+                                ],
+                                "avoid": "Omuzların yerden kalkması",
+                                "warn": "SKOLYOZ: Her iki taraf eşit süre",
+                                "alts": []
+                        },
+                        {
+                                "name": "Supine Spinal Twist Left",
+                                "sets": "1 × 60sn",
+                                "muscle": "Her taraf eşit",
+                                "how": [
+                                        "Sol dizi büküp sağ tarafa yatır",
+                                        "Sol omuz yerde — sağa bak",
+                                        "60 sn"
+                                ],
+                                "avoid": "Omuzların yerden kalkması",
+                                "warn": "SKOLYOZ: Asla bir tarafı atlama",
+                                "alts": []
+                        },
+                        {
+                                "name": "Prone Cobra",
+                                "sets": "2 × 20sn",
+                                "muscle": "Sırt ekstansörleri, postür",
+                                "how": [
+                                        "Yüzüstü yat",
+                                        "Göğsü sırt kaslarıyla kaldır",
+                                        "Kürek kemiklerini birleştir",
+                                        "20 sn tut"
+                                ],
+                                "avoid": "Kollarla itmek",
+                                "warn": "Pazar sonrası öne kapanan omuzları aç",
+                                "alts": [
+                                        "Superman Hold"
+                                ]
+                        },
+                        {
+                                "name": "Hug Knees to Chest",
+                                "sets": "1 × 60sn",
+                                "muscle": "Alt sırt, glute recovery",
+                                "how": [
+                                        "Sırt üstü — iki dizi göğse çek",
+                                        "Hafifçe sağa sola salla",
+                                        "60 sn"
+                                ],
+                                "avoid": "Boynu kaldırma",
+                                "warn": "Pazar yük taşıma sonrası alt sırt için",
+                                "alts": []
+                        }
+                ]
+        }
+],
     },
     {
       id: 6, title: "OFF 2", sub: "ÇARŞAMBA", focus: "Mobilite + Hafif Aktivasyon", duration: "~25 dk", color: "#6C757D",
       type: "offday",
       blocks: [
-        { name: "⚡ AKTİF RECOVERY — Evde", color: "#6C757D", exercises: [
-          { name:"Band Pull Apart", sets:"3 × 20", muscle:"Postür kasları", how:["Bandı iki elle önde omuz hizasında tut — omuz genişliğinde", "Kolları düz tutarak yanlara aç — kürek kemiklerini birleştir", "1 sn tam açık pozisyonda tut", "Kontrollü geri gel — 2-3 sn"], avoid:"Omuzları kulağa kaldırma — trapez değil rhomboid çalışmalı", warn:"Bilgisayar başında postür kasları zayıflar — günlük yapılmalı", alts:[] },
-          { name:"Dead Hang", sets:"3 × 20sn", muscle:"Omurga dekompresyon, grip", how:["Bardan iki elle asıl — overhand tutuş", "Omuzları aktif tut — kulağa doğru değil, aşağı çek", "Vücut sallanmasın — sakin kal", "Nefes al — omurgayı uzat — 20-30 sn tut"], avoid:"Tamamen pasif sarkmak — omuzlar aktif olmalı", warn:"Omurga dekompresyonu — disk arası mesafeyi açar, sırt ağrısına iyi gelir", alts:[] },
-          { name:"Glute Bridge", sets:"3 × 20", muscle:"Glute aktivasyon", how:["Sırt üstü yat — dizler bükülü 90°, ayaklar yerde", "Topuklarla yere bas ve kalçayı yukarı kaldır", "Üstte 1 sn glute'u sıkıştır — kasılmayı hisset", "Kontrollü indir — 2 sn"], avoid:"Beli kaldırmaya çalışma — hareket kalçadan gelir", warn:"Her antrenmandan önce glute aktivasyonu — güç ve diz koruması için", alts:[] },
-          { name:"Side Plank Left", sets:"2 × 30sn", muscle:"Sol oblique", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
-          { name:"Side Plank Right", sets:"2 × 30sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
-          { name:"World Greatest Stretch", sets:"2 × 5 (her taraf)", muscle:"Full body mobilite", how:["Büyük lunge adımı at — sağ ayak önde", "Sağ elin sağ ayağın iç yanına koy", "Sol kolu tavana doğru aç — gözler elle", "3 sn tut, el yere indir, topuğu it — kalça aç", "Her iki taraf 5'er tekrar"], avoid:"Aceleyle yapma — her pozisyonda 2-3 sn kal", warn:"Tüm vücudu tek harekette ısıtır — kalça, sırt, omuz, göğüs", alts:[] },
-          { name:"Chin Tuck", sets:"3 × 15", muscle:"Boyun", how:["Sandalyede dik otur veya ayakta dur", "Çeneni geriye it — çift çene yap", "Boyun uzuyor gibi hisset — 2 sn tut", "Bırak, tekrarla — 12-15 tekrar"], avoid:"Başı aşağı eğme — sadece geriye it", warn:"Bilgisayar başında çalışanlar için boyun ağrısının ana önlemi", alts:[] },
-        ]},
-      ],
+        {
+                "name": "⚡ AKTİF RECOVERY — Ekipmansız",
+                "color": "#6C757D",
+                "exercises": [
+                        {
+                                "name": "Scapula Squeeze",
+                                "sets": "3 × 15",
+                                "muscle": "Rhomboid, orta trapez, postür",
+                                "how": [
+                                        "Ayakta veya sandalyede — dik duruş",
+                                        "Kolları yana veya yanında serbest",
+                                        "Kürek kemiklerini sıkıştır",
+                                        "2 sn tut, bırak"
+                                ],
+                                "avoid": "Omuzları kulağa kaldırma",
+                                "warn": "Band Pull Apart'ın ekipmansız versiyonu",
+                                "alts": [
+                                        "Prone Y squeeze"
+                                ]
+                        },
+                        {
+                                "name": "Incline Push Up",
+                                "sets": "3 × 10",
+                                "muscle": "Göğüs, triceps, serratus",
+                                "how": [
+                                        "Masa, tezgah veya duvara elleri koy",
+                                        "Vücut düz — core sıkı",
+                                        "3 sn yavaşça in, kontrollü it",
+                                        "Tempo yavaş"
+                                ],
+                                "avoid": "Beli sarkıtma",
+                                "warn": "Off day push-up — kan dolaşımını artırır, hareket örüntüsünü korur",
+                                "alts": [
+                                        "Wall Push Up",
+                                        "Knee Push Up"
+                                ]
+                        },
+                        {
+                                "name": "Glute Bridge",
+                                "sets": "3 × 20",
+                                "muscle": "Glute, hamstring aktivasyon",
+                                "how": [
+                                        "Sırt üstü — dizler bükülü",
+                                        "Topuklarla bas, kalçayı kaldır",
+                                        "1 sn sıkıştır, 2 sn indir"
+                                ],
+                                "avoid": "Beli aşırı kaldırma",
+                                "warn": "Mid-week glute aktivasyonu — Perşembe performansına katkı",
+                                "alts": [
+                                        "Single Leg Glute Bridge"
+                                ]
+                        },
+                        {
+                                "name": "Side Plank Left",
+                                "sets": "2 × 30sn",
+                                "muscle": "Sol oblique, lateral core",
+                                "how": [
+                                        "Sol dirsek omuz altında",
+                                        "Kalça yukarı — 30 sn"
+                                ],
+                                "avoid": "Kalça sarkmasın",
+                                "warn": "SKOLYOZ günlük yapılabilir",
+                                "alts": []
+                        },
+                        {
+                                "name": "Side Plank Right",
+                                "sets": "2 × 30sn",
+                                "muscle": "Sağ oblique",
+                                "how": [
+                                        "Her iki taraf eşit"
+                                ],
+                                "avoid": "Kalça sarkmasın",
+                                "warn": "SKOLYOZ: Asla bir tarafı atlama",
+                                "alts": []
+                        },
+                        {
+                                "name": "World Greatest Stretch",
+                                "sets": "2 × 5 (her taraf)",
+                                "muscle": "Kalça, torasik, omuz — full body mobilite",
+                                "how": [
+                                        "Büyük lunge — sağ ayak önde",
+                                        "Sağ eli sağ ayağın yanına koy",
+                                        "Sol kolu tavana aç — gözler elle",
+                                        "3 sn tut, geri dön",
+                                        "Her iki taraf"
+                                ],
+                                "avoid": "Aceleyle yapma",
+                                "warn": "Tüm vücudu tek harekette ısıtır",
+                                "alts": []
+                        },
+                        {
+                                "name": "Chin Tuck",
+                                "sets": "3 × 15",
+                                "muscle": "Derin boyun fleksörleri",
+                                "how": [
+                                        "Sandalyede dik otur",
+                                        "Çeneni geriye it — 2 sn tut",
+                                        "Bırak, tekrarla"
+                                ],
+                                "avoid": "Başı aşağı eğme",
+                                "warn": "Bilgisayar başındaysan saatte bir yap",
+                                "alts": []
+                        }
+                ]
+        }
+],
     },
     {
       id: 7, title: "OFF 3", sub: "CUMA", focus: "Cumartesi Hazırlığı", duration: "~15 dk", color: "#6C757D",
       type: "offday",
       blocks: [
-        { name: "🔋 HAZİRLIK — Cumartesi Öncesi", color: "#6C757D", exercises: [
-          { name:"Hip Flexor Stretch", sets:"2 × 45sn (her taraf)", muscle:"Hip flexor", how:["Yarım diz pozisyonu — sağ diz yerde, sol ayak önde", "Kalçayı öne it — arka bacak üzerinde gerilme hisset", "Posterior tilt yap — kalçanı altına tıkıştır", "Gövde dik — öne eğilme — 30-45 sn tut"], avoid:"Gövdeyi öne eğme — dik tut", warn:"Masa başı çalışıyorsan her gün şart — kısalmış hip flexor sırt ağrısına yol açar", alts:[] },
-          { name:"Glute Bridge", sets:"3 × 15", muscle:"Glute aktivasyon", how:["Sırt üstü yat — dizler bükülü 90°, ayaklar yerde", "Topuklarla yere bas ve kalçayı yukarı kaldır", "Üstte 1 sn glute'u sıkıştır — kasılmayı hisset", "Kontrollü indir — 2 sn"], avoid:"Beli kaldırmaya çalışma — hareket kalçadan gelir", warn:"Her antrenmandan önce glute aktivasyonu — güç ve diz koruması için", alts:[] },
-          { name:"Band External Rotation", sets:"2 × 15 (her taraf)", muscle:"Rotator cuff hazırlık", how:["Dirsek 90° bükülü — vücuda yapışık", "Bant dirseğin ön kısmından geçiyor", "Kolu dışa doğru döndür — dirsek sabit", "Kontrollü geri gel — kasılmayı hisset"], avoid:"Dirseği vücuttan ayırma — sabit tutmalı", warn:"ROTATOR CUFF REHABİLİTASYON: Omuz cerrahisi riskini azaltan en önemli hareket", alts:[] },
-          { name:"Supine Hip Rotation", sets:"2 × 10 (her taraf)", muscle:"Kalça", how:["Sırt üstü yat — dizler bükülü, ayaklar yerde", "Sağ dizi yavaşça sağa yatır — 10 sn tut", "Geri gel, sol dizi sola yatır — 10 sn tut", "Ağrı varsa range'i azalt — zorla yapma"], avoid:"Kalçanın yerden kalkmasına izin verme", warn:"DİZ: Kalça rotatorlarını açar — menisküs stresi azalır", alts:[] },
-          { name:"Cat and Cow", sets:"2 × 10", muscle:"Omurga", how:["Dört ayak — bilekler omuz altında, dizler kalça altında", "Cat: nefes ver → sırtı yuvarlat, çeneyi göğse çek, pelvis içe döner", "Cow: nefes al → sırtı çukurlaştır, göğsü öne çık, kuyruğu kaldır", "Yavaş ve nefesle birlikte — 3-4 sn her pozisyon"], avoid:"Sadece boyun veya belden yapma — tüm omurga dalgalanmalı", warn:"SKOLYOZ: Her tekrarda sol-sağ simetriyi hisset", alts:[] },
-        ]},
-      ],
+        {
+                "name": "🔋 HAZİRLIK — Cumartesi Öncesi",
+                "color": "#6C757D",
+                "exercises": [
+                        {
+                                "name": "Hip Flexor Stretch",
+                                "sets": "2 × 45sn (her taraf)",
+                                "muscle": "Hip flexor — Lower günü öncesi",
+                                "how": [
+                                        "Yarım diz — diz yerde, ayak önde",
+                                        "Kalçayı öne it, posterior tilt",
+                                        "Gövde dik — 45 sn her taraf"
+                                ],
+                                "avoid": "Gövdeyi öne eğme",
+                                "warn": "Cumartesi Lower öncesi akşam yap",
+                                "alts": []
+                        },
+                        {
+                                "name": "Floor Bridge",
+                                "sets": "3 × 15",
+                                "muscle": "Glute aktivasyon",
+                                "how": [
+                                        "Sırt üstü — dizler bükülü",
+                                        "Kalçayı kaldır, 1 sn sıkıştır",
+                                        "Yavaşça indir"
+                                ],
+                                "avoid": "Beli aşırı kaldırma",
+                                "warn": "Cumartesi için glute pre-aktivasyon",
+                                "alts": []
+                        },
+                        {
+                                "name": "Prone External Rotation",
+                                "sets": "2 × 15 (her taraf)",
+                                "muscle": "Infraspinatus, teres minor — rotator cuff",
+                                "how": [
+                                        "Yüzüstü yat — bir kolun dirseği 90° büküp yanına koy",
+                                        "Ön kolu tavana doğru kaldır — dirsek sabit",
+                                        "Sadece önkol döner",
+                                        "Yavaşça geri indir"
+                                ],
+                                "avoid": "Omuz kaslarıyla kaldırma — sadece dış rotasyon",
+                                "warn": "Band olmadan rotator cuff prehab — bant yerine geçer",
+                                "alts": [
+                                        "Side-lying External Rotation"
+                                ]
+                        },
+                        {
+                                "name": "Supine Hip Rotation",
+                                "sets": "2 × 10 (her taraf)",
+                                "muscle": "Kalça iç-dış rotatorlar",
+                                "how": [
+                                        "Sırt üstü — dizler bükülü",
+                                        "Sağ dizi sağa yatır — 10 sn tut",
+                                        "Geri gel, sol dizi sola — 10 sn",
+                                        "Ağrı varsa range'i azalt"
+                                ],
+                                "avoid": "Kalçanın yerden kalkması",
+                                "warn": "DİZ: Kalça rotatorlarını açar — menisküs stresi azalır",
+                                "alts": []
+                        },
+                        {
+                                "name": "Cat and Cow",
+                                "sets": "2 × 10",
+                                "muscle": "Omurga mobilite",
+                                "how": [
+                                        "Dört ayak — nefesle birlikte",
+                                        "3-4 sn her pozisyon",
+                                        "Yavaş — sırtı ısıt"
+                                ],
+                                "avoid": "Aceleyle yapma",
+                                "warn": "Cumartesi Lower öncesi omurga hazırlığı",
+                                "alts": []
+                        },
+                        {
+                                "name": "Ankle Circle",
+                                "sets": "2 × 10 (her yön)",
+                                "muscle": "Ayak bileği mobilite",
+                                "how": [
+                                        "Otur — bir ayağı kaldır",
+                                        "10 saat yönünde, 10 ters",
+                                        "Her iki ayak"
+                                ],
+                                "avoid": "Dizden yapmaya çalışma",
+                                "warn": "Menisküs için ihmal edilmez",
+                                "alts": []
+                        }
+                ]
+        }
+],
     },
   ],
 };
