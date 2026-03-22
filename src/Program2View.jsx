@@ -8,7 +8,6 @@ import NutritionTracker from "./Nutrition";
 import { saveFlow, loadFlow, clearFlow } from "./flowStore";
 import { getDashboardStats } from "./tracker";
 import { parseSets } from "./SetTracker";
-import SkillTimer from "./SkillTimer";
 import Program2Stats from "./Program2Stats";
 
 const FLOW_KEY = "session2";
@@ -368,7 +367,9 @@ export default function Program2View({ user }) {
         </div>
       </div>
 
-      {page2 === "nutrition" ? (
+      {page2 === "stats" ? (
+        <main className="main"><Program2Stats /></main>
+      ) : page2 === "nutrition" ? (
         <main className="main"><NutritionTracker /></main>
       ) : (
         <>

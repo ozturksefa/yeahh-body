@@ -305,6 +305,10 @@ const GIF_MAP = {
   "Side Step with Band":             "O95afRA",  // monster walk
   "Prone Y-T-W":                     "4GqRrAk",  // superman push-up
 
+  // ══ KLASİK PROGRAM EK GIF'LER ══
+  "Wall Sit":                            "dzz6BiV",  // ≈ squat hold (wall sit DB'de yok, statik squat pozisyonu)
+  "Dumbbell Romanian Deadlift (Yavaş Tempo)": "rR0LJzx",  // RDL — aynı Dumbbell RDL GIF
+
   // ══ PROGRAM 2 EK GIF'LER ══
   "Shoulder CARs": "TFA88iB",
   "Band External Rotation": "FWdVhcW",
