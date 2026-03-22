@@ -4,7 +4,6 @@
 const DB_NAME = "yeahh_body";
 const DB_VERSION = 1;
 const STORE = "flow";
-const KEY = "session";
 
 function openDB() {
   return new Promise((resolve, reject) => {
@@ -20,12 +19,12 @@ function openDB() {
   });
 }
 
-// Save flow state: { day, expandedEx, workoutActive, savedAt }
-export async function saveFlow(state) {
+// key: "session" for classic, "session2" for full activation
+export async function saveFlow(state, key = "session") {
   try {
     const db = await openDB();
     const tx = db.transaction(STORE, "readwrite");
-    tx.objectStore(STORE).put({ ...state, savedAt: Date.now() }, KEY);
+    tx.objectStore(STORE).put({ ...state, savedAt: Date.now() }, key);
     await new Promise((res, rej) => { tx.oncomplete = res; tx.onerror = rej; });
     db.close();
   } catch (e) {
@@ -33,26 +32,20 @@ export async function saveFlow(state) {
   }
 }
 
-// Load flow state — returns null if nothing saved or stale (>12h)
-export async function loadFlow() {
+export async function loadFlow(key = "session") {
   try {
     const db = await openDB();
     const tx = db.transaction(STORE, "readonly");
-    const req = tx.objectStore(STORE).get(KEY);
+    const req = tx.objectStore(STORE).get(key);
     const result = await new Promise((res, rej) => { req.onsuccess = () => res(req.result); req.onerror = rej; });
     db.close();
 
     if (!result || !result.workoutActive) return null;
 
-    // Stale check: older than 12 hours
     const ageHours = (Date.now() - (result.savedAt || 0)) / (1000 * 60 * 60);
-    if (!isFinite(ageHours) || ageHours > 12) {
-      await clearFlow();
-      return null;
-    }
+    if (!isFinite(ageHours) || ageHours > 12) { await clearFlow(key); return null; }
 
-    // Validate
-    if (typeof result.day !== "number" || result.day < 0 || result.day > 3) return null;
+    if (typeof result.day !== "number" || result.day < 0) return null;
     if (!result.expandedEx || typeof result.expandedEx !== "string") return null;
 
     return result;
@@ -62,12 +55,11 @@ export async function loadFlow() {
   }
 }
 
-// Clear flow state
-export async function clearFlow() {
+export async function clearFlow(key = "session") {
   try {
     const db = await openDB();
     const tx = db.transaction(STORE, "readwrite");
-    tx.objectStore(STORE).delete(KEY);
+    tx.objectStore(STORE).delete(key);
     await new Promise((res, rej) => { tx.oncomplete = res; tx.onerror = rej; });
     db.close();
   } catch (e) {

@@ -1,7 +1,9 @@
 import { useState, useEffect } from "react";
 import "./Nutrition.css";
 
-const TARGETS = { calories: 2200, protein: 150, carbs: 250, fat: 70 };
+function loadTargets() {
+  try { return JSON.parse(localStorage.getItem("yb_targets") || "null") || { calories: 2200, protein: 150, carbs: 250, fat: 70 }; } catch { return { calories: 2200, protein: 150, carbs: 250, fat: 70 }; }
+}
 
 const QUICK_FOODS = [
   // Kahvaltılık
@@ -139,9 +141,9 @@ function getRecentFoods() {
 
 // Makroya göre akıllı öneriler üret
 function getSmartSuggestions(totals) {
-  const remProtein = TARGETS.protein - totals.protein;
-  const remCalories = TARGETS.calories - totals.calories;
-  const remCarbs = TARGETS.carbs - totals.carbs;
+  const remProtein = targets.protein - totals.protein;
+  const remCalories = targets.calories - totals.calories;
+  const remCarbs = targets.carbs - totals.carbs;
   const suggestions = [];
 
   if (remCalories <= 0) {
@@ -186,6 +188,8 @@ function getSmartSuggestions(totals) {
 }
 
 export default function NutritionTracker() {
+  const [targets, setTargets] = useState(loadTargets);
+  const [showTargets, setShowTargets] = useState(false);
   const [activeDate, setActiveDate] = useState(todayStr());
   const [entries, setEntries] = useState(() => loadEntries(todayStr()));
   const [search, setSearch] = useState("");
@@ -282,6 +286,38 @@ export default function NutritionTracker() {
   return (
     <div className="nutrition">
 
+      {/* Hedef düzenleme */}
+      <button className="nutri-target-toggle" onClick={() => setShowTargets(s => !s)}>
+        {showTargets ? "✕ Hedefleri Kapat" : "🎯 Günlük Hedefleri Düzenle"}
+      </button>
+      {showTargets && (
+        <div className="nutri-target-editor">
+          {[
+            { key: "calories", label: "Kalori", unit: "kcal", min: 1200, max: 5000 },
+            { key: "protein",  label: "Protein",  unit: "g", min: 50, max: 300 },
+            { key: "carbs",    label: "Karb",  unit: "g", min: 50, max: 600 },
+            { key: "fat",      label: "Yağ",    unit: "g", min: 20, max: 200 },
+          ].map(f => (
+            <div key={f.key} className="nutri-target-row">
+              <span className="nutri-target-label">{f.label}</span>
+              <input
+                className="nutri-target-input"
+                type="number" inputMode="numeric"
+                value={targets[f.key]}
+                onChange={e => {
+                  const v = Math.max(f.min, Math.min(f.max, parseInt(e.target.value) || f.min));
+                  saveTargets({ ...targets, [f.key]: v });
+                }}
+              />
+              <span className="nutri-target-unit">{f.unit}</span>
+            </div>
+          ))}
+          <button className="nutri-target-reset" onClick={() => saveTargets({ calories: 2200, protein: 150, carbs: 250, fat: 70 })}>
+            Varsayılana Döndür
+          </button>
+        </div>
+      )}
+
       {/* Tarih nav */}
       <div className="nutri-date-nav">
         <button className="nutri-date-btn" onClick={() => navigateDay(-1)}>‹</button>
@@ -292,19 +328,19 @@ export default function NutritionTracker() {
 
       {/* Macro rings */}
       <div className="nutri-rings">
-        <MacroRing label="Kalori" val={totals.calories} target={TARGETS.calories} unit="kcal" color="#FF6B35" />
-        <MacroRing label="Protein" val={totals.protein} target={TARGETS.protein} unit="g" color="#4FC3F7" />
-        <MacroRing label="Karb" val={totals.carbs} target={TARGETS.carbs} unit="g" color="#66BB6A" />
-        <MacroRing label="Yağ" val={totals.fat} target={TARGETS.fat} unit="g" color="#FFA726" />
+        <MacroRing label="Kalori" val={totals.calories} target={targets.calories} unit="kcal" color="#FF6B35" />
+        <MacroRing label="Protein" val={totals.protein} target={targets.protein} unit="g" color="#4FC3F7" />
+        <MacroRing label="Karb" val={totals.carbs} target={targets.carbs} unit="g" color="#66BB6A" />
+        <MacroRing label="Yağ" val={totals.fat} target={targets.fat} unit="g" color="#FFA726" />
       </div>
 
       {/* Progress bars */}
       <div className="nutri-bars">
         {[
-          { label: "Kalori", val: totals.calories, target: TARGETS.calories, color: "#FF6B35", unit: "kcal" },
-          { label: "Protein", val: totals.protein, target: TARGETS.protein, color: "#4FC3F7", unit: "g" },
-          { label: "Karb", val: totals.carbs, target: TARGETS.carbs, color: "#66BB6A", unit: "g" },
-          { label: "Yağ", val: totals.fat, target: TARGETS.fat, color: "#FFA726", unit: "g" },
+          { label: "Kalori", val: totals.calories, target: targets.calories, color: "#FF6B35", unit: "kcal" },
+          { label: "Protein", val: totals.protein, target: targets.protein, color: "#4FC3F7", unit: "g" },
+          { label: "Karb", val: totals.carbs, target: targets.carbs, color: "#66BB6A", unit: "g" },
+          { label: "Yağ", val: totals.fat, target: targets.fat, color: "#FFA726", unit: "g" },
         ].map(b => (
           <div key={b.label} className="nutri-bar-row">
             <span className="nutri-bar-label">{b.label}</span>

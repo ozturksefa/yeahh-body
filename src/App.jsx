@@ -403,7 +403,7 @@ export default function App() {
           <NutritionTracker />
         </main>
       ) : programMode === "full" ? (
-        <Program2View />
+        <Program2View user={user} />
       ) : (
       <>
       <div className="day-hdr" style={{ borderColor: d.color + "44", background: d.color + "0D" }}>
