@@ -10,7 +10,7 @@ function savePR(name, seconds) {
     const prs = loadPRs();
     const key = name.toLowerCase().replace(/\s+/g, "-");
     const prev = prs[key] || 0;
-    if (seconds > prev) { prs[key] = seconds; localStorage.setItem(LS_KEY, JSON.stringify(prs)); return true; }
+    if (seconds > prev) { prs[key] = seconds; try { localStorage.setItem(LS_KEY, JSON.stringify(prs)); } catch {} return true; }
     return false;
   } catch { return false; }
 }

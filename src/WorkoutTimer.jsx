@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { saveWorkout, loadWorkout, markWorkoutDone, resetWorkout } from "./tracker";
 
 function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, onElapsed }) {
+  if (dayIndex < 0) return null;
   const [workout, setWorkout] = useState(null);
   const [elapsed, setElapsed] = useState(0);
   const [started, setStarted] = useState(false);

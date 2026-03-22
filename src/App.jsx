@@ -50,7 +50,7 @@ export default function App() {
       } else {
         next[originalName] = altName;
       }
-      localStorage.setItem("yb_swaps", JSON.stringify(next));
+      try { localStorage.setItem("yb_swaps", JSON.stringify(next)); } catch {}
       return next;
     });
   };
@@ -361,17 +361,17 @@ export default function App() {
           <div className="prog-mode-toggle">
             <button
               className={`prog-mode-btn ${programMode === "classic" ? "prog-mode-active" : ""}`}
-              onClick={() => { setProgramMode("classic"); try { localStorage.setItem("yb_program_mode", "classic"); } catch {} }}>
+              onClick={() => { setProgramMode("classic"); setPage("program"); try { localStorage.setItem("yb_program_mode", "classic"); } catch {} }}>
               Klasik Split
             </button>
             <button
               className={`prog-mode-btn ${programMode === "full" ? "prog-mode-active" : ""}`}
-              onClick={() => { setProgramMode("full"); try { localStorage.setItem("yb_program_mode", "full"); } catch {} }}>
+              onClick={() => { setProgramMode("full"); setPage("program"); try { localStorage.setItem("yb_program_mode", "full"); } catch {} }}>
               Full Activation
             </button>
             <button
               className={`prog-mode-btn ${programMode === "athletic" ? "prog-mode-active" : ""}`}
-              onClick={() => { setProgramMode("athletic"); try { localStorage.setItem("yb_program_mode", "athletic"); } catch {} }}>
+              onClick={() => { setProgramMode("athletic"); setPage("program"); try { localStorage.setItem("yb_program_mode", "athletic"); } catch {} }}>
               Atletik ⚡
             </button>
           </div>
