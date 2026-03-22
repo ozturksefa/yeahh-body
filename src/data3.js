@@ -454,7 +454,7 @@ export const PROGRAM3 = {
         "Kalça düşmesin"
         ],
         "avoid": "Kalçayı düşürme — açı kaybolur",
-        "warn": "Handstand push-up'a giden yol",
+        "warn": "ROTATOR CUFF: Omuzda keskin ağrıda elevated pike'a geç. Handstand push-up'a giden yol",
         "alts": [
         "Elevated Pike Push Up",
         "Wall Pike"
@@ -466,7 +466,7 @@ export const PROGRAM3 = {
         { name: "🏋️ KUVVET — Press & Row Supersets", color: "#1A3A5C", exercises: [
           { name:"Push Up to Row (DB)", sets:"4 × 8 (her taraf)", muscle:"Göğüs + sırt + core — bütünsel stabilite", how:["Push up pozisyonu — her elde DB","1 push up yap","Sağ DB ile row çek","1 push up — sol DB ile row","= 1 tekrar"], avoid:"Kalçayı döndürme row sırasında — core sıkı", warn:"En fonksiyonel superset — fire/military standardı", alts:["Renegade Row","Push Up + Separate Row"] },
           { name:"Inverted Row", sets:"4 × max", muscle:"Mid sırt, rhomboid, biceps, core — bodyweight pull", how:["Barın altına uzan — topuklar yerde","Vücut düz çizgi — core sıkı","Göğsü bara çek","3 sn indir"], avoid:"Kalça düşmesin — vücut düz", warn:"Pull-up'a giden yol — ne kadar eğik o kadar zor", alts:["TRX Row","Smith Machine Row"] },
-          { name:"Single Arm DB Press (Alternating)", sets:"4 × 8 (her taraf)", muscle:"Ön/orta delt, triceps, core anti-rotation", how:["Ayakta veya oturarak","Tek elle press — diğer el serbest","Core: döndürme tepkisi ver","Simetrik güç geliştir"], avoid:"Gövdeyi yana eğme", warn:"SKOLYOZ: Unilateral press asimetriyi giderir", alts:["DB Shoulder Press (bilateral)","Landmine Press"] },
+          { name:"Single Arm DB Press (Alternating)", sets:"4 × 8 (her taraf)", muscle:"Ön/orta delt, triceps, core anti-rotation", how:["Ayakta veya oturarak","Tek elle press — diğer el serbest","Core: döndürme tepkisi ver","Simetrik güç geliştir"], avoid:"Gövdeyi yana eğme", warn:"ROTATOR CUFF: Ağrıda landmine press'e geç. SKOLYOZ: Unilateral press asimetriyi giderir", alts:["DB Shoulder Press (bilateral)","Landmine Press"] },
         ]},
 
         { name: "🔄 LOKOMOSYON & CARRY", color: "#8B4513", exercises: [
@@ -582,7 +582,7 @@ export const PROGRAM3 = {
         "Her sette biraz daha dik açı hedefle"
         ],
         "avoid": "Kalçayı düşürme",
-        "warn": "Ayaklarını giderek yükseltiyorsun — sonunda wall HSPU",
+        "warn": "ROTATOR CUFF: Omuz ağrısında açıyı düşür. Ayaklarını giderek yükseltiyorsun — sonunda wall HSPU",
         "alts": [
         "Elevated Pike Push Up"
         ]
@@ -598,7 +598,7 @@ export const PROGRAM3 = {
         "20sn tut — nefes al"
         ],
         "avoid": "Beli çukurlaştırma — düz çizgi",
-        "warn": "Handstand push-up öncesi stabilite — haftalar alır",
+        "warn": "ROTATOR CUFF: Duvardan destek her zaman gerekli. Omuz ağrısında pike hold'a geç. Stabilite haftalar alır",
         "alts": [
         "Box Handstand",
         "Pike Hold on Box"
@@ -637,7 +637,7 @@ export const PROGRAM3 = {
     {
       id: 4, title: "GÜN 4", sub: "PAZAR", focus: "Dayanıklılık Devresi", duration: "~75 dk", color: "#8338EC",
       type: "training",
-      injury: "⚠️ En uzun kondisyon günü — tempo düşükse daha iyi form daha uzun süre dayanmak demek.",
+      injury: "⚠️ OMUZ: Wall Handstand ve Muscle-up'ta ağrıda anında dur — zemin seviyesinde alternatife geç. DİZ: Kondisyon devresi koşu yerine rowing veya jumping jack ile değiştirilebilir.",
       conditioning: "Uzun Devre — aerobik kapasite ve akıl gücü",
       blocks: [
         { name: "🔥 ISINMA — Genel Hazırlık", color: "#CC5500", exercises: [
@@ -701,7 +701,7 @@ export const PROGRAM3 = {
         "Yapamıyorsan band yardımıyla öğren"
         ],
         "avoid": "Sadece kollarla çekme — tüm vücut momentum",
-        "warn": "Henüz pull-up yapamıyorsan bu bloğu atla — önce pull-up",
+        "warn": "ROTATOR CUFF: Kipping hareketi omuz stresi yaratır — ağrıda bu bloğu atla, sadece high pull-up yap",
         "alts": [
         "Assisted Muscle-up",
         "Bar Transition Drill",
@@ -759,7 +759,7 @@ export const PROGRAM3 = {
                                 "Süreyi not al"
                         ],
                         "avoid": "Beli çukurlaştırma",
-                        "warn": "Her hafta 5sn artır — hedefe gidiyorsun",
+                        "warn": "ROTATOR CUFF: Omuz ağrısında pike hold ile değiştir. Her hafta 5sn artır",
                         "alts": [
                                 "Box Handstand",
                                 "Pike Hold"

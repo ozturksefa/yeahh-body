@@ -33,7 +33,7 @@ export default function App() {
   const [page, setPage] = useState("program");
   const [showScrollTop, setShowScrollTop] = useState(false);
   const [programMode, setProgramMode] = useState(() => {
-    try { return localStorage.getItem("yb_program_mode") || "classic"; } catch { return "classic"; }
+    try { return localStorage.getItem("yb_program_mode") || "athletic"; } catch { return "athletic"; }
   });
   const [day, setDay] = useState(0);
   const [expandedEx, setExpandedEx] = useState(null);

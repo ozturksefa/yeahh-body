@@ -42,6 +42,9 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
           <div className="ex-name">
             {displayName}
             {swappedName && <span className="swap-badge">🔄</span>}
+            {ex.warn && /ROTATOR CUFF|DİZ:|DİZ :/i.test(ex.warn) && !swappedName && (
+              <span className="injury-badge">⚠️</span>
+            )}
           </div>
           <div className="ex-meta">
             <span className="ex-sets" style={{ background: blockColor + "33", color: blockColor }}>{ex.sets}</span>
@@ -89,7 +92,11 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
               <strong>✕ YAPMA: </strong>{ex.avoid}
             </div>
           )}
-          {ex.warn && <div className="warn-box">⚠ {ex.warn}</div>}
+          {ex.warn && (
+            <div className={/ROTATOR CUFF|DİZ:|SKOLYOZ/i.test(ex.warn) ? "warn-box warn-box-injury" : "warn-box"}>
+              ⚠ {ex.warn}
+            </div>
+          )}
           {ex.alts?.length > 0 && (
             <div className="section">
               <div className="section-label" style={{ color: "var(--purple)" }}>ALTERNATİF — değiştirmek için dokun</div>
