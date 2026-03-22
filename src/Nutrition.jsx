@@ -217,6 +217,11 @@ export default function NutritionTracker() {
 
   const suggestions = getSmartSuggestions(totals);
 
+  const saveTargets = (newTargets) => {
+    setTargets(newTargets);
+    try { localStorage.setItem("yb_targets", JSON.stringify(newTargets)); } catch {}
+  };
+
   const addFood = (food, multiplier = 1) => {
     const scaled = {
       name: multiplier !== 1 ? `${food.name} ×${multiplier}` : food.name,

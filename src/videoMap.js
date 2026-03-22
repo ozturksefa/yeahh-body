@@ -304,6 +304,33 @@ const GIF_MAP = {
   "Lateral Step Up":                 "76vfTdU",  // dumbbell step up single leg balance
   "Side Step with Band":             "O95afRA",  // monster walk
   "Prone Y-T-W":                     "4GqRrAk",  // superman push-up
+
+  // ══ PROGRAM 2 EK GIF'LER ══
+  "Shoulder CARs": "TFA88iB",
+  "Band External Rotation": "FWdVhcW",
+  "Supine Hip Rotation": "2LQkNPW",
+  "Wrist Circle": "uJmK7Z1",
+  "Thread the Needle": "qBcKorM",
+  "Lat Stretch Chair": "FJKGaKW",
+  "Chest Doorway Stretch": "FCu6nCj",
+  "Child's Pose": "f38OEuO",
+  "Triceps Stretch": "YRVPJcA",
+  "Dead Hang": "pBMDnBu",
+  "Chin-up Negative": "zMSmrRF",
+  "Scapula Pull Up": "sTfvVsG",
+  "Dip Negative": "eGBfCB5",
+  "Parallel Bar Support Hold": "eGBfCB5",
+  "Hollow Body Hold": "3B6MqAb",
+  "DB Overhead Press": "wbNPCJ1",
+  "Cable Fly": "0p9Bm5V",
+  "DB Lateral Raise": "OlHKYFi",
+  "DB Row Single Arm": "ynVKlM2",
+  "Single Leg Glute Bridge (Sağ)": "4iVp5YU",
+  "Side Plank Left": "5VXmnV5",
+  "Side Plank Right": "5VXmnV5",
+  "Copenhagen Plank Left": "5VXmnV5",
+  "Copenhagen Plank Right": "5VXmnV5",
+  "Knee Tuck Hold": "eGBfCB5",
 };
 
 const GIF_BASE = "https://static.exercisedb.dev/media/";
