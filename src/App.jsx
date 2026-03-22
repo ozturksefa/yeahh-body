@@ -11,6 +11,7 @@ import RestTimer from "./RestTimer";
 import WorkoutTimer from "./WorkoutTimer";
 import BlockCard from "./BlockCard";
 import { parseSets } from "./SetTracker";
+import Program2View from "./Program2View";
 import "./App.css";
 
 
@@ -29,6 +30,9 @@ import "./App.css";
 export default function App() {
   const [user, setUser] = useState(undefined);
   const [page, setPage] = useState("program");
+  const [programMode, setProgramMode] = useState(() => {
+    try { return localStorage.getItem("yb_program_mode") || "classic"; } catch { return "classic"; }
+  });
   const [day, setDay] = useState(0);
   const [expandedEx, setExpandedEx] = useState(null);
   const [guideOpen, setGuideOpen] = useState(null);
@@ -350,6 +354,23 @@ export default function App() {
         </div>
         <div className="prog-title">Kişisel Antrenman Programı</div>
         {streak > 0 && <div className="streak-badge">🔥 {streak} antrenman üst üste</div>}
+
+        {/* Program seçici */}
+        {page === "program" && (
+          <div className="prog-mode-toggle">
+            <button
+              className={`prog-mode-btn ${programMode === "classic" ? "prog-mode-active" : ""}`}
+              onClick={() => { setProgramMode("classic"); try { localStorage.setItem("yb_program_mode", "classic"); } catch {} }}>
+              Klasik Split
+            </button>
+            <button
+              className={`prog-mode-btn ${programMode === "full" ? "prog-mode-active" : ""}`}
+              onClick={() => { setProgramMode("full"); try { localStorage.setItem("yb_program_mode", "full"); } catch {} }}>
+              Full Activation ✦
+            </button>
+          </div>
+        )}
+
         <div className="page-nav">
           <button className={`page-tab ${page === "program" ? "page-tab-active" : ""}`}
             onClick={() => setPage("program")}>🏋️ Program</button>
@@ -358,7 +379,7 @@ export default function App() {
           <button className={`page-tab ${page === "nutrition" ? "page-tab-active" : ""}`}
             onClick={() => setPage("nutrition")}>🍽 Beslenme</button>
         </div>
-        {page === "program" && (
+        {page === "program" && programMode === "classic" && (
         <div className="tabs">
           {PROGRAM.days.map((dd, i) => (
             <button key={i}
@@ -381,6 +402,8 @@ export default function App() {
         <main className="main">
           <NutritionTracker />
         </main>
+      ) : programMode === "full" ? (
+        <Program2View />
       ) : (
       <>
       <div className="day-hdr" style={{ borderColor: d.color + "44", background: d.color + "0D" }}>

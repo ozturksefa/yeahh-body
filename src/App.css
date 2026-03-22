@@ -659,3 +659,32 @@ body{
   border-radius:var(--r);animation:prPulse 0.5s ease;
 }
 @keyframes prPulse{0%{transform:scale(0.8);opacity:0}50%{transform:scale(1.05)}100%{transform:scale(1);opacity:1}}
+
+/* ═══ PROGRAM MODE TOGGLE ═══ */
+.prog-mode-toggle { display:flex; gap:6px; padding:8px 12px 4px; }
+.prog-mode-btn { flex:1; padding:8px 0; border-radius:8px; border:1px solid #2a2a30; background:#131316; color:#888; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; transition:all .2s; }
+.prog-mode-active { background:var(--red); color:#fff; border-color:var(--red); }
+
+/* ═══ SKILL TRACKER ═══ */
+.skill-toggle-btn { width:100%; padding:10px; background:#131316; border:1px solid #2a2a30; border-radius:8px; color:#888; font-size:12px; font-weight:700; cursor:pointer; font-family:inherit; margin-bottom:4px; }
+.skill-tracker { padding:8px 0 12px; }
+.skill-tracker-title { font-size:10px; font-weight:700; color:#888; letter-spacing:1px; text-transform:uppercase; padding-bottom:8px; }
+.skill-card { background:#131316; border:1px solid #2a2a30; border-radius:10px; padding:12px; margin-bottom:8px; }
+.skill-card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:8px; }
+.skill-name { font-size:13px; font-weight:700; color:#fff; }
+.skill-level { font-size:11px; color:var(--red); font-family:var(--mono); font-weight:700; }
+.skill-progress-bar { display:flex; gap:4px; margin-bottom:8px; }
+.skill-step { flex:1; height:6px; background:#2a2a30; border-radius:3px; cursor:pointer; transition:background .2s; }
+.skill-step-done { background:#555; }
+.skill-step-current { background:var(--red); }
+.skill-current { display:flex; align-items:center; gap:6px; margin-bottom:4px; }
+.skill-current-label { font-size:10px; color:#555; }
+.skill-current-name { font-size:12px; color:#fff; font-weight:600; }
+.skill-current-target { font-size:11px; color:var(--red); font-family:var(--mono); margin-left:auto; }
+.skill-next { font-size:11px; color:#555; margin-bottom:8px; }
+.skill-next-label { color:#444; margin-right:4px; }
+.skill-next-name { color:#888; }
+.skill-level-btns { display:flex; align-items:center; gap:8px; }
+.skill-level-btns button { width:28px; height:28px; background:#1a1a1e; border:1px solid #2a2a30; border-radius:6px; color:#aaa; font-size:16px; cursor:pointer; display:flex; align-items:center; justify-content:center; }
+.skill-level-btns button:disabled { opacity:.3; cursor:default; }
+.skill-level-btns span { flex:1; font-size:11px; color:#555; text-align:center; }
