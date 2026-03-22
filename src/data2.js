@@ -72,9 +72,10 @@ export const PROGRAM2 = {
           { name:"Straight Arm Pulldown", sets:"3 × 12", muscle:"Lat izolasyon, serratus", how:["Kablo yukarıda, kollar uzun","Kolları düz tut — dirsek hafif bükük","Aşağı çek — kalçaya doğru","Lat'ı sıkıştır"], avoid:"Dirsekleri bükme", warn:null, alts:["Pullover Machine","DB Pullover"] },
           { name:"Face Pull", sets:"3 × 15", muscle:"Arka delt, rotator cuff", how:["Kablo göz hizasında","İki elle rope attachment","Yüze doğru çek — dirsekler yüksek","1 sn tut — dışa dön"], avoid:"Dirseği düşürme", warn:"Her Pull günü zorunlu — posterior delt zayıflığı skolyozu artırır", alts:["Band Face Pull","Reverse Fly"] },
         ]},
-        { name: "💪 SECONDARY — Upper Body Push (Hafif)", color: "#6C63FF", exercises: [
-          { name:"Push Up", sets:"3 × 12", muscle:"Göğüs, triceps, ön delt", how:["Eller omuz genişliğinde","Vücut düz çizgi — core sıkı","Göğüs yere değer","Patlayıcı yukarı"], avoid:"Kalça yukarı veya aşağı sarkmasın", warn:null, alts:["Incline Push Up","Knee Push Up"] },
-          { name:"DB Lateral Raise", sets:"3 × 15", muscle:"Orta delt izolasyon", how:["Hafif öne eğik — 10°","Kolları yanlara kaldır — omuz hizasına","Başparmak hafif aşağı — internal rotation","Kontrollü indir — 3 sn"], avoid:"Momentum kullanma — sallanma yok", warn:"Omuz için en güvenli izolasyon", alts:["Cable Lateral Raise","Band Lateral Raise"] },
+        { name: "💪 SECONDARY — Biceps & Omuz (Hafif)", color: "#6C63FF", exercises: [
+          { name:"Incline Dumbbell Curl", sets:"3 × 12 (her taraf)", muscle:"Biceps uzun baş izolasyon", how:["45° incline bench — kollar serbest sarkar","Avuç yukarı — supinasyon","Kontrollü kıvır — tepe noktada sıkıştır","3 sn yavaşça indir — tam germe"], avoid:"Dirsekleri öne atmayı — sabit kalacak", warn:"Pull günü biceps hacmini dengeler — triceps dengesizliğini giderir", alts:["Standing DB Curl","Cable Curl","Hammer Curl"] },
+          { name:"Standing Dumbbell Hammer Curl", sets:"3 × 12 (her taraf)", muscle:"Biceps brachii, brachialis, önkol", how:["Nötr tutuş — başparmak yukarı","Dirseği yanında tut — sabit","Kontrollü kıvır","3 sn indir"], avoid:"Gövdeyi arkaya eğme", warn:null, alts:["Cross Body Hammer Curl","Cable Hammer Curl"] },
+          { name:"DB Lateral Raise", sets:"2 × 15", muscle:"Orta delt izolasyon", how:["Hafif öne eğik — 10°","Yanlara kaldır — omuz hizası","Kontrollü indir — 3 sn"], avoid:"Momentum kullanma", warn:null, alts:["Cable Lateral Raise"] },
         ]},
         { name: "🤸 CALİSTHENİCS SKILL — Pull", color: "#E76F51", exercises: [
           { name:"Dead Hang", sets:"3 × 30sn", muscle:"Lat, ön kol, grip, omuz dekompresyon", how:["Bardan sarkıl — tam ağırlık","Omuzları kulağa çekme — aktif omuz","Nefes al — omurgayı uzat","30 sn tut"], avoid:"Pasif asılma — omuzlar aktif olacak", warn:"Pull-up yolunun temeli — asla atlama", alts:["Scapula Pull","Flexed Arm Hang"] },
@@ -181,6 +182,7 @@ export const PROGRAM2 = {
           { name:"Dumbbell Romanian Deadlift", sets:"3 × 10", muscle:"Hamstring, glute", how:["Dizler hafif bükülü — sabit","Kalçayı geriye it","Dumbbellları bacak boyunca indir","Hamstrings'de gerilme hissedince dur"], avoid:"Sırtı büküp öne eğilme", warn:"SKOLYOZ: Omurga nötrali kontrol et", alts:["Single Leg RDL","Cable Pull Through"] },
           { name:"Single Leg Glute Bridge (Sağ)", sets:"3 × 12", muscle:"Sağ glute, hamstring izolasyon", how:["Sol bacak uzatılmış","Sağ ayakla kalçayı yukarı it","1 sn sıkıştır"], avoid:"Kalçayı gövdeyle indirme", warn:"DİZ SAKATLIGI: Step up yerine", alts:["Floor Bridge","Hip Thrust"] },
           { name:"Machine Seated Leg Curl", sets:"3 × 12", muscle:"Hamstring izolasyon", how:["Oturarak — pivot diz hizasında","Kontrollü kıvır","3 sn yavaşça indir"], avoid:"Kalçayı kaldırma", warn:null, alts:["Machine Lying Leg Curl","Swiss Ball Curl"] },
+          { name:"Swiss Ball Hamstring Curl", sets:"3 × 12", muscle:"Hamstring — hip extension + knee flexion", how:["Sırt üstü yat — topuklar ball üzerinde","Kalçayı kaldır ve sabit tut","Topukları çekerek ball'ı bedenine doğru getir","Yavaşça geri uzat — kalça hep yukarıda"], avoid:"Kalçayı düşürme — hep yukarıda kalacak", warn:"Makine yoksa en iyi hamstring alternatifi — dize yük yok", alts:["Glute Bridge Hamstring Walk","Nordic Hamstring Curl","Lying Leg Curl"] },
         ]},
         { name: "💪 SECONDARY — Upper Back (Hafif)", color: "#2A9D8F", exercises: [
           { name:"DB Row Single Arm", sets:"3 × 10 (her taraf)", muscle:"Sırt orta, rhomboid, biceps", how:["Bench'e bir dizi ve eli daya","Dumbbell ile çek — dirsek göğüs hizasında","Kürek kemiğini geri çek — 1 sn","Kontrollü indir"], avoid:"Gövdeyi döndürme", warn:"Alt çalışırken üst uyumasın", alts:["Cable Row","Machine Row"] },
@@ -211,7 +213,7 @@ export const PROGRAM2 = {
     },
 
     {
-      id: 4, title: "GÜN 4", sub: "PAZAR", focus: "Full Body Skill", duration: "~75 dk", color: "#8338EC",
+      id: 4, title: "GÜN 4", sub: "PAZAR", focus: "Full Body Skill", duration: "~70 dk", color: "#8338EC",
       type: "training",
       injury: "⚠️ Skill günü — ağırlık yok, vücut ağırlığı ve kontrol. Diz ve omuz kısıtları geçerli.",
       blocks: [
@@ -235,18 +237,13 @@ export const PROGRAM2 = {
           { name:"Assisted Pull Up", sets:"3 × 8", muscle:"Pull-up pattern — tam hareket", how:["Makine veya band yardımıyla","Tam aşağı — tam yukarı","Temiz form önce — ağırlık sonra"], avoid:"Kısmi range", warn:null, alts:["Band Pull Up","Lat Pulldown"] },
         ]},
         { name: "🤸 SKILL — Push-up & Dip Geliştirme", color: "#E76F51", exercises: [
-          { name:"Push Up", sets:"3 × max", muscle:"Göğüs, triceps, ön delt", how:["Temiz form — vücut düz","Son tekrara kadar git","Formu bozmadan dur"], avoid:"Kalça yukarı sarkmasın", warn:null, alts:[] },
-          { name:"Diamond Push Up", sets:"3 × 8", muscle:"Triceps, iç göğüs", how:["Eller elmas şeklinde","Dirsekler vücuda yakın"], avoid:null, warn:null, alts:["Close Grip Push Up"] },
-          { name:"Pike Push Up", sets:"3 × 8", muscle:"Ön delt — overhead push skill", how:["Ters V pozisyonu","Başı yere doğru indir","Omuz hareketi"], avoid:"Kalçayı düşürme", warn:null, alts:[] },
-          { name:"Dip Negative", sets:"3 × 5", muscle:"Triceps, alt göğüs — eccentric", how:["Üst pozisyondan","5 sn yavaşça in","Her tekrar temiz"], avoid:"Hızlı düşme", warn:null, alts:["Bench Dip Negative"] },
+          { name:"Pike Push Up", sets:"3 × 8", muscle:"Ön delt — overhead push skill", how:["Ters V pozisyonu — kalça yukarı","Başı yere doğru indir","Patlayıcı yukarı it — omuz hareketi"], avoid:"Kalçayı düşürme", warn:"Handstand push-up'a giden yol", alts:["Wall Pike Push Up"] },
+          { name:"Dip Negative", sets:"3 × 5", muscle:"Triceps, alt göğüs — eccentric", how:["Üst pozisyondan başla","5 saniyede yavaşça in","Zıpla veya ayağa kalk — başa dön"], avoid:"Hızlı düşme — 5 sn şart", warn:null, alts:["Bench Dip Negative"] },
         ]},
         { name: "🤸 SKILL — L-sit & Core", color: "#8338EC", exercises: [
           { name:"Hollow Body Hold", sets:"4 × 20sn", muscle:"Anterior core zinciri", how:["Sırt üstü — kollar kulakların yanında","Bacaklar 45°","Bel yerde"], avoid:"Beli kaldırma", warn:null, alts:["Tuck Hold"] },
           { name:"Knee Tuck Hold", sets:"4 × 15sn", muscle:"Hip flexor, core, triceps basınç", how:["Parallel bar / sandalye","Dizleri göğse çek","Tutabildiğin kadar tut"], avoid:"Öne eğilme", warn:null, alts:["Hanging Knee Raise"] },
           { name:"Ab Wheel Rollout", sets:"3 × 8", muscle:"Core — full anterior zincir", how:["Diz üstünde başla","Tekerleği öne yuvarla — kontrollü","Geri çek — core sıkıştır"], avoid:"Beli sarkıtma", warn:null, alts:["Plank to Pike","TRX Pike"] },
-        ]},
-        { name: "💪 FULL BODY DUMBBELL COMPLEX", color: "#1A3A5C", exercises: [
-          { name:"DB Complex (3 tur)", sets:"3 tur × 8 tekrar dinlenmeden", muscle:"Tüm vücut — fonksiyonel güç", how:["1: RDL × 8 — kalçayı geriye","2: Bent Over Row × 8 — aynı pozisyonda","3: Hang Clean × 8 — patlayıcı yukarı","4: Overhead Press × 8 — yukarı","Tur arasında 90 sn dinlen"], avoid:"Çok ağır yük — form bozulur", warn:"Hafif ağırlık al — full hareket önemli", alts:["KB Complex","Barbell Complex"] },
         ]},
         { name: "🎯 CORE", color: "#6C63FF", exercises: [
           { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique", how:["Sol dirsek omuz altında","Kalça yukarı"], avoid:"Kalça sarkmasın", warn:"SKOLYOZ şart", alts:[] },
@@ -254,8 +251,8 @@ export const PROGRAM2 = {
           { name:"Copenhagen Plank Left", sets:"2 × 20sn", muscle:"Adduktör, core — lateral zincir", how:["Yana yat — üst ayak bench'te","Alt bacak havada — kaldır","20 sn tut"], avoid:"Kalçayı düşürme", warn:null, alts:["Side Plank"] },
           { name:"Copenhagen Plank Right", sets:"2 × 20sn", muscle:"Adduktör, core", how:["Her iki taraf eşit"], avoid:"Kalçayı düşürme", warn:null, alts:["Side Plank"] },
         ]},
-        { name: "🔥 FİNİSHER — AMRAP 5 Dakika", color: "#990000", exercises: [
-          { name:"AMRAP Circuit", sets:"5 dakika × max tur", muscle:"Full body — kondisyon", how:["5 Push Up","5 Inverted Row (veya band pull apart)","10 Glute Bridge","Dinlenmeden — tur sayısını not al"], avoid:"Formu bozma", warn:null, alts:["Tabata","Jump Rope 5 dk"] },
+        { name: "🔥 FİNİSHER", color: "#990000", exercises: [
+          { name:"Jump Rope", sets:"3 × 60sn", muscle:"Koordinasyon, calf, kondisyon", how:["Hafif zıpla — ayak parmaklarına in","Bilek hareketi","60 sn tempo — 30 sn dinlen"], avoid:"Topukla inme", warn:null, alts:["Jumping Jacks","High Knees"] },
         ]},
         { name: "❄️ SOĞUMA — Full Body", color: "#8338EC", exercises: [
           { name:"Child's Pose", sets:"1 × 60sn", muscle:"Sırt, omuz, kalça", how:["Kolları öne uzat — nefes al"], avoid:null, warn:null, alts:[] },
