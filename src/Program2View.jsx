@@ -12,7 +12,7 @@ import Program2Stats from "./Program2Stats";
 
 const FLOW_KEY = "session2";
 const SWAPS_KEY = "yb_swaps2";
-const TRACK_BLOCKS = ["PRIMARY", "SECONDARY", "CALİSTHENİCS", "SKILL", "CORE", "FİNİSHER", "FULL BODY"];
+const TRACK_BLOCKS = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER", "PRIMARY", "SECONDARY", "KALİSTENİK", "SKILL", "KOMPLİMENTER", "FULL BODY"];
 
 // ─── Skill Tracker ───────────────────────────────────────────────
 function SkillTracker() {

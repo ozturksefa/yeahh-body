@@ -12,7 +12,7 @@ import { parseSets } from "./SetTracker";
 
 const FLOW_KEY = "session3";
 const SWAPS_KEY = "yb_swaps3";
-const TRACK_BLOCKS = ["PRIMARY", "SECONDARY", "CALİSTHENİCS", "SKILL", "CORE", "FİNİSHER", "FULL BODY"];
+const TRACK_BLOCKS = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER", "PRIMARY", "SECONDARY", "KALİSTENİK", "SKILL", "KOMPLİMENTER", "FULL BODY"];
 
 // ─── Off Day View ────────────────────────────────────────────────
 function OffBlock({ block }) {
