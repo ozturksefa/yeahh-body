@@ -18,7 +18,7 @@ export function isUpper(exerciseName) {
 }
 
 function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
-  const trackBlocks = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER"];
+  const trackBlocks = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER", "PRIMARY", "SECONDARY", "KALİSTENİK", "SKILL", "KOMPLİMENTER", "FULL BODY"];
   const showTracker = trackBlocks.some(b => blockName?.toUpperCase().includes(b));
   const parsed = parseSets(ex.sets);
   const shouldRender = showTracker && parsed && !parsed.timed;
