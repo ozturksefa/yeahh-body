@@ -341,7 +341,7 @@ export default function Program3View({ user }) {
   };
 
   // dayIndex: offset +10 — klasik programla çakışmasın
-  const workoutDayIndex = isOff ? -1 : day.id + 9;
+  const workoutDayIndex = isOff ? -1 : day.id + 19;
 
   return (
     <div>
@@ -355,7 +355,7 @@ export default function Program3View({ user }) {
       </div>
 
       {page2 === "stats" ? (
-        <main className="main"><Program2Stats /></main>
+        <main className="main"><Prog3Stats /></main>
       ) : page2 === "nutrition" ? (
         <main className="main"><NutritionTracker /></main>
       ) : (
