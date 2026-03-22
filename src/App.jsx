@@ -12,6 +12,7 @@ import WorkoutTimer from "./WorkoutTimer";
 import BlockCard from "./BlockCard";
 import { parseSets } from "./SetTracker";
 import Program2View from "./Program2View";
+import Program3View from "./Program3View";
 import "./App.css";
 
 
@@ -366,7 +367,12 @@ export default function App() {
             <button
               className={`prog-mode-btn ${programMode === "full" ? "prog-mode-active" : ""}`}
               onClick={() => { setProgramMode("full"); try { localStorage.setItem("yb_program_mode", "full"); } catch {} }}>
-              Full Activation ✦
+              Full Activation
+            </button>
+            <button
+              className={`prog-mode-btn ${programMode === "athletic" ? "prog-mode-active" : ""}`}
+              onClick={() => { setProgramMode("athletic"); try { localStorage.setItem("yb_program_mode", "athletic"); } catch {} }}>
+              Atletik ⚡
             </button>
           </div>
         )}
@@ -404,6 +410,8 @@ export default function App() {
         </main>
       ) : programMode === "full" ? (
         <Program2View user={user} />
+      ) : programMode === "athletic" ? (
+        <Program3View user={user} />
       ) : (
       <>
       <div className="day-hdr" style={{ borderColor: d.color + "44", background: d.color + "0D" }}>
