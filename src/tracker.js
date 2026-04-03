@@ -152,27 +152,96 @@ export async function getHistory(exerciseName, limit = 8) {
   return results;
 }
 
-export async function suggestWeight(exerciseName, targetSets, targetReps, isUpperBody) {
+// RPE'yi localStorage'dan oku (ExertionRating'den kaydedilen)
+function getRPEForSession(exerciseName, dayIndex) {
+  try { return parseInt(localStorage.getItem(`yb_rpe_${dayIndex}_${exerciseName}`)) || 0; } catch { return 0; }
+}
+
+export async function suggestWeight(exerciseName, targetSets, targetReps, isUpperBody, dayIndex) {
   const history = await getHistory(exerciseName, 4);
   if (history.length === 0) return null;
 
-  const lastSession = history[0];
-  const sets = lastSession.sets;
-  if (!sets || sets.length === 0) return null;
+  const last = history[0];
+  const prev = history[1] || null;
 
-  const allCompleted = sets.every(s => s.reps >= targetReps && s.done);
-  const lastWeight = sets[0]?.weight || 0;
+  const lastSets = last.sets || [];
+  if (lastSets.length === 0) return null;
 
-  if (allCompleted) {
-    const inc = isUpperBody ? 2.5 : 5;
-    return { weight: lastWeight + inc, reason: `Gecen sefer ${lastWeight}kg x ${targetReps} tamamladin → +${inc}kg artir`, type: "up" };
+  const lastWeight = Math.max(...lastSets.map(s => s.weight || 0));
+  if (lastWeight === 0) return { weight: 0, reason: "İlk seans — kendin belirle", type: "first" };
+
+  const inc = isUpperBody ? 2.5 : 5;
+
+  // ─── RPE bazlı analiz ───────────────────────────────────────
+  // Son seansin RPE'sini bul (dayIndex gerekli değil — history date'e göre)
+  // localStorage'dan güncel dayIndex ile RPE oku
+  const lastRPE = dayIndex ? getRPEForSession(exerciseName, dayIndex) : 0;
+
+  // Son seansın tamamlanma durumu
+  const lastAllDone = lastSets.every(s => s.done && (s.reps || 0) >= targetReps);
+  const lastAvgReps = lastSets.reduce((a,s) => a + (s.reps||0), 0) / lastSets.length;
+
+  // Önceki seansin tamamlanma durumu (2 ardışık kontrol)
+  const prevSets = prev?.sets || [];
+  const prevAllDone = prevSets.length > 0 && prevSets.every(s => s.done && (s.reps||0) >= targetReps);
+  const prevWeight = prevSets.length > 0 ? Math.max(...prevSets.map(s => s.weight||0)) : 0;
+
+  // ─── Karar mantığı ──────────────────────────────────────────
+
+  // 1. RPE 9-10 → ağırlık indir veya aynı kal
+  if (lastRPE >= 9) {
+    const dec = lastRPE === 10 ? inc : 0;
+    const newW = dec > 0 ? Math.max(lastWeight - dec, 0) : lastWeight;
+    return {
+      weight: newW,
+      reason: `RPE ${lastRPE} — çok yoğun. ${dec > 0 ? `${dec}kg indir (${newW}kg)` : "Aynı ağırlıkta kal"}`,
+      type: "down",
+      rpe: lastRPE,
+    };
   }
 
-  const incomplete = sets.filter(s => !s.done || s.reps < targetReps).length;
-  if (incomplete > 0) {
-    return { weight: lastWeight, reason: `Gecen sefer ${incomplete} set tamamlanamadi → ayni agirlikta kal (${lastWeight}kg)`, type: "same" };
+  // 2. RPE 7 ve altı + tamamlandı → artır (tek seans yeterli)
+  if (lastRPE > 0 && lastRPE <= 7 && lastAllDone) {
+    const newW = lastWeight + inc;
+    return {
+      weight: newW,
+      reason: `RPE ${lastRPE} + tüm setler tamamlandı → +${inc}kg (${newW}kg)`,
+      type: "up",
+      rpe: lastRPE,
+      confident: true,
+    };
   }
-  return { weight: lastWeight, reason: "Ayni agirlikla devam et", type: "same" };
+
+  // 3. RPE 8 + 2 ardışık seans tamamlandı → artır
+  if (lastAllDone && prevAllDone && lastWeight === prevWeight) {
+    const newW = lastWeight + inc;
+    return {
+      weight: newW,
+      reason: `2 ardışık seans ${lastWeight}kg tamamlandı → +${inc}kg (${newW}kg)`,
+      type: "up",
+      rpe: lastRPE,
+      confident: true,
+    };
+  }
+
+  // 4. Tamamlandı ama tek seans ve RPE belirsiz → aynı ağırlık, bir daha dene
+  if (lastAllDone) {
+    return {
+      weight: lastWeight,
+      reason: `${lastWeight}kg tamamlandı${lastRPE ? ` (RPE ${lastRPE})` : ""} — bir seans daha onayla, sonra artır`,
+      type: "confirm",
+      rpe: lastRPE,
+    };
+  }
+
+  // 5. Tamamlanamadı → aynı ağırlık
+  const incomplete = lastSets.filter(s => !s.done || (s.reps||0) < targetReps).length;
+  return {
+    weight: lastWeight,
+    reason: `${incomplete} set eksik tamamlandı (${lastWeight}kg) — aynı ağırlıkta kal`,
+    type: "same",
+    rpe: lastRPE,
+  };
 }
 
 export async function getWeeklyStats() {

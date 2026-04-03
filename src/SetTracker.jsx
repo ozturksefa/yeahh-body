@@ -41,7 +41,7 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
     (async () => {
       const [saved, sug, hist] = await Promise.all([
         loadExerciseSets(dayIndex, ex.name),
-        suggestWeight(ex.name, setCount, targetReps, isUpper(ex.name)),
+        suggestWeight(ex.name, setCount, targetReps, isUpper(ex.name), dayIndex),
         getHistory(ex.name, 3),
       ]);
       if (cancelled) return;
@@ -127,10 +127,17 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       )}
 
       {suggestion && (
-        <div className={`tracker-suggest ${suggestion.type === "up" ? "suggest-up" : "suggest-same"}`}>
-          <span className="suggest-icon">{suggestion.type === "up" ? "⬆" : "➡"}</span>
-          <span>{suggestion.reason}</span>
-          {suggestion.type === "up" && (
+        <div className={`tracker-suggest suggest-${suggestion.type}`}>
+          <div className="suggest-row">
+            <span className="suggest-icon">
+              {suggestion.type === "up" ? "⬆" :
+               suggestion.type === "down" ? "⬇" :
+               suggestion.type === "confirm" ? "🔁" :
+               suggestion.type === "first" ? "🆕" : "➡"}
+            </span>
+            <span className="suggest-reason">{suggestion.reason}</span>
+          </div>
+          {(suggestion.type === "up" || suggestion.type === "down") && suggestion.weight > 0 && (
             <button className="suggest-apply" onClick={() => fillAll(suggestion.weight)}>
               {suggestion.weight}kg Uygula
             </button>

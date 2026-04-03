@@ -963,3 +963,33 @@ body{
   border-top: 1px solid var(--border); padding-top: 10px;
   line-height: 1.5;
 }
+
+/* ═══ RPE SCALE & PROGRESSIVE OVERLOAD ═══ */
+.exertion-header {
+  display: flex; justify-content: space-between;
+  align-items: center; margin-bottom: 8px;
+}
+.exertion-selected-desc {
+  font-size: 11px; color: var(--text3); font-style: italic;
+}
+.exertion-hint {
+  margin-top: 8px; padding: 7px 10px;
+  border-radius: 6px; font-size: 11px; font-weight: 600;
+}
+.exertion-hint-easy  { background: rgba(102,187,106,.1); color: #66BB6A; border: 1px solid rgba(102,187,106,.2); }
+.exertion-hint-good  { background: rgba(79,195,247,.1);  color: #4FC3F7; border: 1px solid rgba(79,195,247,.2); }
+.exertion-hint-hard  { background: rgba(255,82,82,.1);   color: #FF5252; border: 1px solid rgba(255,82,82,.2); }
+
+/* Öneri tip renkleri */
+.suggest-up      { background: rgba(102,187,106,.08); border-color: rgba(102,187,106,.3); }
+.suggest-down    { background: rgba(255,82,82,.08);   border-color: rgba(255,82,82,.3); }
+.suggest-same    { background: rgba(255,255,255,.04); border-color: var(--border); }
+.suggest-confirm { background: rgba(79,195,247,.08);  border-color: rgba(79,195,247,.3); }
+.suggest-first   { background: rgba(255,167,38,.08);  border-color: rgba(255,167,38,.3); }
+
+.suggest-row { display: flex; align-items: flex-start; gap: 8px; margin-bottom: 6px; }
+.suggest-reason { font-size: 12px; color: var(--text2); flex: 1; line-height: 1.4; }
+
+.suggest-up   .suggest-icon { color: #66BB6A; }
+.suggest-down .suggest-icon { color: #FF5252; }
+.suggest-confirm .suggest-icon { color: #4FC3F7; }
