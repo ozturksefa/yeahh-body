@@ -993,3 +993,24 @@ body{
 .suggest-up   .suggest-icon { color: #66BB6A; }
 .suggest-down .suggest-icon { color: #FF5252; }
 .suggest-confirm .suggest-icon { color: #4FC3F7; }
+
+/* ═══ PROGRAM SELECTOR BAR ═══ */
+.prog-mode-bar {
+  display: flex; gap: 4px; padding: 8px 14px;
+  background: var(--card); border-bottom: 1px solid var(--border);
+}
+
+/* ═══ DASHBOARD — Body Tracker & Charts ═══ */
+.recharts-tooltip-wrapper { outline: none !important; }
+
+/* ═══ SESSION NOTES ═══ */
+textarea::placeholder { color: var(--text3); }
+textarea { outline: none; }
+textarea:focus { border-color: var(--red) !important; }
+
+/* ═══ DELOAD ALERT ═══ */
+.deload-alert {
+  background: rgba(255,167,38,.08);
+  border: 1px solid rgba(255,167,38,.35);
+  border-radius: 8px; padding: 12px 14px; margin-bottom: 12px;
+}

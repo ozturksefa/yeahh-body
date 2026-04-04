@@ -106,7 +106,7 @@ function OffDayView({ day }) {
 }
 
 
-export default function Program2View({ user }) {
+export default function Program2View({ user, logout, ProgramSelector }) {
   const trainingDays = PROGRAM2.days.filter(d => d.type === "training");
   const offDays = PROGRAM2.days.filter(d => d.type === "offday");
   const allDays = [...trainingDays, ...offDays];
@@ -316,15 +316,20 @@ export default function Program2View({ user }) {
   const workoutDayIndex = isOff ? -1 : day.id + 9;
 
   return (
-    <div>
-      {/* Sayfa nav */}
-      <div style={{ padding: "0 12px" }}>
-        <div className="page-nav" style={{ marginBottom: 4 }}>
+    <div className="app">
+      {/* App header */}
+      <header className="hdr">
+        <div className="hdr-top">
+          <span className="brand"><span className="brand-bar">|</span> YEAHH BODY</span>
+          {logout && <button className="logout-btn" onClick={logout}>Çıkış</button>}
+        </div>
+        {ProgramSelector && <ProgramSelector />}
+        <div className="page-nav" style={{ marginBottom: 0 }}>
           <button className={`page-tab ${page2 === "program" ? "page-tab-active" : ""}`} onClick={() => setPage2("program")}>🏋️ Program</button>
           <button className={`page-tab ${page2 === "stats" ? "page-tab-active" : ""}`} onClick={() => setPage2("stats")}>📊 İlerleme</button>
           <button className={`page-tab ${page2 === "nutrition" ? "page-tab-active" : ""}`} onClick={() => setPage2("nutrition")}>🍽 Beslenme</button>
         </div>
-      </div>
+      </header>
 
       {page2 === "stats" ? (
         <main className="main"><Program2Stats /></main>

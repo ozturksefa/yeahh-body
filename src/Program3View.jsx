@@ -150,7 +150,7 @@ function Prog3Stats() {
   );
 }
 
-export default function Program3View({ user }) {
+export default function Program3View({ user, logout, ProgramSelector }) {
   const trainingDays = PROGRAM3.days.filter(d => d.type === "training");
   const offDays = PROGRAM3.days.filter(d => d.type === "offday");
   const allDays = [...trainingDays, ...offDays];
@@ -360,8 +360,14 @@ export default function Program3View({ user }) {
   const workoutDayIndex = isOff ? -1 : day.id + 19;
 
   return (
-    <div>
-      {/* Sayfa nav */}
+    <div className="app">
+      <header className="hdr">
+        <div className="hdr-top">
+          <span className="brand"><span className="brand-bar">|</span> YEAHH BODY</span>
+          {logout && <button className="logout-btn" onClick={logout}>Çıkış</button>}
+        </div>
+        {ProgramSelector && <ProgramSelector />}
+      </header>
       <div style={{ padding: "0 12px" }}>
         <div className="page-nav" style={{ marginBottom: 4 }}>
           <button className={`page-tab ${page2 === "program" ? "page-tab-active" : ""}`} onClick={() => setPage2("program")}>🏋️ Program</button>
