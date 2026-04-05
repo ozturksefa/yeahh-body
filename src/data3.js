@@ -1,10 +1,21 @@
 export const PROGRAM3 = {
   meta: {
-    name: "Atletik Dayanıklılık",
-    phase: "Faz 1 — Temel Atletizm",
+    name: "Kalistenik Kuvvet",
+    phase: "Faz 2 — Hacim & Yoğunlaşma",
     weeks: "Hafta 1–8",
-    description: "Askeri/itfaiye dayanıklılık felsefesi. Her günde 6 temel kalıp: Push, Pull, Hinge, Squat, Carry, Locomotion. İzolasyon yok. Kondisyon her gün farklı.",
+    description: "Kalistenik skill önce, kuvvet tabanı sonra. İzolasyon yok. Skill taze sinir sistemiyle yapılır. Pull-up + Dip ana yollar.",
   },
+
+  periodization: [
+    { week: 1, label: "Hacim Başlangıç", sets_modifier: 1.0, note: "Form otur, ağırlığı tanı" },
+    { week: 2, label: "Hacim", sets_modifier: 1.0, note: "Aynı ağırlık — daha temiz form" },
+    { week: 3, label: "Hacim Artışı", sets_modifier: 1.2, note: "Ağırlığı %5-10 artır" },
+    { week: 4, label: "Yoğunluk", sets_modifier: 0.9, note: "Rep azalt, ağırlık artır" },
+    { week: 5, label: "Yoğunluk Artışı", sets_modifier: 0.9, note: "En ağır haftalar başlıyor" },
+    { week: 6, label: "Zirve", sets_modifier: 0.8, note: "Maksimum ağırlık — düşük rep" },
+    { week: 7, label: "Max Test", sets_modifier: 1.0, note: "Kalistenik max test — PR hafta" },
+    { week: 8, label: "Deload", sets_modifier: 0.5, note: "Hacim yarıya in, ağırlık %60" },
+  ],
 
   principles: [
     "Her sette hareket kalitesi önce — ağırlık sonra",
@@ -254,534 +265,216 @@ export const PROGRAM3 = {
   days: [
     // ─────────────────────────────────────────────────
     {
-      id: 1, title: "GÜN 1", sub: "SALI", focus: "Kuvvet Bazı", duration: "~75 dk", color: "#C1121F",
+      id: 1, title: "GÜN 1", sub: "SALI", focus: "Push + Pull + Hinge + Squat", duration: "~80 dk", color: "#C1121F",
       type: "training",
-      injury: "⚠️ BEL: Deadlift ve Row'da omurga nötral — yuvarlama yok. DİZ: Squat yoksa Bulgarian Split Squat. OMUZ: Overhead ağrıda landmine'a geç.",
+      injury: "⚠️ BEL: Deadlift'te nötral omurga. DİZ: Goblet Squat'ta knee tracking. OMUZ: Floor Press'te 45° dirsek. ROTATOR CUFF: Face Pull her günün önceliği.",
       conditioning: "Sprint Interval — en yüksek kardiyovasküler stres",
       blocks: [
         { name: "🔥 ISINMA — Postür & Aktivasyon", color: "#CC5500", exercises: [
-          { name:"Chin Tuck", sets:"3 × 12", muscle:"Derin boyun fleksörleri", how:["Sandalyede dik otur veya ayakta dur", "Çeneni geriye it — çift çene yap", "Boyun uzuyor gibi hisset — 2 sn tut", "Bırak, tekrarla — 12-15 tekrar"], avoid:"Başı aşağı eğme — sadece geriye it", warn:"Bilgisayar başında çalışanlar için boyun ağrısının ana önlemi", alts:[] },
-          { name:"Band Pull Apart", sets:"3 × 15", muscle:"Arka omuz, rhomboid, postür", how:["Bandı iki elle önde omuz hizasında tut — omuz genişliğinde", "Kolları düz tutarak yanlara aç — kürek kemiklerini birleştir", "1 sn tam açık pozisyonda tut", "Kontrollü geri gel — 2-3 sn"], avoid:"Omuzları kulağa kaldırma — trapez değil rhomboid çalışmalı", warn:"Bilgisayar başında postür kasları zayıflar — günlük yapılmalı", alts:[] },
-          { name:"Foam Roller Upper Back Roll", sets:"2 × 10", muscle:"Torasik mobilite", how:["Foam roller'ı üst sırt (T4-T8) hizasına yerleştir", "Kolları göğsün üzerinde çaprazla veya elleri ensede", "Yavaşça yuvarlan — ağrılı noktada 20-30 sn kal", "Nefes ver ve kası bırak — zorla bastırma"], avoid:"Bel omurları üzerinde yuvarlanma — sadece üst sırt", warn:"KİFOZ + SKOLYOZ: Torasik mobilite her gün şart — asla atlama", alts:[] },
+          { name:"Chin Tuck", sets:"3 × 12", muscle:"Derin boyun fleksörleri", how:["Sandalyede dik otur","Çeneni geriye it — çift çene yap","2 sn tut, bırak"], avoid:"Başı aşağı eğme", warn:"Boyun fıtığı — günlük şart", alts:[] },
+          { name:"Band Pull Apart", sets:"3 × 15", muscle:"Arka omuz, rhomboid, postür", how:["Bandı iki elle önde tut","Kolları yanlara aç — kürek kemiklerini birleştir","1 sn tut"], avoid:"Omuzları kulağa kaldırma", warn:"ROTATOR CUFF: Her gün yap", alts:[] },
+          { name:"Hip Hinge", sets:"2 × 10", muscle:"Posterior chain aktivasyon", how:["Kalçayı geriye it","Sırt düz, dizler hafif bükülü","Geri gel"], avoid:"Sırtı büküp öne eğme", warn:"Deadlift öncesi şart", alts:[] },
+          { name:"Goblet Squat (ağırlıksız)", sets:"2 × 10", muscle:"Quad, glute, kalça mobilite", how:["Topların önünde derin otur","Dizleri dışa aç — kollarla bastır","Dik gövde — göğsü aç","Topuklarla it — kalk"], avoid:"Topukların kalkması", warn:"Squat hareketini aktive et", alts:[] },
           { name:"Shoulder CARs", sets:"2 × 5 (her taraf)", muscle:"Glenohumeral mobilite", how:["Kolu yavaşça tam daire çiz","5 sn bir tur"], avoid:"Gövdeyi döndürme", warn:"Rotator cuff ısınma", alts:[] },
-          { name:"Hip Hinge", sets:"2 × 10", muscle:"Posterior chain aktivasyon", how:["Ayakta dik","Kalçayı geriye it — öne değil","Sırt düz, dizler hafif bükülü","Geri gel"], avoid:"Sırtı büküp öne eğme", warn:"Deadlift öncesi şart", alts:[] },
-          { name:"Supine Hip Rotation", sets:"2 × 8 (her taraf)", muscle:"Kalça rotatorları", how:["Sırt üstü yat — dizler bükülü, ayaklar yerde", "Sağ dizi yavaşça sağa yatır — 10 sn tut", "Geri gel, sol dizi sola yatır — 10 sn tut", "Ağrı varsa range'i azalt — zorla yapma"], avoid:"Kalçanın yerden kalkmasına izin verme", warn:"DİZ: Kalça rotatorlarını açar — menisküs stresi azalır", alts:[] },
+        ]},
+        { name: "🛡 SAKATILIK PROTOKOLÜ — Zorunlu (5 dk)", color: "#7B241C", exercises: [
+          { name:"Band External Rotation", sets:"3 × 15 (her taraf)", muscle:"İnfraspinatus, teres minor — rotator cuff aktif stabilizasyon", how:["Dirsek 90° — vücuda yapışık","Bandı dışa döndür — omuz hizasına","1 sn tut — kontrollü geri","Asla momentum kullanma"], avoid:"Dirsekleri vücuttan ayırma", warn:"ROTATOR CUFF: Tedavindir. Atlama. Her antrenman öncesi zorunlu", alts:["Cable External Rotation"] },
+          { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Serratus anterior, trapez orta/alt — scapula kontrolü", how:["Sırtını duvara daya — kollar W pozisyonu","Yavaşça kolları yukarı kaydır — U yap","Kürek kemikleri duvarda kalacak — asla ayrılmayacak"], avoid:"Kürek kemiklerinin duvardan ayrılması", warn:"KİFOZ + ROTATOR CUFF: Scapula stabilizasyonu rotator cuff'ı besler", alts:[] },
+          { name:"Chin Tuck", sets:"3 × 12", muscle:"Derin boyun fleksörleri — servikal stabilizasyon", how:["Dik otur","Çeneni geriye it — çift çene","2 sn tut — bırak"], avoid:"Başı aşağı eğme", warn:"BOYUN FITIĞI: Servikal disk basıncını azaltır. Her gün zorunlu", alts:[] },
         ]},
 
-        { name: "🏋️ KUVVET — Compound Ağırlık", color: "#C1121F", exercises: [
-          { name:"Dumbbell Deadlift", sets:"5 × 5", muscle:"Tüm posterior chain — hamstring, glute, sırt erektör, trapez", how:["Ayaklar kalça genişliğinde","Sırt düz — göğsü aç önce","Kürek kemiklerini aşağı çek","Kalçayı öne iterek kalk — dumbbelllar bacak yanında"], avoid:"Sırtı büküp öne eğme — nötral omurga şart", warn:"🟡 BEL FITIĞI: Omurga nötral — asla yuvarlama. Ağırlığı düşür, range kıs. Trap Bar tercih et. SKOLYOZ: Her sette simetri kontrol", alts:["Trap Bar Deadlift", "Romanian Deadlift", "Hex Bar Deadlift"], alt_reasons:["BEL: Trap bar omurgayı daha dik tutar", "BEL: Kalça hareketi — daha az spinal yük", "BEL: En güvenli deadlift varyantı"] },
-          { name:"Landmine Press", sets:"4 × 8 (her taraf)", muscle:"Ön/orta delt, triceps, serratus anterior, core anti-rotation", how:["Barlın serbest ucunu tut — göğüs hizasında","Çapraz yukarı it — tam uzatma","Yavaşça geri al","SKOLYOZ: Core sıkı, bel nötral"], avoid:"Beli hiperextend etme", warn:"ROTATOR CUFF: En güvenli overhead alternatif", alts:["DB Overhead Press","Push Press","Arnold Press"] },
-          { name:"Weighted Pull Up / Assisted", sets:"5 × 3–5", muscle:"Lat, teres major, biceps, rear delt — tüm çekme zinciri", how:["Pronasyon tutuş — omuz genişliğinden geniş","Aktif omuz — kulağa çekme","Göğsü bara doğru çek","3 sn aşağı — full range"], avoid:"Momentum kullanma — temiz tekrar", warn:"Konsantrik yapamazsan negatifle yap — 5 sn indir", alts:["Assisted Pull Up","Lat Pulldown","Negative Pull Up"] },
-          { name:"Barbell / DB Bent Over Row", sets:"3 × 6", muscle:"Mid trapez, rhomboid, lat, posterior delt, biceps", how:["45° öne eğik — sırt düz","Barlı/DB'yi karın/alt göğse çek","Kürek kemiklerini sıkıştır — 1 sn tut","Kontrollü indir"], avoid:"Gövdeyi kaldırma — sadece kollar çalışır", warn:"🔴 BEL FITIĞI: Fleksiyonlu yükleme — en riskli row. Destekli Single Arm Row veya Cable Row'a geç. Ağrıda kesinlikle yapma", alts:["Single Arm DB Row (destekli)", "Cable Row", "Chest Supported Row"], alt_reasons:["BEL: Gövde dik destekli — disk baskısı azalır", "BEL: Kablo ile daha kontrollü açı", "BEL: Göğüs destekli — omurga yüksüz"] },
-          { name:"Bulgarian Split Squat", sets:"3 × 6 (her bacak)", muscle:"Quad, glute, hip flexor — unilateral bütünsel", how:["Arka ayak bench'te — ön diz hizasında","Dikey olarak in — öne değil","Ön topuk yerde kalacak","Ön ayakla it — kalça öne"], avoid:"Ön dizi ayak ucunu geçirme", warn:"DİZ: Ağrıda reverse lunge'a geç — daha az knee dominant", alts:["Reverse Lunge","Step Down","Single Leg Squat to Box"], alt_reasons:["DİZ: Öne hamle — diz baskısı azalır","DİZ: Eksantrik iniş — diz kontrolü","DİZ: Kutu indirmesi — daha az knee dominant"] },
+        { name: "🤸 KALİSTENİK — Pull-up Skill (Önce Yap)", color: "#2A9D8F", exercises: [
+          { name:"Dead Hang", sets:"3 × 30sn", muscle:"Lat, ön kol, grip, omurga dekompresyon", how:["Bardan asıl — overhand tutuş","Omuzları aktif tut — aşağı çek, kulağa değil","Vücut sakin — sallanma yok","Nefes al — omurgayı uzat"], avoid:"Tamamen pasif sarkma — omuzlar aktif olmalı", warn:"Pull-up yolunun temeli — her Salı buradan başla", alts:["Flexed Arm Hang","Active Hang"] },
+          { name:"Scapula Pull Up", sets:"3 × 12", muscle:"Lat aktivasyon, scapula kontrol", how:["Bardan asıl — kollar düz","Sadece kürek kemiklerini aşağı çek","Vücut hafifçe yukarı kalkar","Kontrollü geri sal"], avoid:"Dirsekleri bükme — sadece scapula hareketi", warn:"Pull-up önce scapula, sonra dirsekler", alts:[] },
+          { name:"Chin-up Negative", sets:"5 × 5 (5sn indir)", muscle:"Biceps, lat — eccentric güç", how:["Zıplamayla üst pozisyona gel","5 saniyede yavaşça in","Tam alta in — bırak","Her tekrar temiz başla"], avoid:"Hızlı düşme — 5sn şart", warn:"Konsantrik yapamazsan negatifle güç kazan", alts:["Assisted Chin Up","Band Pull Up"] },
+          { name:"Assisted Pull-up", sets:"4 × 6", muscle:"Lat, teres major, biceps — tam hareket", how:["Bant veya makine yardımıyla","Tam aşağı — tam yukarı — tam range","Göğsü bara doğru çek","3sn indir"], avoid:"Kısmi range — yarım tekrar saymaz", warn:"Haftadan haftaya yardımı azalt", alts:["Lat Pulldown","Band Pull Up"] },
         ]},
 
-        {
-        "name": "🤸 KALİSTENİK — Pull-up Skill (Önce Yap)",
-        "color": "#2A9D8F",
-        "exercises": [
-        {
-        "name": "Dead Hang",
-        "sets": "3 × 30sn",
-        "muscle": "Lat, ön kol, grip, omurga dekompresyon",
-        "how": [
-        "Bardan asıl — overhand tutuş",
-        "Omuzları aktif tut — aşağı çek, kulağa değil",
-        "Vücut sakin — sallanma yok",
-        "Nefes al — omurgayı uzat"
-        ],
-        "avoid": "Tamamen pasif sarkma — omuzlar aktif olmalı",
-        "warn": "Pull-up yolunun temeli — her Salı buradan başla",
-        "alts": [
-        "Flexed Arm Hang",
-        "Active Hang"
-        ]
-        },
-        {
-        "name": "Scapula Pull Up",
-        "sets": "3 × 12",
-        "muscle": "Lat aktivasyon, scapula kontrol — pull-up motorunun ateşlenmesi",
-        "how": [
-        "Bardan asıl — kollar düz",
-        "Sadece kürek kemiklerini aşağı çek",
-        "Vücut hafifçe yukarı kalkar",
-        "Kontrollü geri sal"
-        ],
-        "avoid": "Dirsekleri bükme — sadece scapula hareketi",
-        "warn": "Pull-up'ta ilk hatırlatma: önce scapula, sonra dirsekler",
-        "alts": []
-        },
-        {
-        "name": "Chin-up Negative",
-        "sets": "5 × 5 (5sn indir)",
-        "muscle": "Biceps, lat — eccentric güç inşası",
-        "how": [
-        "Step veya zıplamayla üst pozisyona gel",
-        "5 saniyede yavaşça in — tempoyu say",
-        "Tam alta inince serbest bırak",
-        "Her tekrar temiz başla"
-        ],
-        "avoid": "Hızlı düşme — 5sn şart",
-        "warn": "Konsantrik yapamazsan negatifle güç kazan — en etkili yöntem",
-        "alts": [
-        "Assisted Chin Up",
-        "Band Pull Up"
-        ]
-        },
-        {
-        "name": "Assisted Pull-up",
-        "sets": "4 × 6",
-        "muscle": "Lat, teres major, biceps — tam hareket örüntüsü",
-        "how": [
-        "Bant veya makine yardımıyla",
-        "Tam aşağı — tam yukarı — tam range",
-        "Göğsü bara doğru çek",
-        "3sn indir — lat'ı hisset"
-        ],
-        "avoid": "Kısmi range — yarım tekrar saymaz",
-        "warn": "Seviyen ne olursa olsun — haftadan haftaya yardımı azalt",
-        "alts": [
-        "Lat Pulldown",
-        "Band Pull Up"
-        ]
-        }
-        ]
-        },
-
-        { name: "🔄 KOMPLİMENTER — Hinge & Carry", color: "#1A3A5C", exercises: [
-          { name:"Kettlebell Swing", sets:"4 × 15", muscle:"Glute, hamstring, core — patlayıcı hip extension", how:["Hip hinge — squat değil","KB bacaklar arasından geri götür","Kalçayı patlayıcı öne it — KB omuz hizasına","Nefes: it → dışarı, geri → içeri"], avoid:"Kollarla kaldırmaya çalışma — güç kalçadan gelir", warn:"🟡 BEL FITIĞI: Hip hinge tekniği mükemmel olmalı — squat değil. Omurga nötral korunacak. Ağrıda Glute Bridge ile değiştir. DİZ: Diz bükme değil kalça hareketi", alts:["Dumbbell Swing", "Hip Hinge (hızlı tempo)", "Glute Bridge"], alt_reasons:["BEL: DB ile daha kontrollü hip hinge", "BEL: Sadece kalça — omurga yüksüz", "BEL: Glute aktivasyonu — swing benzeri ama güvenli"] },
-          { name:"Double Farmer Carry", sets:"4 × 30m", muscle:"Grip, trapez, core statik, ayak bileği stabilite, full body", how:["Her iki elde ağır DB/KB","Dik dur — omuzlar geri ve aşağı","Küçük hızlı adımlar","Nefes almayı kesme — steady"], avoid:"Öne eğilme veya yana sallanma", warn:"Ağır tut — konuşamayacak kadar zor olmalı", alts:["Suitcase Carry","Overhead Carry","Sandbag Carry"] },
+        { name: "🏋️ KUVVET — Push + Pull + Hinge + Squat", color: "#C1121F", exercises: [
+          { name:"Dumbbell Deadlift", sets:"4 × 5", muscle:"Posterior chain — hamstring, glute, erektör, trapez", how:["Sırt düz — göğsü aç","Kürek kemiklerini aşağı çek","Kalçayı öne iterek kalk"], avoid:"Sırtı yuvarlama — nötral şart", warn:"🟡 BEL FITIĞI: Omurga nötral. Trap Bar tercih et. SKOLYOZ: simetri kontrol", alts:["Trap Bar Deadlift","Romanian Deadlift","Hex Bar Deadlift"], alt_reasons:["BEL: Omurgayı dik tutar","BEL: Az spinal yük","BEL: En güvenli varyant"] },
+          { name:"Goblet Squat", sets:"4 × 8", muscle:"Quad, glute, core stabilite — squat pattern", how:["DB veya KB göğüste tut — iki elle","Topuklar omuz genişliğinde — dizler dışa","Derin otur — kalça topuğun dibine","Topuklarla it — tam uzat"], avoid:"Topukların kalkması veya dizlerin içe çökmesi", warn:"DİZ: En güvenli squat varyantı. Ağırlık gövdeyi dik tutar. Menisküs için knee tracking önemli", alts:["Box Squat","Bulgarian Split Squat","Reverse Lunge"], alt_reasons:["DİZ: Oturup kalkma — kısa ROM","DİZ: Unilateral — daha az yük","DİZ: Hamle geriye — daha az knee stress"] },
+          { name:"Weighted Pull Up / Assisted", sets:"5 × 3–5", muscle:"Lat, biceps, rear delt — dikey çekiş", how:["Pronasyon tutuş — omuz genişliğinde","Aktif omuz — kulağa çekme","Göğsü bara doğru çek","3 sn kontrollü in"], avoid:"Momentum kullanma", warn:"Negatifle başla — 5sn iniş", alts:["Assisted Pull Up","Lat Pulldown","Negative Pull Up"] },
+          { name:"Floor Press", sets:"4 × 8", muscle:"Göğüs, triceps, ön delt — zeminde güvenli press", how:["Sırt üstü yat — DB'ler göğüs hizasında","Dirsekler 45° — kulaktan uzak","Tam uzat — kürek kemikleri yerde sabit","Yavaşça in — dirsekler yere değince dur"], avoid:"Dirsekleri tam açma — omuz riski", warn:"ROTATOR CUFF: Bench'ten güvenli — ROM limitleniyor. Omuz ağrısında range'i azalt", alts:["Push-up","Landmine Press","DB Shoulder Press"], alt_reasons:["OMUZ: Vücut ağırlığı","OMUZ: Açılı press — scapula sabit","OMUZ: Oturarak destekli"] },
+          { name:"Band Face Pull", sets:"3 × 15", muscle:"Arka delt, dış rotator, rhomboid — posterior shoulder", how:["Bant göz hizasında bağlı","İki elle tut — başparmaklar arkaya","Çek ve dışa döndür — dirsekler kulak hizasına","1 sn tut — kontrollü geri"], avoid:"Dirsekleri aşağıya çekme — bu lat çalışır, rear delt değil", warn:"ROTATOR CUFF: Bu egzersiz tedavindir. Her günkü öncelikli hareket. Omuz dengesinin temeli", alts:["Band External Rotation","Rear Delt Fly","Cable Face Pull"], alt_reasons:["OMUZ: Saf dış rotasyon","OMUZ: Lying pozisyon — daha izole","OMUZ: Kablo ile daha kontrollü"] },
         ]},
 
-        { name: "🎯 CORE — Anti-Rotasyon & Stabilite", color: "#6C63FF", exercises: [
-          { name:"Dead Bug", sets:"3 × 10 (her taraf)", muscle:"Transversus abdominis, core anti-extension", how:["Sırt üstü yat — kollar kulakların yanında düz uzatılmış", "Bacaklar düz, yerden 20-30cm yukarıda — açı küçük tutulur", "Alt sırt yere basılı — bel yerde kalacak, bu kritik", "20sn tut — nefes almayı kesme, kısa nefesler al", "Titreme normaldir — devam et, sadece bel kalkmayacak"], avoid:"Beli yerden kaldırma — bu hareketin tek kuralı", warn:"Muscle-up, handstand, L-sit — tüm ileri kalisteniğin çekirdek gücü buradan gelir", alts:["Bird Dog","Hollow Body Hold"] },
-          { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique, quadratus lumborum", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
-          { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
+        { name: "🔄 CARRY & CORE", color: "#1A3A5C", exercises: [
+          { name:"Double Farmer Carry", sets:"4 × 30m", muscle:"Grip, trapez, core statik, full body — yük taşıma", how:["Her iki elde ağır DB/KB","Dik dur — omuzlar geri ve aşağı","Küçük hızlı adımlar","Nefes almayı kesme"], avoid:"Öne eğilme veya yana sallanma", warn:"Ağır tut — konuşamayacak kadar zor olmalı", alts:["Suitcase Carry","Overhead Carry","Sandbag Carry"] },
+          { name:"Dead Bug", sets:"3 × 8 (her taraf)", muscle:"Transversus abdominis, core anti-extension", how:["Sırt üstü — kollar uzatılmış","Alt sırt yerde — bel yerde kalacak","Karşı kol-bacak uzat — 3sn tut","Alt sırt yerde kaldıkça devam"], avoid:"Beli yerden kaldırma", warn:"BEL FITIĞI: Anti-extension core — disk için güvenli", alts:["Bird Dog","Hollow Body Hold"] },
+          { name:"Pallof Press", sets:"3 × 10 (her taraf)", muscle:"Core anti-rotasyon, oblique — rotasyon direnci", how:["Bant veya kablo yan tarafa bağlı","Her iki elle göğüs önünde tut","Öne uzat — vücut dönmez — 2sn tut","Geri çek — kontrollü"], avoid:"Vücudun dönmesine izin verme — bu hareketin özü", warn:"SKOLYOZ: Anti-rotasyon her gün şart. Lateral core dengesizliğini düzeltir", alts:["Landmine Rotation","Cable Anti-Rotation"] },
         ]},
 
         { name: "⚡ KONDİSYON — Sprint Interval", color: "#990000", exercises: [
-          { name:"Sprint Interval", sets:"6 × 30sn sprint / 30sn yürüyüş", muscle:"Full body — kardiyovasküler kapasite, bacak gücü, core", how:["30 sn maksimum efor koşu veya rowing","30 sn aktif yürüyüş / kürek makinesi hafif","6 tur — dinlenmeden","Son 2 turda bile hız düşmemeli — bu kondisyon göstergesi"], avoid:"Orta tempo koşu — ya sprint ya dinlenme", warn:"Diz ağrısı varsa koşu yerine rowing veya bike", alts:["Rowing Machine Interval","Assault Bike","Jump Rope HIIT"] },
+          { name:"Sprint Interval", sets:"6 × 30sn sprint / 30sn yürüyüş", muscle:"Full body — kardiyovasküler kapasite, bacak gücü", how:["30 sn maksimum efor koşu veya rowing","30 sn aktif yürüyüş","6 tur — dinlenmeden","Son 2 turda bile hız düşmemeli"], avoid:"Orta tempo koşu — ya sprint ya dinlenme", warn:"Diz ağrısı varsa rowing veya bike", alts:["Rowing Machine Interval","Assault Bike","Jump Rope HIIT"] },
         ]},
 
         { name: "❄️ SOĞUMA", color: "#C1121F", exercises: [
-          { name:"Child's Pose", sets:"1 × 60sn", muscle:"Sırt, omuz, kalça", how:["Diz üstü otur, topuklarına otur", "Kolları öne uzat — yere koy", "Alnı yere koy veya mindere", "Tamamen bırak — pasif esneme — 45-60 sn"], avoid:"Zorla uzanma — yer çekimi işini yapsın", warn:"Diz ağrısı varsa topuklara oturmak yerine daha dik dur", alts:[] },
-          { name:"Hamstring, Obliques and Lat Stretch", sets:"2 × 45sn", muscle:"3 bölge", how:["Otur, bacağı uzat, öne eğil"], avoid:null, warn:null, alts:[] },
-          { name:"Hip Flexor Stretch", sets:"2 × 45sn (her taraf)", muscle:"Hip flexor, kasık", how:["Yarım diz pozisyonu — sağ diz yerde, sol ayak önde", "Kalçayı öne it — arka bacak üzerinde gerilme hisset", "Posterior tilt yap — kalçanı altına tıkıştır", "Gövde dik — öne eğilme — 30-45 sn tut"], avoid:"Gövdeyi öne eğme — dik tut", warn:"Masa başı çalışıyorsan her gün şart — kısalmış hip flexor sırt ağrısına yol açar", alts:[] },
-          { name:"Supine Spinal Twist Right", sets:"1 × 45sn", muscle:"Torasik rotasyon", how:["Sırt üstü yat — kollar yana T şeklinde açık", "Sağ dizi 90° büküp sol tarafa yatır", "Sağ omuz yerde kalsın — ters yöne bak", "45-60 sn tut — nefes alarak derinleştir"], avoid:"Omuzların yerden kalkmasına izin verme", warn:"SKOLYOZ: Her iki tarafa mutlaka eşit süre uygula", alts:[] },
-          { name:"Supine Spinal Twist Left", sets:"1 × 45sn", muscle:"Her taraf eşit", how:["Sırt üstü yat — kollar yana T şeklinde açık", "Sol dizi 90° büküp sağ tarafa yatır", "Sol omuz yerde kalsın — ters yöne bak", "Her iki taraf eşit süre — 45-60 sn"], avoid:"Omuzların yerden kalkmasına izin verme", warn:"SKOLYOZ: Her iki tarafa mutlaka eşit süre uygula", alts:[] },
+          { name:"Child's Pose", sets:"1 × 60sn", muscle:"Sırt, omuz, kalça", how:["Diz üstü otur","Kolları öne uzat — yere koy","60 sn"], avoid:"Zorla uzanma", warn:null, alts:[] },
+          { name:"Hip Flexor Stretch", sets:"2 × 45sn (her taraf)", muscle:"Hip flexor, kasık", how:["Yarım diz — sağ diz yerde","Kalçayı öne it","Gövde dik — 45 sn"], avoid:"Gövdeyi öne eğme", warn:"Masa başı çalışıyorsan her gün şart", alts:[] },
+          { name:"Supine Spinal Twist", sets:"1 × 45sn (her taraf)", muscle:"Torasik rotasyon", how:["Sırt üstü — dizi karşı tarafa yatır","Omuz yerde kalsın","45 sn"], avoid:"Omuzların kalkması", warn:"SKOLYOZ: Her iki tarafa eşit", alts:[] },
         ]},
       ],
+
     },
 
     // ─────────────────────────────────────────────────
     {
-      id: 2, title: "GÜN 2", sub: "PERŞEMBE", focus: "Kalistenik Dayanıklılık", duration: "~75 dk", color: "#2A9D8F",
+      id: 2, title: "GÜN 2", sub: "PERŞEMBE", focus: "Push + Pull + Squat + Kalistenik", duration: "~80 dk", color: "#2A9D8F",
       type: "training",
-      injury: "⚠️ BEL: Seated Forward Fold'da tam öne eğilme yapma. BOYUN: Pike Push Up'ta boyun nötral. OMUZ: Pull-up'ta kürek kemikleri aktif.",
+      injury: "⚠️ BEL: KB Swing'de hip hinge — squat değil. DİZ: Split Squat'ta ön dizi izle. OMUZ: Dip'te 90° altına inme. ROTATOR CUFF: Rear Delt Fly kontrollü.",
       conditioning: "Amrap / Timed Circuit — anaerobik eşik",
       blocks: [
         { name: "🔥 ISINMA — Mobilite & Aktivasyon", color: "#CC5500", exercises: [
-          { name:"Chin Tuck", sets:"3 × 12", muscle:"Boyun fleksörleri", how:["Sandalyede dik otur veya ayakta dur", "Çeneni geriye it — çift çene yap", "Boyun uzuyor gibi hisset — 2 sn tut", "Bırak, tekrarla — 12-15 tekrar"], avoid:"Başı aşağı eğme — sadece geriye it", warn:"Bilgisayar başında çalışanlar için boyun ağrısının ana önlemi", alts:[] },
-          { name:"Cat and Cow", sets:"2 × 10", muscle:"Omurga mobilite", how:["Dört ayak — bilekler omuz altında, dizler kalça altında", "Cat: nefes ver → sırtı yuvarlat, çeneyi göğse çek, pelvis içe döner", "Cow: nefes al → sırtı çukurlaştır, göğsü öne çık, kuyruğu kaldır", "Yavaş ve nefesle birlikte — 3-4 sn her pozisyon"], avoid:"Sadece boyun veya belden yapma — tüm omurga dalgalanmalı", warn:"SKOLYOZ: Her tekrarda sol-sağ simetriyi hisset", alts:[] },
-          { name:"Band External Rotation", sets:"2 × 15 (her taraf)", muscle:"Rotator cuff ısınma", how:["Dirsek 90° bükülü — vücuda yapışık", "Bant dirseğin ön kısmından geçiyor", "Kolu dışa doğru döndür — dirsek sabit", "Kontrollü geri gel — kasılmayı hisset"], avoid:"Dirseği vücuttan ayırma — sabit tutmalı", warn:"ROTATOR CUFF REHABİLİTASYON: Omuz cerrahisi riskini azaltan en önemli hareket", alts:[] },
-          { name:"Dead Hang", sets:"2 × 30sn", muscle:"Lat aktivasyon, grip, omurga dekompresyon", how:["Bardan iki elle asıl — overhand tutuş", "Omuzları aktif tut — kulağa doğru değil, aşağı çek", "Vücut sallanmasın — sakin kal", "Nefes al — omurgayı uzat — 20-30 sn tut"], avoid:"Tamamen pasif sarkmak — omuzlar aktif olmalı", warn:"Omurga dekompresyonu — disk arası mesafeyi açar, sırt ağrısına iyi gelir", alts:[] },
-          { name:"Hip Flexor Stretch", sets:"2 × 30sn (her taraf)", muscle:"Hip flexor açılımı", how:["Yarım diz pozisyonu — sağ diz yerde, sol ayak önde", "Kalçayı öne it — arka bacak üzerinde gerilme hisset", "Posterior tilt yap — kalçanı altına tıkıştır", "Gövde dik — öne eğilme — 30-45 sn tut"], avoid:"Gövdeyi öne eğme — dik tut", warn:"Masa başı çalışıyorsan her gün şart — kısalmış hip flexor sırt ağrısına yol açar", alts:[] },
-          { name:"Supine Hip Rotation", sets:"2 × 8 (her taraf)", muscle:"Kalça rotatorları", how:["Sırt üstü yat — dizler bükülü, ayaklar yerde", "Sağ dizi yavaşça sağa yatır — 10 sn tut", "Geri gel, sol dizi sola yatır — 10 sn tut", "Ağrı varsa range'i azalt — zorla yapma"], avoid:"Kalçanın yerden kalkmasına izin verme", warn:"DİZ: Kalça rotatorlarını açar — menisküs stresi azalır", alts:[] },
+          { name:"Foam Roller Upper Back Roll", sets:"2 × 10", muscle:"Torasik mobilite", how:["Foam roller'ı üst sırta koy (T4-T8)","Yavaşça yuvarlan","Ağrılı noktada 20-30 sn kal"], avoid:"Bel üzerinde yapma", warn:"KİFOZ + SKOLYOZ: Torasik mobilite şart", alts:[] },
+          { name:"Supine Hip Rotation", sets:"2 × 8 (her taraf)", muscle:"Kalça rotatorları", how:["Sırt üstü — dizler bükülü","Dizi yavaşça yana yatır — 10 sn","Geri gel, diğer taraf"], avoid:"Kalçanın kalkmasına izin verme", warn:"DİZ: Kalça rotatorlarını açar — menisküs stresi azalır", alts:[] },
+          { name:"Band Pull Apart", sets:"3 × 15", muscle:"Arka omuz, rhomboid — günlük rutin", how:["Bandı iki elle önde tut","Kolları yanlara aç — kürek kemiklerini birleştir","1 sn tut"], avoid:"Omuzları kulağa kaldırma", warn:"ROTATOR CUFF: Her gün bu hareket", alts:[] },
+          { name:"Reverse Lunge (ağırlıksız)", sets:"2 × 8 (her bacak)", muscle:"Quad, glute, kalça aktivasyon", how:["Ayaklar bitişik — dik dur","Sağ ayağı geriye adım at","Diz yere yakın — neredeyse değiyor","Ön ayakla it — dön"], avoid:"Ön dizi çok öne götürme", warn:"DİZ: Geriye hamle — daha az knee dominant", alts:[] },
+        ]},
+        { name: "🛡 SAKATILIK PROTOKOLÜ — Zorunlu (5 dk)", color: "#7B241C", exercises: [
+          { name:"Band External Rotation", sets:"3 × 15 (her taraf)", muscle:"İnfraspinatus, teres minor — rotator cuff aktif stabilizasyon", how:["Dirsek 90° — vücuda yapışık","Bandı dışa döndür — omuz hizasına","1 sn tut — kontrollü geri","Asla momentum kullanma"], avoid:"Dirsekleri vücuttan ayırma", warn:"ROTATOR CUFF: Tedavindir. Atlama. Her antrenman öncesi zorunlu", alts:["Cable External Rotation"] },
+          { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Serratus anterior, trapez orta/alt — scapula kontrolü", how:["Sırtını duvara daya — kollar W pozisyonu","Yavaşça kolları yukarı kaydır — U yap","Kürek kemikleri duvarda kalacak — asla ayrılmayacak"], avoid:"Kürek kemiklerinin duvardan ayrılması", warn:"KİFOZ + ROTATOR CUFF: Scapula stabilizasyonu rotator cuff'ı besler", alts:[] },
+          { name:"Chin Tuck", sets:"3 × 12", muscle:"Derin boyun fleksörleri — servikal stabilizasyon", how:["Dik otur","Çeneni geriye it — çift çene","2 sn tut — bırak"], avoid:"Başı aşağı eğme", warn:"BOYUN FITIĞI: Servikal disk basıncını azaltır. Her gün zorunlu", alts:[] },
         ]},
 
-        {
-        "name": "🤸 KALİSTENİK — Push/Dip Skill (Önce Yap)",
-        "color": "#E76F51",
-        "exercises": [
-        {
-        "name": "Push Up Variations",
-        "sets": "4 × max (temiz form)",
-        "muscle": "Göğüs, triceps, ön delt, serratus, core",
-        "how": [
-        "Normal → Diamond → Pike sırasıyla ilerle",
-        "Ulaşabildiğin en zor versiyondan başla",
-        "Form bozulunca dur — sonraki versiyona geç",
-        "Set arası 60sn — tam dinlen"
-        ],
-        "avoid": "Kalça yukarı veya aşağı — vücut düz çizgi",
-        "warn": "Askeri ve itfaiye testlerinde standart — temiz tekrar sayılır",
-        "alts": [
-        "Incline Push Up",
-        "Knee Push Up"
-        ]
-        },
-        {
-        "name": "Dip Negative",
-        "sets": "5 × 5 (5sn indir)",
-        "muscle": "Triceps, alt göğüs, ön delt — eccentric güç",
-        "how": [
-        "Paralel bar veya bench — üst pozisyondan başla",
-        "5sn yavaşça in — tempo say",
-        "90° dirsek açısına ulaş",
-        "Her tekrar için yukarı çık"
-        ],
-        "avoid": "Hızlı düşme",
-        "warn": "Full dip öncesi eccentric güç — omuz güvenleri",
-        "alts": [
-        "Bench Dip Negative"
-        ]
-        },
-        {
-        "name": "Full Dip",
-        "sets": "3 × max",
-        "muscle": "Triceps, alt göğüs, ön delt — pressing zinciri",
-        "how": [
-        "Kolları tam uzat — üst pozisyon",
-        "Göğüs hafif öne — dip için",
-        "Tam aşağı — 90° dirsek",
-        "Patlayıcı yukarı"
-        ],
-        "avoid": "Omuzları kulağa kaldırma",
-        "warn": "Ağrıda negatife geç",
-        "alts": [
-        "Bench Dip",
-        "Ring Dip"
-        ]
-        },
-        {
-        "name": "Pike Push Up",
-        "sets": "3 × 8",
-        "muscle": "Ön delt, triceps — overhead push skill",
-        "how": [
-        "Ters V pozisyonu — kalça yüksekte",
-        "Başı yere doğru yavaş indir",
-        "Patlayıcı it — omuz hareketi",
-        "Kalça düşmesin"
-        ],
-        "avoid": "Kalçayı düşürme — açı kaybolur",
-        "warn": "ROTATOR CUFF: Omuzda keskin ağrıda elevated pike'a geç. Handstand push-up'a giden yol",
-        "alts": [
-        "Elevated Pike Push Up",
-        "Wall Pike"
-        ]
-        }
-        ]
-        },
-
-        { name: "🏋️ KUVVET — Press & Row Supersets", color: "#1A3A5C", exercises: [
-          { name:"Push Up to Row (DB)", sets:"4 × 8 (her taraf)", muscle:"Göğüs + sırt + core — bütünsel stabilite", how:["Push up pozisyonu — her elde DB","1 push up yap","Sağ DB ile row çek","1 push up — sol DB ile row","= 1 tekrar"], avoid:"Kalçayı döndürme row sırasında — core sıkı", warn:"En fonksiyonel superset — fire/military standardı", alts:["Renegade Row","Push Up + Separate Row"] },
-          { name:"Inverted Row", sets:"4 × max", muscle:"Mid sırt, rhomboid, biceps, core — bodyweight pull", how:["Barın altına uzan — topuklar yerde","Vücut düz çizgi — core sıkı","Göğsü bara çek","3 sn indir"], avoid:"Kalça düşmesin — vücut düz", warn:"Pull-up'a giden yol — ne kadar eğik o kadar zor", alts:["TRX Row","Smith Machine Row"] },
-          { name:"Single Arm DB Press (Alternating)", sets:"4 × 8 (her taraf)", muscle:"Ön/orta delt, triceps, core anti-rotation", how:["Ayakta veya oturarak","Tek elle press — diğer el serbest","Core: döndürme tepkisi ver","Simetrik güç geliştir"], avoid:"Gövdeyi yana eğme", warn:"ROTATOR CUFF: Ağrıda landmine press'e geç. SKOLYOZ: Unilateral press asimetriyi giderir", alts:["DB Shoulder Press (bilateral)","Landmine Press"] },
+        { name: "🤸 KALİSTENİK — Dip / Push Skill", color: "#F4A261", exercises: [
+          { name:"Push Up Variations", sets:"4 × max", muscle:"Göğüs, triceps, ön delt, serratus, core", how:["Mümkünse normal, zor ise dizde","Vücut düz — kalça ne yukarı ne aşağı","Dirsekler 45° — kulaktan uzak","Göğüs yere değince kalk"], avoid:"Dirsekleri tam açma — omuz riski", warn:"ROTATOR CUFF: Dirsek açısına dikkat — 45° kural", alts:["Knee Push Up","Incline Push Up","Diamond Push Up"] },
+          { name:"Dip Negative", sets:"5 × 5 (5sn indir)", muscle:"Triceps, alt göğüs, ön delt — eccentric", how:["Paralel barlarda üst pozisyon","5 saniyede yavaşça in","Tam aşağı — dirsekler 90°'nin biraz altına","Zıplayarak veya adımla tekrar üste gel"], avoid:"Hızlı düşme — 5sn şart", warn:"OMUZ: Çok aşağı inme — 90° yeter", alts:["Bench Dip Negative","Ring Dip Negative"] },
+          { name:"Full Dip", sets:"3 × max", muscle:"Triceps, göğüs, ön delt — full pressing", how:["Paralel bar — bilek altında","Hafif öne eğil — göğüs dip'i","Tam alta — topukları sıkıştır","Güçlü it — tam uzat"], avoid:"Aşırı aşağı inme — omuz ligamanı riski", warn:"OMUZ: Ağrıda ring dip'e geç — daha doğal pozisyon", alts:["Ring Dip","Bench Dip","Assisted Dip"] },
         ]},
 
-        { name: "🔄 LOKOMOSYON & CARRY", color: "#8B4513", exercises: [
-          { name:"Bear Crawl", sets:"4 × 20m", muscle:"Omuz stabilite, core anti-extension, quad, kondisyon", how:["Dört ayak — dizler yerden 5 cm","Çapraz hareket: sağ el + sol ayak","Bel sabit — kalça yukarı çıkmasın","Nefesi tutma"], avoid:"Kalçayı kaldırma", warn:"Omuz cerrahisi standart hareketi — rotator cuff için ideal", alts:["Crab Walk","Leopard Crawl"] },
-          { name:"Suitcase Carry (Tek El)", sets:"3 × 30m (her el)", muscle:"Core lateral stabilite, trapez, grip, quadratus lumborum", how:["Tek elde ağır DB/KB","Dik dur — yana eğilme","Karşı taraf core'u sıkı tut","Her el ayrı"], avoid:"Yana eğilme — bu egzersizin amacını yok eder", warn:"SKOLYOZ: En iyi lateral core egzersizi", alts:["Suitcase Deadlift","Offset Carry"] },
+        { name: "🏋️ KUVVET — Push + Pull + Squat + Hinge", color: "#2A9D8F", exercises: [
+          { name:"Bulgarian Split Squat", sets:"4 × 8 (her bacak)", muscle:"Quad, glute, hip flexor — unilateral squat", how:["Arka ayak bench'te","Ön diz topuğun üzerinde","Dikey olarak in — 90°","Ön topukla it — kalk"], avoid:"Ön dizi ayak ucunu geçirme", warn:"DİZ: Menisküs için ön dizi izle — ağrıda Reverse Lunge'a geç", alts:["Reverse Lunge","Step Down","Single Leg Press"], alt_reasons:["DİZ: Geriye hamle","DİZ: Eksantrik iniş","DİZ: Makine destekli"] },
+          { name:"Kettlebell Swing", sets:"5 × 15", muscle:"Glute, hamstring, core — patlayıcı hinge", how:["Hip hinge — squat değil","KB bacaklar arasından geri götür","Kalçayı patlayıcı öne it","KB omuz hizasına — kollar değil kalça iter"], avoid:"Squat gibi diz bükme — kalça hareketi", warn:"🟡 BEL FITIĞI: Hip hinge tekniği mükemmel olmalı. Ağrıda Glute Bridge ile değiştir", alts:["Dumbbell Swing","Hip Hinge hızlı","Glute Bridge"], alt_reasons:["BEL: DB ile daha kontrollü","BEL: Sadece kalça","BEL: Güvenli glute aktivasyonu"] },
+          { name:"Landmine Press", sets:"4 × 8 (her taraf)", muscle:"Ön delt, triceps, serratus, core anti-rotation", how:["Barlın serbest ucunu göğüs hizasında tut","Çapraz yukarı it — tam uzat","Yavaşça geri al","SKOLYOZ: Core sıkı, bel nötral"], avoid:"Beli hiperextend etme", warn:"ROTATOR CUFF: En güvenli overhead alternatif", alts:["DB Overhead Press","Arnold Press","Push Press"], alt_reasons:["OMUZ: Oturarak destekli","OMUZ: Dönüşlü — tüm ROM","OMUZ: Bacak yardımıyla"] },
+          { name:"Inverted Row", sets:"4 × max", muscle:"Mid sırt, rhomboid, biceps — yatay çekiş", how:["Barın altında — vücut düz tahta gibi","Topuklardan asıl — kollar uzatılmış","Göğsü bara çek — kürek kemiklerini sıkıştır","Kontrollü in — tam uzat"], avoid:"Kalçanın sarkması — vücut düz kalacak", warn:"Body weight çekiş — push/pull dengesi için şart", alts:["TRX Row","Table Row","Cable Row"], alt_reasons:["Ayarlanabilir açı","Ev versiyonu","Makine destekli"] },
+          { name:"Rear Delt Fly (lying)", sets:"3 × 12", muscle:"Posterior delt, teres minor, rotator cuff", how:["Yüzüstü bench üstünde yat veya yere yat","DB'leri yanlardan kaldır — kollar hafif bükülü","Kürek kemiklerini sıkıştır — 1 sn tut","Kontrollü in — omuzlar önüne çekme"], avoid:"Momentum kullanma — yavaş kontrollü", warn:"ROTATOR CUFF: Tedavi egzersizi. Arka delt zayıflığı omuz sorununa doğrudan katkı yapar", alts:["Band Rear Delt Fly","Cable Rear Delt Fly","Face Pull"], alt_reasons:["OMUZ: Bant daha kontrollü","OMUZ: Kablo sabit direnç","OMUZ: Dış rotasyon ekler"] },
         ]},
 
-        { name: "🎯 CORE — Dinamik", color: "#6C63FF", exercises: [
-          { name:"Bird Dog", sets:"3 × 10 (her taraf)", muscle:"Erector spinae, glute, core stabilite", how:["Sırt üstü yat — kollar tavana dik, dizler 90° havada", "BEL YERDE — tüm hareket boyunca değişmemeli", "Sağ kolu geri, sol bacağı öne uzat — aynı anda", "Geri gel, sol kol — sağ bacak uzat", "Nefes verirken uzat, alırken geri gel"], avoid:"Beli yerden kaldırma — bu hareketin tek amacı beli yerde tutmak", warn:"SKOLYOZ: En etkili lumbar stabilizasyon egzersizi", alts:["Dead Bug"] },
-          { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
-          { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
-          { name:"Hollow Body Hold", sets:"3 × 20sn", muscle:"Anterior core zinciri", how:["Sırt üstü yat — kollar kulakların yanında düz uzatılmış", "Bacaklar düz, yerden 20-30cm yukarıda — açı küçük tutulur", "Alt sırt yere basılı — bel yerde kalacak, bu kritik", "20sn tut — nefes almayı kesme, kısa nefesler al", "Titreme normaldir — devam et, sadece bel kalkmayacak"], avoid:"Beli yerden kaldırma — bu hareketin tek kuralı", warn:"Muscle-up, handstand, L-sit — tüm ileri kalisteniğin çekirdek gücü buradan gelir", alts:["Tuck Hold"] },
+        { name: "🔄 CARRY & LOCOMOTION", color: "#1A3A5C", exercises: [
+          { name:"Bear Crawl", sets:"4 × 20m", muscle:"Omuz stabilite, core anti-extension, quad, kondisyon", how:["Eller omuz altında — dizler kalça altında","Dizler yere 3-5cm mesafede — asla değmez","Karşı kol-bacak ilerle — diyagonal","Nefes kontrolü — steady"], avoid:"Kalçayı havaya kaldırma", warn:"Tüm vücut entegrasyonu — kalisteniğin gizli silahı", alts:["Crab Walk","Lateral Bear Crawl"] },
+          { name:"Suitcase Carry (Tek El)", sets:"3 × 30m (her el)", muscle:"Core lateral stabilite, trapez, grip, QL", how:["Tek elde ağır DB/KB","Dik dur — yana sarkma yok","Küçük adımlar — kontrollü","30m bir el, döndür diğer el"], avoid:"Yana eğilme — bu anti-lateral flexion", warn:"SKOLYOZ: Lateral core dengesi için şart — her iki el eşit", alts:["Overhead Carry","Waiter Walk"] },
+          { name:"Hollow Body Hold", sets:"3 × 20sn", muscle:"Anterior core zinciri — kalisteniğin motoru", how:["Sırt üstü — kollar kulaklara yapışık uzatılmış","Bacaklar düz 20-30° yukarıda","Bel yerde — yere basıyor gibi hisset","20 sn tut — nefes almayı kesme"], avoid:"Belin yükselmesi", warn:"Muscle-up, handstand, planche'ın temeli", alts:["Knee Tuck Hollow","Bent Knee Hollow"] },
         ]},
 
         { name: "⚡ KONDİSYON — AMRAP Circuit", color: "#990000", exercises: [
-          { name:"AMRAP 8 Dakika", sets:"8 dakika × maksimum tur", muscle:"Full body — aerobik + anaerobik kondisyon", how:["Saat başladığında dur: 5 Push Up", "Sonra: 5 Inverted Row veya Band Pull Apart", "Sonra: 10 Glute Bridge", "Durmadan başa dön — kaç tur tamamladığını say", "Her hafta 1 tur daha hedefle — bu kondisyon gelişiminin göstergesi"], avoid:"Tempo düşürme — yavaşla ama durma", warn:"İtfaiye ve askeri kondisyon testi bu tür circuitlerle yapılır — tur sayısı seni tanımlar", alts:["Tabata","5 tur sabit süre"] },
+          { name:"AMRAP 8 Dakika", sets:"8 dakika × maksimum tur", muscle:"Full body — aerobik + anaerobik kondisyon", how:["5 Push-up + 5 Inverted Row + 10 Goblet Squat + 10 KB Swing","Mümkün olduğunca çok tur — 8 dk boyunca","Her turu say — ilerlemeyi takip et","Formu düşürme — kaliteyi koru"], avoid:"Sadece kolay hareketleri seçme", warn:"Aerobik eşikte çalış — konuşabilirsin ama zor", alts:["20dk Zone 2 Koşu","Rowing AMRAP"] },
         ]},
 
         { name: "❄️ SOĞUMA", color: "#2A9D8F", exercises: [
-          { name:"Lat Stretch Chair", sets:"1 × 45sn (her taraf)", muscle:"Lat", how:["Sandalyeye tutun, kalçayı dışa it"], avoid:null, warn:null, alts:[] },
-          { name:"Hip Flexor Stretch", sets:"2 × 45sn (her taraf)", muscle:"Hip flexor", how:["Yarım diz pozisyonu — sağ diz yerde, sol ayak önde", "Kalçayı öne it — arka bacak üzerinde gerilme hisset", "Posterior tilt yap — kalçanı altına tıkıştır", "Gövde dik — öne eğilme — 30-45 sn tut"], avoid:"Gövdeyi öne eğme — dik tut", warn:"Masa başı çalışıyorsan her gün şart — kısalmış hip flexor sırt ağrısına yol açar", alts:[] },
-          { name:"Prone Cobra Stretch", sets:"2 × 30sn", muscle:"Omurga ekstansörler, göğüs", how:["Yüzüstü yat","Kolları düz it — göğsü kaldır","Beli değil göğsü aç"], avoid:"Boyun germe", warn:"KİFOZ KRİTİK", alts:[] },
-          { name:"Seated Forward Fold", sets:"1 × 60sn", muscle:"Hamstring, alt sırt", how:["Bacaklar uzatılmış","Öne doğru uzan — pasif"], avoid:null, warn:null, alts:["Standing Half Forward Bend", "Supine Hamstring Stretch", "Knee to Chest"], alt_reasons:["BEL: Ayakta — disk baskısı azalır", "BEL: Sırt üstü — disk yüksüz hamstring germe", "BEL: Kalçayı göğse çek — lumbar fleksiyon minimal"] },
+          { name:"Child's Pose", sets:"1 × 60sn", muscle:"Sırt, omuz, kalça", how:["Kolları öne uzat","Alnı yere koy","60 sn"], avoid:null, warn:null, alts:[] },
+          { name:"Pigeon Pose", sets:"1 × 45sn (her taraf)", muscle:"Piriformis, kalça dış rotatorları", how:["Ön bacak yatay — arka bacak uzatılmış","Kalçayı yere bırak","45 sn her taraf"], avoid:"Ağrıda zorla yapma", warn:"DİZ: Ön bacağı ayarla", alts:[] },
+          { name:"Supine Spinal Twist", sets:"1 × 45sn (her taraf)", muscle:"Torasik rotasyon", how:["Dizi karşı tarafa yatır","Omuz yerde","45 sn"], avoid:"Omuzların kalkması", warn:"SKOLYOZ: Her iki tarafa eşit", alts:[] },
         ]},
       ],
+
     },
 
     // ─────────────────────────────────────────────────
     {
-      id: 3, title: "GÜN 3", sub: "CUMARTESİ", focus: "Fonksiyonel Güç", duration: "~80 dk", color: "#F4A261",
+      id: 3, title: "GÜN 3", sub: "CUMARTESİ", focus: "Posterior Chain + Fonksiyonel", duration: "~80 dk", color: "#F4A261",
       type: "training",
-      injury: "⚠️ BEL: RDL'de range kıs — hamstring gerilene kadar. Ab Wheel Rollout'u Dead Bug ile değiştir. DİZ: Sığ range. OMUZ: Prehab ısınmada.",
+      injury: "⚠️ BEL: RDL'de nötral omurga. DİZ: Step-Up'ta knee tracking. OMUZ: Pike Push-Up'ta range azalt. ROTATOR CUFF: Face Pull önce.",
       conditioning: "Yük Taşıma Devresi — dayanıklılık gücü",
       blocks: [
         { name: "🔥 ISINMA — Fonksiyonel Hazırlık", color: "#CC5500", exercises: [
-          { name:"Chin Tuck", sets:"3 × 12", muscle:"Boyun fleksörleri", how:["Sandalyede dik otur veya ayakta dur", "Çeneni geriye it — çift çene yap", "Boyun uzuyor gibi hisset — 2 sn tut", "Bırak, tekrarla — 12-15 tekrar"], avoid:"Başı aşağı eğme — sadece geriye it", warn:"Bilgisayar başında çalışanlar için boyun ağrısının ana önlemi", alts:[] },
-          { name:"Foam Roller Upper Back Roll", sets:"2 × 10", muscle:"Torasik mobilite", how:["Foam roller'ı üst sırt (T4-T8) hizasına yerleştir", "Kolları göğsün üzerinde çaprazla veya elleri ensede", "Yavaşça yuvarlan — ağrılı noktada 20-30 sn kal", "Nefes ver ve kası bırak — zorla bastırma"], avoid:"Bel omurları üzerinde yuvarlanma — sadece üst sırt", warn:"KİFOZ + SKOLYOZ: Torasik mobilite her gün şart — asla atlama", alts:[] },
-          { name:"World Greatest Stretch", sets:"2 × 5 (her taraf)", muscle:"Kalça, torasik, omuz — full body ısınma", how:["Büyük lunge adımı at — sağ ayak önde", "Sağ elin sağ ayağın iç yanına koy", "Sol kolu tavana doğru aç — gözler elle", "3 sn tut, el yere indir, topuğu it — kalça aç", "Her iki taraf 5'er tekrar"], avoid:"Aceleyle yapma — her pozisyonda 2-3 sn kal", warn:"Tüm vücudu tek harekette ısıtır — kalça, sırt, omuz, göğüs", alts:["Leg Swing + Thoracic Rotation ayrı"] },
-          { name:"Glute Bridge Hamstring Walk", sets:"3 × 12", muscle:"Glute + hamstring aktivasyon", how:["Sırt üstü kalçayı kaldır","Ayakları yavaşça öne yürüt","Kalça hep yukarıda — asla indir","Geri yürüt"], avoid:"Kalçayı düşürme", warn:null, alts:["Floor Bridge"] },
-          { name:"Prone Y-T-W", sets:"2 × 10", muscle:"Alt trapez, rhomboid, rotator cuff", how:["Yüzüstü yat","Y-T-W sırasıyla — kaldır, tut, indir"], avoid:"Boyun sıkışması", warn:"Rotator cuff prehab", alts:[] },
+          { name:"Foam Roller Upper Back Roll", sets:"2 × 10", muscle:"Torasik mobilite", how:["Foam roller'ı üst sırta koy","Yavaşça yuvarlan — ağrılı noktada kal"], avoid:"Bel üzerinde yapma", warn:"KİFOZ + SKOLYOZ: Torasik mobilite şart", alts:[] },
+          { name:"Hip Circle", sets:"2 × 10 (her yön)", muscle:"Kalça mobilite, rotatorlar", how:["Ayakta — eller belde","Kalçayla büyük daire çiz","10 saat yönü, 10 saat karşıtı"], avoid:"Dizleri bükme", warn:"Her antrenmandan önce kalça mobilite", alts:[] },
+          { name:"Band Face Pull", sets:"3 × 15", muscle:"Arka delt, rotator cuff — günlük rutin", how:["Bant göz hizasında","İki elle — başparmaklar arkaya","Çek ve dışa döndür — dirsekler kulak hizasına","1 sn tut"], avoid:"Dirsekleri aşağı çekme", warn:"ROTATOR CUFF: Her gün bu hareket — tedavindir", alts:["Band External Rotation","Rear Delt Fly"] },
+          { name:"Reverse Lunge (ağırlıksız)", sets:"2 × 8 (her bacak)", muscle:"Kalça ve bacak aktivasyon", how:["Sağ ayağı geriye adım at","Diz yere yakın","Ön ayakla it — dön"], avoid:"Ön dizi çok öne götürme", warn:"DİZ: Geriye hamle — knee stress az", alts:[] },
+        ]},
+        { name: "🛡 SAKATILIK PROTOKOLÜ — Zorunlu (5 dk)", color: "#7B241C", exercises: [
+          { name:"Band External Rotation", sets:"3 × 15 (her taraf)", muscle:"İnfraspinatus, teres minor — rotator cuff aktif stabilizasyon", how:["Dirsek 90° — vücuda yapışık","Bandı dışa döndür — omuz hizasına","1 sn tut — kontrollü geri","Asla momentum kullanma"], avoid:"Dirsekleri vücuttan ayırma", warn:"ROTATOR CUFF: Tedavindir. Atlama. Her antrenman öncesi zorunlu", alts:["Cable External Rotation"] },
+          { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Serratus anterior, trapez orta/alt — scapula kontrolü", how:["Sırtını duvara daya — kollar W pozisyonu","Yavaşça kolları yukarı kaydır — U yap","Kürek kemikleri duvarda kalacak — asla ayrılmayacak"], avoid:"Kürek kemiklerinin duvardan ayrılması", warn:"KİFOZ + ROTATOR CUFF: Scapula stabilizasyonu rotator cuff'ı besler", alts:[] },
+          { name:"Chin Tuck", sets:"3 × 12", muscle:"Derin boyun fleksörleri — servikal stabilizasyon", how:["Dik otur","Çeneni geriye it — çift çene","2 sn tut — bırak"], avoid:"Başı aşağı eğme", warn:"BOYUN FITIĞI: Servikal disk basıncını azaltır. Her gün zorunlu", alts:[] },
         ]},
 
-        { name: "🏋️ KUVVET — Posterior Chain", color: "#F4A261", exercises: [
-          { name:"Romanian Deadlift", sets:"4 × 8", muscle:"Hamstring, glute, sırt erektör — arka zincir", how:["Dizler hafif bükülü — sabit kalacak","Kalçayı geriye it","Dumbbellları bacak boyunca indir","Hamstrings'de gerilme hissedince dur — geri"], avoid:"Sırtı büküp öne eğilme", warn:"🟡 BEL FITIĞI: Range kıs — hamstring gerilene kadar, daha fazla eğilme. Omurga nötral. SKOLYOZ: Her sette simetri kontrol et", alts:["Single Leg RDL (hafif)", "Hip Hinge", "Cable Pull Through"], alt_reasons:["BEL: Tek bacak — daha az spinal kompresyon", "BEL: Kalça dominant — hamstring kontrollü", "BEL: Kablo ile nötral omurga kolay korunur"] },
-          { name:"Single Leg RDL", sets:"3 × 8 (her bacak)", muscle:"Hamstring, glute — unilateral hinge", how:["Tek ayak üzerinde dur","Kalçayı geriye iterek öne eğil","Sırt düz — karşı bacak geriye uzanır","Hamstrings gerilince geri gel"], avoid:"Beli büküp öne eğilme", warn:"DİZ: Fonksiyonel — squat yok", alts:["RDL bilateral","KB Single Leg RDL"] },
-          { name:"Single Arm DB Row (Ağır)", sets:"4 × 6 (her taraf)", muscle:"Lat, mid sırt — unilateral güç", how:["Bench'e dizi ve eli daya","Ağır dumbbell — güçlü çek","Kürek kemiğini tam geri çek","3 sn indir — tam germe"], avoid:"Gövdeyi döndürme", warn:"SKOLYOZ: Her iki taraf eşit güç kritik", alts:["Cable Row","Chest Supported Row"] },
-          { name:"Floor Press", sets:"4 × 8", muscle:"Göğüs, triceps, ön delt — zeminde limitli range", how:["Sırt üstü yat — dizler bükülü","DB'leri yan tarafta — dirsekler yerde","Göğse doğru in — dirsekler yere değince dur","İt — tam uzatma"], avoid:"Bileği büküp bırakma", warn:"ROTATOR CUFF: En güvenli press — sınırlı range", alts:["Incline DB Press","Push Up Ağırlıklı"] },
+        { name: "🤸 KALİSTENİK — L-sit & Handstand Skill", color: "#8338EC", exercises: [
+          { name:"Support Hold", sets:"3 × 20sn", muscle:"Triceps, ön delt, core basınç", how:["Paralel barlarda kolları tam uzat","Omuzları bastır — kulağa değil","Vücut hafif salınabilir — sabit tut","20 sn"], avoid:"Dirsekleri bükme", warn:"L-sit'in temeli — önce süre, sonra bacak kaldır", alts:["Chair Support Hold","Ring Support"] },
+          { name:"Knee Tuck Hold", sets:"4 × 15sn", muscle:"Hip flexor, core basınç, triceps", how:["Support pozisyonda — dizleri çek","Kalçayı kaldır — L-sit'e geçiş","15 sn tut — nefesi kesme","Her sette süreyi uzatmaya çalış"], avoid:"Omuzların sarkması", warn:"L-sit'e giden yol — daha iyi skip", alts:["Tuck L-sit","Floor L-sit"] },
+          { name:"Wall Handstand Hold", sets:"3 × 20sn", muscle:"Omuz stabilite, core, bilek — handstand temeli", how:["Duvara yakın — eller omuz genişliğinde","Bacakları duvara koy — kontrollü","Omuzları kulak hizasına it — aktif omuz","Gövde düz — kalça sıkı"], avoid:"Beli aşırı bükme", warn:"ROTATOR CUFF: Scapular depression aktif — omuz stabilite", alts:["Pike Hold","Headstand"] },
+          { name:"Hollow Body Hold", sets:"4 × 20sn", muscle:"Anterior core zinciri — kalisteniğin motoru", how:["Sırt üstü — kollar kulaklara yapışık","Bacaklar düz 20-30° yukarıda","Bel yerde","20 sn — nefes almayı kesme"], avoid:"Belin yükselmesi", warn:"Planche, muscle-up, L-sit'in çekirdeği", alts:["Bent Knee Hollow"] },
         ]},
 
-        {
-        "name": "🤸 KALİSTENİK — L-sit & Handstand Skill (Önce Yap)",
-        "color": "#8338EC",
-        "exercises": [
-        {
-        "name": "Support Hold",
-        "sets": "3 × 20sn",
-        "muscle": "Triceps, ön delt, core basınç — L-sit'in temeli",
-        "how": [
-        "Paralel bar veya iki sandalye",
-        "Kolları düz it — vücut askıda",
-        "Core sıkı — hafifçe öne eğil",
-        "20sn tut — nefes al"
-        ],
-        "avoid": "Dirsekleri bükme",
-        "warn": "L-sit olmadan bu olmaz — asla atlama",
-        "alts": [
-        "Chair Support Hold",
-        "Floor Support"
-        ]
-        },
-        {
-        "name": "Knee Tuck Hold",
-        "sets": "4 × 15sn",
-        "muscle": "Hip flexor, core, triceps basınç",
-        "how": [
-        "Support pozisyonunda",
-        "Dizleri göğse çek — mümkün olduğu kadar yüksek",
-        "15sn tut — titreme normal",
-        "Kontrollü indir"
-        ],
-        "avoid": "Öne eğilme — gövde dik",
-        "warn": "L-sit progressionının 2. adımı",
-        "alts": [
-        "Hanging Knee Raise",
-        "Floor Tuck Hold"
-        ]
-        },
-        {
-        "name": "Hollow Body Hold",
-        "sets": "4 × 20sn",
-        "muscle": "Anterior core zinciri — kalisteniğin ana motoru",
-        "how": [
-        "Sırt üstü — kollar kulakların yanında uzatılmış",
-        "Bacaklar 45° — yerden 20cm",
-        "Bel yerde — lower back basısı",
-        "20sn tut — nefes almayı kesme"
-        ],
-        "avoid": "Beli yerden kaldırma",
-        "warn": "Muscle-up, handstand, L-sit — hepsinin temeli hollow body",
-        "alts": [
-        "Tuck Hold",
-        "Arch Hold"
-        ]
-        },
-        {
-        "name": "Pike Push Up",
-        "sets": "4 × 8",
-        "muscle": "Ön delt dominant — handstand push-up temeli",
-        "how": [
-        "Ters V — kalça yüksekte",
-        "Başı yere doğru indir — dirsekler dışa açılır",
-        "Patlayıcı it",
-        "Her sette biraz daha dik açı hedefle"
-        ],
-        "avoid": "Kalçayı düşürme",
-        "warn": "ROTATOR CUFF: Omuz ağrısında açıyı düşür. Ayaklarını giderek yükseltiyorsun — sonunda wall HSPU",
-        "alts": [
-        "Elevated Pike Push Up"
-        ]
-        },
-        {
-        "name": "Wall Handstand Hold",
-        "sets": "3 × 20sn",
-        "muscle": "Omuz stabilite, core, bilek — handstand temeli",
-        "how": [
-        "Duvara karşı ellerle yukarı çık",
-        "Vücut düz — core sıkı, kalça sıkıştır",
-        "Omuzları kulağa it — aktif omuz",
-        "20sn tut — nefes al"
-        ],
-        "avoid": "Beli çukurlaştırma — düz çizgi",
-        "warn": "ROTATOR CUFF: Duvardan destek her zaman gerekli. Omuz ağrısında pike hold'a geç. Stabilite haftalar alır",
-        "alts": [
-        "Box Handstand",
-        "Pike Hold on Box"
-        ]
-        }
-        ]
-        },
-
-        { name: "🔄 FONKSİYONEL KOMPLİMENTER", color: "#8B4513", exercises: [
-          { name:"Sandbag / DB Complex", sets:"3 tur × dinlenmeden", muscle:"Tüm vücut — fonksiyonel dayanıklılık", how:["1: RDL × 6","2: Bent Over Row × 6","3: High Pull × 6 — KB'yi çeneye doğru","4: Press × 6","Her hareketi bırakmadan yap","Tur arası 90 sn"], avoid:"Çok ağır — form bozulur", warn:"Hafif ağırlık al — full hareket önemli", alts:["KB Complex","Barbell Complex"] },
-        ]},
-
-        { name: "🎯 CORE — Rotasyon & Lateral", color: "#6C63FF", exercises: [
-          { name:"Dead Bug", sets:"3 × 10 (her taraf)", muscle:"Core stabilite", how:["Sırt üstü yat — kollar tavana dik, dizler 90° havada", "BEL YERDE — tüm hareket boyunca değişmemeli", "Sağ kolu geri, sol bacağı öne uzat — aynı anda", "Geri gel, sol kol — sağ bacak uzat", "Nefes verirken uzat, alırken geri gel"], avoid:"Beli yerden kaldırma — bu hareketin tek amacı beli yerde tutmak", warn:"SKOLYOZ: En etkili lumbar stabilizasyon egzersizi", alts:[] },
-          { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
-          { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
-          { name:"Copenhagen Plank Left", sets:"2 × 20sn", muscle:"Adduktör, lateral core", how:["Sol yana yat — üst ayağı (sol) bench veya sandalye kenarına koy", "Alt bacağı (sağ) yerden kaldır — iki bacak arasında boşluk", "Dirsek omuz altında — kalça yukarı it", "Vücut düz çizgi — 20sn tut", "Her iki taraf eşit süre"], avoid:"Kalçanın düşmesi — lateral zincir boyunca gerilme hissedeceksin", warn:"Adduktör + lateral core birlikte — diz stabilitesi ve kalça sağlığı için kritik", alts:[] },
-          { name:"Copenhagen Plank Right", sets:"2 × 20sn", muscle:"Her iki taraf eşit", how:["Sağ yana yat — üst ayağı (sağ) bench kenarına koy", "Alt bacağı (sol) yerden kaldır", "Dirsek omuz altında — kalça yukarı", "20sn tut — her iki taraf eşit"], avoid:"Kalçanın düşmesi", warn:"SKOLYOZ: Her iki taraf mutlaka eşit süre", alts:[] },
+        { name: "🏋️ KUVVET — Posterior Chain + Push + Pull", color: "#F4A261", exercises: [
+          { name:"Romanian Deadlift", sets:"4 × 8", muscle:"Hamstring, glute, erektör — posterior chain temeli", how:["Ayaklar kalça genişliğinde","Barı/DB'yi bacak boyunca indir — doğrusal","Hamstring'de gerilme hissedince dur","Kalçayı öne it — kalk"], avoid:"Dizleri tam düzeltme — hafif bükülü kalacak", warn:"🟡 BEL FITIĞI: Nötral omurga şart. Aralıkları kıs — yarı ROM. SKOLYOZ: Simetri kontrol", alts:["Single Leg RDL (destekli)","Good Morning","Hip Hinge"] },
+          { name:"Single Leg RDL", sets:"3 × 8 (her bacak)", muscle:"Hamstring, glute — unilateral posterior hinge", how:["Tek ayakta — karşı taraf hafice arkada","Öne eğil — kalçadan","Arka bacak geriye uzanır — denge için","Hamstring gerilme hissedince dur"], avoid:"Beli yuvarlama", warn:"DİZ: Unilateral denge — menisküs için stabilite çalışması", alts:["Hip Hinge (tek bacak)","RDL (bilateral hafif)"] },
+          { name:"Step-Up (Weighted)", sets:"4 × 10 (her bacak)", muscle:"Quad, glute — fonksiyonel squat pattern", how:["DB veya ağırlıksız — adım yüksekliği diz hizası","Tam ağırlığı ön ayağa ver — topuklardan it","Tam dik kalk — üst bacak uzatılmış","Kontrollü in — arka ayak yere"], avoid:"Arka ayaktan itme — ön bacak çalışmalı", warn:"DİZ: En fonksiyonel squat varyantı. İtfaiyeci merdiveni simülasyonu. Menisküs için ideal", alts:["Reverse Lunge","Box Squat","Assisted Squat"], alt_reasons:["DİZ: Geriye hamle","DİZ: Kontrollü iniş","DİZ: Destekli"] },
+          { name:"Single Arm DB Row", sets:"4 × 8 (her taraf)", muscle:"Lat, mid sırt, rhomboid — unilateral yatay çekiş", how:["Bench'e tek el-diz dayan","DB'yi kalça/alt göğüs hizasına çek","Kürek kemiğini sıkıştır — 1 sn tut","Kontrollü in — omuz öne düşmez"], avoid:"Gövdeyi döndürme — sadece kürek çalışır", warn:"BEL FITIĞI: Destekli — spinal yük minimal. Bu versiyonu tercih et", alts:["Cable Row","Chest Supported Row"] },
+          { name:"Pike Push Up", sets:"4 × 8", muscle:"Ön delt, triceps — handstand push-up temeli", how:["Kalçayı havaya kaldır — V şekli","Başı ellerin arasına indir","Dirsekler biraz dışa — temiz form","İt — tam kalk"], avoid:"Kalçayı düşürme — plank değil pike", warn:"ROTATOR CUFF: Vertical push — handstand hazırlığı. Ağrıda range'i azalt", alts:["Incline Push Up","Decline Push Up","Wall Shoulder Press"] },
         ]},
 
         { name: "⚡ KONDİSYON — Yük Taşıma Devresi", color: "#990000", exercises: [
-          { name:"Yük Taşıma Devresi", sets:"4 tur × 3 dk / 1 dk dinlenme", muscle:"Full body dayanıklılık — itfaiye/askeri simülasyon", how:["30m Farmer Carry (ağır)","20m Bear Crawl","30m Suitcase Carry (sağ)","30m Suitcase Carry (sol)","Bir tur = yukarıdaki sıra","4 tur tamamla"], avoid:"Formu bırakma — ağırlığı düşür", warn:"İtfaiye taşıma simülasyonu — gerçek dünya gücü", alts:["Sandbag Carry","Tire Flip","Sled Push"] },
+          { name:"Yük Taşıma Devresi", sets:"4 tur × 3 dk / 1 dk dinlenme", muscle:"Full body dayanıklılık — itfaiye/askeri simülasyon", how:["Tur: Farmer Carry 30m + Suitcase Carry 30m (tek el) + Bear Crawl 10m","Her turu mümkün olduğunca hızlı tamamla","1 dk dinlenme — sonra tekrar","4 tur — toplam ~16 dk çalışma"], avoid:"Formun bozulması — önce form, sonra hız", warn:"İtfaiyeci fonksiyonel fitness 4 pillarından biri: Carry ve locomotion", alts:["Sandbag Devresi","20dk Zone 2 Koşu"] },
+        ]},
+
+        { name: "🔄 CORE — Rotasyon & Lateral", color: "#6C3483", exercises: [
+          { name:"Copenhagen Plank Left", sets:"2 × 20sn", muscle:"Sol adduktör, lateral core, QL", how:["Yan yat — üst ayak bench üstünde","Kalçayı kaldır — dirsek altında","Vücut düz — 20 sn"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Lateral core dengesizliği için kritik", alts:[] },
+          { name:"Copenhagen Plank Right", sets:"2 × 20sn", muscle:"Sağ adduktör, lateral core", how:["Diğer taraf — eşit süre"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Her iki taraf eşit olacak", alts:[] },
+          { name:"Pallof Press", sets:"3 × 10 (her taraf)", muscle:"Core anti-rotasyon — rotasyon direnci", how:["Bant veya kablo yan tarafa bağlı","Her iki elle göğüs önünde tut","Öne uzat — vücut dönmez — 2sn tut","Geri çek"], avoid:"Vücudun dönmesine izin verme", warn:"SKOLYOZ: Anti-rotasyon egzersizi. Lateral core dengesizliği düzeltir", alts:["Landmine Rotation","Cable Anti-Rotation"] },
         ]},
 
         { name: "❄️ SOĞUMA", color: "#F4A261", exercises: [
-          { name:"Standing Quad Stretch", sets:"1 × 45sn (her taraf)", muscle:"Quad", how:["Topuğu kalçaya çek"], avoid:null, warn:null, alts:[] },
-          { name:"Lizard Pose Left", sets:"1 × 45sn", muscle:"Kalça fleksör, groin", how:["Sol ayak öne — büyük lunge","Sağ diz yerde"], avoid:null, warn:null, alts:[] },
-          { name:"Lizard Pose Right", sets:"1 × 45sn", muscle:"Her taraf eşit", how:["Her taraf eşit"], avoid:null, warn:null, alts:[] },
-          { name:"Thread the Needle", sets:"1 × 30sn (her taraf)", muscle:"Torasik rotasyon", how:["Dört ayak — kolu alttan geçir"], avoid:null, warn:null, alts:[] },
-          { name:"Seated Forward Fold", sets:"1 × 60sn", muscle:"Hamstring", how:["Öne uzan"], avoid:null, warn:null, alts:["Standing Half Forward Bend", "Supine Hamstring Stretch", "Knee to Chest"] },
+          { name:"Child's Pose", sets:"1 × 60sn", muscle:"Sırt, omuz, kalça", how:["Kolları öne uzat","60 sn"], avoid:null, warn:null, alts:[] },
+          { name:"Hamstring Stretch", sets:"2 × 45sn (her taraf)", muscle:"Hamstring, posterior chain", how:["Otur — tek bacağı uzat","Öne eğil — gerini hisset","45 sn"], avoid:"Sırtı yuvarlama", warn:"BEL: Hafif eğil — zorla değil", alts:[] },
+          { name:"Supine Spinal Twist", sets:"1 × 45sn (her taraf)", muscle:"Torasik rotasyon", how:["Dizi karşı tarafa yatır","Omuz yerde","45 sn"], avoid:"Omuzların kalkması", warn:"SKOLYOZ: Her iki tarafa eşit", alts:[] },
         ]},
       ],
+
     },
 
     // ─────────────────────────────────────────────────
     {
-      id: 4, title: "GÜN 4", sub: "PAZAR", focus: "Dayanıklılık Devresi", duration: "~75 dk", color: "#8338EC",
+      id: 4, title: "GÜN 4", sub: "PAZAR", focus: "Güç + Max Test + Zone 2 Aerobik", duration: "~80 dk", color: "#8338EC",
       type: "training",
-      injury: "⚠️ BEL+BOYUN: Muscle-up kipping hareketi — ağrıda tamamen atla. Wall Handstand'da boyun nötral şart. OMUZ: Ağrıda alternatife geç.",
+      injury: "⚠️ BEL: KB Swing mükemmel hinge. DİZ: Goblet Squat knee tracking. OMUZ: Push Press'te Landmine'a geç ağrıda. AB WHEEL: BEL FITIĞI riski — Knee Rollout kullan.",
       conditioning: "Uzun Devre — aerobik kapasite ve akıl gücü",
       blocks: [
         { name: "🔥 ISINMA — Genel Hazırlık", color: "#CC5500", exercises: [
-          { name:"Chin Tuck", sets:"3 × 12", muscle:"Boyun", how:["Sandalyede dik otur veya ayakta dur", "Çeneni geriye it — çift çene yap", "Boyun uzuyor gibi hisset — 2 sn tut", "Bırak, tekrarla — 12-15 tekrar"], avoid:"Başı aşağı eğme — sadece geriye it", warn:"Bilgisayar başında çalışanlar için boyun ağrısının ana önlemi", alts:[] },
-          { name:"Band Pull Apart", sets:"3 × 15", muscle:"Arka omuz", how:["Bandı iki elle önde omuz hizasında tut — omuz genişliğinde", "Kolları düz tutarak yanlara aç — kürek kemiklerini birleştir", "1 sn tam açık pozisyonda tut", "Kontrollü geri gel — 2-3 sn"], avoid:"Omuzları kulağa kaldırma — trapez değil rhomboid çalışmalı", warn:"Bilgisayar başında postür kasları zayıflar — günlük yapılmalı", alts:[] },
-          { name:"Foam Roller Upper Back Roll", sets:"2 × 10", muscle:"Torasik", how:["Foam roller'ı üst sırt (T4-T8) hizasına yerleştir", "Kolları göğsün üzerinde çaprazla veya elleri ensede", "Yavaşça yuvarlan — ağrılı noktada 20-30 sn kal", "Nefes ver ve kası bırak — zorla bastırma"], avoid:"Bel omurları üzerinde yuvarlanma — sadece üst sırt", warn:"KİFOZ + SKOLYOZ: Torasik mobilite her gün şart — asla atlama", alts:[] },
-          { name:"Hip Hinge", sets:"2 × 10", muscle:"Posterior chain aktivasyon", how:["Kalçayı geriye it"], avoid:null, warn:null, alts:[] },
-          { name:"Shoulder CARs", sets:"2 × 5 (her taraf)", muscle:"Omuz mobilite", how:["Tam daire — yavaş"], avoid:null, warn:null, alts:[] },
-          { name:"Supine Hip Rotation", sets:"2 × 8 (her taraf)", muscle:"Kalça", how:["Sırt üstü yat — dizler bükülü, ayaklar yerde", "Sağ dizi yavaşça sağa yatır — 10 sn tut", "Geri gel, sol dizi sola yatır — 10 sn tut", "Ağrı varsa range'i azalt — zorla yapma"], avoid:"Kalçanın yerden kalkmasına izin verme", warn:"DİZ: Kalça rotatorlarını açar — menisküs stresi azalır", alts:[] },
+          { name:"Foam Roller Upper Back Roll", sets:"2 × 10", muscle:"Torasik mobilite", how:["Foam roller'ı üst sırta koy","Yavaşça yuvarlan"], avoid:"Bel üzerinde yapma", warn:"Haftalık kapanış — mobilite şart", alts:[] },
+          { name:"Band Pull Apart", sets:"3 × 15", muscle:"Arka omuz — günlük rutin", how:["Bandı iki elle önde tut","Kolları yanlara aç — kürek kemiklerini birleştir","1 sn tut"], avoid:"Omuzları kulağa kaldırma", warn:"ROTATOR CUFF: Her gün", alts:[] },
+          { name:"Goblet Squat (ağırlıksız)", sets:"2 × 10", muscle:"Quad, glute, mobilite", how:["DB veya kettlebell göğüste","Derin otur — kalça topuğun dibine","Topuklarla it — kalk"], avoid:"Topukların kalkması", warn:"Squat pattern aktivasyon", alts:[] },
+          { name:"Hip Hinge", sets:"2 × 10", muscle:"Posterior chain aktivasyon", how:["Kalçayı geriye it","Sırt düz","Geri gel"], avoid:"Sırtı büküp öne eğme", warn:"Swing ve deadlift öncesi", alts:[] },
+        ]},
+        { name: "🛡 SAKATILIK PROTOKOLÜ — Zorunlu (5 dk)", color: "#7B241C", exercises: [
+          { name:"Band External Rotation", sets:"3 × 15 (her taraf)", muscle:"İnfraspinatus, teres minor — rotator cuff aktif stabilizasyon", how:["Dirsek 90° — vücuda yapışık","Bandı dışa döndür — omuz hizasına","1 sn tut — kontrollü geri","Asla momentum kullanma"], avoid:"Dirsekleri vücuttan ayırma", warn:"ROTATOR CUFF: Tedavindir. Atlama. Her antrenman öncesi zorunlu", alts:["Cable External Rotation"] },
+          { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Serratus anterior, trapez orta/alt — scapula kontrolü", how:["Sırtını duvara daya — kollar W pozisyonu","Yavaşça kolları yukarı kaydır — U yap","Kürek kemikleri duvarda kalacak — asla ayrılmayacak"], avoid:"Kürek kemiklerinin duvardan ayrılması", warn:"KİFOZ + ROTATOR CUFF: Scapula stabilizasyonu rotator cuff'ı besler", alts:[] },
+          { name:"Chin Tuck", sets:"3 × 12", muscle:"Derin boyun fleksörleri — servikal stabilizasyon", how:["Dik otur","Çeneni geriye it — çift çene","2 sn tut — bırak"], avoid:"Başı aşağı eğme", warn:"BOYUN FITIĞI: Servikal disk basıncını azaltır. Her gün zorunlu", alts:[] },
         ]},
 
-        { name: "🏋️ KUVVET — Hız & Güç", color: "#8338EC", exercises: [
-          { name:"KB Swing (Heavy)", sets:"5 × 10", muscle:"Posterior chain patlayıcı güç — hip extension", how:["Ağır KB — hip hinge başlangıç","Kalçayı patlayıcı öne it","KB omuz hizasına — kollar pasif","Kontrollü geri"], avoid:"Squat hareketi yapmaya çalışma", warn:"🟡 BEL FITIĞI: Hip hinge — squat değil. Omurga nötral şart. Ağrıda Glute Bridge ile değiştir. ROTATOR CUFF: Ağrıda DB Swing tercih et", alts:["Dumbbell Swing", "Glute Bridge (ağır)", "Hip Hinge"], alt_reasons:["BEL: DB ile daha kontrollü, hafif", "BEL: Kalça dominant — bel yüksüz", "BEL: Hip hinge drili — swing temeli"] },
-          { name:"Push Press", sets:"3 × 5", muscle:"Tüm vücut — bacak + omuz + core koordinasyon", how:["DB'leri omuz hizasında","Hafif diz bükümü — patlayıcı it","Bacak gücüyle başla — kollar tamamlar","Kontrollü indir"], avoid:"Sadece kollarla itme — bacak kullan", warn:"🟡 BOYUN FITIĞI: Boyun nötral — başı öne eğme. Ağrıda Landmine Press'e geç — en güvenli overhead. ROTATOR CUFF: Ağrıda landmine'a geç", alts:["Landmine Push Press", "DB Shoulder Press (oturarak)", "Arnold Press"], alt_reasons:["BOYUN+OMUZ: Çapraz açı — servikal kompresyon yok", "BOYUN: Oturarak — boyun yüksüz, destekli", "BOYUN+OMUZ: Omuz sağlığı dostu overhead"] },
-          { name:"Trap Bar / DB Shrug Carry Combo", sets:"3 × 20m", muscle:"Trapez üst, rhomboid, core — yük altında postür", how:["DB'leri omuz hizasında (rack pozisyon)","20 metre yürü","Sonra Farmer Carry pozisyonuna al","20 metre daha yürü"], avoid:"Boynu büküp öne eğilme", warn:null, alts:["Farmer Carry","Yoked Carry"] },
+        { name: "🤸 KALİSTENİK — Max Test & Skill Progression", color: "#2A9D8F", exercises: [
+          { name:"Dead Hang Max", sets:"4 × max süre", muscle:"Grip, lat, omurga dekompresyon", how:["Bardan asıl","Ne kadar tutabilirsen tut","Her seferde süreyi kaydet — ilerleme takibi"], avoid:"Pasif sarkma — omuzlar aktif", warn:"Pull-up'ın temeli — haftalık test", alts:[] },
+          { name:"Pull Up Max Test", sets:"3 set × maksimum", muscle:"Tüm çekme zinciri — haftalık ölçüm", how:["Temiz form — göğüs bara","Momentum yok","Her tekrarı say — kaydet","Setler arası tam dinlenme"], avoid:"Kipping — sadece temiz tekrar", warn:"Setin sonunu kaydet — haftalık ilerleme buradan görünür", alts:["Chin Up Max","Assisted Pull Up"] },
+          { name:"Push Up Max Test", sets:"3 set × maksimum", muscle:"Göğüs, triceps, core — haftalık ölçüm", how:["Temiz form — göğüs yere değiyor","Core sıkı — vücut düz","Her tekrarı say","Setler arası tam dinlenme"], avoid:"Kalçayı havaya kaldırma", warn:"Taktik atlet standardı: 40+ tekrar hedef", alts:[] },
+          { name:"Dip Max Test", sets:"2 set × maksimum", muscle:"Triceps, alt göğüs — haftalık ölçüm", how:["Paralel barda — temiz form","Tam alta — 90°","Tam kalk","Kaydet"], avoid:"Aşırı aşağı inme", warn:"Push zincirinin haftalık kapanışı", alts:["Bench Dip Max","Ring Dip"] },
+          { name:"Muscle-up Prep", sets:"3 × 5", muscle:"Pull + push geçişi — üst kalisteniğin zirvesi", how:["Explosive pull-up — mümkünse geçiş","Geçiş yapamıyorsan explosive chin-up","Geçiş anında aktif dip pozisyonu","En az 15 pull-up olmadan muscle-up zorla yapılmaz"], avoid:"Kipping — kontrol şart", warn:"OMUZ: Geçiş anında rotasyon — ağrıda dur. Kas-up seviyesi gelmeden zorla yapma", alts:["Explosive Pull Up","Transition Drill","Bar Muscle Up Negative"] },
         ]},
 
-        {
-        "name": "🤸 KALİSTENİK — Pull-up Max & Progression Test",
-        "color": "#2A9D8F",
-        "exercises": [
-        {
-        "name": "Dead Hang",
-        "sets": "4 × max süre",
-        "muscle": "Grip, lat, omurga dekompresyon",
-        "how": [
-        "Bardan asıl — aktif omuz",
-        "Mümkün olduğu kadar uzan",
-        "Süreyi not al — her hafta kaydet",
-        "PR kır"
-        ],
-        "avoid": "Pasif sarkma",
-        "warn": "Grip gücü kalisteniğin gizli anahtarı — takip et",
-        "alts": []
-        },
-        {
-        "name": "Pull Up Max Test",
-        "sets": "3 set × maksimum",
-        "muscle": "Tüm çekme zinciri — haftalık ilerleme ölçümü",
-        "how": [
-        "Her sette maksimum temiz tekrar",
-        "Set arası 3dk tam dinlenme",
-        "Tekrar sayısını not al",
-        "Haftalık trend takip et"
-        ],
-        "avoid": "Kısmi range — geçersiz sayılır",
-        "warn": "Askeri fitness testlerinde standart ölçüm — bu sayı hedefini gösterir",
-        "alts": [
-        "Chin Up Max",
-        "Assisted Pull Up"
-        ]
-        },
-        {
-        "name": "Muscle-up Prep",
-        "sets": "3 × 5",
-        "muscle": "Pull + push geçişi — üst kalisteniğin zirvesi",
-        "how": [
-        "Yüksek pull-up: göğsü bara çek",
-        "Geçiş anında dirseği barın üstüne al",
-        "Dip pozisyonuna it",
-        "Yapamıyorsan band yardımıyla öğren"
-        ],
-        "avoid": "Sadece kollarla çekme — tüm vücut momentum",
-        "warn": "ROTATOR CUFF: Kipping hareketi omuz stresi yaratır — ağrıda bu bloğu atla, sadece high pull-up yap",
-        "alts": [
-        "Assisted Muscle-up",
-        "Bar Transition Drill",
-        "Negative Muscle-up"
-        ]
-        }
-        ]
-        },
-
-        { name: "⚡ KONDİSYON — Uzun Devre", color: "#990000", exercises: [
-          { name:"20 Dakika Sürekli Devre", sets:"20 dakika sürekli", muscle:"Full body aerobik kapasite", how:["Her hareket 40 sn, arası 20 sn:","1. Jumping Jack / Jump Rope","2. Push Up","3. Inverted Row / Band Pull","4. Glute Bridge","5. Mountain Climber","6. Bear Crawl 10m ileri geri","Devre tamamlandı — başa dön","Kaç tur tamamladığını not al"], avoid:"Durmak — tempo düşür ama dur", warn:"Aerobik baz olmadan güç dayanıklılığa dönüşmez", alts:["Rowing Machine 20 dk","Run/Walk 20 dk"] },
+        { name: "🏋️ KUVVET — Güç & Hız", color: "#8338EC", exercises: [
+          { name:"KB Swing (Heavy)", sets:"5 × 10", muscle:"Posterior chain patlayıcı güç — hip extension", how:["Ağır KB — formun bozulmayacağı kadar","Hip hinge — patlayıcı kalça","KB omuz hizasına","Nefes: it → dışarı, geri → içeri"], avoid:"Squat gibi diz bükme — kalça hareketi", warn:"🟡 BEL FITIĞI: Mükemmel hip hinge tekniği. Ağrıda Glute Bridge ile değiştir", alts:["Dumbbell Swing","Glute Bridge Heavy","Hip Thrust"] },
+          { name:"Goblet Squat (Heavy)", sets:"5 × 5", muscle:"Quad, glute — squat pattern güç", how:["Ağır KB/DB göğüste — yavaş ve kontrollü","Derin otur — hamstringlerde gerilme","Patlayıcı kalk — topuklardan it","Nefes: in → aşağı, dışarı → yukarı"], avoid:"Topukların kalkması — dizlerin içe çökmesi", warn:"DİZ: Ağır goblet squat — knee tracking izle. Ağrıda ağırlığı indir", alts:["Box Squat","Safety Bar Squat","Assisted Squat"] },
+          { name:"Push Press", sets:"3 × 5", muscle:"Tüm vücut — bacak + omuz + core koordinasyonu", how:["DB'ler omuza — ayaklar omuz genişliğinde","Hafifçe diz bük — patlayıcı it","Overhead tam uzat — core sıkı","Kontrollü in — bir sonraki tekrar"], avoid:"Beli hiperextend etme", warn:"ROTATOR CUFF: Ağrıda bacak yardımını artır veya Landmine Press'e geç", alts:["Landmine Press","DB Overhead Press","Arnold Press"] },
+          { name:"Band Face Pull", sets:"3 × 15", muscle:"Posterior delt, rotator cuff — haftalık kapanış", how:["Bant göz hizasında","Çek ve dışa döndür","1 sn tut"], avoid:"Dirsekleri aşağı çekme", warn:"ROTATOR CUFF: Haftanın son posterior delt çalışması", alts:["Rear Delt Fly","Cable Face Pull"] },
+          { name:"Trap Bar Carry / DB Shrug Carry", sets:"3 × 20m", muscle:"Trapez üst, rhomboid, core — yük altında postür", how:["Ağır trap bar veya DB — yürü","Omuzlar aktif — aşağı ve geri","Dik postür — yük testlemesi","20m gidip gel"], avoid:"Omuzları kulağa kaldırma", warn:"Taktik atlet postür testi — ağır yük altında dik kalabilmek", alts:["Heavy Farmer Carry","Overhead Carry"] },
         ]},
 
-                {
-        "name": "🤸 KALİSTENİK — Push/Dip Max & Handstand",
-        "color": "#E76F51",
-        "exercises": [
-                {
-                        "name": "Push Up Max Test",
-                        "sets": "3 set × maksimum",
-                        "muscle": "Göğüs, triceps, core",
-                        "how": [
-                                "Maksimum temiz tekrar",
-                                "3dk set arası",
-                                "Sayı not al — trend takip"
-                        ],
-                        "avoid": "Kalça yukarı — geçersiz",
-                        "warn": "Standart fitness testi",
-                        "alts": [
-                                "Knee Push Up"
-                        ]
-                },
-                {
-                        "name": "Dip Max Test",
-                        "sets": "2 set × maksimum",
-                        "muscle": "Triceps, alt göğüs",
-                        "how": [
-                                "Paralel bar — tam üst pozisyondan başla",
-                                "Yavaşça in — 90° dirsek açısına kadar",
-                                "Patlayıcı it — tam yukarı",
-                                "Form bozulunca dur — o son tekrar sayılmaz",
-                                "Tekrar sayısını not al — haftalık takip"
-                        ],
-                        "avoid": "Kısmi range — tam aşağı inmeden sayma",
-                        "warn": "Hedef: 15+ dip = güçlü pressing temeli",
-                        "alts": []
-                },
-                {
-                        "name": "Wall Handstand Hold",
-                        "sets": "3 × max süre",
-                        "muscle": "Omuz stabilite, core, bilek",
-                        "how": [
-                                "Duvara karşı el duruşu",
-                                "Vücut düz — core sıkı",
-                                "Süreyi not al"
-                        ],
-                        "avoid": "Beli çukurlaştırma",
-                        "warn": "ROTATOR CUFF: Omuz ağrısında pike hold ile değiştir. Her hafta 5sn artır",
-                        "alts": [
-                                "Box Handstand",
-                                "Pike Hold"
-                        ]
-                }
-        ]
-},
+        { name: "🎯 CORE — Haftalık Kapanış", color: "#6C3483", exercises: [
+          { name:"Ab Wheel Rollout", sets:"3 × 8", muscle:"Core anterior zinciri — tam uzanma", how:["Dizler yerde — wheel önde","Öne uzan — omurga nötral","Core kası — sırt düşmez","Geri çek — core ile döner"], avoid:"Beli bırakma — core çalışmayı keser", warn:"🔴 BEL FITIĞI: Bu egzersiz disk için yüksek risk. Knee rollout veya Dragon Flag'a geç. SKOLYOZ: Kısa range ile başla", alts:["Knee Ab Wheel Rollout","Dead Bug","Plank ile yavaşla"], alt_reasons:["BEL: Kısa ROM","BEL: Anti-extension güvenli","BEL: Statik stabilite"] },
+          { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique, QL — lateral stabilite", how:["Sol yanına yat — dirsek omuz altında","Kalçayı kaldır — düz çizgi","45 sn tut"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Her iki taraf eşit — atlama", alts:[] },
+          { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique — lateral stabilite", how:["Diğer taraf — eşit süre","Kalçayı kaldır — düz çizgi","45 sn"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Her iki tarafa mutlaka eşit süre", alts:[] },
+        ]},
 
-{ name: "🎯 CORE — Haftalık Kapanış", color: "#6C63FF", exercises: [
-          { name:"Ab Wheel Rollout", sets:"3 × 8", muscle:"Core anterior zinciri — full", how:["Diz üstünde başla","Öne yuvarla — kontrollü","Geri çek"], avoid:"Beli sarkıtma", warn:null, alts:["Dead Bug", "Hollow Body Hold", "Plank to Pike"], alt_reasons:["BEL: Bel yerde sabit — lumbar fleksiyon yok", "BEL: Anterior core — disk dostu", "BEL: Pike — lumbar nötral"] },
-          { name:"Side Plank Left", sets:"2 × 45sn", muscle:"Sol oblique", how:["Sol yanına yat — sol dirsek omuz altında tam dik", "Ayakları üst üste veya öne-arkaya aç", "Kalçayı yerden kaldır — omuzdan topuğa düz çizgi", "Üst kolu tavana uzan veya kalçaya koy — 30-45 sn tut"], avoid:"Kalçanın öne veya geriye sarkması", warn:"SKOLYOZ: Her iki tarafı eşit süre yap — lateral core dengesi kritik", alts:[] },
-          { name:"Side Plank Right", sets:"2 × 45sn", muscle:"Sağ oblique", how:["Sağ yanına yat — sağ dirsek omuz altında", "Kalçayı yerden kaldır — düz çizgi", "Her iki taraf eşit süre — 30-45 sn", "Nefes almayı kesme"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Asla bir tarafı atlama", alts:[] },
+        { name: "⚡ KONDİSYON — Uzun Aerobik Devre (Zone 2)", color: "#990000", exercises: [
+          { name:"20 Dakika Sürekli Aerobik Devre", sets:"20 dakika sürekli", muscle:"Kardiyovasküler kapasite — aerobik baz", how:["Seçenekler: Koşu / Kürek / Bisiklet / Devre (Goblet Squat + Push-up + Row tekrar)","Tempo: Konuşabilecek kadar yavaş — Zone 2 aerobik","Kalp atışı: 130-150 bpm hedef","20 dk boyunca tempo düşmez"], avoid:"Sprint yapmak — bu Zone 2, HIIT değil", warn:"İtfaiyeci araştırması: Her antrenman 30-40 dk aerobik içermeli. Aerobik baz olmadan kondisyon gelişmez. Bu en çok atlanan parça", alts:["20dk Koşu","20dk Rowing","20dk Jump Rope Zone 2"] },
         ]},
 
         { name: "❄️ SOĞUMA — Derin Esneme", color: "#8338EC", exercises: [
-          { name:"Child's Pose", sets:"1 × 60sn", muscle:"Sırt, omuz", how:["Diz üstü otur, topuklarına otur", "Kolları öne uzat — yere koy", "Alnı yere koy veya mindere", "Tamamen bırak — pasif esneme — 45-60 sn"], avoid:"Zorla uzanma — yer çekimi işini yapsın", warn:"Diz ağrısı varsa topuklara oturmak yerine daha dik dur", alts:[] },
-          { name:"Supine Spinal Twist Right", sets:"1 × 60sn", muscle:"Torasik", how:["Sırt üstü yat — kollar yana T şeklinde açık", "Sağ dizi 90° büküp sol tarafa yatır", "Sağ omuz yerde kalsın — ters yöne bak", "45-60 sn tut — nefes alarak derinleştir"], avoid:"Omuzların yerden kalkmasına izin verme", warn:"SKOLYOZ: Her iki tarafa mutlaka eşit süre uygula", alts:[] },
-          { name:"Supine Spinal Twist Left", sets:"1 × 60sn", muscle:"Her taraf eşit", how:["Sırt üstü yat — kollar yana T şeklinde açık", "Sol dizi 90° büküp sağ tarafa yatır", "Sol omuz yerde kalsın — ters yöne bak", "Her iki taraf eşit süre — 45-60 sn"], avoid:"Omuzların yerden kalkmasına izin verme", warn:"SKOLYOZ: Her iki tarafa mutlaka eşit süre uygula", alts:[] },
-          { name:"Hamstring, Obliques and Lat Stretch", sets:"2 × 45sn", muscle:"3 bölge", how:["Otur, bacağı uzat"], avoid:null, warn:null, alts:[] },
-          { name:"Diaphragmatic Breathing", sets:"2 × 10 nefes", muscle:"Parasempatik — recovery", how:["Sırt üstü yat — dizler bükülü, ayaklar yerde", "Bir eli göğse, bir eli karna koy", "Burndan 4 sn nefes al — KARIN şişmeli, göğüs değil", "2 sn tut, ağızdan 6 sn yavaşça ver", "10 tekrar — her nefeste biraz daha derin"], avoid:"Göğüs yükseltme — nefes karna gitmeli", warn:"Parasempatik sistemi aktive eder — uyku kalitesini artırır, kortizolü düşürür", alts:[] },
+          { name:"Child's Pose", sets:"1 × 60sn", muscle:"Sırt, omuz, kalça", how:["Kolları öne uzat","60 sn"], avoid:null, warn:null, alts:[] },
+          { name:"Hip Flexor Stretch", sets:"2 × 45sn (her taraf)", muscle:"Hip flexor, kasık", how:["Yarım diz — sağ diz yerde","Kalçayı öne it","Gövde dik — 45 sn"], avoid:"Gövdeyi öne eğme", warn:"Oturan biri için her gün şart", alts:[] },
+          { name:"Supine Spinal Twist", sets:"1 × 45sn (her taraf)", muscle:"Torasik rotasyon", how:["Dizi karşı tarafa yatır","Omuz yerde","45 sn"], avoid:"Omuzların kalkması", warn:"SKOLYOZ: Her iki tarafa eşit", alts:[] },
+          { name:"Pigeon Pose", sets:"1 × 60sn (her taraf)", muscle:"Piriformis, kalça", how:["Ön bacak yatay","Kalçayı yere bırak","60 sn her taraf"], avoid:"Ağrıda zorla yapma", warn:"DİZ: Ön bacağı ayarla", alts:[] },
         ]},
       ],
+
     },
 
     // ─── OFF DAYS ───────────────────────────────────
