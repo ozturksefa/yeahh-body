@@ -307,34 +307,46 @@ export const PROGRAM_HOME = {
     // ── OFF GÜNLER ───────────────────────────────────────────────
     {
       id: 5, title: "OFF 1", sub: "PAZARTESİ",
-      focus: "Aktif Recovery", duration: "~10 dk", color: "#6C757D", type: "offday",
+      focus: "Mobilite + Handstand Pratik", duration: "~20 dk", color: "#6C757D", type: "offday",
       blocks: [
-        { name: "🧘 AKTİF RECOVERY", color: "#6C757D", exercises: [
-          { name:"Cat-Cow Mobilite", sets:"2 × 10", muscle:"Torasik mobilite", how:["Sabah kalktığında"], avoid:null, warn:"BEL + BOYUN", alts:[] },
-          { name:"Hip Flexor Stretch", sets:"2 × 30sn (her taraf)", muscle:"Hip flexor", how:["Yarım diz"], avoid:null, warn:null, alts:[] },
-          { name:"Chin Tuck", sets:"2 × 12", muscle:"Boyun", how:["Çeneni geriye it"], avoid:null, warn:"BOYUN FITIĞI: Off günde bile", alts:[] },
+        { name: "🧘 MOBİLİTE (5 dk)", color: "#6C757D", exercises: [
+          { name:"Cat-Cow Mobilite", sets:"2 × 10", muscle:"Torasik + lumbar mobilite", how:["Sabah kalktığında — 10 tekrar nefes ritmiyle"], avoid:null, warn:"BEL + BOYUN FITIĞI", alts:[] },
+          { name:"Wrist Rotation", sets:"2 × 30sn (her yön)", muscle:"Bilek mobilite", how:["Her iki yön — handstand öncesi zorunlu"], avoid:null, warn:"Handstand için bilek ısınması", alts:[] },
+          { name:"Chin Tuck", sets:"2 × 12", muscle:"Boyun fleksörleri", how:["Çeneni geriye it — 2 sn"], avoid:null, warn:"BOYUN FITIĞI: Off günde bile atlanmaz", alts:[] },
+        ]},
+        { name: "🙃 HANDSTAND PRATİK (10 dk)", color: "#8338EC", exercises: [
+          { name:"Pike Hold", sets:"3 × 20sn", muscle:"Omuz stabilite, core anterior", how:["Kalçayı havaya kaldır — kollar kulakların arasında","V pozisyonu — omuzlar aktif","20 sn tut — nefes alma"], avoid:"Dirsekleri bükme", warn:"ROTATOR CUFF: Ağrı yoksa devam. Sabah soğukta küçük başla", alts:[] },
+          { name:"Wall Handstand Hold", sets:"5 × max süre", muscle:"Tüm omuz stabilizasyon zinciri", how:["Duvara karşı kick-up — kontrollü","Her seti kaydet — kaç saniye?","Setler arası 60 sn dinlenme","Beyin-kas bağlantısı kuruluyor — bunu sık yapmak hızlandırır"], avoid:"Beli büküp muz pozu", warn:"Off günde kısa pratik = haftalık antrenman kadar değerli. Motor öğrenme uyku + tekrarla pekişir", alts:["Pike Hold"] },
         ]},
       ],
     },
     {
       id: 6, title: "OFF 2", sub: "ÇARŞAMBA",
-      focus: "Mobilite + Yürüyüş", duration: "~20 dk", color: "#6C757D", type: "offday",
+      focus: "L-sit Pratik + Yürüyüş", duration: "~25 dk", color: "#6C757D", type: "offday",
       blocks: [
-        { name: "🚶 ÇARŞAMBA RECOVERY", color: "#6C757D", exercises: [
-          { name:"Cat-Cow Mobilite", sets:"2 × 10", muscle:"Torasik mobilite", how:["10 tekrar"], avoid:null, warn:null, alts:[] },
-          { name:"Hızlı Yürüyüş", sets:"15 dakika sürekli", muscle:"Aktif recovery", how:["Hafif tempo — nefes normal"], avoid:"Koşma", warn:"MENİSKÜS: Yürüyüş her gün yapılabilir", alts:[] },
-          { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Postür kasları", how:["W'den U'ya"], avoid:null, warn:"ROTATOR CUFF", alts:[] },
+        { name: "🪑 L-SİT PRATİK (10 dk)", color: "#2A9D8F", exercises: [
+          { name:"Floor L-sit Tuck Hold", sets:"5 × max süre", muscle:"Hip flexor, core basınç, triceps", how:["Zemin — dizleri çek","Her seti kaydet — kaç saniye?","Setler arası 45 sn","Yorgunluk hissettirmemeli — pratik, antrenman değil"], avoid:"Omuzların kulağa kalkması — aşağı bas", warn:"L-sit günde 2 kez kısa pratik yapan kişi, haftada 1 kez uzun yapandan çok daha hızlı ilerler", alts:[] },
+          { name:"Chair L-sit Tuck Hold", sets:"4 × max süre", muscle:"L-sit progressionu", how:["İki sandalye — tuck pozisyon","Zemin versiyonundan daha uzun süre tutulur","Her setте bir öncekinden daha uzun dene"], avoid:"Sandalyelerin kayması — sabitle", warn:"Motor öğrenme: sık kısa pratik > seyrek uzun pratik", alts:["Floor L-sit Tuck"] },
+        ]},
+        { name: "🚶 YÜRÜYÜŞ + MOBİLİTE (15 dk)", color: "#6C757D", exercises: [
+          { name:"Hızlı Yürüyüş", sets:"12 dakika sürekli", muscle:"Aktif recovery, aerobik", how:["Hafif terleme seviyesinde","Dik postür — omuzlar geri"], avoid:"Koşma", warn:"MENİSKÜS: Günlük yürüyüş eklem sağlığını korur", alts:[] },
+          { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Postür kasları", how:["W'den U'ya — kürek kemikleri duvarda"], avoid:null, warn:"ROTATOR CUFF + KİFOZ: Günlük rutin", alts:[] },
         ]},
       ],
     },
     {
       id: 7, title: "OFF 3", sub: "CUMA",
-      focus: "Cumartesi Hazırlığı", duration: "~10 dk", color: "#6C757D", type: "offday",
+      focus: "Handstand Pratik + Cumartesi Hazırlığı", duration: "~20 dk", color: "#6C757D", type: "offday",
       blocks: [
-        { name: "🔋 CUMARTESİ HAZIRLIĞI", color: "#6C757D", exercises: [
-          { name:"Wrist Rotation", sets:"2 × 30sn", muscle:"Bilek mobilite", how:["Her iki yön"], avoid:null, warn:"Yarın handstand var", alts:[] },
-          { name:"Shoulder Cross Stretch", sets:"2 × 30sn (her taraf)", muscle:"Posterior kapsül", how:["30 sn her taraf"], avoid:null, warn:"ROTATOR CUFF", alts:[] },
-          { name:"Hip Circle", sets:"2 × 10 (her yön)", muscle:"Kalça mobilite", how:["Her iki yön"], avoid:null, warn:null, alts:[] },
+        { name: "🙃 HANDSTAND PRATİK (10 dk)", color: "#8338EC", exercises: [
+          { name:"Wrist Rotation", sets:"2 × 30sn (her yön)", muscle:"Bilek ısınma", how:["Her iki yön — 30 sn"], avoid:null, warn:"Handstand öncesi zorunlu bilek ısınması", alts:[] },
+          { name:"Pike Hold", sets:"3 × 20sn", muscle:"Omuz aktivasyon", how:["V pozisyon — 20 sn","Cumartesiye hazırlık"], avoid:"Dirsekleri bükme", warn:"ROTATOR CUFF: Hafif hissedilir — normal", alts:[] },
+          { name:"Wall Handstand Hold", sets:"5 × max süre", muscle:"Omuz + core stabilite", how:["Duvara kick-up","Her seti kaydet","Pazartesi setiyle karşılaştır — ilerleme görünüyor mu?"], avoid:"Beli büküp muz pozu", warn:"Haftada 3 kez handstand pratik (Pzt/Çarş/Cum) = Bir ayda ciddi ilerleme", alts:["Pike Hold"] },
+        ]},
+        { name: "🔋 CUMARTESİ HAZIRLIK MOBİLİTE (10 dk)", color: "#6C757D", exercises: [
+          { name:"Shoulder Cross Stretch", sets:"2 × 30sn (her taraf)", muscle:"Posterior kapsül", how:["Kolunu göğüs önünde — diğer elle çek — 30 sn"], avoid:null, warn:"ROTATOR CUFF: Ertesi gün full skill var", alts:[] },
+          { name:"Hip Circle", sets:"2 × 10 (her yön)", muscle:"Kalça mobilite", how:["Her iki yön — büyük daire"], avoid:null, warn:null, alts:[] },
+          { name:"Cat-Cow Mobilite", sets:"2 × 10", muscle:"Torasik + lumbar", how:["Nefes ritmiyle 10 tekrar"], avoid:null, warn:"BEL + BOYUN FITIĞI", alts:[] },
         ]},
       ],
     },
