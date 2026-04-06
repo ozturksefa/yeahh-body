@@ -216,9 +216,10 @@ function OffDayView({ day }) {
 }
 
 export default function HomeView({ user, logout, ProgramSelector }) {
-  const trainingDays = PROGRAM_HOME.days.filter(d => d.type === "training");
-  const offDays = PROGRAM_HOME.days.filter(d => d.type === "offday");
-  const allDays = [...trainingDays, ...offDays];
+  const DAY_ORDER = {'PAZARTESİ':1,'SALI':2,'ÇARŞAMBA':3,'PERŞEMBE':4,'CUMA':5,'CUMARTESİ':6,'PAZAR':7};
+  const allDays = [...PROGRAM_HOME.days].sort((a,b) => (DAY_ORDER[a.sub]||9) - (DAY_ORDER[b.sub]||9));
+  const trainingDays = allDays.filter(d => d.type === "training");
+  const offDays = allDays.filter(d => d.type === "offday");
 
   const [pageH, setPageH] = useState("program");
   const [selectedDay, setSelectedDay] = useState(0);
@@ -387,21 +388,12 @@ export default function HomeView({ user, logout, ProgramSelector }) {
         </div>
         {pageH === "program" && (
           <div className="tabs" style={{ flexWrap: "wrap", gap: 4 }}>
-            {trainingDays.map((d, i) => (
+            {allDays.map((d, i) => (
               <button key={i} className={`tab ${selectedDay === i ? "tab-active" : ""}`}
-                style={selectedDay === i ? { background: d.color, borderColor: d.color } : {}}
+                style={selectedDay === i ? { background: d.type==="offday"?"#6C757D":d.color, borderColor: d.type==="offday"?"#6C757D":d.color } : {}}
                 onClick={() => { setSelectedDay(i); setExpandedEx(null); }}>
-                <div className="tab-t">{d.title}</div>
-                <div className="tab-s">{d.sub}</div>
-              </button>
-            ))}
-            {offDays.map((d, i) => (
-              <button key={"off"+i}
-                className={`tab ${selectedDay === trainingDays.length + i ? "tab-active" : ""}`}
-                style={selectedDay === trainingDays.length + i ? { background: "#6C757D", borderColor: "#6C757D" } : {}}
-                onClick={() => { setSelectedDay(trainingDays.length + i); setExpandedEx(null); }}>
-                <div className="tab-t">{d.title}</div>
-                <div className="tab-s">{d.sub}</div>
+                <div className="tab-t">{d.type==="offday"?"🛌":d.title}</div>
+                <div className="tab-s">{d.sub.substring(0,3)}</div>
               </button>
             ))}
           </div>

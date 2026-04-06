@@ -425,7 +425,7 @@ const GIF_MAP = {
   'L-sit Leg Extension':              'UpWmA5E',
   'Hollow Body Hold':                 null,        // YT: hollow body hold tutorial
   'External Rotation (Towel/Yerçekimi)': 'bmBf7LN', // dumbbell lying external shoulder rotation
-  'Wrist Rotation':                   null,        // YT: wrist rotation mobility
+  'Wrist Rotation':                   '2zNKRUB',  // wrist circles
   'Shoulder Cross Stretch':           null,        // YT: cross body shoulder stretch
   'AMRAP Bodyweight 8 Dakika':        null,        // YT: bodyweight amrap workout
   'Hızlı Yürüyüş':                    null,        // YT: power walking technique
@@ -434,6 +434,9 @@ const GIF_MAP = {
   'Bulgarian Split Squat (Sandalye)': 'VaP75jl',  // barbell rear lunge — form ref
 
   'Side Plank': '5VXmnV5',  // bodyweight incline side plank
+
+  // ─── OFF GÜN EK HAREKETLERİ ─────────────────────
+  'Prone Cobra':                       'XPUDTt7',  // pike-to-cobra push-up
 };
 
 const GIF_BASE = "https://static.exercisedb.dev/media/";
