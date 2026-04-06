@@ -406,11 +406,11 @@ const GIF_MAP = {
   'Archer Push-up':                   'A9qxk2F',  // archer push up
   'Pike Push-up':                     'sVvXT5J',  // exercise ball pike push up — closest
   'Chair Dip':                        'J60bN17',  // assisted triceps dip (kneeling)
-  'Decline Push-up (Ayaklar Sandalyede)': null,   // YT: decline push up tutorial
+  'Decline Push-up (Ayaklar Sandalyede)': 'i5cEhka',  // decline push-up
   'Pseudo-Planche Push-up':           'rQhGcin',  // frog planche — closest
   'Planche Lean':                     'rQhGcin',  // frog planche
   'Wall Walk':                        null,        // YT: wall walk handstand tutorial
-  'Pike Hold':                        null,        // YT: pike hold handstand prep
+  'Pike Hold':                        'sVvXT5J',  // exercise ball pike push up
   'Wall Handstand Hold':              'XooAdhl',  // handstand
   'Wall Handstand Hold Max':          'XooAdhl',  // handstand
   'Inverted Row (Masa Altı)':         'bZGHsAZ',  // inverted row
@@ -429,7 +429,7 @@ const GIF_MAP = {
   'Shoulder Cross Stretch':           null,        // YT: cross body shoulder stretch
   'AMRAP Bodyweight 8 Dakika':        null,        // YT: bodyweight amrap workout
   'Hızlı Yürüyüş':                    null,        // YT: power walking technique
-  'Push-up Max Test':                 null,        // YT: max push up test
+  'Push-up Max Test':                 'A9qxk2F',  // push-up family ref
   'Copenhagen Plank (Sandalye)':      null,        // YT: copenhagen plank
   'Bulgarian Split Squat (Sandalye)': 'VaP75jl',  // barbell rear lunge — form ref
 
