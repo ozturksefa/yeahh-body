@@ -393,6 +393,8 @@ const GIF_MAP = {
   'Hip Circle':                     'vIICElP',  // band lying hip internal rotation — best available
 
   // ─── KONDİSYON / DEVRE — YouTube fallback ─────────────────────
+
+  'Rowing Interval':                    null,  // YT: rowing machine interval
   'Sprint Interval':                    null,  // YT: sprint interval training
   'AMRAP 8 Dakika':                     null,  // YT: amrap workout circuit
   'Yük Taşıma Devresi':                 null,  // YT: loaded carry circuit
