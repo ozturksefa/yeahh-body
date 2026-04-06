@@ -4,6 +4,7 @@ import AuthScreen from "./Auth";
 import ClassicView from "./ClassicView";
 import Program2View from "./Program2View";
 import Program3View from "./Program3View";
+import HomeView from "./HomeView";
 import "./App.css";
 
 export default function App() {
@@ -46,6 +47,7 @@ export default function App() {
   const ProgramSelector = () => (
     <div className="prog-mode-bar">
       {[
+        { id: "home",     label: "🏠 Ev" },
         { id: "classic",  label: "Klasik Split" },
         { id: "full",     label: "Full Activation" },
         { id: "athletic", label: "Atletik ⚡" },
@@ -59,6 +61,7 @@ export default function App() {
     </div>
   );
 
+  if (programMode === "home")     return <HomeView user={user} logout={logout} ProgramSelector={ProgramSelector} />;
   if (programMode === "full")     return <Program2View user={user} logout={logout} ProgramSelector={ProgramSelector} />;
   if (programMode === "athletic") return <Program3View user={user} logout={logout} ProgramSelector={ProgramSelector} />;
   return <ClassicView user={user} logout={logout} ProgramSelector={ProgramSelector} />;

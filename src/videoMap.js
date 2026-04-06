@@ -400,6 +400,40 @@ const GIF_MAP = {
   'Yük Taşıma Devresi':                 null,  // YT: loaded carry circuit
   'Trap Bar Carry / DB Shrug Carry':    null,  // YT: farmer carry trap bar
   '20 Dakika Sürekli Aerobik Devre':    null,  // YT: zone 2 cardio circuit
+
+  // ─── EV PROGRAMI HAREKETLERİ ──────────────────────────────────
+  'Diamond Push-up':                  'soIB2rj',  // diamond push-up
+  'Archer Push-up':                   'A9qxk2F',  // archer push up
+  'Pike Push-up':                     'sVvXT5J',  // exercise ball pike push up — closest
+  'Chair Dip':                        'J60bN17',  // assisted triceps dip (kneeling)
+  'Decline Push-up (Ayaklar Sandalyede)': null,   // YT: decline push up tutorial
+  'Pseudo-Planche Push-up':           'rQhGcin',  // frog planche — closest
+  'Planche Lean':                     'rQhGcin',  // frog planche
+  'Wall Walk':                        null,        // YT: wall walk handstand tutorial
+  'Pike Hold':                        null,        // YT: pike hold handstand prep
+  'Wall Handstand Hold':              'XooAdhl',  // handstand
+  'Wall Handstand Hold Max':          'XooAdhl',  // handstand
+  'Inverted Row (Masa Altı)':         'bZGHsAZ',  // inverted row
+  'Inverted Row Max Test':            'bZGHsAZ',  // inverted row
+  'Pistol Squat Progression':         'nqs5HGV',  // single leg squat (pistol) male
+  'Good Morning (Ağırlıksız)':        'XlZ4lAC',  // barbell good morning — form ref
+  'Hip Thrust (Sandalye)':            'qKBpF7I',  // barbell glute bridge
+  'Single Leg Glute Bridge':          'GibBPPg',  // glute bridge march
+  'Floor L-sit Tuck Hold':            'UpWmA5E',  // l-sit on floor
+  'Chair L-sit Tuck Hold':            'UpWmA5E',  // l-sit on floor — ref
+  'L-sit Max Süre':                   'UpWmA5E',
+  'L-sit Leg Extension':              'UpWmA5E',
+  'Hollow Body Hold':                 null,        // YT: hollow body hold tutorial
+  'External Rotation (Towel/Yerçekimi)': 'bmBf7LN', // dumbbell lying external shoulder rotation
+  'Wrist Rotation':                   null,        // YT: wrist rotation mobility
+  'Shoulder Cross Stretch':           null,        // YT: cross body shoulder stretch
+  'AMRAP Bodyweight 8 Dakika':        null,        // YT: bodyweight amrap workout
+  'Hızlı Yürüyüş':                    null,        // YT: power walking technique
+  'Push-up Max Test':                 null,        // YT: max push up test
+  'Copenhagen Plank (Sandalye)':      null,        // YT: copenhagen plank
+  'Bulgarian Split Squat (Sandalye)': 'VaP75jl',  // barbell rear lunge — form ref
+
+  'Side Plank': '5VXmnV5',  // bodyweight incline side plank
 };
 
 const GIF_BASE = "https://static.exercisedb.dev/media/";
