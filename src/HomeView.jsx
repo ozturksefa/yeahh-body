@@ -10,6 +10,184 @@ import WorkoutTimer from "./WorkoutTimer";
 import BlockCard from "./BlockCard";
 import { parseSets } from "./SetTracker";
 
+
+// ─── Ev Skill Tracker ─────────────────────────────────────────
+const HOME_SKILL_KEY = "yb_skill_home";
+
+function loadHomeSkillLevels() {
+  try { return JSON.parse(localStorage.getItem(HOME_SKILL_KEY) || "{}"); } catch { return {}; }
+}
+function saveHomeSkillLevels(levels) {
+  try { localStorage.setItem(HOME_SKILL_KEY, JSON.stringify(levels)); } catch {}
+}
+
+function HomeSkillTracker() {
+  const [levels, setLevels] = useState(loadHomeSkillLevels);
+  const [open, setOpen] = useState(null);
+  const paths = PROGRAM_HOME.skillPaths;
+  const phase2 = PROGRAM_HOME.phase2;
+
+  const setLevel = (pathKey, level) => {
+    setLevels(prev => {
+      const next = { ...prev, [pathKey]: level };
+      saveHomeSkillLevels(next);
+      return next;
+    });
+  };
+
+  return (
+    <div style={{ padding:"0 12px", marginBottom:12 }}>
+      <div style={{ fontSize:13, fontWeight:800, marginBottom:8, color:"#fff" }}>
+        🎯 Skill Progression
+      </div>
+
+      {/* Kapı barı uyarısı */}
+      <div style={{
+        background:"rgba(255,167,38,.08)", border:"1px solid rgba(255,167,38,.3)",
+        borderRadius:8, padding:"10px 12px", marginBottom:10,
+      }}>
+        <div style={{ fontSize:11, fontWeight:700, color:"#FFA726", marginBottom:4 }}>
+          💡 En Değerli Yatırım
+        </div>
+        <div style={{ fontSize:11, color:"#C4C4CC", lineHeight:1.5 }}>
+          {PROGRAM_HOME.equipment.önerilen[0]}
+        </div>
+      </div>
+
+      {Object.entries(paths).map(([key, path]) => {
+        const currentLevel = levels[key] || 1;
+        const step = path.steps.find(s => s.level === currentLevel);
+        const isBarNeeded = key === "pull" && currentLevel >= 4;
+
+        return (
+          <div key={key} style={{
+            background:"#131316", border:"1px solid #2A2A30",
+            borderRadius:8, marginBottom:8, overflow:"hidden",
+          }}>
+            <button onClick={() => setOpen(open===key?null:key)} style={{
+              width:"100%", background:"transparent", border:"none",
+              padding:"10px 12px", display:"flex", alignItems:"center",
+              gap:8, cursor:"pointer", textAlign:"left",
+            }}>
+              <span style={{ fontSize:18 }}>{path.icon}</span>
+              <div style={{ flex:1 }}>
+                <div style={{ fontSize:13, fontWeight:700, color:"#fff" }}>{path.name}</div>
+                <div style={{ fontSize:11, color: isBarNeeded ? "#FFA726" : "#7A7A84", marginTop:2 }}>
+                  {isBarNeeded ? "⚠️ Kapı barı gerekli" : `Seviye ${currentLevel}/${path.steps.length} — ${step?.name || ""}`}
+                </div>
+              </div>
+              {/* Progress bar */}
+              <div style={{ width:60, height:4, background:"#222226", borderRadius:2, overflow:"hidden" }}>
+                <div style={{
+                  height:"100%", background:"#2A9D8F",
+                  width:`${(currentLevel/path.steps.length)*100}%`,
+                  transition:"width .3s",
+                }}/>
+              </div>
+              <span style={{ color:"#7A7A84", fontSize:14 }}>{open===key?"▲":"▼"}</span>
+            </button>
+
+            {open === key && (
+              <div style={{ padding:"0 12px 12px" }}>
+                {/* Steps */}
+                <div style={{ display:"flex", flexDirection:"column", gap:4, marginBottom:10 }}>
+                  {path.steps.map(s => (
+                    <button key={s.level} onClick={() => setLevel(key, s.level)} style={{
+                      display:"flex", alignItems:"center", gap:8, padding:"8px 10px",
+                      borderRadius:6, border:"none", cursor:"pointer", textAlign:"left",
+                      background: s.level === currentLevel ? "#2A9D8F22"
+                        : s.level < currentLevel ? "#00C85311" : "#1A1A1E",
+                      borderLeft: `3px solid ${
+                        s.level === currentLevel ? "#2A9D8F"
+                        : s.level < currentLevel ? "#00C853" : "#2A2A30"}`,
+                    }}>
+                      <span style={{ fontSize:12, fontWeight:700, minWidth:20,
+                        color: s.level < currentLevel ? "#00C853"
+                          : s.level === currentLevel ? "#2A9D8F" : "#7A7A84" }}>
+                        {s.level < currentLevel ? "✓" : s.level}
+                      </span>
+                      <div style={{ flex:1 }}>
+                        <div style={{ fontSize:12, fontWeight:600,
+                          color: s.level <= currentLevel ? "#fff" : "#7A7A84" }}>
+                          {s.name}
+                        </div>
+                        <div style={{ fontSize:10, color:"#7A7A84" }}>{s.target}</div>
+                      </div>
+                    </button>
+                  ))}
+                </div>
+
+                {/* Şu an görev */}
+                {step && (
+                  <div style={{
+                    background:"#2A9D8F11", border:"1px solid #2A9D8F33",
+                    borderRadius:6, padding:"8px 10px",
+                  }}>
+                    <div style={{ fontSize:10, color:"#2A9D8F", fontWeight:700, marginBottom:3 }}>
+                      Şu an odak:
+                    </div>
+                    <div style={{ fontSize:12, color:"#C4C4CC" }}>{step.detail}</div>
+                  </div>
+                )}
+
+                {/* Faz 2 mesajı */}
+                {currentLevel >= path.steps.length && phase2.milestones[key] && (
+                  <div style={{
+                    background:"rgba(255,167,38,.08)", border:"1px solid rgba(255,167,38,.3)",
+                    borderRadius:6, padding:"8px 10px", marginTop:8,
+                  }}>
+                    <div style={{ fontSize:10, color:"#FFA726", fontWeight:700, marginBottom:3 }}>
+                      🏆 Faz 2:
+                    </div>
+                    <div style={{ fontSize:11, color:"#C4C4CC" }}>{phase2.milestones[key]}</div>
+                  </div>
+                )}
+
+                <div style={{ display:"flex", gap:6, marginTop:8 }}>
+                  <button onClick={() => setLevel(key, Math.max(1, currentLevel-1))}
+                    disabled={currentLevel<=1} style={{
+                    flex:1, padding:"8px", borderRadius:6,
+                    border:"1px solid #2A2A30", background:"#1A1A1E",
+                    color:"#C4C4CC", cursor:"pointer", fontSize:16,
+                    opacity: currentLevel<=1 ? .3 : 1,
+                  }}>‹</button>
+                  <button onClick={() => setLevel(key, Math.min(path.steps.length, currentLevel+1))}
+                    disabled={currentLevel>=path.steps.length} style={{
+                    flex:1, padding:"8px", borderRadius:6,
+                    border:"1px solid #2A9D8F", background:"#2A9D8F22",
+                    color:"#2A9D8F", cursor:"pointer", fontSize:16,
+                    opacity: currentLevel>=path.steps.length ? .3 : 1,
+                  }}>›</button>
+                </div>
+              </div>
+            )}
+          </div>
+        );
+      })}
+
+      {/* Periodizasyon */}
+      <div style={{ marginTop:12, background:"#131316", border:"1px solid #2A2A30", borderRadius:8, padding:"10px 12px" }}>
+        <div style={{ fontSize:11, fontWeight:700, color:"#7A7A84", marginBottom:8, letterSpacing:".06em" }}>
+          8 HAFTALIK YOL HARİTASI
+        </div>
+        <div style={{ display:"flex", gap:3, flexWrap:"wrap" }}>
+          {PROGRAM_HOME.periodization.map((w,i) => (
+            <div key={i} style={{
+              flex:"1 0 calc(25% - 4px)", minWidth:60,
+              background:"#1A1A1E", borderRadius:6, padding:"6px 8px",
+              border:"1px solid #2A2A30",
+            }}>
+              <div style={{ fontSize:10, color:"#7A7A84" }}>H{w.week}</div>
+              <div style={{ fontSize:11, fontWeight:700, color:"#C4C4CC" }}>{w.label}</div>
+              <div style={{ fontSize:9, color:"#7A7A84", marginTop:2, lineHeight:1.3 }}>{w.note}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
 const SWAPS_KEY = "yb_swaps_home";
 const FLOW_KEY  = "session_home";
 const TRACK_BLOCKS = ["KUVVET","SKİLL","MAX TEST","KALİSTENİK","CORE","CARRY","SAKATILIK"];
@@ -205,6 +383,7 @@ export default function HomeView({ user, logout, ProgramSelector }) {
           <button className={`page-tab ${pageH === "program" ? "page-tab-active" : ""}`} onClick={() => setPageH("program")}>🏠 Program</button>
           <button className={`page-tab ${pageH === "dashboard" ? "page-tab-active" : ""}`} onClick={() => setPageH("dashboard")}>📊 İlerleme</button>
           <button className={`page-tab ${pageH === "nutrition" ? "page-tab-active" : ""}`} onClick={() => setPageH("nutrition")}>🍽 Beslenme</button>
+          <button className={`page-tab ${pageH === "skills" ? "page-tab-active" : ""}`} onClick={() => setPageH("skills")}>🎯 Skill</button>
         </div>
         {pageH === "program" && (
           <div className="tabs" style={{ flexWrap: "wrap", gap: 4 }}>
@@ -233,6 +412,8 @@ export default function HomeView({ user, logout, ProgramSelector }) {
         <main className="main"><Dashboard /></main>
       ) : pageH === "nutrition" ? (
         <main className="main"><NutritionTracker /></main>
+      ) : pageH === "skills" ? (
+        <main className="main"><HomeSkillTracker /></main>
       ) : isOff ? (
         <OffDayView day={day} />
       ) : (

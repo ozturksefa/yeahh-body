@@ -8,9 +8,103 @@
 export const PROGRAM_HOME = {
   meta: {
     name: "Ev Programı",
-    phase: "1 Ay — Salondan Uzak",
-    weeks: "Hafta 1–4",
-    description: "Ekipmansız. Masa + sandalye + zemin + duvar. Handstand ve L-sit gelişimi için altın ay. Sprint yok — hızlı yürüyüş kondisyon.",
+    phase: "Faz 1 — Temel Kuvvet & Skill",
+    weeks: "Hafta 1–8 (sonrasında Faz 2)",
+    description: "Ekipmansız uzun vadeli program. Masa + sandalye + zemin + duvar. Handstand, L-sit, pistol squat, planche lean — salon olmadan tam gelişim. Pull için kapı barı eklenmesi önerilir.",
+  },
+
+  equipment: {
+    mevcut: ["Masa/tezgah (inverted row)", "Sandalye (dip, bulgarian, L-sit)", "Zemin", "Duvar"],
+    önerilen: ["Kapı pull-up barı (150-300₺) — pull gelişimini sonsuza uzatır"],
+  },
+
+  periodization: [
+    { week: 1, label: "Adaptasyon",    sets_mod: 0.8,  note: "Form ve pozisyonlar oturur" },
+    { week: 2, label: "Hacim",         sets_mod: 1.0,  note: "Normal hacim" },
+    { week: 3, label: "Hacim +",       sets_mod: 1.1,  note: "Set veya rep artır" },
+    { week: 4, label: "Yoğunluk",      sets_mod: 0.9,  note: "Daha zor varyasyon dene" },
+    { week: 5, label: "Hacim ++",      sets_mod: 1.2,  note: "En yüksek hacim" },
+    { week: 6, label: "Yoğunluk +",    sets_mod: 0.85, note: "Tempo yavaşlat (3-1-3)" },
+    { week: 7, label: "Max Test",      sets_mod: 1.0,  note: "Tüm max testleri kaydet — PR haftası" },
+    { week: 8, label: "Deload",        sets_mod: 0.5,  note: "Hacim yarıya — aktif dinlenme" },
+  ],
+
+  phase2: {
+    trigger: "Hafta 7 max testleri geçilince:",
+    milestones: {
+      handstand: "Wall handstand 30+ sn → Serbest handstand denemesine geç",
+      lsit: "Full L-sit 10+ sn → L-sit push-up ve V-sit'e geç",
+      push: "Archer push-up 8+ → Tek kol push-up negatiflerine geç",
+      squat: "Full pistol 8+ → Deficit pistol (step üzerinde)",
+      pull: "Inverted row 20+ → Kapı barı şart — pull-up negatiflerine geç",
+    },
+  },
+
+  skillPaths: {
+    handstand: {
+      name: "Handstand Yolu", icon: "🙃",
+      description: "Denge ve omuz stabilite — salona ihtiyaç yok",
+      steps: [
+        { level:1, name:"Pike Hold", target:"4 × 20sn", detail:"Kalçayı havaya kaldır — omuzlar aktif" },
+        { level:2, name:"Wall Walk", target:"4 × 4 adım", detail:"Adım sayısını her hafta artır" },
+        { level:3, name:"Wall Handstand (göğüs duvarda)", target:"4 × 15sn", detail:"Göğüs duvara bakıyor — daha kolay" },
+        { level:4, name:"Wall Handstand (sırt duvarda)", target:"4 × 30sn", detail:"Topuklar duvarda — daha güç" },
+        { level:5, name:"Wall Handstand Hold", target:"3 × max süre", detail:"Hedef: 60sn" },
+        { level:6, name:"Serbest Handstand Deneme", target:"10 deneme/gün", detail:"Duvarsız — denge noktasını bul" },
+        { level:7, name:"Handstand Push-up (duvarda)", target:"3 × 3-5", detail:"En büyük milestone" },
+      ],
+    },
+    lsit: {
+      name: "L-sit Yolu", icon: "🪑",
+      description: "Core + hip flexor — sadece sandalye",
+      steps: [
+        { level:1, name:"Floor Tuck Hold", target:"5 × max", detail:"Zemin — dizler çekilmiş" },
+        { level:2, name:"Chair Tuck Hold", target:"5 × max", detail:"Sandalye — daha kolay" },
+        { level:3, name:"Tek Bacak Uzatma", target:"3 × 5 (her bacak)", detail:"Sandalye tuck'tan bir bacağı uzat" },
+        { level:4, name:"Full L-sit", target:"4 × max süre", detail:"Her iki bacak uzatılmış — hedef 10sn" },
+        { level:5, name:"L-sit 15 sn", target:"3 × 15sn", detail:"Süreyi uzat" },
+        { level:6, name:"L-sit Push-up", target:"3 × 5", detail:"L-sit pozisyonunda push-up" },
+        { level:7, name:"V-sit Deneme", target:"3 × max", detail:"Bacaklar 45° yukarıda" },
+      ],
+    },
+    push: {
+      name: "Push Yolu", icon: "💪",
+      description: "Göğüs + triceps + delt — zemin",
+      steps: [
+        { level:1, name:"Normal Push-up", target:"4 × max", detail:"Temel" },
+        { level:2, name:"Diamond + Pike", target:"4 × max", detail:"Diamond + Pike push-up" },
+        { level:3, name:"Chair Dip + Archer", target:"4 × max", detail:"Triceps ve unilateral" },
+        { level:4, name:"Pseudo-Planche Push-up", target:"4 × 8", detail:"Öne doğru eğ" },
+        { level:5, name:"One-arm Push-up Negative", target:"3 × 3 (her kol)", detail:"Yavaş in — 5sn" },
+        { level:6, name:"One-arm Push-up", target:"3 × 5 (her kol)", detail:"Büyük milestone" },
+        { level:7, name:"Handstand Push-up (duvarda)", target:"3 × 3-5", detail:"Dikey pressing zirvesi" },
+      ],
+    },
+    squat: {
+      name: "Pistol Yolu", icon: "🦵",
+      description: "Tek bacak güç — sandalye",
+      steps: [
+        { level:1, name:"Assisted Pistol (2 el)", target:"4 × 5 (her bacak)", detail:"Sandalye veya kapı çerçevesi" },
+        { level:2, name:"Assisted Pistol (1 el)", target:"4 × 6", detail:"Sadece 1 parmak desteği" },
+        { level:3, name:"Box Pistol", target:"4 × 6", detail:"Alçak yüzeye otur — kalk" },
+        { level:4, name:"Full Pistol", target:"4 × 8 (her bacak)", detail:"Duvarsız — tam range" },
+        { level:5, name:"Deficit Pistol", target:"4 × 6", detail:"Step üzerinde — daha derin" },
+        { level:6, name:"Weighted Pistol", target:"3 × 5", detail:"Sırt çantasıyla" },
+      ],
+    },
+    pull: {
+      name: "Pull Yolu", icon: "🔝",
+      description: "Çekiş — masa → kapı barı",
+      steps: [
+        { level:1, name:"Inverted Row (masa, dizler bükülü)", target:"4 × max", detail:"Başlangıç" },
+        { level:2, name:"Inverted Row (bacaklar düz)", target:"4 × max", detail:"Daha zor" },
+        { level:3, name:"Elevated Inverted Row (ayaklar yüksekte)", target:"4 × max", detail:"Ayakları sandalyeye koy" },
+        { level:4, name:"→ Kapı Barı Gerekli ←", target:"Yatırım: 150-300₺", detail:"Bu noktadan sonra pull gelişimi için bar şart" },
+        { level:5, name:"Dead Hang", target:"3 × max süre", detail:"Kapı barıyla — omurga dekompresyon" },
+        { level:6, name:"Chin-up Negative", target:"5 × 5 (5sn indir)", detail:"Eccentric güç" },
+        { level:7, name:"Full Pull-up", target:"4 × max", detail:"Kalisteniğin temeli" },
+      ],
+    },
   },
 
   principles: [
