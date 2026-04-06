@@ -10,7 +10,7 @@ export const PROGRAM_HOME = {
     name: "Ev Programı",
     phase: "Faz 1 — Temel Kuvvet & Skill",
     weeks: "Hafta 1–8 (sonrasında Faz 2)",
-    description: "Ekipmansız uzun vadeli program. Masa + sandalye + zemin + duvar. Handstand, L-sit, pistol squat, planche lean — salon olmadan tam gelişim. Pull için kapı barı eklenmesi önerilir.",
+    description: "Dayanıklılık önce — denge, kontrol, hız takip eder. Ekipmansız uzun vadeli program. Her günde 4 pillar: aerobik kondisyon, tek ayak denge, tempo kontrolü, patlayıcı hareket. Skill gelişimi (handstand, L-sit) buna paralel ilerler.",
   },
 
   equipment: {
@@ -141,22 +141,28 @@ export const PROGRAM_HOME = {
           { name:"Wall Handstand Hold", sets:"4 × max süre", muscle:"Omuz + core stabilite — full handstand pozisyonu", how:["Duvara karşı dön — elleri 10-15cm duvara yakın","Bir bacağı at — diğerini takip et","Vücut duvara yapışık — topuklar duvarda","Gözler ellerin arasında — 0 aşağı bakma"], avoid:"Beli aşırı bükme — muz pozu", warn:"BOYUN FITIĞI: Boyunu hiperekstansiyona getirme — nötral pozisyon. ROTATOR CUFF: Ağrıda hemen in", alts:["Wall Walk"] },
         ]},
 
+        { name: "⚖️ DENGE & HIZ", color: "#E76F51", exercises: [
+          { name:"Tek Ayak Denge Hold", sets:"3 × 30sn (her bacak)", muscle:"Ayak bileği stabilite, propriyosepsiyon, tibialis anterior", how:["Tek ayakta dur — duvara dokunmadan","30 sn tut — gözler açık","İlerledikçe: gözler kapalı dene","Sallantı normaldir — kontrol etmeye çalış"], avoid:"Duvara ya da bir şeye tutunma", warn:"DİZ + MENİSKÜS: Statik denge — eklem basıncı yok. Propriyosepsiyon menisküs rehabilitasyonunun temelidir", alts:[] },
+          { name:"Explosive Push-up", sets:"3 × 8 (hızlı çık, kontrollü in)", muscle:"Göğüs, triceps, nöromüsküler hız — patlayıcı güç", how:["Normal push-up pozisyonu","Yavaş in — 3 sn","Patlayıcı it — eller yerden kalkacak kadar hızlı","Kontrollü in — tekrar"], avoid:"Ellerin yere çarpması — kontrollü in", warn:"HIZ elementi: sade push-up'tan farklı — hızlı konsentrik, yavaş eksantrik. ROTATOR CUFF: Ağrıda normal push-up'a geç", alts:["Hızlı Push-up (eller kalkmadan)"] },
+        ]},
+
         { name: "💪 KUVVET — Push + Hip Extension", color: "#C1121F", exercises: [
           { name:"Diamond Push-up", sets:"4 × max", muscle:"Triceps dominant, göğüs iç kısmı, ön delt", how:["Eller birbirine yakın — elmas şekli","Dirsekler vücuda paralel","Göğüs yere değince kalk","Yavaş in, hızlı çık"], avoid:"Dirseklerin dışa açılması", warn:"ROTATOR CUFF: Elmas tutuş dirsek merkezli — omuz baskısı az. Ağrıda geniş tutuşa geç", alts:["Close-grip Push-up"] },
-          { name:"Pike Push-up", sets:"4 × 8", muscle:"Ön delt dominant — handstand push-up temeli", how:["Kalçayı havaya kaldır — V şekli","Başı ellerin arasına indir","Dirsekler biraz dışa","İt — tam kalk"], avoid:"Kalçayı düşürme — plank değil pike", warn:"ROTATOR CUFF: Vertical push — en doğal overhead. Ağrıda range azalt", alts:["Decline Push-up"] },
+          { name:"Pike Push-up", sets:"3 × 15", muscle:"Ön delt dominant — handstand push-up temeli", how:["Kalçayı havaya kaldır — V şekli","Başı ellerin arasına indir","Dirsekler biraz dışa","İt — tam kalk"], avoid:"Kalçayı düşürme — plank değil pike", warn:"ROTATOR CUFF: Vertical push — en doğal overhead. Ağrıda range azalt", alts:["Decline Push-up"] },
           { name:"Chair Dip", sets:"4 × max", muscle:"Triceps, alt göğüs, ön delt", how:["Sırtın sandalyeye — eller omuz genişliğinde","Dizler 90° veya uzatılmış","Kalçayı aşağı indir — dirsekler 90°","It — tam kalk"], avoid:"Sandalye kaymasın — sabitle. Çok öne eğilme", warn:"DİZ: Uzatılmış bacak versiyonu daha zor ama diz stres az. OMUZ: 90° altına inme", alts:["Floor Dip"] },
           { name:"Decline Push-up (Ayaklar Sandalyede)", sets:"3 × max", muscle:"Üst göğüs, ön delt, triceps", how:["Ayakları sandalyeye koy","Vücut düz — kalça ne yukarı ne aşağı","Normal push-up hareketi","Dirsekler 45°"], avoid:"Sandalye kaymasın", warn:"ROTATOR CUFF: Yüksek ön delt aktivasyonu — ağrıda normal push-up'a geç", alts:["Incline Push-up"] },
-          { name:"Single Leg Glute Bridge", sets:"4 × 12 (her bacak)", muscle:"Glute max, hamstring — tek bacak güç", how:["Sırt üstü — sol diz bükülü, sağ bacak uzatılmış","Sol topukla it — kalçayı kaldır","Zirve: 2 sn sıkıştır","Kontrollü in — yere değmeden"], avoid:"Beli hiperextend etme", warn:"DİZ: Sol bacakla çalışırken sağ diz stres yok. Sağ bacakla dikkat — tam uzatma", alts:["Hip Thrust (sandalyede)"] },
+          { name:"Pistol Squat Progression", sets:"3 × 8 (her bacak)", muscle:"Quad, glute, denge — tek bacak squat dayanıklılığı", how:["Sandalye desteğiyle başla","Tek ayakla aşağı otur — kontrollü 3sn","Topukla patlayıcı kalk","Her haftada destek azalt"], avoid:"Topuğun kalkması", warn:"DİZ + MENİSKÜS: Sandalye destekli — yük kontrollü. Sağ bacak için özellikle dikkat. Dayanıklılık odaklı: 8 tekrar", alts:["Reverse Lunge","Box Squat"] },
+          { name:"Single Leg Glute Bridge", sets:"3 × 20 (her bacak)", muscle:"Glute max, hamstring — tek bacak güç", how:["Sırt üstü — sol diz bükülü, sağ bacak uzatılmış","Sol topukla it — kalçayı kaldır","Zirve: 2 sn sıkıştır","Kontrollü in — yere değmeden"], avoid:"Beli hiperextend etme", warn:"DİZ: Sol bacakla çalışırken sağ diz stres yok. Sağ bacakla dikkat — tam uzatma", alts:["Hip Thrust (sandalyede)"] },
         ]},
 
         { name: "🎯 CORE — Anterior Zincir", color: "#6C3483", exercises: [
           { name:"Hollow Body Hold", sets:"4 × 20sn", muscle:"Anterior core — handstand, L-sit, planche'ın motoru", how:["Sırt üstü — kollar kulaklara yapışık uzatılmış","Bacaklar düz 20-30° yukarıda","Bel yerde — yere basıyor gibi hisset","20 sn tut"], avoid:"Belin yükselmesi", warn:"Tüm kalistenik hareketlerin çekirdeği", alts:["Bent Knee Hollow"] },
-          { name:"Dead Bug", sets:"3 × 8 (her taraf)", muscle:"Core anti-extension stabilite", how:["Sırt üstü — kollar yukarı, dizler 90°","Karşı kol-bacak uzat — 3 sn tut","Alt sırt yerde kalacak","Geri — diğer taraf"], avoid:"Beli yerden kaldırma", warn:"BEL FITIĞI: En güvenli core egzersizi", alts:[] },
+          { name:"Dead Bug", sets:"3 × 12 (her taraf)", muscle:"Core anti-extension stabilite", how:["Sırt üstü — kollar yukarı, dizler 90°","Karşı kol-bacak uzat — 3 sn tut","Alt sırt yerde kalacak","Geri — diğer taraf"], avoid:"Beli yerden kaldırma", warn:"BEL FITIĞI: En güvenli core egzersizi", alts:[] },
           { name:"Side Plank", sets:"2 × 40sn (her taraf)", muscle:"Oblique, QL — lateral stabilite", how:["Dirsek omuz altında","Kalçayı kaldır — düz çizgi","40 sn tut"], avoid:"Kalçanın sarkması", warn:"SKOLYOZ: Her iki taraf eşit — atlama", alts:[] },
         ]},
 
         { name: "⚡ KONDİSYON — Hızlı Yürüyüş", color: "#990000", exercises: [
-          { name:"Hızlı Yürüyüş", sets:"20 dakika sürekli", muscle:"Aerobik kapasite, bacak dayanıklılığı", how:["Normal yürüyüş temponun %80'i — hafif terleme","Dik postür — omuzlar geri","4 dk hızlı + 1 dk normal tempo","Toplamda 20 dk"], avoid:"Koşmaya geçme — menisküs riski", warn:"MENİSKÜS: Koşu yerine hızlı yürüyüş — aerobik kazanım %70 korunur", alts:["Merdiven çıkma (yavaş)","Statik bisiklet"] },
+          { name:"Hızlı Yürüyüş", sets:"30 dakika sürekli", muscle:"Aerobik kapasite, bacak dayanıklılığı", how:["Normal yürüyüş temponun %80'i — hafif terleme","Dik postür — omuzlar geri","10 dk hızlı + 2 dk normal tempo × 2 tur + 6 dk soğuma","Toplamda 30 dk — Zone 2 aerobik baz"], avoid:"Koşmaya geçme — menisküs riski", warn:"MENİSKÜS: Koşu yerine hızlı yürüyüş — aerobik kazanım %70 korunur", alts:["Merdiven çıkma (yavaş)","Statik bisiklet"] },
         ]},
       ],
     },
@@ -186,16 +192,21 @@ export const PROGRAM_HOME = {
           { name:"L-sit Leg Extension", sets:"3 × 3-5 tekrar (her bacak)", muscle:"Hip flexor güç — tam L-sit'e geçiş", how:["Chair tuck pozisyonunda","Tek bacağı yavaşça uzat","2 sn tam uzatılmış tut","Geri çek — diğer bacak"], avoid:"Vücudun aşağı düşmesi", warn:"Tuck'tan full L-sit'e köprü — sabır gerekir", alts:[] },
         ]},
 
+        { name: "⚖️ DENGE & HIZ", color: "#E76F51", exercises: [
+          { name:"Tek Ayak Denge (Göz Kapalı)", sets:"3 × 20sn (her bacak)", muscle:"Propriyosepsiyon, vestibüler sistem, ayak bileği stabilite", how:["Tek ayakta dur","10 sn gözler açık — alış","Gözleri kapat — 20 sn tut","Zorlanırsan öne bak, tekrar kapat"], avoid:"Tutunma — düşme hissi normaldir başta", warn:"DİZ + MENİSKÜS: Göz kapalı denge eklem stabilitesini hızla artırır. Menisküs rehabilitasyonunda kanıt var", alts:[] },
+          { name:"Tempo Inverted Row", sets:"3 × 8 (3sn in, 1sn tut, patlayıcı çık)", muscle:"Mid sırt, rhomboid, biceps — hız + kontrol entegrasyonu", how:["Masa altı pozisyon","3 saniyede yavaşça in — kontrol","Zirvede 1 sn tut — kürek kemikleri sıkı","Patlayıcı çek — hızlı üste gel"], avoid:"Sallanma — her tekrar kontrollü başla", warn:"Tempo çalışması: kas-nöromüsküler koordinasyon geliştirir. Normal row'dan 2 kat etkili", alts:[] },
+        ]},
+
         { name: "💪 KUVVET — Pull + Squat + Hinge", color: "#2A9D8F", exercises: [
           { name:"Inverted Row (Masa Altı)", sets:"4 × max", muscle:"Mid sırt, rhomboid, biceps — çekiş zinciri", how:["Masanın altına uzan — göğüs masa altında","Topuklardan asıl — vücut düz tahta gibi","Göğsü masaya çek — kürek kemiklerini sıkıştır","Yavaş in — tam uzat"], avoid:"Kalçanın yere değmesi — vücut düz", warn:"BEL FITIĞI: Omurga nötral. Salonda pull-up olan kişi için en iyi ev alternatifi", alts:["Towel Row (kapıdan)"] },
-          { name:"Bulgarian Split Squat (Sandalye)", sets:"4 × 8 (her bacak)", muscle:"Quad, glute — unilateral güç", how:["Arka ayak sandalyede","Ön diz topuğun üzerinde","Dikey olarak in — 90°","Ön ayakla it — kalk"], avoid:"Ön dizi ayak ucunu geçirme", warn:"DİZ + MENİSKÜS: Ön dizi izle. Ağrıda reverse lunge'a geç", alts:["Reverse Lunge"] },
-          { name:"Archer Push-up", sets:"3 × 5 (her taraf)", muscle:"Göğüs unilateral güç — tek kol push-up temeli", how:["Normal push-up pozisyonu","Sol kolu yana uzat — düz ama serbest","Sağ kolun üzerine in","It — dön — diğer taraf"], avoid:"Serbest kolun kenetlenmesi — rahat sallanmalı", warn:"ROTATOR CUFF: Tek taraflı yükleme — ağrıda normal push-up'a dön", alts:["Wide Push-up"] },
-          { name:"Good Morning (Ağırlıksız)", sets:"3 × 12", muscle:"Hamstring, erektör spinae — posterior chain", how:["Ayakta — eller ensede veya önde","Kalçayı geriye it — öne değil","Sırt düz — hamstringte gerilme hissedince dur","Kalçayı öne it — kalk"], avoid:"Sırtı yuvarlama — disk riski", warn:"BEL FITIĞI: Ağırlıksız iyi morning — posterior chain'i çalıştırır. Hafif ROM ile başla", alts:["Romanian Deadlift (ağırlıksız)"] },
-          { name:"Pistol Squat Progression", sets:"4 × 5 (her bacak)", muscle:"Quad, glute, denge — en etkili BW squat", how:["Sandalyeye tek ayakla otur pozisyonunda başla","Sol ayakla it — kalk (sandalye destekli)","İlerledikçe sandayleyi uzaklaştır","Tam pistol: bir ayakta tam aşağı — tam yukarı"], avoid:"Topuğun kalkması — denge bozulur", warn:"DİZ + MENİSKÜS: Sandalye destekli başla — yük kontrolü. Ağrıda derinliği azalt", alts:["Assisted Pistol (sandalye)"] },
+          { name:"Bulgarian Split Squat (Sandalye)", sets:"3 × 15 (her bacak)", muscle:"Quad, glute — unilateral güç", how:["Arka ayak sandalyede","Ön diz topuğun üzerinde","Dikey olarak in — 90°","Ön ayakla it — kalk"], avoid:"Ön dizi ayak ucunu geçirme", warn:"DİZ + MENİSKÜS: Ön dizi izle. Ağrıda reverse lunge'a geç", alts:["Reverse Lunge"] },
+          { name:"Archer Push-up", sets:"3 × 10 (her taraf)", muscle:"Göğüs unilateral güç — tek kol push-up temeli", how:["Normal push-up pozisyonu","Sol kolu yana uzat — düz ama serbest","Sağ kolun üzerine in","It — dön — diğer taraf"], avoid:"Serbest kolun kenetlenmesi — rahat sallanmalı", warn:"ROTATOR CUFF: Tek taraflı yükleme — ağrıda normal push-up'a dön", alts:["Wide Push-up"] },
+          { name:"Good Morning (Ağırlıksız)", sets:"3 × 20", muscle:"Hamstring, erektör spinae — posterior chain", how:["Ayakta — eller ensede veya önde","Kalçayı geriye it — öne değil","Sırt düz — hamstringte gerilme hissedince dur","Kalçayı öne it — kalk"], avoid:"Sırtı yuvarlama — disk riski", warn:"BEL FITIĞI: Ağırlıksız iyi morning — posterior chain'i çalıştırır. Hafif ROM ile başla", alts:["Romanian Deadlift (ağırlıksız)"] },
+          { name:"Pistol Squat Progression", sets:"3 × 10 (her bacak)", muscle:"Quad, glute, denge — en etkili BW squat", how:["Sandalyeye tek ayakla otur pozisyonunda başla","Sol ayakla it — kalk (sandalye destekli)","İlerledikçe sandayleyi uzaklaştır","Tam pistol: bir ayakta tam aşağı — tam yukarı"], avoid:"Topuğun kalkması — denge bozulur", warn:"DİZ + MENİSKÜS: Sandalye destekli başla — yük kontrolü. Ağrıda derinliği azalt", alts:["Assisted Pistol (sandalye)"] },
         ]},
 
         { name: "⚡ KONDİSYON — AMRAP Bodyweight", color: "#990000", exercises: [
-          { name:"AMRAP Bodyweight 8 Dakika", sets:"8 dakika × maksimum tur", muscle:"Full body dayanıklılık", how:["1 tur: 5 Push-up + 5 Inverted Row + 10 Reverse Lunge (her bacak)","Mümkün olduğunca çok tur — 8 dk","Her turu say — ilerlemeyi takip et","Form bozulmadan devam"], avoid:"Sadece kolay hareketleri seçme", warn:"Aerobik eşikte çalış — koşu yok", alts:["5 tur × 3 dk çalışma / 1 dk dinlenme"] },
+          { name:"AMRAP Bodyweight 12 Dakika", sets:"12 dakika × maksimum tur", muscle:"Full body dayanıklılık", how:["1 tur: 5 Push-up + 5 Inverted Row + 10 Reverse Lunge (her bacak)","Mümkün olduğunca çok tur — 8 dk","Her turu say — ilerlemeyi takip et","Form bozulmadan devam"], avoid:"Sadece kolay hareketleri seçme", warn:"Aerobik eşikte çalış — koşu yok", alts:["5 tur × 3 dk çalışma / 1 dk dinlenme"] },
         ]},
       ],
     },
@@ -226,12 +237,17 @@ export const PROGRAM_HOME = {
           { name:"Planche Lean", sets:"4 × 20sn", muscle:"Anterior core, omuz anterior, bilek — planche temeli", how:["Push-up pozisyonunda","Vücudu öne doğru eğ — omuzlar elin önüne geç","Topuklar yerden kalkabilir","Kollar düz — 20 sn tut"], avoid:"Beli büküp öne eğme — vücut düz çizgi", warn:"ROTATOR CUFF: Hafif hissedilir — ağrıda dur. BEL: Korunma için core sıkı", alts:["Frog Stand"] },
         ]},
 
+        { name: "⚖️ DENGE & HIZ", color: "#E76F51", exercises: [
+          { name:"Tek Ayak RDL (Denge Odaklı)", sets:"3 × 8 (her bacak)", muscle:"Hamstring, glute, propriyosepsiyon — dinamik denge", how:["Sağ ayakta dur — sol ayak havada","Öne eğil kalçadan — sağ bacak diz hafif bükülü","Sol bacak arkaya uzar — denge noktasını bul","Kalçayı öne it — kalk — her seferinde yavaş"], avoid:"Beli yuvarlama — nötral omurga", warn:"DİZ + MENİSKÜS: Dinamik tek ayak denge — menisküs için en iyi rehabilitasyon hareketi. Sağ bacak için yavaş başla", alts:["Destekli Tek Ayak RDL (duvara 1 parmak)"] },
+          { name:"Explosive Push-up", sets:"3 × 10 (hızlı çık, kontrollü in)", muscle:"Nöromüsküler hız + göğüs gücü", how:["3 sn yavaş in","Patlayıcı it — eller kalkar","Kontrollü in — yumuşak iniş","Tempo düşmesin — kalite önce"], avoid:"Formun bozulması", warn:"HIZ: Her hafta explosive tekrar sayısı artıyor. Bu dayanıklılık + hız entegrasyonu", alts:["Hızlı Push-up"] },
+        ]},
+
         { name: "💪 KUVVET — Full Body Hacim", color: "#F4A261", exercises: [
           { name:"Inverted Row (Masa Altı)", sets:"5 × max", muscle:"Mid sırt, rhomboid, biceps", how:["Masanın altında — göğsü masaya çek","Kürek kemiklerini sıkıştır — 1 sn tut","Kontrollü in"], avoid:"Kalçanın sarkması", warn:"BEL FITIĞI: Nötral omurga", alts:[] },
-          { name:"Pseudo-Planche Push-up", sets:"4 × 8", muscle:"Ön delt dominant, triceps, serratus — planche prep", how:["Push-up pozisyonunda","Elleri kalçaya doğru döndür — parmaklar arkaya","Vücudu öne eğ — planche lean pozisyonu","Bu pozisyondan push-up yap"], avoid:"Dirseklerin aşırı bükülmesi", warn:"ROTATOR CUFF: Bilek ve omuz üzerinde — ağrıda normal push-up'a geç", alts:["Pike Push-up"] },
-          { name:"Pistol Squat Progression", sets:"5 × 5 (her bacak)", muscle:"Quad, glute — maksimum BW güç", how:["Sandalye desteği azalt her hafta","Derin otur — tek ayakta","Topukla it — kalk","Haftalık ilerlemeyi not et"], avoid:"Topuğun kalkması", warn:"DİZ + MENİSKÜS: Ağrıda derinliği azalt. Sağ bacak için özellikle dikkat", alts:["Bulgarian Split Squat (sandalye)"] },
-          { name:"Hip Thrust (Sandalye)", sets:"4 × 15", muscle:"Glute max, hamstring — posterior chain en güçlü ev hareketi", how:["Sırtın sandalyeye — omuz bıçakları sandalye kenarında","Her iki ayak yerde — diz 90°","Kalçayı it — tam uzat — 2 sn sıkıştır","Kontrollü in"], avoid:"Beli hiperextend etme", warn:"BEL FITIĞI: Kalça hareketi — omurga sabit. DİZ: Topukta baskı — diz ağrısı azalır", alts:["Single Leg Glute Bridge"] },
-          { name:"Archer Push-up", sets:"4 × 6 (her taraf)", muscle:"Unilateral göğüs ve omuz — tek kol push-up temeli", how:["Sol kolu yana uzat — serbest","Sağ kolun üzerine in","It — dön — diğer taraf"], avoid:"Serbest kolun zeminde baskı yapması", warn:"ROTATOR CUFF: Ağrıda normal push-up'a geç", alts:["Wide Push-up"] },
+          { name:"Pseudo-Planche Push-up", sets:"3 × 12", muscle:"Ön delt dominant, triceps, serratus — planche prep", how:["Push-up pozisyonunda","Elleri kalçaya doğru döndür — parmaklar arkaya","Vücudu öne eğ — planche lean pozisyonu","Bu pozisyondan push-up yap"], avoid:"Dirseklerin aşırı bükülmesi", warn:"ROTATOR CUFF: Bilek ve omuz üzerinde — ağrıda normal push-up'a geç", alts:["Pike Push-up"] },
+          { name:"Pistol Squat Progression", sets:"3 × 12 (her bacak)", muscle:"Quad, glute — maksimum BW güç", how:["Sandalye desteği azalt her hafta","Derin otur — tek ayakta","Topukla it — kalk","Haftalık ilerlemeyi not et"], avoid:"Topuğun kalkması", warn:"DİZ + MENİSKÜS: Ağrıda derinliği azalt. Sağ bacak için özellikle dikkat", alts:["Bulgarian Split Squat (sandalye)"] },
+          { name:"Hip Thrust (Sandalye)", sets:"3 × 20", muscle:"Glute max, hamstring — posterior chain en güçlü ev hareketi", how:["Sırtın sandalyeye — omuz bıçakları sandalye kenarında","Her iki ayak yerde — diz 90°","Kalçayı it — tam uzat — 2 sn sıkıştır","Kontrollü in"], avoid:"Beli hiperextend etme", warn:"BEL FITIĞI: Kalça hareketi — omurga sabit. DİZ: Topukta baskı — diz ağrısı azalır", alts:["Single Leg Glute Bridge"] },
+          { name:"Archer Push-up", sets:"3 × 12 (her taraf)", muscle:"Unilateral göğüs ve omuz — tek kol push-up temeli", how:["Sol kolu yana uzat — serbest","Sağ kolun üzerine in","It — dön — diğer taraf"], avoid:"Serbest kolun zeminde baskı yapması", warn:"ROTATOR CUFF: Ağrıda normal push-up'a geç", alts:["Wide Push-up"] },
         ]},
 
         { name: "🎯 CORE — Haftalık Hacim", color: "#6C3483", exercises: [
@@ -279,11 +295,15 @@ export const PROGRAM_HOME = {
           { name:"Inverted Row Max Test", sets:"3 set × maksimum", muscle:"Sırt, biceps — çekiş gücü", how:["Masa altında — vücut düz","Göğsü masaya çek — sayımı kaydet"], avoid:"Kalçanın yere değmesi", warn:"Pull-up karşılığı ev testi", alts:[] },
         ]},
 
+        { name: "⚖️ DENGE & HIZ", color: "#E76F51", exercises: [
+          { name:"Single Leg Balance Reach (Y-Balance)", sets:"3 × 5 yön (her bacak)", muscle:"Tüm denge sistemi — ayak bileği, diz, kalça koordinasyonu", how:["Sağ ayakta dur","Sol ayakla 3 yöne uzaklık say: öne, yana, geriye çapraz","Her uzanmada denge bozulmayacak","5 yön her bacak — simetri önemli"], avoid:"Destek ayağın topuğunun kalkması", warn:"MENİSKÜS + DİZ: Y-Balance testi klinik standart. Hem rehabilitasyon hem test. Sağ-sol farkı kapandıkça sağlamlık geldi demek", alts:["Tek Ayak Denge Hold (basit)"] },
+        ]},
+
         { name: "💪 KUVVET — Güç Odaklı", color: "#8338EC", exercises: [
           { name:"Planche Lean", sets:"5 × 25sn", muscle:"Anterior chain — planche temeli", how:["Omuzlar elin önüne geçecek kadar eğil","Kollar düz — vücut düz çizgi","25 sn tut"], avoid:"Beli büküp öne eğme", warn:"ROTATOR CUFF: Hafif hissedilir — ağrıda dur", alts:[] },
           { name:"Diamond Push-up", sets:"5 × max", muscle:"Triceps + göğüs — güç setleri", how:["Eller elmas — yavaş in, hızlı çık","Her seti kaydet"], avoid:"Dirseklerin dışa açılması", warn:"ROTATOR CUFF: Ağrıda geniş tutuşa geç", alts:[] },
-          { name:"Pistol Squat Progression", sets:"4 × 6 (her bacak)", muscle:"Tek bacak güç — haftalık en ağır", how:["Bu hafta sandalye desteği önceki haftadan az","Derinliği artır — kontrollü","6 tekrar her bacak"], avoid:"Topuğun kalkması", warn:"DİZ + MENİSKÜS: Sağ bacak dikkat", alts:["Bulgarian Split Squat"] },
-          { name:"Hip Thrust (Sandalye)", sets:"5 × 12", muscle:"Glute max — posterior güç", how:["Sırtın sandalyeye","Kalçayı it — 2 sn sıkıştır","Kontrollü in"], avoid:"Beli hiperextend etme", warn:"BEL FITIĞI: Kalça hareketi — omurga sabit", alts:[] },
+          { name:"Pistol Squat Progression", sets:"3 × 12 (her bacak)", muscle:"Tek bacak güç — haftalık en ağır", how:["Bu hafta sandalye desteği önceki haftadan az","Derinliği artır — kontrollü","6 tekrar her bacak"], avoid:"Topuğun kalkması", warn:"DİZ + MENİSKÜS: Sağ bacak dikkat", alts:["Bulgarian Split Squat"] },
+          { name:"Hip Thrust (Sandalye)", sets:"4 × 20", muscle:"Glute max — posterior güç", how:["Sırtın sandalyeye","Kalçayı it — 2 sn sıkıştır","Kontrollü in"], avoid:"Beli hiperextend etme", warn:"BEL FITIĞI: Kalça hareketi — omurga sabit", alts:[] },
         ]},
 
         { name: "🎯 CORE — Haftalık Kapanış", color: "#6C3483", exercises: [
@@ -324,12 +344,16 @@ export const PROGRAM_HOME = {
       id: 6, title: "OFF 2", sub: "ÇARŞAMBA",
       focus: "L-sit Pratik + Yürüyüş", duration: "~25 dk", color: "#6C757D", type: "offday",
       blocks: [
+        { name: "🛡 SAKATILIK PROTOKOLÜ (3 dk)", color: "#7B241C", exercises: [
+          { name:"Chin Tuck", sets:"3 × 12", muscle:"Derin boyun fleksörleri", how:["Dik otur","Çeneni geriye it — 2 sn","Bırak — tekrar"], avoid:"Başı eğme", warn:"BOYUN FITIĞI: Off günde bile atlanmaz — her gün 3dk yeterli", alts:[] },
+          { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Serratus anterior, trapez — postür", how:["Sırtını duvara daya","W'den U'ya kaydır","Kürek kemikleri duvarda"], avoid:"Ayrılma", warn:"ROTATOR CUFF + KİFOZ: Her gün şart", alts:[] },
+        ]},
         { name: "🪑 L-SİT PRATİK (10 dk)", color: "#2A9D8F", exercises: [
           { name:"Floor L-sit Tuck Hold", sets:"5 × max süre", muscle:"Hip flexor, core basınç, triceps", how:["Zemin — dizleri çek","Her seti kaydet — kaç saniye?","Setler arası 45 sn","Yorgunluk hissettirmemeli — pratik, antrenman değil"], avoid:"Omuzların kulağa kalkması — aşağı bas", warn:"L-sit günde 2 kez kısa pratik yapan kişi, haftada 1 kez uzun yapandan çok daha hızlı ilerler", alts:[] },
           { name:"Chair L-sit Tuck Hold", sets:"4 × max süre", muscle:"L-sit progressionu", how:["İki sandalye — tuck pozisyon","Zemin versiyonundan daha uzun süre tutulur","Her setте bir öncekinden daha uzun dene"], avoid:"Sandalyelerin kayması — sabitle", warn:"Motor öğrenme: sık kısa pratik > seyrek uzun pratik", alts:["Floor L-sit Tuck"] },
         ]},
         { name: "🚶 YÜRÜYÜŞ + MOBİLİTE (15 dk)", color: "#6C757D", exercises: [
-          { name:"Hızlı Yürüyüş", sets:"12 dakika sürekli", muscle:"Aktif recovery, aerobik", how:["Hafif terleme seviyesinde","Dik postür — omuzlar geri"], avoid:"Koşma", warn:"MENİSKÜS: Günlük yürüyüş eklem sağlığını korur", alts:[] },
+          { name:"Hızlı Yürüyüş", sets:"20 dakika sürekli", muscle:"Aktif recovery, aerobik", how:["Hafif terleme seviyesinde","Dik postür — omuzlar geri","Tempo stabil — 20 dk kesintisiz"], avoid:"Koşma", warn:"MENİSKÜS: Günlük yürüyüş eklem sağlığını korur", alts:[] },
           { name:"Scapular Wall Slide", sets:"2 × 10", muscle:"Postür kasları", how:["W'den U'ya — kürek kemikleri duvarda"], avoid:null, warn:"ROTATOR CUFF + KİFOZ: Günlük rutin", alts:[] },
         ]},
       ],
@@ -347,6 +371,9 @@ export const PROGRAM_HOME = {
           { name:"Shoulder Cross Stretch", sets:"2 × 30sn (her taraf)", muscle:"Posterior kapsül", how:["Kolunu göğüs önünde — diğer elle çek — 30 sn"], avoid:null, warn:"ROTATOR CUFF: Ertesi gün full skill var", alts:[] },
           { name:"Hip Circle", sets:"2 × 10 (her yön)", muscle:"Kalça mobilite", how:["Her iki yön — büyük daire"], avoid:null, warn:null, alts:[] },
           { name:"Cat-Cow Mobilite", sets:"2 × 10", muscle:"Torasik + lumbar", how:["Nefes ritmiyle 10 tekrar"], avoid:null, warn:"BEL + BOYUN FITIĞI", alts:[] },
+        ]},
+        { name: "🚶 DAYANIKLILIK — Aerobik Baz", color: "#2A9D8F", exercises: [
+          { name:"Hızlı Yürüyüş", sets:"15 dakika sürekli", muscle:"Aerobik kapasite — haftalık kondisyon birikimi", how:["Hafif tempo — Zone 2","Dik postür","Yarın Cumartesi full antrenman var — hafif tut","15 dk kesintisiz"], avoid:"Koşma — menisküs", warn:"MENİSKÜS: Yürüyüş her off günde aerobik bazı korur. Cumartesi yoğun geçecek — bu hazırlık", alts:["Statik bisiklet 15dk"] },
         ]},
       ],
     },
