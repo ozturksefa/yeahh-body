@@ -368,6 +368,36 @@ const GIF_MAP = {
   "Copenhagen Plank Left": "5VXmnV5",
   "Copenhagen Plank Right": "5VXmnV5",
   "Knee Tuck Hold": "UpWmA5E",
+
+  // ─── YENİ HAREKETLER (program güncellemesi) ───────────────────
+  'Cat-Cow Mobilite':               'MSfvriJ',  // skin the cat — closest cat-cow
+  'Hip Hinge':                      'XlZ4lAC',  // barbell good morning — hip hinge pattern
+  'Goblet Squat':                   'yn8yg1r',  // dumbbell goblet squat
+  'Goblet Squat (ağırlıksız)':      'ZA8b5hc',  // kettlebell goblet squat
+  'Goblet Squat (Heavy)':           'yn8yg1r',  // dumbbell goblet squat
+  'Scapular Wall Slide':            'uTBt1HV',  // scapular pull-up — best match
+  'Band Face Pull':                 'tc5dYrf',  // band standing rear delt row — closest
+  'Supine Spinal Twist':            '6sYyrRX',  // bent knee lying twist
+  'Supine Spinal Twist Right':      '6sYyrRX',
+  'Supine Spinal Twist Left':       '6sYyrRX',
+  'Supine Hip Rotation':            'vIICElP',  // band lying hip internal rotation
+  'Reverse Lunge (ağırlıksız)':    'VaP75jl',  // barbell rear lunge
+  'Rear Delt Fly (lying)':          'Ln9iTbU',  // barbell rear delt raise — prone
+  'Glute Bridge / Hip Thrust':      'qKBpF7I',  // barbell glute bridge
+  'Step-Up (Weighted)':             'Kxquu2E',  // barbell step-up
+  'Single Arm DB Row':              'km0sQC0',  // band one arm standing low row
+  'Chest Supported Row':            '7vG5o25',  // dumbbell incline row
+  'Hamstring Stretch':              '99rWm7w',  // hamstring stretch
+  'Dead Hang Max':                  'uWpxD4v',  // arm slingers hanging
+  'Shoulder CARs':                  'bmBf7LN',  // dumbbell lying external shoulder rotation
+  'Hip Circle':                     'vIICElP',  // band lying hip internal rotation — best available
+
+  // ─── KONDİSYON / DEVRE — YouTube fallback ─────────────────────
+  'Sprint Interval':                    null,  // YT: sprint interval training
+  'AMRAP 8 Dakika':                     null,  // YT: amrap workout circuit
+  'Yük Taşıma Devresi':                 null,  // YT: loaded carry circuit
+  'Trap Bar Carry / DB Shrug Carry':    null,  // YT: farmer carry trap bar
+  '20 Dakika Sürekli Aerobik Devre':    null,  // YT: zone 2 cardio circuit
 };
 
 const GIF_BASE = "https://static.exercisedb.dev/media/";
