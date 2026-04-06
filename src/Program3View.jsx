@@ -16,6 +16,7 @@ const SWAPS_KEY = "yb_swaps3";
 const TRACK_BLOCKS = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER", "PRIMARY", "SECONDARY", "KALİSTENİK", "SKILL", "KOMPLİMENTER", "FULL BODY"];
 
 // ─── Off Day View ────────────────────────────────────────────────
+// ─── Off Day View ────────────────────────────────────────────────
 function OffDayView({ day }) {
   const [expandedEx, setExpandedEx] = useState(null);
   return (
@@ -24,32 +25,35 @@ function OffDayView({ day }) {
         <div className="day-top">
           <div>
             <div className="day-focus" style={{ color: "#6C757D" }}>{day.focus}</div>
-            <div className="day-meta">{day.duration} · 🏠 Ekipman gerektirmez</div>
+            <div className="day-meta">{day.duration} · Aktif dinlenme</div>
           </div>
           <div className="day-badge" style={{ background: "#6C757D" }}>{day.sub}</div>
         </div>
+        {day.injury && <div className="injury">{day.injury}</div>}
       </div>
       <main className="main">
         {day.blocks.map((block, bi) => (
-          <BlockCard key={bi} block={block} blockIdx={bi}
+          <BlockCard
+            key={bi}
+            block={block}
+            blockIdx={bi}
             expandedEx={expandedEx}
             onExToggle={k => setExpandedEx(p => p === k ? null : k)}
             dayIndex={-1}
             onStartRest={() => {}}
             swaps={{}}
             onSwap={() => {}}
-            forceOpen={false}
+            forceOpen={true}
             workoutActive={false}
             isLastEx={false}
-            onAllSetsDone={() => {}} />
+            onAllSetsDone={() => {}}
+          />
         ))}
-        <div className="footer">Off day — hafif tut, dinlenmeye izin ver 🌿</div>
+        <div className="footer">Dinlenme günü — hafif tut 🌿</div>
       </main>
     </>
   );
 }
-
-
 
 function SkillTracker3() {
   const LS_KEY = 'yb_skill_levels_3';

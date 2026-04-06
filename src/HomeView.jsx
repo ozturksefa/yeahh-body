@@ -192,26 +192,42 @@ const SWAPS_KEY = "yb_swaps_home";
 const FLOW_KEY  = "session_home";
 const TRACK_BLOCKS = ["KUVVET","SKİLL","MAX TEST","KALİSTENİK","CORE","CARRY","SAKATILIK"];
 
+// ─── Off Day View ────────────────────────────────────────────────
 function OffDayView({ day }) {
+  const [expandedEx, setExpandedEx] = useState(null);
   return (
-    <div style={{ padding: "12px 12px 0" }}>
+    <>
       <div className="day-hdr" style={{ borderColor: "#6C757D44", background: "#6C757D0D" }}>
         <div className="day-top">
           <div>
             <div className="day-focus" style={{ color: "#6C757D" }}>{day.focus}</div>
-            <div className="day-meta">{day.duration}</div>
+            <div className="day-meta">{day.duration} · Aktif dinlenme</div>
           </div>
           <div className="day-badge" style={{ background: "#6C757D" }}>{day.sub}</div>
         </div>
+        {day.injury && <div className="injury">{day.injury}</div>}
       </div>
-      {day.blocks.map((block, bi) => (
-        <BlockCard key={bi} block={block} blockIdx={bi} expandedEx={null}
-          onExToggle={()=>{}} dayIndex={day.id + 29}
-          onStartRest={()=>{}} swaps={{}} onSwap={()=>{}}
-          forceOpen={false} workoutActive={false} isLastEx={false}
-          onAllSetsDone={()=>{}} />
-      ))}
-    </div>
+      <main className="main">
+        {day.blocks.map((block, bi) => (
+          <BlockCard
+            key={bi}
+            block={block}
+            blockIdx={bi}
+            expandedEx={expandedEx}
+            onExToggle={k => setExpandedEx(p => p === k ? null : k)}
+            dayIndex={-1}
+            onStartRest={() => {}}
+            swaps={{}}
+            onSwap={() => {}}
+            forceOpen={true}
+            workoutActive={false}
+            isLastEx={false}
+            onAllSetsDone={() => {}}
+          />
+        ))}
+        <div className="footer">Dinlenme günü — hafif tut 🌿</div>
+      </main>
+    </>
   );
 }
 
