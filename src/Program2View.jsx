@@ -94,7 +94,7 @@ function OffDayView({ day }) {
             onStartRest={() => {}}
             swaps={{}}
             onSwap={() => {}}
-            forceOpen={false}
+            forceOpen={true}
             workoutActive={false}
             isLastEx={false}
             onAllSetsDone={() => {}} />
