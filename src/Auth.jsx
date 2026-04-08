@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { supabase } from "./supabaseClient";
 
-function AuthScreen({ onAuth }) {
+function AuthScreen() {
   const [mode, setMode] = useState("login"); // login | signup
   const [email, setEmail] = useState("");
   const [pass, setPass] = useState("");

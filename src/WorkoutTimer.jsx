@@ -1,14 +1,16 @@
-import { useState, useEffect } from "react";
+import { useCallback, useEffect, useState } from "react";
 import { saveWorkout, loadWorkout, markWorkoutDone, resetWorkout } from "./tracker";
 
-function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, onElapsed }) {
-  if (dayIndex < 0) return null;
+function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, onElapsed, onStateChange }) {
   const [workout, setWorkout] = useState(null);
   const [elapsed, setElapsed] = useState(0);
   const [started, setStarted] = useState(false);
   const [loaded, setLoaded] = useState(false);
+  const isDisabled = dayIndex < 0;
 
   useEffect(() => {
+    if (isDisabled) return;
+
     (async () => {
       const w = await loadWorkout(dayIndex);
       setWorkout(w);
@@ -23,10 +25,19 @@ function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, on
       }
       setLoaded(true);
     })();
-  }, [dayIndex]);
+  }, [dayIndex, isDisabled]);
 
   useEffect(() => {
-    if (!started || workout?.completed) return;
+    if (!onStateChange) return;
+    onStateChange({
+      loaded,
+      started,
+      completed: !!workout?.completed,
+    });
+  }, [loaded, started, workout?.completed, onStateChange]);
+
+  useEffect(() => {
+    if (isDisabled || !started || workout?.completed) return;
     const start = workout?.startTime || Date.now();
     const timer = setInterval(() => {
       const e = Math.floor((Date.now() - start) / 1000);
@@ -34,9 +45,9 @@ function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, on
       if (onElapsed) onElapsed(e);
     }, 1000);
     return () => clearInterval(timer);
-  }, [started, workout?.completed, workout?.startTime]);
+  }, [isDisabled, onElapsed, started, workout?.completed, workout?.startTime]);
 
-  const startWorkout = async () => {
+  const startWorkout = useCallback(async () => {
     const now = Date.now();
     const w = { exercises: {}, startTime: now, completed: false, start_time: now };
     await saveWorkout(dayIndex, { exercises: {}, start_time: now, completed: false });
@@ -44,19 +55,21 @@ function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, on
     setStarted(true);
     setElapsed(0);
     if (onWorkoutStart) onWorkoutStart();
-  };
+  }, [dayIndex, onWorkoutStart]);
 
-  const finishWorkout = async () => {
+  const finishWorkout = useCallback(async () => {
     await markWorkoutDone(dayIndex);
-    setWorkout(prev => ({ ...prev, completed: true, endTime: Date.now() }));
+    setWorkout(prev => ({ ...(prev || {}), completed: true, endTime: Date.now() }));
     setStarted(false);
     if (onWorkoutFinish) onWorkoutFinish();
-  };
+  }, [dayIndex, onWorkoutFinish]);
 
   // Expose finishWorkout to parent via ref
   useEffect(() => {
     if (finishRef) finishRef.current = finishWorkout;
-  });
+  }, [finishRef, finishWorkout]);
+
+  if (isDisabled) return null;
 
   if (!loaded) return null;
 

@@ -10,7 +10,15 @@ function savePR(name, seconds) {
     const prs = loadPRs();
     const key = name.toLowerCase().replace(/\s+/g, "-");
     const prev = prs[key] || 0;
-    if (seconds > prev) { prs[key] = seconds; try { localStorage.setItem(LS_KEY, JSON.stringify(prs)); } catch {} return true; }
+    if (seconds > prev) {
+      prs[key] = seconds;
+      try {
+        localStorage.setItem(LS_KEY, JSON.stringify(prs));
+      } catch {
+        return false;
+      }
+      return true;
+    }
     return false;
   } catch { return false; }
 }
@@ -18,18 +26,13 @@ function getPR(name) {
   try { const prs = loadPRs(); return prs[name.toLowerCase().replace(/\s+/g,"-")] || 0; } catch { return 0; }
 }
 
-export default function SkillTimer({ exerciseName, targetSeconds }) {
+function SkillTimerCard({ exerciseName, targetSeconds }) {
   const [elapsed, setElapsed] = useState(0);
   const [running, setRunning] = useState(false);
   const [finished, setFinished] = useState(false);
   const [isNewPR, setIsNewPR] = useState(false);
   const [pr, setPR] = useState(() => getPR(exerciseName));
   const intervalRef = useRef(null);
-
-  useEffect(() => {
-    setElapsed(0); setRunning(false); setFinished(false); setIsNewPR(false);
-    setPR(getPR(exerciseName));
-  }, [exerciseName]);
 
   useEffect(() => {
     if (running) {
@@ -45,7 +48,9 @@ export default function SkillTimer({ exerciseName, targetSeconds }) {
               osc.connect(gain); gain.connect(ctx.destination);
               osc.frequency.value = 880; gain.gain.value = 0.3;
               osc.start(); osc.stop(ctx.currentTime + 0.3);
-            } catch {}
+            } catch {
+              // audio cue is optional
+            }
           }
           return next;
         });
@@ -110,4 +115,8 @@ export default function SkillTimer({ exerciseName, targetSeconds }) {
       </div>
     </div>
   );
+}
+
+export default function SkillTimer(props) {
+  return <SkillTimerCard key={props.exerciseName} {...props} />;
 }

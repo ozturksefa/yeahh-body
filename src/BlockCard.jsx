@@ -6,7 +6,7 @@ import ExerciseNote from "./ExerciseNote";
 import SkillTimer from "./SkillTimer";
 import ErrorBoundary from "./ErrorBoundary";
 
-function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAdvance, workoutActive, isLastEx, onAllSetsDone }) {
+function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAllSetsDone }) {
   const cardRef = useRef(null);
   const originalName = ex.name;
   const swappedName = swaps?.[originalName] || null;

@@ -12,7 +12,9 @@ function ExerciseNote({ exerciseName }) {
     try {
       if (val) localStorage.setItem(key, val);
       else localStorage.removeItem(key);
-    } catch {}
+    } catch {
+      return;
+    }
   };
 
   if (!editing && !note) {

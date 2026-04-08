@@ -1,53 +1,29 @@
 import { useState, useEffect } from "react";
 
-// Dinlenme süresi belirleme (saniye)
-export function getRestDuration(blockName, exerciseName) {
-  const bn = blockName?.toUpperCase() || "";
-  const en = exerciseName?.toLowerCase() || "";
-
-  if (bn.includes("FİNİSHER")) return 45;
-  if (bn.includes("CORE")) return 60;
-  if (bn.includes("CALİSTHENİCS")) return 75;
-
-  // Kuvvet — compound vs isolation
-  if (bn.includes("KUVVET")) {
-    const compound = ["squat","deadlift","press","pull up","chin up","row","hip thrust","lunge","step up","leg press"];
-    if (compound.some(c => en.includes(c))) return 120;
-    return 90; // isolation: curl, raise, extension
-  }
-  return 90;
-}
-
-function RestTimer({ seconds, exerciseName, isTransition, onDismiss, onAdjust }) {
+function RestTimerCard({ seconds, exerciseName, isTransition, onDismiss, onAdjust }) {
   const [remaining, setRemaining] = useState(seconds);
-  const [done, setDone] = useState(false);
   const [mini, setMini] = useState(false);
+  const done = remaining <= 0;
 
   useEffect(() => {
-    setRemaining(seconds);
-    setDone(false);
-    setMini(false);
-  }, [seconds, exerciseName]);
-
-  useEffect(() => {
-    if (remaining <= 0) {
-      setDone(true);
-      setMini(false); // Expand when done
-      if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
-      try {
-        const ctx = new (window.AudioContext || window.webkitAudioContext)();
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.connect(gain); gain.connect(ctx.destination);
-        osc.frequency.value = 880;
-        gain.gain.value = 0.3;
-        osc.start(); osc.stop(ctx.currentTime + 0.3);
-      } catch {}
-      return;
+    if (!done) {
+      const t = setTimeout(() => setRemaining((r) => r - 1), 1000);
+      return () => clearTimeout(t);
     }
-    const t = setTimeout(() => setRemaining(r => r - 1), 1000);
-    return () => clearTimeout(t);
-  }, [remaining]);
+    if (navigator.vibrate) navigator.vibrate([200, 100, 200, 100, 200]);
+    try {
+      const ctx = new (window.AudioContext || window.webkitAudioContext)();
+      const osc = ctx.createOscillator();
+      const gain = ctx.createGain();
+      osc.connect(gain); gain.connect(ctx.destination);
+      osc.frequency.value = 880;
+      gain.gain.value = 0.3;
+      osc.start(); osc.stop(ctx.currentTime + 0.3);
+    } catch {
+      // audio cue is optional
+    }
+    return undefined;
+  }, [done]);
 
   const mins = Math.floor(remaining / 60);
   const secs = remaining % 60;
@@ -97,4 +73,6 @@ function RestTimer({ seconds, exerciseName, isTransition, onDismiss, onAdjust })
   );
 }
 
-export default RestTimer;
+export default function RestTimer(props) {
+  return <RestTimerCard key={`${props.exerciseName}-${props.seconds}`} {...props} />;
+}

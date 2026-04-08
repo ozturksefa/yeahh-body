@@ -1,5 +1,5 @@
-import { useState, useEffect } from "react";
-import { getMealPlan, getDayType, getWorkoutSchedule } from "./mealPlanner";
+import { useMemo, useState } from "react";
+import { getHomeMealSections, getMealPlan, getDayType, getWorkoutSchedule } from "./mealPlanner";
 import { calcDayCalories, getUserWeight } from "./calorieCalc";
 
 function MacroPill({ label, value, unit, color }) {
@@ -59,19 +59,51 @@ function MealCard({ meal, rank }) {
   );
 }
 
-export default function MealRecommendation({ day, targets, totals }) {
-  const [plan, setPlan] = useState(null);
+function SectionMealCard({ title, icon, meals }) {
+  return (
+    <div className="meal-card">
+      <div className="meal-card-head" style={{ cursor: "default" }}>
+        <div className="meal-card-left">
+          <span className="meal-rank">{icon}</span>
+          <div>
+            <div className="meal-name">{title}</div>
+            <div className="meal-desc">Evde yapılabilir, sade ve ulaşılabilir öneriler</div>
+          </div>
+        </div>
+      </div>
+      <div className="meal-card-body">
+        {meals.map((meal) => (
+          <div key={meal.name} style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
+            <div className="meal-name" style={{ fontSize: 14 }}>{meal.name}</div>
+            <div className="meal-desc" style={{ marginTop: 4 }}>{meal.desc}</div>
+            <div className="meal-macros" style={{ marginTop: 8 }}>
+              <MacroPill label="Kalori" value={meal.total.cal} unit="kcal" color="#FF6B35" />
+              <MacroPill label="Protein" value={meal.total.pro} unit="g" color="#4FC3F7" />
+              <MacroPill label="Karb" value={meal.total.carb} unit="g" color="#66BB6A" />
+            </div>
+            <div className="meal-foods" style={{ marginTop: 10 }}>
+              {meal.foods.map((food, index) => <FoodRow key={`${meal.name}-${index}`} food={food} />)}
+            </div>
+            {meal.tip && <div className="meal-tip">💡 {meal.tip}</div>}
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
 
-  useEffect(() => {
-    if (!targets) return;
-    const dayType = getDayType(day);
+export default function MealRecommendation({ day, targets, totals, dayTypeOverride = null, contextLabel = null, contextNote = null }) {
+  const plan = useMemo(() => {
+    if (!targets) return null;
+    const dayType = dayTypeOverride || getDayType(day);
     const w = getUserWeight();
     const workoutKcal = day && day.type !== 'offday'
       ? calcDayCalories(day, w).total
       : 0;
-    const result = getMealPlan({ dayType, targets, totals, workoutKcal });
-    setPlan(result);
-  }, [day, targets, totals]);
+    return getMealPlan({ dayType, targets, totals, workoutKcal });
+  }, [day, dayTypeOverride, targets, totals]);
+  const dayType = dayTypeOverride || getDayType(day);
+  const homeSections = useMemo(() => getHomeMealSections(dayType), [dayType]);
 
   if (!plan) return null;
   const { meals, summary } = plan;
@@ -97,6 +129,10 @@ export default function MealRecommendation({ day, targets, totals }) {
             Fasted antrenman → insulin düşük → yağ yakımı yüksek. Antrenman sonrası ilk öğün kritik.
           </div>
         </div>
+        <div className="meal-rec-title" style={{ marginTop: 14 }}>Antrenmandan sonra evde ne yiyebilirsin?</div>
+        <SectionMealCard title="Kahvaltı" icon="🍳" meals={homeSections.breakfast} />
+        <SectionMealCard title="Ara Öğün" icon="🥛" meals={homeSections.snack} />
+        <SectionMealCard title="Akşam" icon="🍽️" meals={homeSections.dinner} />
       </div>
     );
   }
@@ -114,9 +150,7 @@ export default function MealRecommendation({ day, targets, totals }) {
           )}
         </div>
         {(() => {
-          const { hour, isWeekend, minsToWorkout } = getWorkoutSchedule();
-          const preEatHour = hour - 2;
-          const preEatMin = "00";
+          const { isWeekend, minsToWorkout } = getWorkoutSchedule();
           if (minsToWorkout > 0 && minsToWorkout < 180) {
             return (
               <div className="meal-workout-timer">
@@ -142,6 +176,12 @@ export default function MealRecommendation({ day, targets, totals }) {
         <div className="meal-summary-protein">
           Protein hedefi: <strong>{summary.proteinTarget}g</strong>
         </div>
+        {(contextLabel || contextNote) && (
+          <div className="meal-summary-tips" style={{ marginTop: 8 }}>
+            {contextLabel && <div className="meal-summary-tip">• Gün tipi: {contextLabel}</div>}
+            {contextNote && <div className="meal-summary-tip">• {contextNote}</div>}
+          </div>
+        )}
         <div className="meal-summary-tips">
           {summary.tips.map((t, i) => (
             <div key={i} className="meal-summary-tip">• {t}</div>
@@ -156,6 +196,11 @@ export default function MealRecommendation({ day, targets, totals }) {
       <div className="meal-rec-note">
         Öğünleri Beslenme takibine manuel ekleyebilirsin ↑
       </div>
+
+      <div className="meal-rec-title" style={{ marginTop: 18 }}>Ev tipi günlük öneri akışı</div>
+      <SectionMealCard title="Kahvaltı" icon="🍳" meals={homeSections.breakfast} />
+      <SectionMealCard title="Ara Öğün" icon="🥛" meals={homeSections.snack} />
+      <SectionMealCard title="Akşam" icon="🍽️" meals={homeSections.dinner} />
     </div>
   );
 }

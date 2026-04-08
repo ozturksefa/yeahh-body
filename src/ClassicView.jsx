@@ -8,9 +8,9 @@ import NutritionTracker from "./Nutrition";
 import RestTimer from "./RestTimer";
 import WorkoutTimer from "./WorkoutTimer";
 import BlockCard from "./BlockCard";
-import { parseSets } from "./SetTracker";
+import { parseSets } from "./setTrackerUtils";
 
-export default function ClassicView({ user, logout }) {
+export default function ClassicView({ user, logout, ProgramSelector }) {
   const [page, setPage] = useState("program");
   const [day, setDay] = useState(0);
   const [expandedEx, setExpandedEx] = useState(null);
@@ -35,7 +35,9 @@ export default function ClassicView({ user, logout }) {
       const next = { ...prev };
       if (altName === null) delete next[originalName];
       else next[originalName] = altName;
-      try { localStorage.setItem("yb_swaps", JSON.stringify(next)); } catch {}
+      try { localStorage.setItem("yb_swaps", JSON.stringify(next)); } catch {
+        // localStorage may be unavailable in private mode
+      }
       return next;
     });
   };
@@ -47,7 +49,7 @@ export default function ClassicView({ user, logout }) {
   }, []);
 
   useEffect(() => {
-    if (user) getDashboardStats().then(s => setStreak(s.streak || 0)).catch(() => {});
+    if (user) getDashboardStats().then(s => setStreak(s.streak || 0)).catch(() => undefined);
   }, [user]);
 
   const flowRestoredRef = useRef(false);
@@ -56,7 +58,6 @@ export default function ClassicView({ user, logout }) {
     flowRestoredRef.current = true;
     loadFlow().then(saved => {
       if (!saved) return;
-      prevDayRef.current = saved.day;
       setDay(saved.day);
       setWorkoutActive(true);
       setExpandedEx(saved.expandedEx);
@@ -83,14 +84,15 @@ export default function ClassicView({ user, logout }) {
     else if (!workoutActive) clearFlow();
   }, [workoutActive, expandedEx, day]);
 
-  const prevDayRef = useRef(day);
-  useEffect(() => {
-    if (prevDayRef.current !== day) {
-      prevDayRef.current = day;
-      setExpandedEx(null); setWorkoutActive(false); setOpenBlocks({}); setGlobalAllDone(false);
-      clearFlow();
-    }
-  }, [day]);
+  const selectDay = (nextDay) => {
+    if (nextDay === day) return;
+    setExpandedEx(null);
+    setWorkoutActive(false);
+    setOpenBlocks({});
+    setGlobalAllDone(false);
+    clearFlow();
+    setDay(nextDay);
+  };
 
   // Flat exercise list
   const flatExercises = [];
@@ -173,7 +175,9 @@ export default function ClassicView({ user, logout }) {
   const requestWakeLock = async () => {
     try {
       if ("wakeLock" in navigator) wakeLockRef.current = await navigator.wakeLock.request("screen");
-    } catch {}
+    } catch {
+      // wake lock is best-effort only
+    }
   };
   const releaseWakeLock = () => { wakeLockRef.current?.release(); wakeLockRef.current = null; };
 
@@ -243,7 +247,7 @@ export default function ClassicView({ user, logout }) {
             {PROGRAM.days.map((dd, i) => (
               <button key={i} className={`tab ${day === i ? "tab-active" : ""}`}
                 style={day === i ? { background: dd.color, borderColor: dd.color } : {}}
-                onClick={() => setDay(i)}>
+                onClick={() => selectDay(i)}>
                 <div className="tab-t">{dd.title}</div>
                 <div className="tab-s">{dd.sub}</div>
               </button>

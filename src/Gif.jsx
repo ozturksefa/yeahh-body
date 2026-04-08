@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getGifUrl } from "./videoMap";
+import { getGifUrl, getYouTubeSearchUrl } from "./videoMap";
 
 const MULTI_LABELS = {
   "Dumbbell 4 Ways Lateral Raise": ["Öne Kaldırma", "Yana Kaldırma", "Arkaya Kaldırma", "Çapraz Kaldırma"],
@@ -21,13 +21,6 @@ function SingleGif({ url, label, exerciseName }) {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
   const [src, setSrc] = useState(url);
-
-  // URL prop değişince (swap) state'i güncelle
-  useEffect(() => {
-    setSrc(url);
-    setLoading(true);
-    setError(false);
-  }, [url]);
 
   // Retry once on error with cache-bust
   useEffect(() => {
@@ -73,7 +66,7 @@ function SingleGif({ url, label, exerciseName }) {
 }
 
 function YtFallback({ name }) {
-  const ytUrl = `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " exercise form")}`;
+  const ytUrl = getYouTubeSearchUrl(name);
   return (
     <div className="gif-wrap gif-fallback">
       <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="gif-yt-link">
@@ -96,7 +89,7 @@ function ExerciseGif({ name }) {
     return (
       <div className="gif-wrap gif-multi">
         {gifUrl.map((url, i) => (
-          <SingleGif key={i} url={url} label={labels[i] || null} exerciseName={i === 0 ? name : null} />
+          <SingleGif key={`${name}-${url}-${i}`} url={url} label={labels[i] || null} exerciseName={i === 0 ? name : null} />
         ))}
       </div>
     );
@@ -104,7 +97,7 @@ function ExerciseGif({ name }) {
 
   return (
     <div className="gif-wrap">
-      <SingleGif url={gifUrl} exerciseName={name} />
+      <SingleGif key={`${name}-${gifUrl}`} url={gifUrl} exerciseName={name} />
     </div>
   );
 }

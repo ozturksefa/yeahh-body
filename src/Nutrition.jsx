@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
 import "./Nutrition.css";
+import { daysAgoLocal, shiftLocalDate, todayLocalDate, yesterdayLocalDate } from "./dateUtils";
 
 function loadTargets() {
   try { return JSON.parse(localStorage.getItem("yb_targets") || "null") || { calories: 2200, protein: 150, carbs: 250, fat: 70, bodyWeight: 75 }; } catch { return { calories: 2200, protein: 150, carbs: 250, fat: 70, bodyWeight: 75 }; }
@@ -91,7 +92,7 @@ const MULTIPLIERS = [
 ];
 
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return todayLocalDate();
 }
 
 function getMealLabel() {
@@ -106,7 +107,7 @@ function getMealLabel() {
 
 function formatDate(dateStr) {
   const today = todayStr();
-  const yesterday = new Date(Date.now() - 86400000).toISOString().slice(0, 10);
+  const yesterday = yesterdayLocalDate();
   if (dateStr === today) return "Bugün";
   if (dateStr === yesterday) return "Dün";
   const d = new Date(dateStr + "T12:00:00");
@@ -118,14 +119,14 @@ function loadEntries(dateStr) {
 }
 
 function saveEntries(dateStr, entries) {
-  try { localStorage.setItem("yb_nutrition_" + dateStr, JSON.stringify(entries)); } catch {}
+  try { localStorage.setItem("yb_nutrition_" + dateStr, JSON.stringify(entries)); } catch { return }
 }
 
 // Son 7 günden en sık eklenen yemekler
 function getRecentFoods() {
   const counts = {};
   for (let i = 0; i < 7; i++) {
-    const d = new Date(Date.now() - i * 86400000).toISOString().slice(0, 10);
+    const d = daysAgoLocal(i);
     const entries = loadEntries(d);
     entries.forEach(e => {
       const key = e.name;
@@ -187,10 +188,111 @@ function getSmartSuggestions(totals, targets) {
   return suggestions;
 }
 
+function findFoodsByQuery(queries) {
+  const picked = [];
+  const seen = new Set();
+
+  queries.forEach((query) => {
+    const found = QUICK_FOODS.find((food) => food.name.toLowerCase().includes(query.toLowerCase()));
+    if (found && !seen.has(found.name)) {
+      seen.add(found.name);
+      picked.push(found);
+    }
+  });
+
+  return picked;
+}
+
+function getSessionNutritionSuggestions(session, nutritionContext) {
+  if (!session?.post?.completed) return [];
+
+  const pre = session.pre || {};
+  const post = session.post || {};
+  const suggestions = [];
+  const rpe = Number(post.rpe || 0);
+  const shoulderDelta = Number(post.shoulderAfter ?? 0) - Number(pre.shoulder ?? 0);
+  const kneeDelta = Number(post.kneeAfter ?? 0) - Number(pre.knee ?? 0);
+  const spineDelta = Number(post.spineAfter ?? 0) - Number(pre.spine ?? 0);
+  const symptomAfterMax = Math.max(Number(post.shoulderAfter ?? 0), Number(post.kneeAfter ?? 0), Number(post.spineAfter ?? 0));
+  const symptomDeltaMax = Math.max(shoulderDelta, kneeDelta, spineDelta);
+
+  if (rpe >= 8) {
+    suggestions.push({
+      icon: "🍚",
+      text: "Seans yüksek eforlu geçti; bugün protein + karbonhidratı geciktirme.",
+      type: "meal",
+      foods: findFoodsByQuery(["tavuk göğsü (200g)", "pirinç pilavı (200g)", "muz"]),
+    });
+  }
+
+  if (post.cardio === "fazla" || nutritionContext?.dayType === "cardio") {
+    suggestions.push({
+      icon: "💧",
+      text: "Kondisyon yükü yüksek; sıvı, elektrolit ve kolay sindirilen karbonhidrat eklemek iyi olur.",
+      type: "info",
+      foods: findFoodsByQuery(["ayran", "muz", "patates haşlama"]),
+    });
+  }
+
+  if (symptomAfterMax >= 3 || symptomDeltaMax >= 1) {
+    suggestions.push({
+      icon: "🛠",
+      text: "Semptom artışı var; bugün kalori kısmayı değil toparlanmayı ve protein tabanını öncele.",
+      type: "warn",
+      foods: findFoodsByQuery(["somon", "yoğurt (200g)", "ceviz"]),
+    });
+  }
+
+  if (post.nextAction === "azalt" || post.nextAction === "swap") {
+    suggestions.push({
+      icon: "🔁",
+      text: "Bir sonraki seans azalt/swap notu aldı; toparlanma için günü düşük proteinle kapatma.",
+      type: "meal",
+      foods: findFoodsByQuery(["whey protein", "süzme yoğurt", "lor peyniri"]),
+    });
+  }
+
+  return suggestions;
+}
+
 import MealRecommendation from "./MealRecommendation";
 import { PROGRAM3 } from "./data3";
 
-export default function NutritionTracker() {
+function getHybridNutritionContext(day, mode) {
+  if (!day) return null;
+  if (day.type === "offday") {
+    return {
+      dayType: "rest",
+      label: `${day.sub} · Aktif Recovery`,
+      note: mode === "gym"
+        ? "Bugün salonda olsan da beslenme önceliği toparlanma ve protein tabanı."
+        : "Bugün yüklenme yok; protein ve genel toparlanma öncelikli.",
+    };
+  }
+
+  const focus = String(day.focus || "").toLowerCase();
+  if (focus.includes("recovery") || focus.includes("zone 2")) {
+    return {
+      dayType: "cardio",
+      label: `${day.sub} · Recovery + Zone 2`,
+      note: "Uzun aerobik blok için sıvı, elektrolit ve orta düzey karbonhidrat desteği mantıklı.",
+    };
+  }
+  if (focus.includes("athletic volume") || focus.includes("posterior chain")) {
+    return {
+      dayType: "functional",
+      label: `${day.sub} · Hacim Günü`,
+      note: "Bugün protein + karbonhidrat kombinasyonunu eksik bırakma; ana yük hacim ve iş kapasitesi.",
+    };
+  }
+  return {
+    dayType: "strength",
+    label: `${day.sub} · Kuvvet Temelli Gün`,
+    note: "Bugün protein tabanı sabit, antrenman sonrası karbonhidratı geciktirme.",
+  };
+}
+
+export default function NutritionTracker({ currentDay = null, currentMode = null, currentSession = null }) {
   const [targets, setTargets] = useState(loadTargets);
   const [showTargets, setShowTargets] = useState(false);
   const [activeDate, setActiveDate] = useState(todayStr());
@@ -205,13 +307,16 @@ export default function NutritionTracker() {
   const [showMealRec, setShowMealRec] = useState(false);
 
   // Aktif programdan bugünün günü
-  const todayDay = (() => {
+  const fallbackDay = (() => {
     const days = ['Pazar','Pazartesi','Salı','Çarşamba','Perşembe','Cuma','Cumartesi'];
     const todayName = days[new Date().getDay()];
     const dayMap = { 'Salı': 1, 'Perşembe': 2, 'Cumartesi': 3, 'Pazar': 4 };
     const dayId = dayMap[todayName];
     return dayId ? PROGRAM3.days.find(d => d.id === dayId) : PROGRAM3.days.find(d => d.type === 'offday');
   })();
+
+  const activeDay = currentDay || fallbackDay;
+  const nutritionContext = getHybridNutritionContext(activeDay, currentMode);
 
   useEffect(() => {
     setEntries(loadEntries(activeDate));
@@ -228,11 +333,14 @@ export default function NutritionTracker() {
     fat: acc.fat + (e.fat || 0),
   }), { calories: 0, protein: 0, carbs: 0, fat: 0 });
 
-  const suggestions = getSmartSuggestions(totals, targets);
+  const suggestions = [
+    ...getSmartSuggestions(totals, targets),
+    ...getSessionNutritionSuggestions(currentSession, nutritionContext),
+  ];
 
   const saveTargets = (newTargets) => {
     setTargets(newTargets);
-    try { localStorage.setItem("yb_targets", JSON.stringify(newTargets)); } catch {}
+    try { localStorage.setItem("yb_targets", JSON.stringify(newTargets)); } catch { return }
   };
 
   const addFood = (food, multiplier = 1) => {
@@ -276,9 +384,7 @@ export default function NutritionTracker() {
   };
 
   const navigateDay = (dir) => {
-    const d = new Date(activeDate + "T12:00:00");
-    d.setDate(d.getDate() + dir);
-    const next = d.toISOString().slice(0, 10);
+    const next = shiftLocalDate(activeDate, dir);
     if (next <= todayStr()) setActiveDate(next);
   };
 
@@ -396,6 +502,26 @@ export default function NutritionTracker() {
             </div>
           ))}
         </div>
+      )}
+
+      {isToday && nutritionContext && (
+        <>
+          <button className="nutri-quick-toggle"
+            onClick={() => setShowMealRec(s => !s)}>
+            {showMealRec ? "✕ Öğün Önerisini Kapat" : "🍽 Hibrit Gününe Göre Öğün Önerisi"}
+          </button>
+
+          {showMealRec && (
+            <MealRecommendation
+              day={activeDay}
+              targets={targets}
+              totals={totals}
+              dayTypeOverride={nutritionContext.dayType}
+              contextLabel={nutritionContext.label}
+              contextNote={nutritionContext.note}
+            />
+          )}
+        </>
       )}
 
       {/* Miktar seçici popup */}

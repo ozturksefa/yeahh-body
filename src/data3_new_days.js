@@ -3,6 +3,7 @@
 // Araştırma kaynakları: Dan John/StrongFirst, NSCA TSAC, PMC Tactical Athlete Review,
 // Firefighter Functional Fitness (Kerrigan & Moss), Military.com (Stew Smith)
 
+export const PROGRAM3_NEW_DAYS = {
   days: [
 
     // ══════════════════════════════════════════════════════════════
@@ -246,3 +247,4 @@
     },
 
   ],
+};

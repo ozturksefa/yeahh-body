@@ -1,16 +1,18 @@
-import { useState, useEffect } from "react";
+import { lazy, Suspense, useEffect, useState } from "react";
 import { supabase } from "./supabaseClient";
 import AuthScreen from "./Auth";
-import ClassicView from "./ClassicView";
-import Program2View from "./Program2View";
-import Program3View from "./Program3View";
-import HomeView from "./HomeView";
 import "./App.css";
+
+const ClassicView = lazy(() => import("./ClassicView"));
+const Program2View = lazy(() => import("./Program2View"));
+const Program3View = lazy(() => import("./Program3View"));
+const HomeView = lazy(() => import("./HomeView"));
+const HybridView = lazy(() => import("./HybridView"));
 
 export default function App() {
   const [user, setUser] = useState(undefined);
   const [programMode, setProgramMode] = useState(() => {
-    try { return localStorage.getItem("yb_program_mode") || "athletic"; } catch { return "athletic"; }
+    try { return localStorage.getItem("yb_program_mode") || "hybrid"; } catch { return "hybrid"; }
   });
 
   useEffect(() => {
@@ -34,6 +36,21 @@ export default function App() {
 
   if (!user) return <AuthScreen />;
 
+  const renderProgram = (node) => (
+    <Suspense
+      fallback={
+        <div className="auth-screen">
+          <div className="auth-box">
+            <div className="auth-brand">YEAHH BODY</div>
+            <div style={{ color: "#666", marginTop: 16 }}>Program yükleniyor...</div>
+          </div>
+        </div>
+      }
+    >
+      {node}
+    </Suspense>
+  );
+
   const logout = async () => {
     await supabase.auth.signOut();
     setUser(null);
@@ -41,12 +58,13 @@ export default function App() {
 
   const setMode = (mode) => {
     setProgramMode(mode);
-    try { localStorage.setItem("yb_program_mode", mode); } catch {}
+    try { localStorage.setItem("yb_program_mode", mode); } catch { return }
   };
 
   const ProgramSelector = () => (
     <div className="prog-mode-bar">
       {[
+        { id: "hybrid",  label: "🎯 Hibrit" },
         { id: "home",     label: "🏠 Ev" },
         { id: "classic",  label: "Klasik Split" },
         { id: "full",     label: "Full Activation" },
@@ -61,8 +79,9 @@ export default function App() {
     </div>
   );
 
-  if (programMode === "home")     return <HomeView user={user} logout={logout} ProgramSelector={ProgramSelector} />;
-  if (programMode === "full")     return <Program2View user={user} logout={logout} ProgramSelector={ProgramSelector} />;
-  if (programMode === "athletic") return <Program3View user={user} logout={logout} ProgramSelector={ProgramSelector} />;
-  return <ClassicView user={user} logout={logout} ProgramSelector={ProgramSelector} />;
+  if (programMode === "hybrid")  return renderProgram(<HybridView user={user} logout={logout} ProgramSelector={ProgramSelector} />);
+  if (programMode === "home")     return renderProgram(<HomeView user={user} logout={logout} ProgramSelector={ProgramSelector} />);
+  if (programMode === "full")     return renderProgram(<Program2View user={user} logout={logout} ProgramSelector={ProgramSelector} />);
+  if (programMode === "athletic") return renderProgram(<Program3View user={user} logout={logout} ProgramSelector={ProgramSelector} />);
+  return renderProgram(<ClassicView user={user} logout={logout} ProgramSelector={ProgramSelector} />);
 }

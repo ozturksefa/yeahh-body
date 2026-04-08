@@ -1,16 +1,48 @@
-# React + Vite
+# Yeahh Body
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Kişiselleştirilmiş antrenman ve takip uygulaması. Uygulama artık hibrit bir omurga kullanır:
+- aynı haftalık sistem
+- `Ev` ve `Macfit` için eşdeğer varyasyonlar
+- skill, beslenme, durum ve ilerleme takibi
 
-Currently, two official plugins are available:
+## Geliştirme
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react) uses [Oxc](https://oxc.rs)
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react-swc) uses [SWC](https://swc.rs/)
+```bash
+npm install
+npm run dev
+```
 
-## React Compiler
+## Production Build
 
-The React Compiler is not enabled on this template because of its impact on dev & build performances. To add it, see [this documentation](https://react.dev/learn/react-compiler/installation).
+```bash
+npm run build
+npm run preview
+```
 
-## Expanding the ESLint configuration
+## Ortam Değişkenleri
 
-If you are developing a production application, we recommend using TypeScript with type-aware lint rules enabled. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) for information on how to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+`.env.example` dosyasını referans al:
+
+```bash
+cp .env.example .env.local
+```
+
+Tanımlanabilen değişkenler:
+- `VITE_SUPABASE_URL`
+- `VITE_SUPABASE_ANON_KEY`
+
+Not: Bu değişkenler tanımlanmazsa uygulama mevcut public fallback Supabase config ile çalışmaya devam eder. Production deploy için env üzerinden tanımlaman önerilir.
+
+## Production Notları
+
+- Build artık lazy-loading ve code-splitting kullanır.
+- Hibrit ekran bugünün gününü yerel tarihe göre otomatik açar.
+- Workout tracker, beslenme, dashboard ve hibrit görünüm aynı yerel takvim mantığını paylaşır.
+- Service worker ve cache temizleme için agresif development davranışı kaldırılmıştır.
+
+## Önerilen Deploy Kontrol Listesi
+
+- `VITE_SUPABASE_URL` ve `VITE_SUPABASE_ANON_KEY` tanımlı olsun
+- `npm run build` temiz geçsin
+- Giriş / kayıt / seans tamamlama akışları canlı ortamda test edilsin
+- Supabase RLS ve auth redirect ayarları deploy domainine göre doğrulansın

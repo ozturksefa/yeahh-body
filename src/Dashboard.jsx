@@ -1,11 +1,12 @@
-import { useState, useEffect } from "react";
+import { useEffect, useMemo, useState } from "react";
 import {
   LineChart, Line, BarChart, Bar, XAxis, YAxis,
   Tooltip, ResponsiveContainer, CartesianGrid, ReferenceLine
 } from "recharts";
 import {
-  getDashboardStats, getHistory, getWeeklyStats
+  getDashboardStats, getWeeklyStats
 } from "./tracker";
+import { todayLocalDate } from "./dateUtils";
 
 // ─── Renk paleti ───────────────────────────────────────────────
 const C = {
@@ -22,7 +23,7 @@ function loadMeasurements() {
   try { return JSON.parse(localStorage.getItem(BODY_KEY) || "[]"); } catch { return []; }
 }
 function saveMeasurements(data) {
-  try { localStorage.setItem(BODY_KEY, JSON.stringify(data)); } catch {}
+  try { localStorage.setItem(BODY_KEY, JSON.stringify(data)); } catch { return }
 }
 
 const MEASURE_FIELDS = [
@@ -42,7 +43,7 @@ function BodyTracker() {
 
   const save = () => {
     if (Object.keys(form).length === 0) return;
-    const entry = { date: new Date().toISOString().slice(0,10), ...form };
+    const entry = { date: todayLocalDate(), ...form };
     const next = [entry, ...entries].slice(0, 52); // son 52 hafta
     setEntries(next);
     saveMeasurements(next);
@@ -326,10 +327,7 @@ function MuscleChart({ data }) {
 
 // ─── Deload Uyarısı ─────────────────────────────────────────────
 function DeloadAlert({ stats }) {
-  const [rpeHistory, setRpeHistory] = useState([]);
-
-  useEffect(() => {
-    // localStorage'dan son 4 haftanın ortalama RPE'sini al
+  const rpeHistory = useMemo(() => {
     const entries = [];
     for (let i = 0; i < localStorage.length; i++) {
       const key = localStorage.key(i);
@@ -338,7 +336,7 @@ function DeloadAlert({ stats }) {
         if (val > 0) entries.push(val);
       }
     }
-    setRpeHistory(entries);
+    return entries;
   }, []);
 
   const recentWorkouts = stats?.workoutCount || 0;
@@ -388,7 +386,7 @@ function SessionNotes() {
   const save = () => {
     if (!text.trim()) return;
     const entry = {
-      date: new Date().toISOString().slice(0,10),
+      date: todayLocalDate(),
       time: new Date().toLocaleTimeString("tr-TR", { hour:"2-digit", minute:"2-digit" }),
       text: text.trim(),
       energy,
@@ -396,7 +394,7 @@ function SessionNotes() {
     };
     const next = [entry, ...notes].slice(0, 50);
     setNotes(next);
-    try { localStorage.setItem(SESSION_NOTES_KEY, JSON.stringify(next)); } catch {}
+    try { localStorage.setItem(SESSION_NOTES_KEY, JSON.stringify(next)); } catch { return }
     setText(""); setEnergy(3); setSleep(7);
   };
 

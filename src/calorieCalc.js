@@ -47,7 +47,7 @@ function getMET(name) {
 }
 
 // Set string'inden aktif süre (dakika) hesapla
-function parseDurationMin(setsStr, exName) {
+function parseDurationMin(setsStr) {
   if (!setsStr) return 3;
   const s = setsStr.toLowerCase();
 
@@ -83,7 +83,6 @@ function parseDurationMin(setsStr, exName) {
     const sets = parseInt(repsMatch[1]);
     const reps = parseInt(repsMatch[2]);
     const isHeavy = /heavy|ağır|mak|max/.test(s);
-    const isStrength = /3.5|5.6|1.4/.test(String(getMET(exName)));
 
     // Rep başına süre — eğer "5sn indir" gibi tempo notu varsa onu kullan
     const tempoMatch = s.match(/(\d+)sn\s*(?:indir|uzan|tut|hold)/);

@@ -1,8 +1,9 @@
 // Takip Sistemi — Supabase + localStorage fallback
 import { supabase } from './supabaseClient';
+import { formatLocalDate } from './dateUtils';
 
 function todayStr() {
-  return new Date().toISOString().slice(0, 10);
+  return formatLocalDate(new Date());
 }
 
 async function getUser() {
@@ -108,7 +109,7 @@ export async function loadWorkout(dayIndex) {
 
 export async function markWorkoutDone(dayIndex) {
   const user = await getUser();
-  if (!user) return;
+  if (!user) { fallbackMarkDone(dayIndex); return; }
 
   await supabase
     .from('workouts')
@@ -120,7 +121,7 @@ export async function markWorkoutDone(dayIndex) {
 
 export async function resetWorkout(dayIndex) {
   const user = await getUser();
-  if (!user) return;
+  if (!user) { fallbackResetWorkout(dayIndex); return; }
 
   await supabase
     .from('workouts')
@@ -179,8 +180,6 @@ export async function suggestWeight(exerciseName, targetSets, targetReps, isUppe
 
   // Son seansın tamamlanma durumu
   const lastAllDone = lastSets.every(s => s.done && (s.reps || 0) >= targetReps);
-  const lastAvgReps = lastSets.reduce((a,s) => a + (s.reps||0), 0) / lastSets.length;
-
   // Önceki seansin tamamlanma durumu (2 ardışık kontrol)
   const prevSets = prev?.sets || [];
   const prevAllDone = prevSets.length > 0 && prevSets.every(s => s.done && (s.reps||0) >= targetReps);
@@ -250,7 +249,7 @@ export async function getWeeklyStats() {
 
   const now = new Date();
   const ws = new Date(now); ws.setDate(now.getDate() - now.getDay() + 1);
-  const wsStr = ws.toISOString().slice(0, 10);
+  const wsStr = formatLocalDate(ws);
 
   const { data } = await supabase
     .from('workouts')
@@ -320,7 +319,6 @@ export async function getDashboardStats() {
   }
 
   // Streak hesapla
-  const sortedDates = [...dateSet].sort().reverse();
   let streak = 0;
   const today = todayStr();
   // Haftalık antrenman günleri: Sal=2, Per=4, Cum=6, Paz=0
@@ -330,7 +328,7 @@ export async function getDashboardStats() {
   // Son 28 günü kontrol et
   for (let i = 0; i < 28; i++) {
     const dow = checkDate.getDay();
-    const ds = checkDate.toISOString().slice(0, 10);
+    const ds = formatLocalDate(checkDate);
     if (trainingDays.includes(dow)) {
       if (ds <= today && dateSet.has(ds)) {
         streak++;
@@ -343,7 +341,7 @@ export async function getDashboardStats() {
 
   // PR'lar — en yüksek ağırlık ilk 5
   const prs = Object.entries(exerciseBests)
-    .filter(([_, v]) => v.weight > 0)
+    .filter(([, v]) => v.weight > 0)
     .sort((a, b) => b[1].weight - a[1].weight)
     .slice(0, 8)
     .map(([name, v]) => ({ name, weight: v.weight, reps: v.reps, date: v.date }));
@@ -355,8 +353,8 @@ export async function getDashboardStats() {
     end.setDate(end.getDate() - w * 7);
     const start = new Date(end);
     start.setDate(start.getDate() - 6);
-    const startStr = start.toISOString().slice(0, 10);
-    const endStr = end.toISOString().slice(0, 10);
+    const startStr = formatLocalDate(start);
+    const endStr = formatLocalDate(end);
 
     let vol = 0;
     let count = 0;
@@ -394,14 +392,55 @@ function wK(di) { return `${todayStr()}_day${di}`; }
 function fallbackSave(di,u) { const a=lsL(); a[wK(di)]={...(a[wK(di)]||{}),...u,updatedAt:Date.now()}; lsS(a); }
 function fallbackSaveEx(di,n,s) { const a=lsL(),k=wK(di); if(!a[k])a[k]={exercises:{},startTime:Date.now()}; a[k].exercises[n]=s; lsS(a); }
 function fallbackLoadEx(di,n) { return lsL()[wK(di)]?.exercises?.[n]||null; }
-function fallbackLoadWorkout(di) { return lsL()[wK(di)]||null; }
+function fallbackLoadWorkout(di) {
+  const workout = lsL()[wK(di)] || null;
+  if (!workout) return null;
+  return {
+    ...workout,
+    startTime: workout.startTime ?? workout.start_time ?? null,
+    endTime: workout.endTime ?? workout.end_time ?? null,
+    completed: !!workout.completed,
+  };
+}
+function fallbackMarkDone(di) {
+  const a = lsL();
+  const key = wK(di);
+  const now = Date.now();
+  const existing = a[key] || { exercises: {}, startTime: now };
+  a[key] = {
+    ...existing,
+    startTime: existing.startTime ?? existing.start_time ?? now,
+    start_time: existing.startTime ?? existing.start_time ?? now,
+    endTime: now,
+    end_time: now,
+    completed: true,
+    updatedAt: now,
+  };
+  lsS(a);
+}
+function fallbackResetWorkout(di) {
+  const a = lsL();
+  const key = wK(di);
+  const now = Date.now();
+  const existing = a[key] || { exercises: {} };
+  a[key] = {
+    ...existing,
+    startTime: now,
+    start_time: now,
+    endTime: null,
+    end_time: null,
+    completed: false,
+    updatedAt: now,
+  };
+  lsS(a);
+}
 function fallbackGetHistory(n,l) {
   const a=lsL(),r=[];
   for(const[k,w]of Object.entries(a)){if(w.exercises?.[n])r.push({date:k.split("_")[0],sets:w.exercises[n]});}
   r.sort((a,b)=>b.date.localeCompare(a.date)); return r.slice(0,l);
 }
 function fallbackWeeklyStats() {
-  const a=lsL(),now=new Date(),ws=new Date(now);ws.setDate(now.getDate()-now.getDay()+1);const wsS=ws.toISOString().slice(0,10);
+  const a=lsL(),now=new Date(),ws=new Date(now);ws.setDate(now.getDate()-now.getDay()+1);const wsS=formatLocalDate(ws);
   let w=0,s=0,d=0;
   for(const[k,wo]of Object.entries(a)){const dt=k.split("_")[0];if(dt>=wsS){w++;for(const sets of Object.values(wo.exercises||{}))s+=Array.isArray(sets)?sets.filter(x=>x.done).length:0;if(wo.startTime&&wo.endTime)d+=wo.endTime-wo.startTime;}}
   return{workouts:w,totalSets:s,totalDuration:Math.round(d/60000)};

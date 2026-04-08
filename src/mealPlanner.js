@@ -242,6 +242,146 @@ const MEALS = {
   ],
 };
 
+const HOME_MEAL_SECTIONS = {
+  breakfast: [
+    {
+      name: "Yumurta + peynir tabağı",
+      desc: "En pratik yüksek protein kahvaltı",
+      foods: [
+        { name: "Yumurta (3 adet)", cal: 234, pro: 18, carb: 3, fat: 15 },
+        { name: "Beyaz peynir / lor (60g)", cal: 120, pro: 12, carb: 3, fat: 7 },
+        { name: "Tam buğday ekmek (2 dilim)", cal: 160, pro: 6, carb: 30, fat: 2 },
+        { name: "Domates + salatalık", cal: 40, pro: 2, carb: 8, fat: 0 },
+      ],
+      total: { cal: 554, pro: 38, carb: 44, fat: 24 },
+      tags: ['strength', 'calisthenics', 'functional', 'rest'],
+      tip: "Evde en kolay sürdürülen seçeneklerden biri."
+    },
+    {
+      name: "Yoğurtlu yulaf kasesi",
+      desc: "Hafif ama tok tutan kahvaltı",
+      foods: [
+        { name: "Süzme yoğurt (200g)", cal: 173, pro: 20, carb: 8, fat: 7 },
+        { name: "Yulaf (50g)", cal: 190, pro: 7, carb: 31, fat: 4 },
+        { name: "Muz (1 adet)", cal: 105, pro: 1, carb: 27, fat: 0 },
+        { name: "Ceviz (15g)", cal: 98, pro: 2, carb: 2, fat: 10 },
+      ],
+      total: { cal: 566, pro: 30, carb: 68, fat: 21 },
+      tags: ['cardio', 'calisthenics', 'functional'],
+      tip: "Sabah sindirimi rahatsa çok iyi gider."
+    },
+    {
+      name: "Menemen + yoğurt",
+      desc: "Ev tipi, ekonomik ve doyurucu",
+      foods: [
+        { name: "Menemen (3 yumurta)", cal: 260, pro: 19, carb: 8, fat: 16 },
+        { name: "Yoğurt (150g)", cal: 90, pro: 7, carb: 7, fat: 4 },
+        { name: "Tam buğday ekmek (2 dilim)", cal: 160, pro: 6, carb: 30, fat: 2 },
+      ],
+      total: { cal: 510, pro: 32, carb: 45, fat: 22 },
+      tags: ['strength', 'rest', 'functional'],
+      tip: "Klasik ev kahvaltısı gibi hissettirir, sürdürülebilirliği yüksektir."
+    },
+  ],
+  snack: [
+    {
+      name: "Kefir + muz",
+      desc: "5 dakikalık en kolay ara öğün",
+      foods: [
+        { name: "Kefir (250ml)", cal: 155, pro: 9, carb: 12, fat: 8 },
+        { name: "Muz (1 adet)", cal: 105, pro: 1, carb: 27, fat: 0 },
+      ],
+      total: { cal: 260, pro: 10, carb: 39, fat: 8 },
+      tags: ['cardio', 'strength', 'calisthenics', 'functional'],
+      tip: "Antrenman sonrası da rahat kullanılır."
+    },
+    {
+      name: "Yoğurt + meyve + ceviz",
+      desc: "Basit, dengeli ve ulaşılabilir",
+      foods: [
+        { name: "Yoğurt (200g)", cal: 120, pro: 10, carb: 10, fat: 5 },
+        { name: "Elma veya muz", cal: 90, pro: 1, carb: 22, fat: 0 },
+        { name: "Ceviz (15g)", cal: 98, pro: 2, carb: 2, fat: 10 },
+      ],
+      total: { cal: 308, pro: 13, carb: 34, fat: 15 },
+      tags: ['rest', 'cardio', 'calisthenics'],
+      tip: "Ofiste ya da evde kolay uygulanır."
+    },
+    {
+      name: "Haşlanmış yumurta + ayran",
+      desc: "Ekonomik protein odaklı ara öğün",
+      foods: [
+        { name: "Haşlanmış yumurta (2 adet)", cal: 156, pro: 12, carb: 2, fat: 10 },
+        { name: "Ayran (300ml)", cal: 105, pro: 6, carb: 8, fat: 5 },
+      ],
+      total: { cal: 261, pro: 18, carb: 10, fat: 15 },
+      tags: ['strength', 'functional', 'rest'],
+      tip: "Protein açığını kapatmak için iyi kısa yol."
+    },
+  ],
+  dinner: [
+    {
+      name: "Tavuk + pilav/bulgur + salata",
+      desc: "En güvenli ana akşam öğünü",
+      foods: [
+        { name: "Tavuk göğsü (180-200g)", cal: 330, pro: 55, carb: 0, fat: 7 },
+        { name: "Pirinç pilavı / bulgur (180g pişmiş)", cal: 220, pro: 5, carb: 46, fat: 2 },
+        { name: "Salata + 1 tk zeytinyağı", cal: 70, pro: 2, carb: 6, fat: 5 },
+      ],
+      total: { cal: 620, pro: 62, carb: 52, fat: 14 },
+      tags: ['strength', 'functional', 'cardio', 'calisthenics'],
+      tip: "Antrenman gününde karbonhidratı biraz artır."
+    },
+    {
+      name: "Kuru bakliyat + yoğurt",
+      desc: "Ev yemeği mantığında, ekonomik seçenek",
+      foods: [
+        { name: "Kuru fasulye / nohut (1 büyük kase)", cal: 320, pro: 18, carb: 45, fat: 8 },
+        { name: "Pirinç veya bulgur (120g pişmiş)", cal: 150, pro: 3, carb: 31, fat: 1 },
+        { name: "Yoğurt (200g)", cal: 120, pro: 10, carb: 10, fat: 5 },
+      ],
+      total: { cal: 590, pro: 31, carb: 86, fat: 14 },
+      tags: ['rest', 'cardio', 'functional'],
+      tip: "Recovery günlerinde de çok iş görür."
+    },
+    {
+      name: "Köfte + patates/pirinç",
+      desc: "Klasik akşam yemeği, ulaşılabilir",
+      foods: [
+        { name: "Köfte (180g)", cal: 360, pro: 32, carb: 4, fat: 24 },
+        { name: "Patates veya pirinç", cal: 190, pro: 4, carb: 38, fat: 2 },
+        { name: "Salata", cal: 40, pro: 2, carb: 6, fat: 1 },
+      ],
+      total: { cal: 590, pro: 38, carb: 48, fat: 27 },
+      tags: ['strength', 'calisthenics', 'rest'],
+      tip: "Evde herkesle yenebilecek tipte bir öğün."
+    },
+  ],
+};
+
+function pickSectionMeals(section, dayType) {
+  const pool = HOME_MEAL_SECTIONS[section] || [];
+  return pool
+    .map((meal) => ({
+      ...meal,
+      score: meal.tags.includes(dayType) ? 2 : meal.tags.includes('rest') ? 1 : 0,
+    }))
+    .sort((a, b) => b.score - a.score)
+    .slice(0, 2)
+    .map((meal) => {
+      const { score: _score, ...rest } = meal;
+      return rest;
+    });
+}
+
+export function getHomeMealSections(dayType) {
+  return {
+    breakfast: pickSectionMeals('breakfast', dayType),
+    snack: pickSectionMeals('snack', dayType),
+    dinner: pickSectionMeals('dinner', dayType),
+  };
+}
+
 // ─── ANA FONKSİYON ─────────────────────────────────────────────
 export function getMealPlan({ dayType, targets, totals, workoutKcal }) {
   const mealTime = getMealTime();
@@ -263,7 +403,7 @@ export function getMealPlan({ dayType, targets, totals, workoutKcal }) {
     return {
       meals: [],
       summary: {
-        ...buildDaySummary({ dayType, targets, adjustedCal, workoutKcal, bodyWeight }),
+        ...buildDaySummary({ dayType, adjustedCal, workoutKcal, bodyWeight }),
         fasted: true,
         fastsUntil: hour + 1,
       },
@@ -290,12 +430,12 @@ export function getMealPlan({ dayType, targets, totals, workoutKcal }) {
   const topPicks = scored.slice(0, 2);
 
   // Günlük özet
-  const summary = buildDaySummary({ dayType, targets, adjustedCal, workoutKcal, bodyWeight });
+  const summary = buildDaySummary({ dayType, adjustedCal, workoutKcal, bodyWeight });
 
   return { meals: topPicks, summary, mealTime, adjustedCal };
 }
 
-function buildDaySummary({ dayType, targets, adjustedCal, workoutKcal, bodyWeight }) {
+function buildDaySummary({ dayType, adjustedCal, workoutKcal, bodyWeight }) {
   const typeLabels = {
     strength: 'Kuvvet antrenmanı',
     calisthenics: 'Kalistenik antrenman',

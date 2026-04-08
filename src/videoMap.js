@@ -145,8 +145,6 @@ const GIF_MAP = {
   "Standing Half Forward Bend":       "BbfB8Gb",  // basic toe touch (male)
   "Lizard Pose Left":                 "2Dk4xQV",  // rocking frog stretch (derin kalça/kasık açılımı)
   "Lizard Pose Right":                "2Dk4xQV",
-  "Supine Spinal Twist Right":        "6sYyrRX",  // bent knee lying twist (male)
-  "Supine Spinal Twist Left":         "6sYyrRX",
 
   // ══════════════════════════════════════════════════════
   // ALTERNATİF HAREKETLER (swap için)
@@ -185,7 +183,6 @@ const GIF_MAP = {
   "Cable Pull Through":              "OM46QHm",  // cable pull through (with rope)
   "Cable Reverse Curl":              "eOG0r6v",  // cable reverse curl
   "Cable Reverse Fly":               "PQcUlDi",  // cable supine reverse fly
-  "Chest Supported Row":             "dmgMp3n",  // barbell incline row
   "Child's Pose to Cobra Pose (MAC+)": "XPUDTt7",  // pike-to-cobra push-up
   "Chin Up":                         "MaMuGH6",  // lever assisted chin-up
   "Close Grip Pulldown":             "4LoWllp",  // band fixed back close grip pulldown
@@ -260,7 +257,6 @@ const GIF_MAP = {
   "Romanian Deadlift (hızlı tempo)": "wQ2c4XD",  // barbell romanian deadlift
   "Rowing Machine (omuz yorgunsa)":  "vpQaQkH",  // ski ergometer
   "SCM Stretch":                     "oQRJYkC",  // side push neck stretch
-  "Scapula Pull Up": "uTBt1HV",  // scapular pull-up
   "Side Plank Hip Dip":              "VO2qeJg",  // side plank hip adduction
   "Side Plank Leg Raise Left (MAC+)":  "5VXmnV5",  // bodyweight incline side plank
   "Side Plank Leg Raise Right (MAC+)": "5VXmnV5",  // bodyweight incline side plank
@@ -270,7 +266,6 @@ const GIF_MAP = {
   "Side-lying Hip Abduction":        "WL4EmxJ",  // side bridge hip abduction
   "Single Arm Pulldown":             "U5INZY6",  // cable one arm pulldown
   "Single Leg Calf Raise":           "1kB3Wmk",  // dumbbell single leg calf raise
-  "Single Leg Glute Bridge":         "rmEukuS",  // single leg bridge
   "Single Leg RDL":                  "gKozT8X",  // dumbbell single leg deadlift
   "Ski Erg":                         "vpQaQkH",  // ski ergometer
   "Skull Crusher":                   "h8LFzo9",  // barbell lying triceps extension skull crusher
@@ -296,7 +291,6 @@ const GIF_MAP = {
   "Wrist Circles":                   "2zNKRUB",  // wrist circles
   "Wrist Flexion & Extension":       "82LxxkW",  // barbell wrist curl
   "Clamshell":                       "c8f5cSY",  // side lying hip adduction
-  "Hollow Body Hold": "iny3m5y",  // dead bug (aynı pozisyon)
   "Nordic Hamstring Curl":           "ZSY3MsL",  // self assisted inverse leg curl (on floor)
   "Doorway Chest Stretch":           "3uj0Ozg",  // dynamic chest stretch
   "Lateral Step Up":                 "76vfTdU",  // dumbbell step up single leg balance
@@ -310,7 +304,6 @@ const GIF_MAP = {
   // ══ ATLETİK KALİSTENİK EK ══
   "Assisted Pull-up": "kiJ4Z2K",
   "Full Dip": "9WTm7dq",
-  "Wall Handstand Hold": "XooAdhl",
   "Muscle-up Prep": "pM07UxU",
   "Support Hold": "jTkSc6o",
   // ══ DATASET DOĞRULANMIŞ — Program 2 & 3 ══
@@ -357,7 +350,6 @@ const GIF_MAP = {
   "Scapula Pull Up": "uTBt1HV",
   "Dip Negative": "PAgTVaK",
   "Parallel Bar Support Hold": "9WTm7dq",
-  "Hollow Body Hold": "iny3m5y",
   "DB Overhead Press": "84RyJf8",
   "Cable Fly": "tBWXbIT",
   "DB Lateral Raise": "DsgkuIt",
@@ -370,12 +362,12 @@ const GIF_MAP = {
   "Knee Tuck Hold": "UpWmA5E",
 
   // ─── YENİ HAREKETLER (program güncellemesi) ───────────────────
-  'Cat-Cow Mobilite':               'MSfvriJ',  // skin the cat — closest cat-cow
+  'Cat-Cow Mobilite':               null,        // YT: cat-cow mobility
   'Hip Hinge':                      'XlZ4lAC',  // barbell good morning — hip hinge pattern
   'Goblet Squat':                   'yn8yg1r',  // dumbbell goblet squat
   'Goblet Squat (ağırlıksız)':      'ZA8b5hc',  // kettlebell goblet squat
   'Goblet Squat (Heavy)':           'yn8yg1r',  // dumbbell goblet squat
-  'Scapular Wall Slide':            'uTBt1HV',  // scapular pull-up — best match
+  'Scapular Wall Slide':            null,        // YT: scapular wall slide
   'Band Face Pull':                 'tc5dYrf',  // band standing rear delt row — closest
   'Supine Spinal Twist':            '6sYyrRX',  // bent knee lying twist
   'Supine Spinal Twist Right':      '6sYyrRX',
@@ -390,7 +382,7 @@ const GIF_MAP = {
   'Hamstring Stretch':              '99rWm7w',  // hamstring stretch
   'Dead Hang Max':                  'uWpxD4v',  // arm slingers hanging
   'Shoulder CARs':                  'bmBf7LN',  // dumbbell lying external shoulder rotation
-  'Hip Circle':                     'vIICElP',  // band lying hip internal rotation — best available
+  'Hip Circle':                     null,        // YT: hip circles mobility
 
   // ─── KONDİSYON / DEVRE — YouTube fallback ─────────────────────
 
@@ -403,6 +395,7 @@ const GIF_MAP = {
 
   // ─── EV PROGRAMI HAREKETLERİ ──────────────────────────────────
   'Diamond Push-up':                  'soIB2rj',  // diamond push-up
+  'Incline Push-up':                  'B1EVP9F',  // incline push-up
   'Archer Push-up':                   'A9qxk2F',  // archer push up
   'Pike Push-up':                     'sVvXT5J',  // exercise ball pike push up — closest
   'Chair Dip':                        'J60bN17',  // assisted triceps dip (kneeling)
@@ -414,16 +407,17 @@ const GIF_MAP = {
   'Wall Handstand Hold':              'XooAdhl',  // handstand
   'Wall Handstand Hold Max':          'XooAdhl',  // handstand
   'Inverted Row (Masa Altı)':         'bZGHsAZ',  // inverted row
+  'Tempo Inverted Row':               'bZGHsAZ',  // inverted row tempo varyasyonu
   'Inverted Row Max Test':            'bZGHsAZ',  // inverted row
   'Pistol Squat Progression':         'nqs5HGV',  // single leg squat (pistol) male
   'Good Morning (Ağırlıksız)':        'XlZ4lAC',  // barbell good morning — form ref
   'Hip Thrust (Sandalye)':            'qKBpF7I',  // barbell glute bridge
-  'Single Leg Glute Bridge':          'GibBPPg',  // glute bridge march
+  'Single Leg Glute Bridge':          'rmEukuS',  // single leg bridge with outstretched leg
   'Floor L-sit Tuck Hold':            'UpWmA5E',  // l-sit on floor
   'Chair L-sit Tuck Hold':            'UpWmA5E',  // l-sit on floor — ref
   'L-sit Max Süre':                   'UpWmA5E',
   'L-sit Leg Extension':              'UpWmA5E',
-  'Hollow Body Hold':                 null,        // YT: hollow body hold tutorial
+  'Hollow Body Hold':                 'iny3m5y',  // dead bug / hollow family closest
   'External Rotation (Towel/Yerçekimi)': 'bmBf7LN', // dumbbell lying external shoulder rotation
   'Wrist Rotation':                   '2zNKRUB',  // wrist circles
   'Shoulder Cross Stretch':           null,        // YT: cross body shoulder stretch
@@ -432,6 +426,9 @@ const GIF_MAP = {
   'Push-up Max Test':                 'A9qxk2F',  // push-up family ref
   'Copenhagen Plank (Sandalye)':      null,        // YT: copenhagen plank
   'Bulgarian Split Squat (Sandalye)': 'VaP75jl',  // barbell rear lunge — form ref
+  'Tek Ayak Denge Hold':              '1kB3Wmk',  // single leg stance closest
+  'Single Leg Balance Reach (Y-Balance)': '76vfTdU', // single leg balance closest
+  'Tek Ayak RDL (Denge Odaklı)':      'gKozT8X',  // single leg RDL
 
   'Side Plank': '5VXmnV5',  // bodyweight incline side plank
 
@@ -441,7 +438,36 @@ const GIF_MAP = {
 
 const GIF_BASE = "https://static.exercisedb.dev/media/";
 
+const FORCE_YT_FALLBACK = new Set([
+  "Cat-Cow Mobilite",
+  "Chin Tuck",
+  "Scapular Wall Slide",
+  "Hip Circle",
+  "Shoulder Cross Stretch",
+  "Hollow Body Hold",
+  "Hızlı Yürüyüş",
+  "Copenhagen Plank (Sandalye)",
+  "Tek Ayak Denge Hold",
+  "Single Leg Balance Reach (Y-Balance)",
+  "Wall Sit",
+]);
+
+const YT_QUERY_MAP = {
+  "Cat-Cow Mobilite": "cat cow mobility exercise form",
+  "Chin Tuck": "chin tuck cervical retraction exercise form",
+  "Scapular Wall Slide": "scapular wall slide exercise form",
+  "Hip Circle": "standing hip circles mobility warm up",
+  "Shoulder Cross Stretch": "cross body shoulder stretch form",
+  "Hollow Body Hold": "hollow body hold exercise form",
+  "Hızlı Yürüyüş": "power walking technique posture arm swing",
+  "Copenhagen Plank (Sandalye)": "copenhagen plank chair progression form",
+  "Tek Ayak Denge Hold": "single leg balance hold exercise form",
+  "Single Leg Balance Reach (Y-Balance)": "y balance reach test exercise form",
+  "Wall Sit": "wall sit exercise form knee friendly",
+};
+
 export function getGifUrl(name) {
+  if (FORCE_YT_FALLBACK.has(name)) return null;
   const val = resolveId(name);
   if (!val) return null;
   if (Array.isArray(val)) return val.map(id => `${GIF_BASE}${id}.gif`);
@@ -467,5 +493,6 @@ function resolveId(name) {
 }
 
 export function getYouTubeSearchUrl(name) {
-  return `https://www.youtube.com/results?search_query=${encodeURIComponent(name + " exercise form tutorial")}`;
+  const query = YT_QUERY_MAP[name] || `${name} exercise form tutorial`;
+  return `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
 }

@@ -8,7 +8,7 @@ import { WeeklyStats } from "./Dashboard";
 import NutritionTracker from "./Nutrition";
 import { saveFlow, loadFlow, clearFlow } from "./flowStore";
 import { getDashboardStats } from "./tracker";
-import { parseSets } from "./SetTracker";
+import { parseSets } from "./setTrackerUtils";
 import Program2Stats from "./Program2Stats";
 
 const FLOW_KEY = "session2";
@@ -25,7 +25,9 @@ function SkillTracker() {
   const setLevel = (skill, level) => {
     const next = { ...levels, [skill]: level };
     setLevels(next);
-    try { localStorage.setItem(LS_KEY, JSON.stringify(next)); } catch {}
+    try { localStorage.setItem(LS_KEY, JSON.stringify(next)); } catch {
+      // localStorage may be unavailable
+    }
   };
 
   return (
@@ -109,8 +111,6 @@ function OffDayView({ day }) {
 export default function Program2View({ user, logout, ProgramSelector }) {
   const DAY_ORDER = {'PAZARTESİ':1,'SALI':2,'ÇARŞAMBA':3,'PERŞEMBE':4,'CUMA':5,'CUMARTESİ':6,'PAZAR':7};
   const allDays = [...PROGRAM2.days].sort((a,b) => (DAY_ORDER[a.sub]||9) - (DAY_ORDER[b.sub]||9));
-  const trainingDays = allDays.filter(d => d.type === "training");
-  const offDays = allDays.filter(d => d.type === "offday");
 
   const [page2, setPage2] = useState("program");
   const [selectedDay, setSelectedDay] = useState(0);
@@ -129,15 +129,13 @@ export default function Program2View({ user, logout, ProgramSelector }) {
   const timerRef = useRef(null);
   const wakeLockRef = useRef(null);
   const flowRestoredRef = useRef(false);
-  const prevDayRef = useRef(selectedDay);
 
   const day = allDays[selectedDay];
   const isOff = day.type === "offday";
-  const trainingDayIndex = isOff ? -1 : trainingDays.indexOf(day);
 
   // Streak yükle
   useEffect(() => {
-    if (user) getDashboardStats().then(s => setStreak(s.streak || 0)).catch(() => {});
+    if (user) getDashboardStats().then(s => setStreak(s.streak || 0)).catch(() => undefined);
   }, [user]);
 
   // Session restore
@@ -146,7 +144,6 @@ export default function Program2View({ user, logout, ProgramSelector }) {
     flowRestoredRef.current = true;
     loadFlow(FLOW_KEY).then(saved => {
       if (!saved) return;
-      prevDayRef.current = saved.day;
       setSelectedDay(saved.day);
       setWorkoutActive(true);
       setExpandedEx(saved.expandedEx);
@@ -178,23 +175,23 @@ export default function Program2View({ user, logout, ProgramSelector }) {
     }
   }, [workoutActive, expandedEx, selectedDay]);
 
-  // Day change — reset
-  useEffect(() => {
-    if (prevDayRef.current !== selectedDay) {
-      prevDayRef.current = selectedDay;
-      setExpandedEx(null);
-      setWorkoutActive(false);
-      setOpenBlocks({});
-      setGlobalAllDone(false);
-      clearFlow(FLOW_KEY);
-    }
-  }, [selectedDay]);
+  const selectDay = (nextDay) => {
+    if (nextDay === selectedDay) return;
+    setExpandedEx(null);
+    setWorkoutActive(false);
+    setOpenBlocks({});
+    setGlobalAllDone(false);
+    clearFlow(FLOW_KEY);
+    setSelectedDay(nextDay);
+  };
 
   // Wake lock
   const requestWakeLock = async () => {
     try {
       if ("wakeLock" in navigator) wakeLockRef.current = await navigator.wakeLock.request("screen");
-    } catch {}
+    } catch {
+      // wake lock is best-effort only
+    }
   };
   const releaseWakeLock = () => {
     if (wakeLockRef.current) { wakeLockRef.current.release(); wakeLockRef.current = null; }
@@ -216,7 +213,9 @@ export default function Program2View({ user, logout, ProgramSelector }) {
       const next = { ...prev };
       if (altName === null) delete next[originalName];
       else next[originalName] = altName;
-      try { localStorage.setItem(SWAPS_KEY, JSON.stringify(next)); } catch {}
+      try { localStorage.setItem(SWAPS_KEY, JSON.stringify(next)); } catch {
+        // localStorage may be unavailable
+      }
       return next;
     });
   };
@@ -343,7 +342,7 @@ export default function Program2View({ user, logout, ProgramSelector }) {
                         {allDays.map((d, i) => (
               <button key={i} className={`tab ${selectedDay === i ? "tab-active" : ""}`}
                 style={selectedDay === i ? { background: d.type==="offday"?"#6C757D":d.color, borderColor: d.type==="offday"?"#6C757D":d.color } : {}}
-                onClick={() => { setSelectedDay(i); setExpandedEx(null); }}>
+                onClick={() => selectDay(i)}>
                 <div className="tab-t">{d.type==="offday"?"🛌":d.title}</div>
                 <div className="tab-s">{d.sub.substring(0,3)}</div>
               </button>
