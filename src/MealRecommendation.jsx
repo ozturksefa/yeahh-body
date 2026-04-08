@@ -129,10 +129,10 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
             Fasted antrenman → insulin düşük → yağ yakımı yüksek. Antrenman sonrası ilk öğün kritik.
           </div>
         </div>
-        <div className="meal-rec-title" style={{ marginTop: 14 }}>Antrenmandan sonra evde ne yiyebilirsin?</div>
-        <SectionMealCard title="Kahvaltı" icon="🍳" meals={homeSections.breakfast} />
-        <SectionMealCard title="Ara Öğün" icon="🥛" meals={homeSections.snack} />
-        <SectionMealCard title="Akşam" icon="🍽️" meals={homeSections.dinner} />
+        <div className="meal-rec-title" style={{ marginTop: 14 }}>Bugünün ev tipi beslenme akışı</div>
+        <SectionMealCard title={homeSections.breakfastLabel} icon="🍳" meals={homeSections.breakfast} />
+        <SectionMealCard title={homeSections.snackLabel} icon="🥛" meals={homeSections.snack} />
+        <SectionMealCard title={homeSections.dinnerLabel} icon="🍽️" meals={homeSections.dinner} />
       </div>
     );
   }
@@ -197,10 +197,12 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
         Öğünleri Beslenme takibine manuel ekleyebilirsin ↑
       </div>
 
-      <div className="meal-rec-title" style={{ marginTop: 18 }}>Ev tipi günlük öneri akışı</div>
-      <SectionMealCard title="Kahvaltı" icon="🍳" meals={homeSections.breakfast} />
-      <SectionMealCard title="Ara Öğün" icon="🥛" meals={homeSections.snack} />
-      <SectionMealCard title="Akşam" icon="🍽️" meals={homeSections.dinner} />
+      <div className="meal-rec-title" style={{ marginTop: 18 }}>
+        {homeSections.mode === 'rest' ? 'Off day ev tipi öneriler' : 'Spor günü ev tipi öneriler'}
+      </div>
+      <SectionMealCard title={homeSections.breakfastLabel} icon="🍳" meals={homeSections.breakfast} />
+      <SectionMealCard title={homeSections.snackLabel} icon="🥛" meals={homeSections.snack} />
+      <SectionMealCard title={homeSections.dinnerLabel} icon="🍽️" meals={homeSections.dinner} />
     </div>
   );
 }

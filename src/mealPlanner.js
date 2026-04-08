@@ -243,10 +243,14 @@ const MEALS = {
 };
 
 const HOME_MEAL_SECTIONS = {
-  breakfast: [
+  training: {
+    breakfastLabel: "Spor Sonrası Kahvaltı",
+    snackLabel: "Gün İçinde Ara Öğün",
+    dinnerLabel: "Akşam Öğünü",
+    breakfast: [
     {
       name: "Yumurta + peynir tabağı",
-      desc: "En pratik yüksek protein kahvaltı",
+      desc: "Antrenman sonrası toparlanma için en pratik yüksek protein kahvaltı",
       foods: [
         { name: "Yumurta (3 adet)", cal: 234, pro: 18, carb: 3, fat: 15 },
         { name: "Beyaz peynir / lor (60g)", cal: 120, pro: 12, carb: 3, fat: 7 },
@@ -255,11 +259,11 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 554, pro: 38, carb: 44, fat: 24 },
       tags: ['strength', 'calisthenics', 'functional', 'rest'],
-      tip: "Evde en kolay sürdürülen seçeneklerden biri."
+      tip: "Antrenmandan sonraki ilk ana öğün için çok güvenli seçim."
     },
     {
       name: "Yoğurtlu yulaf kasesi",
-      desc: "Hafif ama tok tutan kahvaltı",
+      desc: "Spor sonrası hafif ama toparlayıcı kahvaltı",
       foods: [
         { name: "Süzme yoğurt (200g)", cal: 173, pro: 20, carb: 8, fat: 7 },
         { name: "Yulaf (50g)", cal: 190, pro: 7, carb: 31, fat: 4 },
@@ -268,11 +272,11 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 566, pro: 30, carb: 68, fat: 21 },
       tags: ['cardio', 'calisthenics', 'functional'],
-      tip: "Sabah sindirimi rahatsa çok iyi gider."
+      tip: "Kondisyon veya skill gününden sonra rahat gider."
     },
     {
       name: "Menemen + yoğurt",
-      desc: "Ev tipi, ekonomik ve doyurucu",
+      desc: "Ekonomik, ulaşılabilir ve spor sonrası tok tutan seçenek",
       foods: [
         { name: "Menemen (3 yumurta)", cal: 260, pro: 19, carb: 8, fat: 16 },
         { name: "Yoğurt (150g)", cal: 90, pro: 7, carb: 7, fat: 4 },
@@ -280,13 +284,13 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 510, pro: 32, carb: 45, fat: 22 },
       tags: ['strength', 'rest', 'functional'],
-      tip: "Klasik ev kahvaltısı gibi hissettirir, sürdürülebilirliği yüksektir."
+      tip: "Evde her gün yapılabilecek kadar sade."
     },
   ],
-  snack: [
+    snack: [
     {
       name: "Kefir + muz",
-      desc: "5 dakikalık en kolay ara öğün",
+      desc: "Spor gününde enerji ve toparlanma için en kolay ara öğün",
       foods: [
         { name: "Kefir (250ml)", cal: 155, pro: 9, carb: 12, fat: 8 },
         { name: "Muz (1 adet)", cal: 105, pro: 1, carb: 27, fat: 0 },
@@ -297,7 +301,7 @@ const HOME_MEAL_SECTIONS = {
     },
     {
       name: "Yoğurt + meyve + ceviz",
-      desc: "Basit, dengeli ve ulaşılabilir",
+      desc: "Basit, dengeli ve evde her zaman kurulabilir",
       foods: [
         { name: "Yoğurt (200g)", cal: 120, pro: 10, carb: 10, fat: 5 },
         { name: "Elma veya muz", cal: 90, pro: 1, carb: 22, fat: 0 },
@@ -309,7 +313,7 @@ const HOME_MEAL_SECTIONS = {
     },
     {
       name: "Haşlanmış yumurta + ayran",
-      desc: "Ekonomik protein odaklı ara öğün",
+      desc: "Protein açığını kapatmak için sade ara öğün",
       foods: [
         { name: "Haşlanmış yumurta (2 adet)", cal: 156, pro: 12, carb: 2, fat: 10 },
         { name: "Ayran (300ml)", cal: 105, pro: 6, carb: 8, fat: 5 },
@@ -319,10 +323,10 @@ const HOME_MEAL_SECTIONS = {
       tip: "Protein açığını kapatmak için iyi kısa yol."
     },
   ],
-  dinner: [
+    dinner: [
     {
       name: "Tavuk + pilav/bulgur + salata",
-      desc: "En güvenli ana akşam öğünü",
+      desc: "Spor günü için en güvenli ana akşam öğünü",
       foods: [
         { name: "Tavuk göğsü (180-200g)", cal: 330, pro: 55, carb: 0, fat: 7 },
         { name: "Pirinç pilavı / bulgur (180g pişmiş)", cal: 220, pro: 5, carb: 46, fat: 2 },
@@ -357,10 +361,129 @@ const HOME_MEAL_SECTIONS = {
       tip: "Evde herkesle yenebilecek tipte bir öğün."
     },
   ],
+  },
+  rest: {
+    breakfastLabel: "Off Day Kahvaltı",
+    snackLabel: "Off Day Ara Öğün",
+    dinnerLabel: "Off Day Akşam",
+    breakfast: [
+      {
+        name: "Omlet + avokatsız sade kahvaltı",
+        desc: "Off day için protein yüksek, karbonhidrat kontrollü başlangıç",
+        foods: [
+          { name: "Omlet (3 yumurta)", cal: 234, pro: 18, carb: 3, fat: 15 },
+          { name: "Lor peyniri (80g)", cal: 95, pro: 14, carb: 3, fat: 2 },
+          { name: "Domates + salatalık", cal: 40, pro: 2, carb: 8, fat: 0 },
+          { name: "Tam buğday ekmek (1 dilim)", cal: 80, pro: 3, carb: 15, fat: 1 },
+        ],
+        total: { cal: 449, pro: 37, carb: 29, fat: 18 },
+        tags: ['rest'],
+        tip: "Off day’de proteini koru, karbonhidratı biraz daha kontrollü tut."
+      },
+      {
+        name: "Yoğurt + yulaf + tarçın",
+        desc: "Hafif ama tok tutan dinlenme günü kahvaltısı",
+        foods: [
+          { name: "Yoğurt (250g)", cal: 150, pro: 12, carb: 12, fat: 6 },
+          { name: "Yulaf (40g)", cal: 150, pro: 5, carb: 27, fat: 3 },
+          { name: "Elma (1 adet)", cal: 80, pro: 0, carb: 21, fat: 0 },
+        ],
+        total: { cal: 380, pro: 17, carb: 60, fat: 9 },
+        tags: ['rest'],
+        tip: "Sindirim rahat olsun istiyorsan iyi seçim."
+      },
+      {
+        name: "Peynir tabağı + haşlanmış yumurta",
+        desc: "Evde çok uğraştırmayan klasik off day kahvaltısı",
+        foods: [
+          { name: "Haşlanmış yumurta (2 adet)", cal: 156, pro: 12, carb: 2, fat: 10 },
+          { name: "Beyaz peynir (70g)", cal: 175, pro: 12, carb: 2, fat: 14 },
+          { name: "Zeytin + domates", cal: 70, pro: 1, carb: 5, fat: 5 },
+          { name: "Tam buğday ekmek (1 dilim)", cal: 80, pro: 3, carb: 15, fat: 1 },
+        ],
+        total: { cal: 481, pro: 28, carb: 24, fat: 30 },
+        tags: ['rest'],
+        tip: "Ailece yenebilecek, çok normal bir kahvaltı."
+      },
+    ],
+    snack: [
+      {
+        name: "Ayran + leblebi",
+        desc: "Basit, ekonomik ve ulaşılabilir",
+        foods: [
+          { name: "Ayran (300ml)", cal: 105, pro: 6, carb: 8, fat: 5 },
+          { name: "Leblebi (40g)", cal: 150, pro: 8, carb: 24, fat: 2 },
+        ],
+        total: { cal: 255, pro: 14, carb: 32, fat: 7 },
+        tags: ['rest'],
+        tip: "Evde her zaman bulunabilen malzemelerle olur."
+      },
+      {
+        name: "Süzme yoğurt + ceviz",
+        desc: "Daha tok tutan dinlenme günü ara öğünü",
+        foods: [
+          { name: "Süzme yoğurt (200g)", cal: 173, pro: 20, carb: 8, fat: 7 },
+          { name: "Ceviz (15g)", cal: 98, pro: 2, carb: 2, fat: 10 },
+        ],
+        total: { cal: 271, pro: 22, carb: 10, fat: 17 },
+        tags: ['rest'],
+        tip: "Akşam açlığını da dengeler."
+      },
+      {
+        name: "Meyve + kefir",
+        desc: "Daha hafif bir off day ara öğünü",
+        foods: [
+          { name: "Kefir (250ml)", cal: 155, pro: 9, carb: 12, fat: 8 },
+          { name: "Elma veya armut", cal: 80, pro: 0, carb: 21, fat: 0 },
+        ],
+        total: { cal: 235, pro: 9, carb: 33, fat: 8 },
+        tags: ['rest'],
+        tip: "Off day’de hafif kalmak istediğinde iyi gider."
+      },
+    ],
+    dinner: [
+      {
+        name: "Sebzeli tavuk + yoğurt",
+        desc: "Off day için dengeli ve toparlayıcı akşam öğünü",
+        foods: [
+          { name: "Tavuk (180g)", cal: 300, pro: 50, carb: 0, fat: 7 },
+          { name: "Sebze sote / haşlama", cal: 120, pro: 4, carb: 16, fat: 4 },
+          { name: "Yoğurt (150g)", cal: 90, pro: 7, carb: 7, fat: 4 },
+        ],
+        total: { cal: 510, pro: 61, carb: 23, fat: 15 },
+        tags: ['rest'],
+        tip: "Karbonhidratı düşük tutup toparlanmayı korur."
+      },
+      {
+        name: "Etli sebze yemeği + yoğurt",
+        desc: "Normal ev yemeği gibi hissettiren off day akşamı",
+        foods: [
+          { name: "Etli sebze yemeği (1 porsiyon)", cal: 320, pro: 24, carb: 18, fat: 16 },
+          { name: "Yoğurt (200g)", cal: 120, pro: 10, carb: 10, fat: 5 },
+          { name: "Küçük salata", cal: 40, pro: 2, carb: 6, fat: 1 },
+        ],
+        total: { cal: 480, pro: 36, carb: 34, fat: 22 },
+        tags: ['rest'],
+        tip: "Ailece yenen normal akşam yemeğine daha yakın."
+      },
+      {
+        name: "Mercimek / nohut + salata",
+        desc: "Ekonomik ve hafif toparlanma akşamı",
+        foods: [
+          { name: "Mercimek veya nohut (1 kase)", cal: 260, pro: 15, carb: 38, fat: 6 },
+          { name: "Yoğurt (150g)", cal: 90, pro: 7, carb: 7, fat: 4 },
+          { name: "Salata", cal: 40, pro: 2, carb: 6, fat: 1 },
+        ],
+        total: { cal: 390, pro: 24, carb: 51, fat: 11 },
+        tags: ['rest'],
+        tip: "Daha ekonomik ve sindirimi rahat bir alternatif."
+      },
+    ],
+  },
 };
 
-function pickSectionMeals(section, dayType) {
-  const pool = HOME_MEAL_SECTIONS[section] || [];
+function pickSectionMeals(sectionGroup, section, dayType) {
+  const pool = HOME_MEAL_SECTIONS[sectionGroup]?.[section] || [];
   return pool
     .map((meal) => ({
       ...meal,
@@ -375,10 +498,16 @@ function pickSectionMeals(section, dayType) {
 }
 
 export function getHomeMealSections(dayType) {
+  const isRestDay = dayType === 'rest';
+  const sectionGroup = isRestDay ? 'rest' : 'training';
   return {
-    breakfast: pickSectionMeals('breakfast', dayType),
-    snack: pickSectionMeals('snack', dayType),
-    dinner: pickSectionMeals('dinner', dayType),
+    mode: sectionGroup,
+    breakfastLabel: HOME_MEAL_SECTIONS[sectionGroup].breakfastLabel,
+    snackLabel: HOME_MEAL_SECTIONS[sectionGroup].snackLabel,
+    dinnerLabel: HOME_MEAL_SECTIONS[sectionGroup].dinnerLabel,
+    breakfast: pickSectionMeals(sectionGroup, 'breakfast', dayType),
+    snack: pickSectionMeals(sectionGroup, 'snack', dayType),
+    dinner: pickSectionMeals(sectionGroup, 'dinner', dayType),
   };
 }
 
