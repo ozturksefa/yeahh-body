@@ -479,11 +479,11 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
         ))}
       </div>
 
-      {/* Akıllı öneri paneli — sadece bugün */}
-      {isToday && suggestions.length > 0 && (
+      {/* Kısa kritik notlar — sadece bugün */}
+      {isToday && suggestions.filter((item) => item.type === "warn").length > 0 && (
         <div className="nutri-smart">
-          <div className="nutri-smart-title">📊 Durum & Öneriler</div>
-          {suggestions.map((s, i) => (
+          <div className="nutri-smart-title">Kısa Not</div>
+          {suggestions.filter((item) => item.type === "warn").slice(0, 2).map((s, i) => (
             <div key={i} className={`nutri-smart-item nutri-smart-${s.type}`}>
               <div className="nutri-smart-row">
                 <span className="nutri-smart-icon">{s.icon}</span>

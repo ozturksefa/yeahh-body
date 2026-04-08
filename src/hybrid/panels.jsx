@@ -2,7 +2,6 @@ import { useMemo } from "react";
 import { PROGRAM_HYBRID } from "../dataHybrid";
 import {
   average,
-  buildSuggestions,
   buttonBase,
   getRelevantSkillsForDay,
   getSkillUnit,
@@ -190,7 +189,6 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
 }
 
 export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setPre, lockedMode = null }) {
-  const signals = buildSuggestions(pre, mode);
   const update = (field, value) => setPre((prev) => ({ ...prev, [field]: value }));
   const modeSwitchEnabled = !lockedMode;
 
@@ -265,21 +263,6 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
         </div>
       </SectionCard>
 
-      <SectionCard title="Bugünkü Öneri" accent="#FFA726">
-        <div style={{ display: "grid", gap: 8 }}>
-          {signals.suggestions.map((item, index) => (
-            <div key={index} style={{ display: "flex", gap: 8, alignItems: "flex-start" }}>
-              <span style={{ color: item.tone, fontWeight: 900 }}>•</span>
-              <span style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.55 }}>{item.text}</span>
-            </div>
-          ))}
-          {modeSwitchEnabled && signals.recommendedMode !== mode && (
-            <div style={{ fontSize: 11, color: "#4FC3F7", lineHeight: 1.55 }}>
-              Sistem önerisi: bugün <strong>{signals.recommendedMode === "home" ? "Ev" : "Macfit"}</strong> yolu daha mantıklı görünüyor.
-            </div>
-          )}
-        </div>
-      </SectionCard>
     </div>
   );
 }

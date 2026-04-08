@@ -2,6 +2,8 @@ import { useMemo, useState } from "react";
 import { getHomeMealSections, getMealPlan, getDayType, getWorkoutSchedule } from "./mealPlanner";
 import { calcDayCalories, getUserWeight } from "./calorieCalc";
 
+const HOME_FILTERS = ["ekonomik", "yüksek protein", "çok pratik"];
+
 function MacroPill({ label, value, unit, color }) {
   return (
     <span className="meal-macro-pill" style={{ background: color + "22", color }}>
@@ -76,6 +78,25 @@ function SectionMealCard({ title, icon, meals }) {
           <div key={meal.name} style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
             <div className="meal-name" style={{ fontSize: 14 }}>{meal.name}</div>
             <div className="meal-desc" style={{ marginTop: 4 }}>{meal.desc}</div>
+            {meal.homeTags?.length > 0 && (
+              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+                {meal.homeTags.map((tag) => (
+                  <span
+                    key={`${meal.name}-${tag}`}
+                    style={{
+                      fontSize: 10,
+                      padding: "4px 8px",
+                      borderRadius: 999,
+                      border: "1px solid rgba(255,255,255,.12)",
+                      color: "#C4C4CC",
+                      background: "rgba(255,255,255,.04)",
+                    }}
+                  >
+                    {tag}
+                  </span>
+                ))}
+              </div>
+            )}
             <div className="meal-macros" style={{ marginTop: 8 }}>
               <MacroPill label="Kalori" value={meal.total.cal} unit="kcal" color="#FF6B35" />
               <MacroPill label="Protein" value={meal.total.pro} unit="g" color="#4FC3F7" />
@@ -93,6 +114,7 @@ function SectionMealCard({ title, icon, meals }) {
 }
 
 export default function MealRecommendation({ day, targets, totals, dayTypeOverride = null, contextLabel = null, contextNote = null }) {
+  const [activeFilters, setActiveFilters] = useState([]);
   const plan = useMemo(() => {
     if (!targets) return null;
     const dayType = dayTypeOverride || getDayType(day);
@@ -104,9 +126,28 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
   }, [day, dayTypeOverride, targets, totals]);
   const dayType = dayTypeOverride || getDayType(day);
   const homeSections = useMemo(() => getHomeMealSections(dayType), [dayType]);
+  const filteredSections = useMemo(() => {
+    const filterMeals = (meals) => {
+      if (activeFilters.length === 0) return meals;
+      return meals.filter((meal) => activeFilters.every((filter) => meal.homeTags?.includes(filter)));
+    };
+
+    return {
+      ...homeSections,
+      breakfast: filterMeals(homeSections.breakfast),
+      snack: filterMeals(homeSections.snack),
+      dinner: filterMeals(homeSections.dinner),
+    };
+  }, [activeFilters, homeSections]);
+
+  const toggleFilter = (filter) => {
+    setActiveFilters((prev) =>
+      prev.includes(filter) ? prev.filter((item) => item !== filter) : [...prev, filter]
+    );
+  };
 
   if (!plan) return null;
-  const { meals, summary } = plan;
+  const { summary } = plan;
 
   // Fasted — antrenman öncesi/sırası
   if (plan.mealTime === 'fasted') {
@@ -130,9 +171,31 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
           </div>
         </div>
         <div className="meal-rec-title" style={{ marginTop: 14 }}>Bugünün ev tipi beslenme akışı</div>
-        <SectionMealCard title={homeSections.breakfastLabel} icon="🍳" meals={homeSections.breakfast} />
-        <SectionMealCard title={homeSections.snackLabel} icon="🥛" meals={homeSections.snack} />
-        <SectionMealCard title={homeSections.dinnerLabel} icon="🍽️" meals={homeSections.dinner} />
+        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "10px 0 14px" }}>
+          {HOME_FILTERS.map((filter) => {
+            const active = activeFilters.includes(filter);
+            return (
+              <button
+                key={filter}
+                onClick={() => toggleFilter(filter)}
+                style={{
+                  borderRadius: 999,
+                  border: `1px solid ${active ? "#2A9D8F" : "#2A2A30"}`,
+                  background: active ? "rgba(42,157,143,.12)" : "#17171B",
+                  color: active ? "#E6FFFA" : "#C4C4CC",
+                  padding: "6px 10px",
+                  fontSize: 11,
+                  cursor: "pointer",
+                }}
+              >
+                {filter}
+              </button>
+            );
+          })}
+        </div>
+        <SectionMealCard title={filteredSections.breakfastLabel} icon="🍳" meals={filteredSections.breakfast} />
+        <SectionMealCard title={filteredSections.snackLabel} icon="🥛" meals={filteredSections.snack} />
+        <SectionMealCard title={filteredSections.dinnerLabel} icon="🍽️" meals={filteredSections.dinner} />
       </div>
     );
   }
@@ -182,27 +245,36 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
             {contextNote && <div className="meal-summary-tip">• {contextNote}</div>}
           </div>
         )}
-        <div className="meal-summary-tips">
-          {summary.tips.map((t, i) => (
-            <div key={i} className="meal-summary-tip">• {t}</div>
-          ))}
-        </div>
-      </div>
-
-      {/* Öğün önerileri */}
-      <div className="meal-rec-title">Şu an için öneriler</div>
-      {meals.map((m, i) => <MealCard key={i} meal={m} rank={i} />)}
-
-      <div className="meal-rec-note">
-        Öğünleri Beslenme takibine manuel ekleyebilirsin ↑
       </div>
 
       <div className="meal-rec-title" style={{ marginTop: 18 }}>
-        {homeSections.mode === 'rest' ? 'Off day ev tipi öneriler' : 'Spor günü ev tipi öneriler'}
+        {filteredSections.mode === 'rest' ? 'Off day ev tipi öneriler' : 'Spor günü ev tipi öneriler'}
       </div>
-      <SectionMealCard title={homeSections.breakfastLabel} icon="🍳" meals={homeSections.breakfast} />
-      <SectionMealCard title={homeSections.snackLabel} icon="🥛" meals={homeSections.snack} />
-      <SectionMealCard title={homeSections.dinnerLabel} icon="🍽️" meals={homeSections.dinner} />
+      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "10px 0 14px" }}>
+        {HOME_FILTERS.map((filter) => {
+          const active = activeFilters.includes(filter);
+          return (
+            <button
+              key={filter}
+              onClick={() => toggleFilter(filter)}
+              style={{
+                borderRadius: 999,
+                border: `1px solid ${active ? "#2A9D8F" : "#2A2A30"}`,
+                background: active ? "rgba(42,157,143,.12)" : "#17171B",
+                color: active ? "#E6FFFA" : "#C4C4CC",
+                padding: "6px 10px",
+                fontSize: 11,
+                cursor: "pointer",
+              }}
+            >
+              {filter}
+            </button>
+          );
+        })}
+      </div>
+      <SectionMealCard title={filteredSections.breakfastLabel} icon="🍳" meals={filteredSections.breakfast} />
+      <SectionMealCard title={filteredSections.snackLabel} icon="🥛" meals={filteredSections.snack} />
+      <SectionMealCard title={filteredSections.dinnerLabel} icon="🍽️" meals={filteredSections.dinner} />
     </div>
   );
 }

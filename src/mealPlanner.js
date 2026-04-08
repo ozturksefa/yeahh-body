@@ -259,6 +259,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 554, pro: 38, carb: 44, fat: 24 },
       tags: ['strength', 'calisthenics', 'functional', 'rest'],
+      homeTags: ['yüksek protein', 'çok pratik'],
       tip: "Antrenmandan sonraki ilk ana öğün için çok güvenli seçim."
     },
     {
@@ -272,6 +273,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 566, pro: 30, carb: 68, fat: 21 },
       tags: ['cardio', 'calisthenics', 'functional'],
+      homeTags: ['çok pratik'],
       tip: "Kondisyon veya skill gününden sonra rahat gider."
     },
     {
@@ -284,6 +286,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 510, pro: 32, carb: 45, fat: 22 },
       tags: ['strength', 'rest', 'functional'],
+      homeTags: ['ekonomik', 'yüksek protein'],
       tip: "Evde her gün yapılabilecek kadar sade."
     },
   ],
@@ -297,6 +300,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 260, pro: 10, carb: 39, fat: 8 },
       tags: ['cardio', 'strength', 'calisthenics', 'functional'],
+      homeTags: ['çok pratik'],
       tip: "Antrenman sonrası da rahat kullanılır."
     },
     {
@@ -309,6 +313,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 308, pro: 13, carb: 34, fat: 15 },
       tags: ['rest', 'cardio', 'calisthenics'],
+      homeTags: ['çok pratik'],
       tip: "Ofiste ya da evde kolay uygulanır."
     },
     {
@@ -320,6 +325,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 261, pro: 18, carb: 10, fat: 15 },
       tags: ['strength', 'functional', 'rest'],
+      homeTags: ['ekonomik', 'yüksek protein', 'çok pratik'],
       tip: "Protein açığını kapatmak için iyi kısa yol."
     },
   ],
@@ -334,6 +340,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 620, pro: 62, carb: 52, fat: 14 },
       tags: ['strength', 'functional', 'cardio', 'calisthenics'],
+      homeTags: ['yüksek protein'],
       tip: "Antrenman gününde karbonhidratı biraz artır."
     },
     {
@@ -346,6 +353,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 590, pro: 31, carb: 86, fat: 14 },
       tags: ['rest', 'cardio', 'functional'],
+      homeTags: ['ekonomik'],
       tip: "Recovery günlerinde de çok iş görür."
     },
     {
@@ -358,6 +366,7 @@ const HOME_MEAL_SECTIONS = {
       ],
       total: { cal: 590, pro: 38, carb: 48, fat: 27 },
       tags: ['strength', 'calisthenics', 'rest'],
+      homeTags: ['yüksek protein'],
       tip: "Evde herkesle yenebilecek tipte bir öğün."
     },
   ],
@@ -378,6 +387,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 449, pro: 37, carb: 29, fat: 18 },
         tags: ['rest'],
+        homeTags: ['yüksek protein', 'çok pratik'],
         tip: "Off day’de proteini koru, karbonhidratı biraz daha kontrollü tut."
       },
       {
@@ -390,6 +400,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 380, pro: 17, carb: 60, fat: 9 },
         tags: ['rest'],
+        homeTags: ['ekonomik', 'çok pratik'],
         tip: "Sindirim rahat olsun istiyorsan iyi seçim."
       },
       {
@@ -403,6 +414,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 481, pro: 28, carb: 24, fat: 30 },
         tags: ['rest'],
+        homeTags: ['çok pratik'],
         tip: "Ailece yenebilecek, çok normal bir kahvaltı."
       },
     ],
@@ -416,6 +428,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 255, pro: 14, carb: 32, fat: 7 },
         tags: ['rest'],
+        homeTags: ['ekonomik', 'çok pratik'],
         tip: "Evde her zaman bulunabilen malzemelerle olur."
       },
       {
@@ -427,6 +440,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 271, pro: 22, carb: 10, fat: 17 },
         tags: ['rest'],
+        homeTags: ['yüksek protein', 'çok pratik'],
         tip: "Akşam açlığını da dengeler."
       },
       {
@@ -438,6 +452,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 235, pro: 9, carb: 33, fat: 8 },
         tags: ['rest'],
+        homeTags: ['çok pratik'],
         tip: "Off day’de hafif kalmak istediğinde iyi gider."
       },
     ],
@@ -452,6 +467,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 510, pro: 61, carb: 23, fat: 15 },
         tags: ['rest'],
+        homeTags: ['yüksek protein'],
         tip: "Karbonhidratı düşük tutup toparlanmayı korur."
       },
       {
@@ -464,6 +480,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 480, pro: 36, carb: 34, fat: 22 },
         tags: ['rest'],
+        homeTags: ['ekonomik'],
         tip: "Ailece yenen normal akşam yemeğine daha yakın."
       },
       {
@@ -476,6 +493,7 @@ const HOME_MEAL_SECTIONS = {
         ],
         total: { cal: 390, pro: 24, carb: 51, fat: 11 },
         tags: ['rest'],
+        homeTags: ['ekonomik'],
         tip: "Daha ekonomik ve sindirimi rahat bir alternatif."
       },
     ],
