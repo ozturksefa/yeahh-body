@@ -6,7 +6,7 @@ import ExerciseNote from "./ExerciseNote";
 import SkillTimer from "./SkillTimer";
 import ErrorBoundary from "./ErrorBoundary";
 
-function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAllSetsDone }) {
+function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAllSetsDone }) {
   const cardRef = useRef(null);
   const originalName = ex.name;
   const swappedName = swaps?.[originalName] || null;
@@ -36,7 +36,7 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
   };
 
   return (
-    <div className="ex-wrap" ref={cardRef}>
+    <div className="ex-wrap" ref={cardRef} data-ex-key={exerciseKey}>
       <button className="ex-header" onClick={handleToggle}
         style={{ borderLeft: `3px solid ${blockColor}` }}>
         <div className="ex-left">
@@ -167,7 +167,7 @@ function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartR
             const key = `${blockIdx}-${ei}`;
             return (
               <ErrorBoundary key={key}>
-                <ExerciseCard ex={ex} blockColor={block.color}
+                <ExerciseCard ex={ex} exerciseKey={key} blockColor={block.color}
                   isOpen={expandedEx === key}
                   onToggle={() => onExToggle(key)}
                   dayIndex={dayIndex}

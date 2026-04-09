@@ -54,7 +54,7 @@ function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, on
     setWorkout(w);
     setStarted(true);
     setElapsed(0);
-    if (onWorkoutStart) onWorkoutStart();
+    if (onWorkoutStart) onWorkoutStart({ resumed: false, workout: w });
   }, [dayIndex, onWorkoutStart]);
 
   const finishWorkout = useCallback(async () => {
@@ -88,7 +88,7 @@ function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, on
       setWorkout(w);
       setStarted(true);
       setElapsed(0);
-      if (onWorkoutStart) onWorkoutStart();
+      if (onWorkoutStart) onWorkoutStart({ resumed: true, workout: w });
     };
     const handleReset = async () => {
       if (!confirm("Tüm set verileri silinecek. Emin misin?")) return;

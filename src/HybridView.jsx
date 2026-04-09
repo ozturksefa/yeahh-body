@@ -64,6 +64,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [supportOpen, setSupportOpen] = useState(false);
   const [focusedBlockIndex, setFocusedBlockIndex] = useState(null);
+  const [nextStepHint, setNextStepHint] = useState(null);
   const finishWorkoutRef = useRef(null);
   const checkoutRef = useRef(null);
 
@@ -113,6 +114,47 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       return progress && progress.completed < progress.total;
     }) || null;
   }, [activeVariant.blocks, blockProgress, focusedBlockIndex]);
+
+  const findNextExerciseTarget = (exerciseMap = {}) => {
+    for (let blockIdx = 0; blockIdx < activeVariant.blocks.length; blockIdx += 1) {
+      const block = activeVariant.blocks[blockIdx];
+      for (let exIdx = 0; exIdx < block.exercises.length; exIdx += 1) {
+        const exercise = block.exercises[exIdx];
+        const sets = exerciseMap?.[exercise.name];
+        if (!Array.isArray(sets) || sets.length === 0) {
+          return { blockIdx, exIdx, blockName: block.name, exerciseName: exercise.name };
+        }
+
+        const isDone = sets.every((set) => set.done);
+        if (!isDone) {
+          return { blockIdx, exIdx, blockName: block.name, exerciseName: exercise.name };
+        }
+      }
+    }
+
+    const fallbackBlock = activeVariant.blocks[0];
+    const fallbackExercise = fallbackBlock?.exercises?.[0];
+    return fallbackBlock && fallbackExercise
+      ? { blockIdx: 0, exIdx: 0, blockName: fallbackBlock.name, exerciseName: fallbackExercise.name }
+      : null;
+  };
+
+  const jumpToTarget = (target) => {
+    if (!target) return;
+    const key = `${target.blockIdx}-${target.exIdx}`;
+    setOpenBlocks((prev) => ({ ...prev, [target.blockIdx]: true }));
+    setFocusedBlockIndex(target.blockIdx);
+    setExpandedEx(key);
+    setNextStepHint({ ...target, key });
+
+    window.setTimeout(() => {
+      const node = document.querySelector(`[data-ex-key="${key}"]`);
+      if (!node) return;
+      const headerHeight = document.querySelector(".hdr")?.offsetHeight || 0;
+      const top = node.getBoundingClientRect().top + window.scrollY;
+      window.scrollTo({ top: Math.max(top - headerHeight - 8, 0), behavior: "smooth" });
+    }, 140);
+  };
 
   useEffect(() => {
     if (!lockedMode) {
@@ -222,6 +264,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     setExpandedEx(null);
     setOpenBlocks({});
     setFocusedBlockIndex(null);
+    setNextStepHint(null);
   };
 
   const handleDayChange = (index) => {
@@ -238,16 +281,19 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     setRestTimer((prev) => prev ? { ...prev, seconds: Math.max(15, prev.seconds + delta), key: Date.now() } : prev);
   };
 
-  const handleWorkoutStart = () => {
+  const handleWorkoutStart = ({ workout } = {}) => {
     setWorkoutState({ loaded: true, started: true, completed: false });
     updateEntry("post", (prev) => ({ ...prev, completed: false }));
-    loadWorkout(workoutDayIndex).then(setWorkoutSnapshot);
+    const snapshot = workout || { exercises: {} };
+    setWorkoutSnapshot(snapshot);
+    jumpToTarget(findNextExerciseTarget(snapshot.exercises || {}));
   };
 
   const handleWorkoutFinish = () => {
     setWorkoutState({ loaded: true, started: false, completed: true });
     updateEntry("post", (prev) => ({ ...prev, completed: true }));
     loadWorkout(workoutDayIndex).then(setWorkoutSnapshot);
+    setNextStepHint(null);
   };
 
   const handleCompleteSession = async () => {
@@ -429,6 +475,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                   const blockIdx = parseInt(String(key).split("-")[0], 10);
                   setOpenBlocks((prev) => ({ ...prev, [blockIdx]: true }));
                   setFocusedBlockIndex(blockIdx);
+                  setNextStepHint(null);
                   setExpandedEx((prev) => prev === key ? null : key);
                 }}
                 dayIndex={workoutDayIndex}
@@ -441,6 +488,34 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               />
             ))}
           </main>
+
+          {nextStepHint && !currentEntry.post.completed && (
+            <div style={{ padding: "0 12px 12px" }}>
+              <button
+                onClick={() => jumpToTarget(nextStepHint)}
+                style={{
+                  width: "100%",
+                  background: "rgba(79,195,247,.08)",
+                  border: "1px solid rgba(79,195,247,.24)",
+                  borderRadius: 12,
+                  padding: "12px 14px",
+                  color: "#fff",
+                  textAlign: "left",
+                  cursor: "pointer",
+                }}
+              >
+                <div style={{ fontSize: 10, color: "#4FC3F7", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
+                  Sonraki Adım
+                </div>
+                <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 4 }}>
+                  {nextStepHint.blockName} · {nextStepHint.exerciseName}
+                </div>
+                <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 4, lineHeight: 1.45 }}>
+                  Kaldığın veya başlaman gereken harekete dön.
+                </div>
+              </button>
+            </div>
+          )}
 
           <div ref={checkoutRef}>
             <DailyCheckoutPanel
