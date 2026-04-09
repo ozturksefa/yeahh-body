@@ -446,10 +446,16 @@ const FORCE_YT_FALLBACK = new Set([
   "Shoulder Cross Stretch",
   "Hollow Body Hold",
   "Hızlı Yürüyüş",
+  "Rower",
+  "Incline Walk",
+  "Bird Dog",
   "Copenhagen Plank (Sandalye)",
   "Tek Ayak Denge Hold",
   "Single Leg Balance Reach (Y-Balance)",
   "Wall Sit",
+  "Prone Cobra",
+  "Box Step Down (eccentric)",
+  "Close Grip Push Up",
 ]);
 
 const YT_QUERY_MAP = {
@@ -460,6 +466,9 @@ const YT_QUERY_MAP = {
   "Shoulder Cross Stretch": "cross body shoulder stretch form",
   "Hollow Body Hold": "hollow body hold exercise form",
   "Hızlı Yürüyüş": "power walking technique posture arm swing",
+  "Rower": "rowing machine technique posture beginner form",
+  "Incline Walk": "incline treadmill walking posture form",
+  "Bird Dog": "bird dog exercise form neutral spine",
   "Copenhagen Plank (Sandalye)": "copenhagen plank chair progression form",
   "Tek Ayak Denge Hold": "single leg balance hold exercise form",
   "Single Leg Balance Reach (Y-Balance)": "y balance reach test exercise form",
@@ -468,6 +477,9 @@ const YT_QUERY_MAP = {
   "Wall Tibialis Raise": "wall tibialis raise exercise form",
   "Box Step Down (eccentric)": "eccentric step down exercise form",
   "Towel Curl Isometric": "towel biceps curl isometric exercise form",
+  "Bridge Walkout": "bridge walkout hamstring exercise form",
+  "Prone Cobra": "prone cobra exercise form scapular retraction",
+  "Close Grip Push Up": "close grip push up exercise form",
 };
 
 export function getGifUrl(name) {
