@@ -173,7 +173,7 @@ export const PROGRAM_HYBRID = {
       intent: "Haftanın en taze gününde çekiş-itiş dengesi kurulur; kısa interval kondisyonla bitirilir.",
       variants: {
         home: {
-          duration: "~65 dk",
+          duration: "~72 dk",
           aerobicMinutes: 28,
           modeNote: "Vakit kısıtlıysa veya semptom yüksekse home yolu daha güvenli seçenek.",
           injury: "⚠️ Omuz ağrılıysa handstand'ı çıkar, sadece pike + row + incline push-up ile kal.",
@@ -194,8 +194,10 @@ export const PROGRAM_HYBRID = {
             ]),
             block("💪 KUVVET — Temel Denge", "#F4A261", [
               ex("Inverted Row (Masa Altı)", "4 × 6-10", "Sırt + biceps", ["Göğsü masaya çek", "Boynu öne uzatma", "Üstte 1 sn sık"], { warn: "Bugünün ana çekişi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh güvenli değilse ayak dirençli towel row kullan", "Hiçbir çekiş kurulamıyorsa prone cobra ile üst sırt aktivasyonunu koru"] }),
-              ex("Incline Push-up", "3 × 8-12", "Göğüs + triceps", ["Yüksekliği omuza göre ayarla", "Dirsekleri 30-45° tut"], { warn: "Bugünün güvenli itişi", alts: ["Wall Push-up"], alt_reasons: ["Omuz hassassa açıyı daha da yükselt"] }),
+              ex("Incline Push-up", "4 × 8-12", "Göğüs + triceps", ["Yüksekliği omuza göre ayarla", "Dirsekleri 30-45° tut"], { warn: "Bugünün güvenli itişi", alts: ["Wall Push-up"], alt_reasons: ["Omuz hassassa açıyı daha da yükselt"] }),
+              ex("Close Grip Push Up", "2 × 8-10", "Triceps + iç göğüs", ["Elleri biraz daha dar al", "Gerekirse incline yap", "Omuz öne düşmesin"], { warn: "Triceps ve göğüs için düşük riskli ek hacim", alts: ["Wall Push-up"], alt_reasons: ["Dar tutuş omuz veya bileği rahatsız ederse açıyı yükselt"] }),
               ex("Single Leg Glute Bridge", "3 × 10-12 (her bacak)", "Glute + hamstring", ["Bel değil kalça itişi", "Üstte 1 sn sık"], { warn: "Posterior chain'i güvenli besler" }),
+              ex("Towel Curl Isometric", "2 × 20-30sn", "Biceps", ["Havluyu ayağın altına sabitle", "Dirseği gövdeye yakın tut", "Boynu kasma"], { warn: "Evde ekipmansız biceps yükleme için pratik çözüm" }),
               ex("Wall Sit", "2 × 20-30sn", "Quad izometrik", ["Ağrısız açı bul", "Topuğu yükle"], { avoid: "Derin açı", warn: "Diz baskısı artarsa çıkar", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Diz bugün hoşlanmıyorsa glute dominanta dön"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
@@ -205,7 +207,7 @@ export const PROGRAM_HYBRID = {
           ],
         },
         gym: {
-          duration: "~70 dk",
+          duration: "~78 dk",
           aerobicMinutes: 15,
           modeNote: "Enerji iyiyse ve semptom düşükse gym yolu daha iyi yüklenir; bu gün rower interval atletik dayanıklılık için en iyi seçeneklerden biri.",
           injury: "⚠️ Omuz iyi değilse pull-up hattını lat pulldown'a, press'i machine press kısa ROM'a çek.",
@@ -220,8 +222,10 @@ export const PROGRAM_HYBRID = {
             ]),
             block("💪 KUVVET — Temel Denge", "#F4A261", [
               ex("Chest Supported Row", "3 × 8-10", "Mid sırt + lat", ["Bench desteğini kullan", "Boynu uzun tut", "Üstte kısa sık"], { warn: "Bugünün ana çekişi" }),
-              ex("Floor Press", "3 × 8-10", "Göğüs + triceps", ["Omuzları geriye yerleştir", "Dirsekleri kontrollü indir"], { warn: "Omuz dostu press" }),
+              ex("Floor Press", "4 × 8-10", "Göğüs + triceps", ["Omuzları geriye yerleştir", "Dirsekleri kontrollü indir"], { warn: "Omuz dostu press" }),
               ex("Hip Thrust", "3 × 10-12", "Glute max", ["Üstte 1 sn sık", "Bel hiperextansiyonu yapma"], { warn: "Posterior chain tabanı" }),
+              ex("Cable Curl", "2 × 10-12", "Biceps", ["Dirseği sabit tut", "Omuzu öne alma"], { warn: "Direkt kol hacmi için düşük riskli ek" }),
+              ex("Triceps Pushdown", "2 × 10-12", "Triceps", ["Dirseği gövdeye yakın tut", "Omuzu yükseltme"], { warn: "Omuz dostu triceps hacmi" }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Pallof Press", "3 × 10 (her taraf)", "Anti-rotasyon", ["Göğüs hizasında it", "2 sn bekle"], { warn: "Skolyoz/kifoz için değerli" }),
@@ -337,6 +341,7 @@ export const PROGRAM_HYBRID = {
               ex("Box Step Down (eccentric)", "2 × 5-6 (her bacak)", "Quad kontrol", ["Alçak kutu kullan", "3 sn yavaş iniş", "Destek alarak kalça-diz hattını koru"], { warn: "Quad toleransını güvenli progresyonla artırır", alts: ["Wall Sit"], alt_reasons: ["Step-down dizde hoş değilse izometrik seçeneğe dön"] }),
               ex("Chest Supported Row", "3 × 10", "Upper back", ["Bench desteğinde boynu uzun tut"], { warn: "Bugünün upper-back omurgası" }),
               ex("Band Face Pull", "2 × 12-15", "Arka omuz + alt trapez", ["Dirsekleri çok yükseltmeden çek"], { warn: "Kifoz eğilimine karşı iyi kapanış" }),
+              ex("Cable Lateral Raise", "2 × 12-15", "Yan omuz", ["Skapular planda kaldır", "Hafif kilo kullan", "Ağrısız aralıkta kal"], { warn: "Omuz hacmi için şartlı ve hafif ek set" }),
               ex("Landmine Press", "2 × 8-10", "Omuz dostu press", ["Kaburgayı kapat", "Barı çapraz yukarı it"], { warn: "Şartlı hareket: omuz ağrısızsa", alts: ["Floor Press"], alt_reasons: ["Landmine bile rahatsızsa floor press'e dön"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
@@ -399,7 +404,7 @@ export const PROGRAM_HYBRID = {
       intent: "Haftanın ana hacim günü; ama kontrol ve toparlanabilirlik çizgisi korunur.",
       variants: {
         home: {
-          duration: "~80 dk",
+          duration: "~85 dk",
           aerobicMinutes: 35,
           modeNote: "Gym yoksa bile haftanın ana işi evde çıkabilir; yürüyüş bloğunu atlama.",
           injury: "⚠️ Bugün hacim var ama skill sadece hafif temas. Diz veya omuz iyi değilse doz düşer.",
@@ -422,7 +427,8 @@ export const PROGRAM_HYBRID = {
             block("💪 KUVVET — Hacim", "#F4A261", [
               ex("Hip Thrust (Sandalye)", "4 × 10-12", "Glute", ["Üstte 1 sn sık", "Belden itme"], { warn: "Bugünün posterior chain omurgası" }),
               ex("Inverted Row (Masa Altı)", "4 × 8-10", "Sırt", ["Göğsü çek", "Boynu nötr tut"], { warn: "Bugünün ana pull hacmi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh stabil değilse towel row ile devam et", "Kurulum yoksa prone cobra ile üst sırt hacmini en azından koru"] }),
-              ex("Incline Push-up", "2-3 × 10-12", "Göğüs", ["Ağrısız ROM'da kal"], { warn: "Push destek hacmi; ana iş değil" }),
+              ex("Incline Push-up", "3 × 10-12", "Göğüs", ["Ağrısız ROM'da kal"], { warn: "Push destek hacmi; ana iş değil" }),
+              ex("Towel Curl Isometric", "2 × 20-30sn", "Biceps", ["Ayağınla direnci ayarla", "Dirseği sabit tut"], { warn: "Evde doğrudan kol çalışması için hafif hacim" }),
               ex("Single Leg Glute Bridge", "2 × 10 (her bacak)", "Glute + hamstring", ["Kontrollü kaldır"], { alts: ["Wall Sit"], alt_reasons: ["Diz iyi, quad dokunuş istiyorsan wall sit kullan"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
@@ -433,7 +439,7 @@ export const PROGRAM_HYBRID = {
           ],
         },
         gym: {
-          duration: "~85 dk",
+          duration: "~92 dk",
           aerobicMinutes: 25,
           modeNote: "Enerji yüksekse gym versiyonu posterior chain ve row hacmini daha iyi yükler.",
           injury: "⚠️ Hacim günü diye ego yok. Pull ve glute omurgası korunur; press destek rolde kalır.",
@@ -451,7 +457,9 @@ export const PROGRAM_HYBRID = {
               ex("Hip Thrust", "4 × 8-10", "Glute", ["Üstte 1 sn sık"], { warn: "Bugünün ana hinge/glute hattı" }),
               ex("Chest Supported Row", "4 × 8-10", "Mid sırt", ["Bench desteğini kullan", "Boyun nötr"]),
               ex("Lat Pulldown", "3 × 8-10", "Lat", ["Dirseği aşağı çek", "Kendini geriye savurma"], { warn: "Dikey çekiş desteği" }),
-              ex("Floor Press", "2-3 × 8-10", "Göğüs + triceps", ["Kontrollü tempo"], { warn: "Press destek rolde" }),
+              ex("Floor Press", "3 × 8-10", "Göğüs + triceps", ["Kontrollü tempo"], { warn: "Press destek rolde" }),
+              ex("Cable Curl", "2 × 10-12", "Biceps", ["Dirseği sabit tut", "Tempo kontrollü"], { warn: "Haftalık kol hacmini dengeler" }),
+              ex("Triceps Pushdown", "2 × 10-12", "Triceps", ["Dirseği gövdeye yakın tut"], { warn: "Omuz dostu triceps hacmi" }),
               ex("Leg Press", "2 × 8-10", "Quad", ["Kısa ağrısız ROM"], { warn: "Sadece tolerans varsa" }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [

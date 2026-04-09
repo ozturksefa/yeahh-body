@@ -467,6 +467,7 @@ const YT_QUERY_MAP = {
   "Standing Calf Raise": "standing calf raise exercise form",
   "Wall Tibialis Raise": "wall tibialis raise exercise form",
   "Box Step Down (eccentric)": "eccentric step down exercise form",
+  "Towel Curl Isometric": "towel biceps curl isometric exercise form",
 };
 
 export function getGifUrl(name) {
