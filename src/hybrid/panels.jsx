@@ -1,4 +1,4 @@
-import { useMemo } from "react";
+import { useMemo, useState } from "react";
 import { PROGRAM_HYBRID } from "../dataHybrid";
 import {
   average,
@@ -189,79 +189,115 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
 }
 
 export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setPre, lockedMode = null }) {
+  const [open, setOpen] = useState(false);
   const update = (field, value) => setPre((prev) => ({ ...prev, [field]: value }));
   const modeSwitchEnabled = !lockedMode;
+  const symptomMax = Math.max(Number(pre.shoulder || 0), Number(pre.knee || 0), Number(pre.spine || 0));
+  const summaryTone = symptomMax >= 3 ? "#FF5252" : pre.energy === "düşük" || pre.sleep === "kötü" ? "#FFA726" : "#2A9D8F";
 
   return (
     <div style={{ padding: "10px 12px 0", display: "grid", gap: 10 }}>
-      <SectionCard title="Günlük Mod Seçimi" accent="#4FC3F7">
-        {modeSwitchEnabled ? (
-          <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-            {[
-              { id: "home", label: "🏠 Ev" },
-              { id: "gym", label: "🏋️ Macfit" },
-            ].map((item) => {
-              const active = mode === item.id;
-              return (
-                <button
-                  key={item.id}
-                  onClick={() => setMode(item.id)}
-                  style={{
-                    ...buttonBase,
-                    flex: 1,
-                    background: active ? "rgba(79,195,247,.12)" : "#17171B",
-                    borderColor: active ? "#4FC3F7" : "#2A2A30",
-                    color: active ? "#fff" : "#C4C4CC",
-                  }}
-                >
-                  {item.label}
-                </button>
-              );
-            })}
-          </div>
-        ) : (
-          <div style={{
-            marginBottom: 10,
-            background: "#17171B",
-            border: "1px solid #2A2A30",
-            borderRadius: 10,
-            padding: "10px 12px",
-            fontSize: 12,
-            color: "#C4C4CC",
-          }}>
-            Bu ekran sabit olarak <strong>{mode === "home" ? "Ev" : "Macfit"}</strong> yolunu gösterir.
-          </div>
-        )}
-        <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.55, marginBottom: 6 }}>{day.intent}</div>
-        <div style={{ fontSize: 11, color: "#7A7A84", lineHeight: 1.5 }}>{activeVariant.modeNote}</div>
-      </SectionCard>
-
-      <SectionCard title="Antrenman Öncesi Check-in" accent="#2A9D8F">
-        <div style={{ display: "grid", gap: 10 }}>
+      <button
+        onClick={() => setOpen((value) => !value)}
+        style={{
+          width: "100%",
+          background: "#131316",
+          border: `1px solid ${summaryTone}33`,
+          borderRadius: 12,
+          padding: 12,
+          color: "inherit",
+          textAlign: "left",
+          cursor: "pointer",
+        }}
+      >
+        <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div>
-            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Enerji</div>
-            <FieldButtons value={pre.energy} onChange={(v) => update("energy", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "düşük", label: "Düşük" }]} />
-          </div>
-          <div>
-            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Uyku</div>
-            <FieldButtons value={pre.sleep} onChange={(v) => update("sleep", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "kötü", label: "Kötü" }]} />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
-            <div>
-              <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Omuz</div>
-              <FieldSelect value={pre.shoulder} onChange={(v) => update("shoulder", v)} />
+            <div style={{ fontSize: 11, color: summaryTone, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>
+              Antrenman Öncesi Hazırlık
             </div>
-            <div>
-              <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Diz</div>
-              <FieldSelect value={pre.knee} onChange={(v) => update("knee", v)} />
+            <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 4 }}>
+              {mode === "home" ? "🏠 Ev" : "🏋️ Macfit"} · {pre.energy || "orta"} enerji · {pre.sleep || "orta"} uyku
             </div>
-            <div>
-              <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bel/Boyun</div>
-              <FieldSelect value={pre.spine} onChange={(v) => update("spine", v)} />
+            <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 6, lineHeight: 1.5 }}>
+              Omuz {pre.shoulder || 0}/5 · Diz {pre.knee || 0}/5 · Bel/Boyun {pre.spine || 0}/5
             </div>
           </div>
+          <div style={{ fontSize: 18, color: "#7A7A84" }}>{open ? "−" : "+"}</div>
         </div>
-      </SectionCard>
+      </button>
+
+      {open && (
+        <>
+          <SectionCard title="Günlük Mod Seçimi" accent="#4FC3F7">
+            {modeSwitchEnabled ? (
+              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
+                {[
+                  { id: "home", label: "🏠 Ev" },
+                  { id: "gym", label: "🏋️ Macfit" },
+                ].map((item) => {
+                  const active = mode === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => setMode(item.id)}
+                      style={{
+                        ...buttonBase,
+                        flex: 1,
+                        background: active ? "rgba(79,195,247,.12)" : "#17171B",
+                        borderColor: active ? "#4FC3F7" : "#2A2A30",
+                        color: active ? "#fff" : "#C4C4CC",
+                      }}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            ) : (
+              <div style={{
+                marginBottom: 10,
+                background: "#17171B",
+                border: "1px solid #2A2A30",
+                borderRadius: 10,
+                padding: "10px 12px",
+                fontSize: 12,
+                color: "#C4C4CC",
+              }}>
+                Bu ekran sabit olarak <strong>{mode === "home" ? "Ev" : "Macfit"}</strong> yolunu gösterir.
+              </div>
+            )}
+            <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.55, marginBottom: 6 }}>{day.intent}</div>
+            <div style={{ fontSize: 11, color: "#7A7A84", lineHeight: 1.5 }}>{activeVariant.modeNote}</div>
+          </SectionCard>
+
+          <SectionCard title="Antrenman Öncesi Check-in" accent="#2A9D8F">
+            <div style={{ display: "grid", gap: 10 }}>
+              <div>
+                <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Enerji</div>
+                <FieldButtons value={pre.energy} onChange={(v) => update("energy", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "düşük", label: "Düşük" }]} />
+              </div>
+              <div>
+                <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Uyku</div>
+                <FieldButtons value={pre.sleep} onChange={(v) => update("sleep", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "kötü", label: "Kötü" }]} />
+              </div>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+                <div>
+                  <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Omuz</div>
+                  <FieldSelect value={pre.shoulder} onChange={(v) => update("shoulder", v)} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Diz</div>
+                  <FieldSelect value={pre.knee} onChange={(v) => update("knee", v)} />
+                </div>
+                <div>
+                  <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bel/Boyun</div>
+                  <FieldSelect value={pre.spine} onChange={(v) => update("spine", v)} />
+                </div>
+              </div>
+            </div>
+          </SectionCard>
+        </>
+      )}
 
     </div>
   );

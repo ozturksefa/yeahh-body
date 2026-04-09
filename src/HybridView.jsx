@@ -274,18 +274,6 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
       {page === "program" && (
         <>
-          <CoachControlPanel program={PROGRAM_HYBRID} />
-          <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" />
-          <DailyCheckinPanel
-            day={day}
-            mode={mode}
-            setMode={handleModeChange}
-            activeVariant={activeVariant}
-            pre={currentEntry.pre}
-            setPre={(updater) => updateEntry("pre", updater)}
-            lockedMode={lockedMode}
-          />
-
           <div className="day-hdr">
             <div className="day-top">
               <div>
@@ -300,6 +288,16 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5 }}>{activeVariant.weekExecutionNote || weekProfile.note}</div>
             </div>
           </div>
+
+          <DailyCheckinPanel
+            day={day}
+            mode={mode}
+            setMode={handleModeChange}
+            activeVariant={activeVariant}
+            pre={currentEntry.pre}
+            setPre={(updater) => updateEntry("pre", updater)}
+            lockedMode={lockedMode}
+          />
 
           <div style={{ padding: "0 12px 12px" }}>
             <WorkoutTimer
@@ -341,6 +339,9 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                 <div key={item} className="pain-row"><span>•</span><span>{item}</span></div>
               ))}
             </div>
+
+            <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" />
+            <CoachControlPanel program={PROGRAM_HYBRID} />
           </main>
 
           <DailyCheckoutPanel

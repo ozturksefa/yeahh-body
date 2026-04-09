@@ -20,7 +20,7 @@ const toneStyles = {
 };
 
 export default function CoachControlPanel({ program = PROGRAM_HOME }) {
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const { meta, coachProfile, controlCenter } = program;
 
   return (

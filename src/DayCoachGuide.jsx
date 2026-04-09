@@ -63,7 +63,7 @@ function BulletList({ items, color = "#C4C4CC" }) {
 
 function DayCoachGuideCard({ day, guides = HOME_COACH_GUIDES, title = "Günlük Koç Rehberi" }) {
   const guide = guides[day?.sub];
-  const [open, setOpen] = useState(true);
+  const [open, setOpen] = useState(false);
   const [beforeChecks, setBeforeChecks] = useState({});
   const [finishChecks, setFinishChecks] = useState({});
 
