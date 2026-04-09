@@ -201,8 +201,8 @@ export const PROGRAM_HYBRID = {
         },
         gym: {
           duration: "~70 dk",
-          aerobicMinutes: 12,
-          modeNote: "Enerji iyiyse ve semptom düşükse gym yolu daha iyi yüklenir.",
+          aerobicMinutes: 15,
+          modeNote: "Enerji iyiyse ve semptom düşükse gym yolu daha iyi yüklenir; bu gün rower interval atletik dayanıklılık için en iyi seçeneklerden biri.",
           injury: "⚠️ Omuz iyi değilse pull-up hattını lat pulldown'a, press'i machine press kısa ROM'a çek.",
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
@@ -220,7 +220,7 @@ export const PROGRAM_HYBRID = {
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Pallof Press", "3 × 10 (her taraf)", "Anti-rotasyon", ["Göğüs hizasında it", "2 sn bekle"], { warn: "Skolyoz/kifoz için değerli" }),
-              ex("Stationary Bike", "10-12 dk interval", "Kısa interval", ["30 sn sert + 60 sn kolay", "Diz ritmini temiz tut"], { alts: ["Rower"], alt_reasons: ["Bike yerine rower tercih etmek istersen aynı işi görür"] }),
+              ex("Rower", "12-15 dk interval", "Kısa interval", ["30 sn sert + 60 sn kolay", "Çekişi belden değil kalça-itme + kol senkronundan üret", "Servikal nötral kal"], { alts: ["Stationary Bike", "Incline Walk"], alt_reasons: ["Bel veya boyun rower'da hoşlanmıyorsa bike'a dön", "Diz veya teknik yorgunlukta incline walk ile ritmi koru"] }),
             ]),
           ],
         },
