@@ -20,14 +20,21 @@ import {
   buttonBase,
   DAY_ORDER,
   ENTRIES_KEY,
+  formatShortDateLabel,
   getTodayContext,
   getTodayIndex,
+  getWeekProgress,
   getWeekExecutionNote,
+  getWeekShiftPreview,
+  getWeekStartDate,
   loadJson,
   MODE_KEY,
   saveJson,
   SKILL_KEY,
+  SNOOZE_KEY,
+  START_KEY,
   SWAPS_KEY,
+  WEEK_LOG_KEY,
   WEEK_KEY,
 } from "./hybrid/shared";
 
@@ -51,6 +58,9 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const [restTimer, setRestTimer] = useState(null);
   const [swaps, setSwaps] = useState(() => loadJson(SWAPS_KEY, {}));
   const [entries, setEntries] = useState(() => loadJson(ENTRIES_KEY, {}));
+  const [startDate, setStartDate] = useState(() => loadJson(START_KEY, null));
+  const [weekLog, setWeekLog] = useState(() => loadJson(WEEK_LOG_KEY, []));
+  const [snoozeDate, setSnoozeDate] = useState(() => loadJson(SNOOZE_KEY, null));
   const [activeWeek, setActiveWeek] = useState(() => {
     const saved = Number(loadJson(WEEK_KEY, 1));
     return Number.isFinite(saved) && saved >= 1 && saved <= PROGRAM_HYBRID.periodization.length ? saved : 1;
@@ -71,6 +81,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const day = allDays[selectedDay];
   const todaySub = todayContext.sub;
   const todayIndex = getTodayIndex(allDays, todaySub);
+  const allEntries = useMemo(() => Object.values(entries), [entries]);
   const showDayTabs = page === "program" || page === "nutrition";
   const workoutDayIndex = selectedDay + (mode === "gym" ? 400 : 300);
   const weekProfile = PROGRAM_HYBRID.periodization.find((item) => item.week === activeWeek) || PROGRAM_HYBRID.periodization[0];
@@ -114,6 +125,27 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       return progress && progress.completed < progress.total;
     }) || null;
   }, [activeVariant.blocks, blockProgress, focusedBlockIndex]);
+  const weekProgress = useMemo(() => getWeekProgress({
+    entries: allEntries,
+    startDate,
+    activeWeek,
+    today: todayContext.key,
+    weekLog,
+    trainingDays: allDays,
+  }), [activeWeek, allDays, allEntries, startDate, todayContext.key, weekLog]);
+  const nextWeekProfile = PROGRAM_HYBRID.periodization.find((item) => item.week === activeWeek + 1) || null;
+  const nextWeekPreview = useMemo(
+    () => (nextWeekProfile ? getWeekShiftPreview(baseVariant, weekProfile, nextWeekProfile) : null),
+    [baseVariant, nextWeekProfile, weekProfile]
+  );
+  const transitionPrompt = useMemo(() => {
+    if (!startDate || !weekProgress.ready) return null;
+    if (snoozeDate === todayContext.key) return null;
+    if (activeWeek >= PROGRAM_HYBRID.periodization.length) {
+      return { kind: "complete" };
+    }
+    return { kind: "advance" };
+  }, [activeWeek, snoozeDate, startDate, todayContext.key, weekProgress.ready]);
 
   const findNextExerciseTarget = (exerciseMap = {}) => {
     for (let blockIdx = 0; blockIdx < activeVariant.blocks.length; blockIdx += 1) {
@@ -165,6 +197,18 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   useEffect(() => {
     saveJson(ENTRIES_KEY, entries);
   }, [entries]);
+
+  useEffect(() => {
+    saveJson(START_KEY, startDate);
+  }, [startDate]);
+
+  useEffect(() => {
+    saveJson(WEEK_LOG_KEY, weekLog);
+  }, [weekLog]);
+
+  useEffect(() => {
+    saveJson(SNOOZE_KEY, snoozeDate);
+  }, [snoozeDate]);
 
   useEffect(() => {
     saveJson(WEEK_KEY, activeWeek);
@@ -296,6 +340,51 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     setNextStepHint(null);
   };
 
+  const appendWeekLog = () => {
+    if (!startDate || weekLog.some((item) => item.week === activeWeek)) return;
+    const currentWeekStart = getWeekStartDate(startDate, activeWeek);
+    setWeekLog((prev) => ([
+      ...prev,
+      {
+        week: activeWeek,
+        startDate: currentWeekStart,
+        completedDate: todayContext.key,
+        sessionCount: weekProgress.sessionCount,
+        repGoalMet: weekProgress.repGoalMet,
+      },
+    ]));
+  };
+
+  const handleStartProgram = () => {
+    setStartDate(todayContext.key);
+    setWeekLog([]);
+    setSnoozeDate(null);
+    setActiveWeek(1);
+  };
+
+  const handleAdvanceWeek = () => {
+    appendWeekLog();
+    setSnoozeDate(null);
+    if (activeWeek < PROGRAM_HYBRID.periodization.length) {
+      setActiveWeek(activeWeek + 1);
+    }
+  };
+
+  const handleSnoozeWeekPrompt = () => {
+    setSnoozeDate(todayContext.key);
+  };
+
+  const handleAcknowledgeCompletion = () => {
+    appendWeekLog();
+  };
+
+  const handleResetProgram = () => {
+    setStartDate(null);
+    setWeekLog([]);
+    setSnoozeDate(null);
+    setActiveWeek(1);
+  };
+
   const handleCompleteSession = async () => {
     if (currentEntry.post.completed) return;
 
@@ -422,6 +511,107 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               {activeVariant.weekExecutionNote || weekProfile.note}
             </div>
           </div>
+
+          {!startDate && (
+            <div style={{ padding: "0 12px 12px" }}>
+              <SectionCard title="🏁 8 Haftalık Programa Başla" accent="#00C853">
+                <div style={{ display: "grid", gap: 10 }}>
+                  <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5 }}>
+                    Bugünü başlangıç tarihi olarak kaydeder ve haftayı `Hafta 1 — Kurulum` olarak başlatır.
+                  </div>
+                  <button
+                    onClick={handleStartProgram}
+                    style={{
+                      ...buttonBase,
+                      width: "100%",
+                      background: "#00C853",
+                      borderColor: "#00C853",
+                      color: "#07140B",
+                      padding: "12px 14px",
+                      fontSize: 13,
+                      fontWeight: 900,
+                    }}
+                  >
+                    Programa Başla
+                  </button>
+                </div>
+              </SectionCard>
+            </div>
+          )}
+
+          {transitionPrompt?.kind === "advance" && (
+            <div style={{ padding: "0 12px 12px" }}>
+              <SectionCard title={`🎉 Hafta ${activeWeek} tamamlandı!`} accent="#00C853">
+                <div style={{ display: "grid", gap: 10 }}>
+                  <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5 }}>
+                    {weekProgress.sessionCount} seans · Rep hedefi: <span style={{ color: weekProgress.repGoalMet ? "#00C853" : "#FFA726", fontWeight: 800 }}>{weekProgress.repGoalMet ? "✓ tutuldu" : "△ kısmen"}</span>
+                  </div>
+                  {nextWeekProfile && (
+                    <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
+                      <div style={{ fontSize: 12, color: "#fff", fontWeight: 800 }}>
+                        Sonraki: Hafta {nextWeekProfile.week} — {nextWeekProfile.label}
+                      </div>
+                      <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginTop: 6 }}>
+                        {nextWeekPreview}
+                      </div>
+                    </div>
+                  )}
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button
+                      onClick={handleAdvanceWeek}
+                      style={{
+                        ...buttonBase,
+                        flex: 1,
+                        background: "#4FC3F7",
+                        borderColor: "#4FC3F7",
+                        color: "#071119",
+                        padding: "12px 14px",
+                        fontSize: 13,
+                        fontWeight: 900,
+                      }}
+                    >
+                      Hafta {nextWeekProfile?.week}'ye Geç
+                    </button>
+                    <button onClick={handleSnoozeWeekPrompt} style={{ ...buttonBase, flex: 1, padding: "12px 14px", fontSize: 13 }}>
+                      Bekle
+                    </button>
+                  </div>
+                </div>
+              </SectionCard>
+            </div>
+          )}
+
+          {transitionPrompt?.kind === "complete" && (
+            <div style={{ padding: "0 12px 12px" }}>
+              <SectionCard title="🏆 8 Hafta tamamlandı!" accent="#FFD166">
+                <div style={{ display: "grid", gap: 10 }}>
+                  <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5 }}>
+                    H1'den H8'e ilerleme kaydın hazır. Dilersen bu bloğu kapat, dilersen yeni bir döngü başlat.
+                  </div>
+                  <div style={{ display: "flex", gap: 8 }}>
+                    <button onClick={handleResetProgram} style={{ ...buttonBase, flex: 1, padding: "12px 14px", fontSize: 13 }}>
+                      Programı Sıfırla
+                    </button>
+                    <button
+                      onClick={handleAcknowledgeCompletion}
+                      style={{
+                        ...buttonBase,
+                        flex: 1,
+                        background: "#FFD166",
+                        borderColor: "#FFD166",
+                        color: "#171105",
+                        padding: "12px 14px",
+                        fontSize: 13,
+                        fontWeight: 900,
+                      }}
+                    >
+                      Devam Et
+                    </button>
+                  </div>
+                </div>
+              </SectionCard>
+            </div>
+          )}
 
           <DailyCheckinPanel
             day={day}
@@ -635,42 +825,80 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
       {page === "plan" && (
         <div style={{ padding: "12px", display: "grid", gap: 10 }}>
-          <SectionCard title="Aktif Hafta Seçimi" accent="#4FC3F7">
+          <SectionCard title="Program Çizelgesi" accent="#4FC3F7">
             <div style={{ display: "grid", gap: 10 }}>
-              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+              <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 8 }}>
                 {PROGRAM_HYBRID.periodization.map((week) => {
+                  const isDone = weekLog.some((item) => item.week === week.week);
                   const active = week.week === activeWeek;
+                  const isFuture = startDate ? week.week > activeWeek && !isDone : week.week > 1;
+                  const weekStart = startDate ? getWeekStartDate(startDate, week.week) : null;
+                  const symbol = isDone ? "✓" : active ? "●" : "○";
                   return (
                     <button
                       key={week.week}
-                      onClick={() => setActiveWeek(week.week)}
+                      onClick={() => !isFuture && setActiveWeek(week.week)}
+                      disabled={isFuture}
                       style={{
                         ...buttonBase,
-                        minWidth: 72,
-                        background: active ? "rgba(79,195,247,.14)" : "#17171B",
-                        borderColor: active ? "#4FC3F7" : "#2A2A30",
-                        color: active ? "#fff" : "#C4C4CC",
+                        minWidth: 0,
+                        opacity: isFuture ? 0.6 : 1,
+                        background: isDone ? "rgba(0,200,83,.1)" : active ? "rgba(79,195,247,.14)" : "#17171B",
+                        borderColor: isDone ? "rgba(0,200,83,.35)" : active ? "#4FC3F7" : "#2A2A30",
+                        color: active || isDone ? "#fff" : "#C4C4CC",
+                        padding: "10px 8px",
                       }}
                     >
-                      H{week.week}
+                      <div style={{ fontSize: 13, fontWeight: 900 }}>H{week.week} {symbol}</div>
+                      <div style={{ fontSize: 10, color: isDone ? "#8FF0A4" : active ? "#4FC3F7" : "#7A7A84", marginTop: 4 }}>{weekStart ? formatShortDateLabel(weekStart) : "bekliyor"}</div>
                     </button>
                   );
                 })}
               </div>
-              <div style={{ fontSize: 12, color: "#fff", fontWeight: 800 }}>Şu an: Hafta {weekProfile.week} · {weekProfile.label}</div>
-              <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5 }}>{getWeekExecutionNote(weekProfile)}</div>
+              {!startDate ? (
+                <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5 }}>Program henüz başlatılmadı. Başlangıç tarihi atanınca haftalar otomatik takvime oturur.</div>
+              ) : (
+                <>
+                  <div style={{ fontSize: 12, color: "#fff", fontWeight: 800 }}>Başlangıç: {formatShortDateLabel(startDate)} · Şu an: Hafta {weekProfile.week} · {weekProfile.label}</div>
+                  <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5 }}>{getWeekExecutionNote(weekProfile)}</div>
+                </>
+              )}
             </div>
           </SectionCard>
 
-          <SectionCard title="8 Haftalık İlerleme" accent="#4FC3F7">
+          <SectionCard title="Hafta Detayı" accent="#4FC3F7">
             <div style={{ display: "grid", gap: 8 }}>
-              {PROGRAM_HYBRID.periodization.map((week) => (
-                <div key={week.week} style={{ background: week.week === activeWeek ? "rgba(79,195,247,.08)" : "#17171B", border: `1px solid ${week.week === activeWeek ? "rgba(79,195,247,.28)" : "#2A2A30"}`, borderRadius: 10, padding: 10 }}>
-                  <div style={{ fontSize: 12, fontWeight: 800, color: "#fff" }}>Hafta {week.week} · {week.label}</div>
-                  <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 6, lineHeight: 1.5 }}>{week.note}</div>
-                  <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 6 }}>Uygulama: {getWeekExecutionNote(week)}</div>
-                </div>
-              ))}
+              <div style={{ background: "rgba(79,195,247,.08)", border: "1px solid rgba(79,195,247,.24)", borderRadius: 10, padding: 10 }}>
+                <div style={{ fontSize: 12, fontWeight: 800, color: "#fff" }}>Hafta {weekProfile.week} · {weekProfile.label}</div>
+                <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 6, lineHeight: 1.5 }}>{weekProfile.note}</div>
+                <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 6 }}>Uygulama: {getWeekExecutionNote(weekProfile)}</div>
+              </div>
+
+              {(() => {
+                const loggedWeek = weekLog.find((item) => item.week === activeWeek);
+                if (loggedWeek) {
+                  return (
+                    <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
+                      <div style={{ fontSize: 11, color: "#00C853", fontWeight: 800, textTransform: "uppercase", letterSpacing: ".06em" }}>Read-only kayıt</div>
+                      <div style={{ fontSize: 12, color: "#fff", fontWeight: 800, marginTop: 6 }}>{loggedWeek.sessionCount} seans · Rep hedefi: {loggedWeek.repGoalMet ? "✓" : "△"}</div>
+                      <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 6, lineHeight: 1.5 }}>Başlangıç: {formatShortDateLabel(loggedWeek.startDate)} · Tamamlandı: {formatShortDateLabel(loggedWeek.completedDate)}</div>
+                    </div>
+                  );
+                }
+
+                if (!startDate) {
+                  return <div style={{ fontSize: 11, color: "#7A7A84" }}>Hafta detayları için önce programı başlat.</div>;
+                }
+
+                return (
+                  <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
+                    <div style={{ fontSize: 11, color: "#4FC3F7", fontWeight: 800, textTransform: "uppercase", letterSpacing: ".06em" }}>Aktif hedef</div>
+                    <div style={{ fontSize: 12, color: "#fff", fontWeight: 800, marginTop: 6 }}>{weekProgress.sessionCount}/4 tamamlanan ana seans</div>
+                    <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 6, lineHeight: 1.5 }}>Hafta penceresi: {formatShortDateLabel(weekProgress.weekStartDate)} · {formatShortDateLabel(weekProgress.weekEndDate)}</div>
+                    <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 6, lineHeight: 1.5 }}>{weekProgress.repGoalMet ? "Rep hedefi genel olarak tutuluyor." : "Rep hedefi için kalite ve toparlanma biraz daha oturmalı."}</div>
+                  </div>
+                );
+              })()}
             </div>
           </SectionCard>
 

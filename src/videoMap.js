@@ -464,6 +464,9 @@ const YT_QUERY_MAP = {
   "Tek Ayak Denge Hold": "single leg balance hold exercise form",
   "Single Leg Balance Reach (Y-Balance)": "y balance reach test exercise form",
   "Wall Sit": "wall sit exercise form knee friendly",
+  "Standing Calf Raise": "standing calf raise exercise form",
+  "Wall Tibialis Raise": "wall tibialis raise exercise form",
+  "Box Step Down (eccentric)": "eccentric step down exercise form",
 };
 
 export function getGifUrl(name) {

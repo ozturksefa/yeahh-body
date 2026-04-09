@@ -1,4 +1,4 @@
-import { formatLocalDate } from "../dateUtils";
+import { formatLocalDate, shiftLocalDate } from "../dateUtils";
 
 export const DAY_ORDER = { PAZARTESİ: 1, SALI: 2, ÇARŞAMBA: 3, PERŞEMBE: 4, CUMA: 5, CUMARTESİ: 6, PAZAR: 7 };
 export const TODAY_SUB_BY_INDEX = ["PAZAR", "PAZARTESİ", "SALI", "ÇARŞAMBA", "PERŞEMBE", "CUMA", "CUMARTESİ"];
@@ -7,6 +7,9 @@ export const SWAPS_KEY = "yb_hybrid_swaps_v1";
 export const ENTRIES_KEY = "yb_hybrid_entries_v1";
 export const SKILL_KEY = "yb_hybrid_skill_v1";
 export const WEEK_KEY = "yb_hybrid_week_v1";
+export const START_KEY = "yb_hybrid_start";
+export const WEEK_LOG_KEY = "yb_hybrid_week_log";
+export const SNOOZE_KEY = "yb_hybrid_snooze";
 
 export const buttonBase = {
   border: "1px solid #2A2A30",
@@ -157,6 +160,115 @@ export function getTodaySub() {
 export function getTodayIndex(days, todaySub = getTodaySub()) {
   const foundIndex = days.findIndex((day) => day.sub === todaySub);
   return foundIndex >= 0 ? foundIndex : 0;
+}
+
+function localDateToDate(dateStr) {
+  const [year, month, day] = String(dateStr || "").split("-").map(Number);
+  return new Date(year, (month || 1) - 1, day || 1);
+}
+
+export function diffLocalDays(startDate, endDate) {
+  const start = localDateToDate(startDate);
+  const end = localDateToDate(endDate);
+  const oneDay = 1000 * 60 * 60 * 24;
+  return Math.floor((end - start) / oneDay);
+}
+
+export function getWeekStartDate(startDate, week) {
+  if (!startDate || !week) return null;
+  return shiftLocalDate(startDate, (week - 1) * 7);
+}
+
+export function getWeekEndDate(startDate, week) {
+  const weekStartDate = getWeekStartDate(startDate, week);
+  return weekStartDate ? shiftLocalDate(weekStartDate, 6) : null;
+}
+
+export function formatShortDateLabel(dateStr) {
+  if (!dateStr) return "—";
+  return localDateToDate(dateStr).toLocaleDateString("tr-TR", { day: "numeric", month: "short" });
+}
+
+export function getCompletedWeekEntries(entries, weekStartDate, weekEndDate, trainingDays = []) {
+  const trainingSet = new Set(trainingDays.filter((day) => day.type === "training").map((day) => day.sub));
+  return entries.filter((entry) => (
+    !!entry?.post?.completed
+    && (!trainingSet.size || trainingSet.has(entry.day))
+    && entry.date >= weekStartDate
+    && entry.date <= weekEndDate
+  ));
+}
+
+export function getRepGoalMet(completedEntries = []) {
+  if (!completedEntries.length) return false;
+  const successCount = completedEntries.filter((entry) => {
+    const nextAction = entry.post?.nextAction || "aynı";
+    const rpe = Number(entry.post?.rpe || 0);
+    const cardio = entry.post?.cardio || "uygun";
+    return nextAction === "aynı" && (rpe === 0 || rpe <= 8) && cardio !== "fazla";
+  }).length;
+  return successCount / completedEntries.length >= 0.75;
+}
+
+export function getWeekProgress({ entries, startDate, activeWeek, today, weekLog = [], trainingDays = [] }) {
+  if (!startDate || !activeWeek) {
+    return {
+      started: false,
+      logged: false,
+      ready: false,
+      sessionCount: 0,
+      repGoalMet: false,
+      completedEntries: [],
+      reason: null,
+      weekStartDate: null,
+      weekEndDate: null,
+      daysElapsed: 0,
+      timelineStatus: "idle",
+    };
+  }
+
+  const weekStartDate = getWeekStartDate(startDate, activeWeek);
+  const weekEndDate = getWeekEndDate(startDate, activeWeek);
+  const completedEntries = getCompletedWeekEntries(entries, weekStartDate, weekEndDate, trainingDays);
+  const sessionCount = completedEntries.length;
+  const repGoalMet = getRepGoalMet(completedEntries);
+  const daysElapsed = diffLocalDays(weekStartDate, today);
+  const logged = weekLog.some((item) => item.week === activeWeek);
+  const reason = sessionCount >= 4 ? "sessions" : daysElapsed >= 7 ? "days" : null;
+
+  return {
+    started: true,
+    logged,
+    ready: !!reason && !logged,
+    sessionCount,
+    repGoalMet,
+    completedEntries,
+    reason,
+    weekStartDate,
+    weekEndDate,
+    daysElapsed,
+    timelineStatus: logged ? "done" : reason ? "ready" : "active",
+  };
+}
+
+export function getWeekShiftPreview(variant, currentWeekProfile, nextWeekProfile) {
+  if (!variant || !currentWeekProfile || !nextWeekProfile) return "Sonraki hafta bekleniyor.";
+  const currentVariant = applyWeekToVariant(variant, currentWeekProfile);
+  const nextVariant = applyWeekToVariant(variant, nextWeekProfile);
+
+  for (let blockIndex = 0; blockIndex < (currentVariant.blocks || []).length; blockIndex += 1) {
+    const currentBlock = currentVariant.blocks[blockIndex];
+    const nextBlock = nextVariant.blocks?.[blockIndex];
+    for (let exerciseIndex = 0; exerciseIndex < (currentBlock.exercises || []).length; exerciseIndex += 1) {
+      const currentExercise = currentBlock.exercises[exerciseIndex];
+      const nextExercise = nextBlock?.exercises?.[exerciseIndex];
+      if (currentExercise?.sets !== nextExercise?.sets) {
+        return `${currentExercise.name}: ${currentExercise.sets} → ${nextExercise.sets}`;
+      }
+    }
+  }
+
+  return "Setler büyük ölçüde aynı; kalite, tempo ve tolerans odağı korunur.";
 }
 
 export function getRelevantSkillsForDay(daySub, skillPaths) {

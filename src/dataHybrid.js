@@ -67,6 +67,7 @@ export const PROGRAM_HYBRID = {
     { pattern: "Ana itiş", gym: "Floor Press / Neutral Machine Press", home: "Incline Push-up", note: "Omuz dostu press hattı" },
     { pattern: "Posterior chain", gym: "Hip Thrust", home: "Hip Thrust (Sandalye) / Single Leg Glute Bridge", note: "Bel ve diz için güvenli kuvvet tabanı" },
     { pattern: "Diz dostu quad", gym: "Leg Press kısa ROM / Low Step-up", home: "Wall Sit / Reverse Lunge kısa ROM", note: "Menisküs toleransı belirler" },
+    { pattern: "Alt bacak desteği", gym: "Standing Calf Raise / Wall Tibialis Raise", home: "Standing Calf Raise / Wall Tibialis Raise", note: "Yürüyüş, incline walk ve diz-ayak bileği dayanıklılığını destekler" },
     { pattern: "Core stabilite", gym: "Pallof Press / Side Plank", home: "Dead Bug / Side Plank / Bird Dog", note: "Bel-boyun güvenliği için ana blok" },
     { pattern: "Kondisyon", gym: "Bike / Rower / Incline Walk", home: "Hızlı Yürüyüş", note: "Koşu ve zıplama yerine düşük darbeli kapasite işi" },
   ],
@@ -123,7 +124,7 @@ export const PROGRAM_HYBRID = {
       intent: "Haftaya yüklenerek değil, eklemleri hazırlayarak girersin.",
       variants: {
         home: {
-          duration: "~20 dk",
+          duration: "~25 dk",
           aerobicMinutes: 20,
           modeNote: "Ev modu bugün yeterli; amaç hazırlık ve rahatlama.",
           injury: "⚠️ Bugün antrenman yok; omuz-boyun hazırlığı ve hafif yürüyüş var.",
@@ -132,6 +133,8 @@ export const PROGRAM_HYBRID = {
               ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["Çeneyi hafif geri al", "Boynu aşağı bükme", "2 sn tut"], { warn: "Servikal nötral hissi ara" }),
               ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı kapalı tut", "Yavaş yukarı kay", "Omuzu kulağa sıkıştırma"]),
               ex("Wrist Rotation", "2 × 30sn", "Bilek hazırlığı", ["Küçük dairelerle başla", "Ağrılı yönü zorlamadan aç"]),
+              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve genel alt bacak dayanıklılığına destek" }),
+              ex("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek", "Hareketi sekmeden bitir"], { warn: "Diz ve ayak bileği hattını destekler" }),
             ]),
             block("🤸 HAFİF SKILL", "#5B2C6F", [
               ex("Pike Hold", "2 × 15sn", "Omuz aktivasyon", ["Omuzları aktif it", "Beli çökertme", "Sadece hafif temas ver"], { alts: ["Downward Dog Hold"] }),
@@ -142,7 +145,7 @@ export const PROGRAM_HYBRID = {
           ],
         },
         gym: {
-          duration: "~25 dk",
+          duration: "~30 dk",
           aerobicMinutes: 20,
           modeNote: "Macfit'teysen yürüyüş yerine bike veya incline walk kullanabilirsin.",
           injury: "⚠️ Bugün salonda da yüklenme yok; toparlanma odaklı kal.",
@@ -151,6 +154,8 @@ export const PROGRAM_HYBRID = {
               ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Dirseği sabit tut", "Yavaş aç-kapat"], { warn: "Isıtma değil bakım dozu" }),
               ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburga dışarı kaçmasın", "Yavaş tempo"]),
               ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut", "Boynu nötral hisset"]),
+              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve incline work kapasitesine destek" }),
+              ex("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek"], { warn: "Alt bacak dengesini destekler" }),
             ]),
             block("🚴 KONDİSYON", "#990000", [
               ex("Stationary Bike", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5", "Kalça-diz hattını rahat tut"], { alts: ["Incline Walk"], alt_reasons: ["Diz bike üzerinde hoşlanmıyorsa yürüyüşe dön"] }),
@@ -303,6 +308,7 @@ export const PROGRAM_HYBRID = {
             block("💪 KUVVET — Kontrol Hattı", "#F4A261", [
               ex("Tempo Inverted Row", "3 × 6-8", "Sırt + skapula", ["3 sn iniş", "Üstte 1 sn dur", "Boynu uzun tut"], { warn: "Bugünün upper-back omurgası", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa güvenli değilse towel row ile çekiş paterni korunur", "Belirgin ekipman kısıtında prone cobra ile skapula ve torasik kontrolü koru"] }),
               ex("Reverse Lunge (ağırlıksız)", "3 × 6-8 (her bacak)", "Quad + glute", ["Kısa kontrollü adım", "Diz çizgisini koru"], { avoid: "Büyük adım ve derin açı", warn: "Diz baskısı varsa wall sit'e dön", alts: ["Wall Sit"], alt_reasons: ["Menisküs hassassa izometrik seçenek daha güvenli olabilir"] }),
+              ex("Wall Sit", "1-2 × 20-30sn", "Quad izometrik", ["Ağrısız diz açısında kal", "Topuğu yükle"], { warn: "Reverse lunge iyi gidiyorsa düşük doz quad finisher olarak kullan", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Diz o gün wall sit'i de sevmiyorsa glute dominanta dön"] }),
               ex("Hip Thrust (Sandalye)", "3 × 12-15", "Glute max", ["Üstte kısa sık", "Bel yerine kalçadan it"]),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
@@ -328,6 +334,7 @@ export const PROGRAM_HYBRID = {
             ]),
             block("💪 KUVVET — Kontrol Hattı", "#F4A261", [
               ex("Leg Press", "3 × 10-12", "Quad", ["Kısa ROM kullan", "Dizini ağrısız açıda tut"], { warn: "Menisküs için ROM belirleyici", alts: ["Hip Thrust"], alt_reasons: ["Diz iyi hissetmiyorsa glute dominanta dön"] }),
+              ex("Box Step Down (eccentric)", "2 × 5-6 (her bacak)", "Quad kontrol", ["Alçak kutu kullan", "3 sn yavaş iniş", "Destek alarak kalça-diz hattını koru"], { warn: "Quad toleransını güvenli progresyonla artırır", alts: ["Wall Sit"], alt_reasons: ["Step-down dizde hoş değilse izometrik seçeneğe dön"] }),
               ex("Chest Supported Row", "3 × 10", "Upper back", ["Bench desteğinde boynu uzun tut"], { warn: "Bugünün upper-back omurgası" }),
               ex("Band Face Pull", "2 × 12-15", "Arka omuz + alt trapez", ["Dirsekleri çok yükseltmeden çek"], { warn: "Kifoz eğilimine karşı iyi kapanış" }),
               ex("Landmine Press", "2 × 8-10", "Omuz dostu press", ["Kaburgayı kapat", "Barı çapraz yukarı it"], { warn: "Şartlı hareket: omuz ağrısızsa", alts: ["Floor Press"], alt_reasons: ["Landmine bile rahatsızsa floor press'e dön"] }),
