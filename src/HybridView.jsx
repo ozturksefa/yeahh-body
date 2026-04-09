@@ -61,7 +61,9 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   });
   const [workoutState, setWorkoutState] = useState({ loaded: false, started: false, completed: false });
   const [workoutSnapshot, setWorkoutSnapshot] = useState(null);
+  const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [supportOpen, setSupportOpen] = useState(false);
+  const [focusedBlockIndex, setFocusedBlockIndex] = useState(null);
   const finishWorkoutRef = useRef(null);
   const checkoutRef = useRef(null);
 
@@ -94,6 +96,23 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       })
     );
   }, [activeVariant.blocks, workoutSnapshot]);
+  const currentBlock = useMemo(() => {
+    if (focusedBlockIndex !== null && activeVariant.blocks[focusedBlockIndex]) {
+      return activeVariant.blocks[focusedBlockIndex];
+    }
+
+    const firstInProgress = activeVariant.blocks.find((_, index) => {
+      const progress = blockProgress[index];
+      return progress && progress.completed < progress.total && progress.touched > 0;
+    });
+
+    if (firstInProgress) return firstInProgress;
+
+    return activeVariant.blocks.find((_, index) => {
+      const progress = blockProgress[index];
+      return progress && progress.completed < progress.total;
+    }) || null;
+  }, [activeVariant.blocks, blockProgress, focusedBlockIndex]);
 
   useEffect(() => {
     if (!lockedMode) {
@@ -202,6 +221,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const resetDayUiState = () => {
     setExpandedEx(null);
     setOpenBlocks({});
+    setFocusedBlockIndex(null);
   };
 
   const handleDayChange = (index) => {
@@ -374,6 +394,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               onWorkoutFinish={handleWorkoutFinish}
               finishRef={finishWorkoutRef}
               onStateChange={setWorkoutState}
+              onElapsed={setElapsedSeconds}
             />
           </div>
 
@@ -407,6 +428,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                 onExToggle={(key) => {
                   const blockIdx = parseInt(String(key).split("-")[0], 10);
                   setOpenBlocks((prev) => ({ ...prev, [blockIdx]: true }));
+                  setFocusedBlockIndex(blockIdx);
                   setExpandedEx((prev) => prev === key ? null : key);
                 }}
                 dayIndex={workoutDayIndex}
@@ -415,6 +437,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                 onSwap={handleSwap}
                 forceOpen={!!openBlocks[bi]}
                 progress={blockProgress[bi]}
+                onFocus={setFocusedBlockIndex}
               />
             ))}
           </main>
@@ -483,27 +506,54 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           )}
 
           {!currentEntry.post.completed && (workoutState.started || hasWorkoutInput) && (
-            <button
-              onClick={() => checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+            <div
               style={{
                 position: "fixed",
                 left: "50%",
                 bottom: 14,
                 transform: "translateX(-50%)",
                 width: "min(456px, calc(100vw - 24px))",
-                background: "#D41920",
+                background: "#131316",
                 color: "#fff",
-                border: "1px solid #D41920",
-                borderRadius: 12,
-                padding: "12px 14px",
-                fontSize: 13,
-                fontWeight: 800,
+                border: "1px solid #2A2A30",
+                borderRadius: 14,
                 boxShadow: "0 10px 30px rgba(0,0,0,.35)",
                 zIndex: 90,
+                overflow: "hidden",
               }}
             >
-              ✅ Seans notları ve tamamlama alanına git
-            </button>
+              <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 12px 8px" }}>
+                <div style={{ minWidth: 0 }}>
+                  <div style={{ fontSize: 10, color: "#7A7A84", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
+                    Aktif Seans
+                  </div>
+                  <div style={{ fontSize: 13, color: "#fff", fontWeight: 800, marginTop: 4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+                    {currentBlock ? currentBlock.name : "Program akışı"}
+                  </div>
+                  <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 4, lineHeight: 1.4 }}>
+                    {workoutState.started
+                      ? `${String(Math.floor(elapsedSeconds / 60)).padStart(2, "0")}:${String(elapsedSeconds % 60).padStart(2, "0")} · ${currentBlock ? `${blockProgress[activeVariant.blocks.indexOf(currentBlock)]?.completed || 0}/${blockProgress[activeVariant.blocks.indexOf(currentBlock)]?.total || 0} hareket` : "devam ediyor"}`
+                      : "Set girdin, seansı kapatmayı unutma"}
+                  </div>
+                </div>
+                <button
+                  onClick={() => checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+                  style={{
+                    border: "1px solid #D41920",
+                    background: "#D41920",
+                    color: "#fff",
+                    borderRadius: 10,
+                    padding: "10px 12px",
+                    fontSize: 12,
+                    fontWeight: 800,
+                    cursor: "pointer",
+                    flexShrink: 0,
+                  }}
+                >
+                  Bitir
+                </button>
+              </div>
+            </div>
           )}
         </>
       )}

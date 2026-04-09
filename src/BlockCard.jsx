@@ -131,12 +131,21 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
   );
 }
 
-function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartRest, swaps, onSwap, forceOpen, onAdvance, isLastEx, workoutActive, onAllSetsDone, progress }) {
+function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartRest, swaps, onSwap, forceOpen, onAdvance, isLastEx, workoutActive, onAllSetsDone, progress, onFocus }) {
   const [manualOpen, setManualOpen] = useState(false);
   const open = forceOpen || manualOpen;
+
+  const handleBlockToggle = () => {
+    setManualOpen((prev) => {
+      const next = !prev;
+      if (next && onFocus) onFocus(blockIdx);
+      return next;
+    });
+  };
+
   return (
     <div className="block">
-      <button className="block-head" onClick={() => setManualOpen(o => !o)} style={{ background: block.color }}>
+      <button className="block-head" onClick={handleBlockToggle} style={{ background: block.color }}>
         <div>
           <div className="block-name">{block.name}</div>
           <div className="block-count">
