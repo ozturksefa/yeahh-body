@@ -19,12 +19,12 @@ const toneStyles = {
   },
 };
 
-export default function CoachControlPanel({ program = PROGRAM_HOME }) {
+export default function CoachControlPanel({ program = PROGRAM_HOME, embedded = false }) {
   const [open, setOpen] = useState(false);
   const { meta, coachProfile, controlCenter } = program;
 
   return (
-    <div style={{ padding: "8px 12px 0" }}>
+    <div style={{ padding: embedded ? "8px 12px 0" : "8px 12px 0" }}>
       <div style={{
         background: "#131316",
         border: "1px solid #2A2A30",

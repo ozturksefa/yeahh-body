@@ -221,55 +221,58 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
             <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 6, lineHeight: 1.5 }}>
               Omuz {pre.shoulder || 0}/5 · Diz {pre.knee || 0}/5 · Bel/Boyun {pre.spine || 0}/5
             </div>
+            <div style={{ fontSize: 11, color: "#7A7A84", marginTop: 6, lineHeight: 1.45 }}>
+              {day.intent}
+            </div>
           </div>
           <div style={{ fontSize: 18, color: "#7A7A84" }}>{open ? "−" : "+"}</div>
         </div>
       </button>
 
+      <div style={{ display: "grid", gap: 8 }}>
+        <div style={{ display: "flex", gap: 8 }}>
+          {[
+            { id: "home", label: "🏠 Ev" },
+            { id: "gym", label: "🏋️ Macfit" },
+          ].map((item) => {
+            const active = mode === item.id;
+            return (
+              <button
+                key={item.id}
+                onClick={() => modeSwitchEnabled && setMode(item.id)}
+                disabled={!modeSwitchEnabled}
+                style={{
+                  ...buttonBase,
+                  flex: 1,
+                  background: active ? "rgba(79,195,247,.12)" : "#17171B",
+                  borderColor: active ? "#4FC3F7" : "#2A2A30",
+                  color: active ? "#fff" : "#C4C4CC",
+                  opacity: modeSwitchEnabled ? 1 : 0.72,
+                  cursor: modeSwitchEnabled ? "pointer" : "default",
+                }}
+              >
+                {item.label}
+              </button>
+            );
+          })}
+        </div>
+        <div style={{
+          background: "#17171B",
+          border: "1px solid #2A2A30",
+          borderRadius: 10,
+          padding: "9px 10px",
+          fontSize: 11,
+          color: "#C4C4CC",
+          lineHeight: 1.45,
+        }}>
+          {modeSwitchEnabled
+            ? activeVariant.modeNote
+            : `Bu ekran sabit olarak ${mode === "home" ? "Ev" : "Macfit"} yolunu gösterir.`}
+        </div>
+      </div>
+
       {open && (
         <>
-          <SectionCard title="Günlük Mod Seçimi" accent="#4FC3F7">
-            {modeSwitchEnabled ? (
-              <div style={{ display: "flex", gap: 8, marginBottom: 10 }}>
-                {[
-                  { id: "home", label: "🏠 Ev" },
-                  { id: "gym", label: "🏋️ Macfit" },
-                ].map((item) => {
-                  const active = mode === item.id;
-                  return (
-                    <button
-                      key={item.id}
-                      onClick={() => setMode(item.id)}
-                      style={{
-                        ...buttonBase,
-                        flex: 1,
-                        background: active ? "rgba(79,195,247,.12)" : "#17171B",
-                        borderColor: active ? "#4FC3F7" : "#2A2A30",
-                        color: active ? "#fff" : "#C4C4CC",
-                      }}
-                    >
-                      {item.label}
-                    </button>
-                  );
-                })}
-              </div>
-            ) : (
-              <div style={{
-                marginBottom: 10,
-                background: "#17171B",
-                border: "1px solid #2A2A30",
-                borderRadius: 10,
-                padding: "10px 12px",
-                fontSize: 12,
-                color: "#C4C4CC",
-              }}>
-                Bu ekran sabit olarak <strong>{mode === "home" ? "Ev" : "Macfit"}</strong> yolunu gösterir.
-              </div>
-            )}
-            <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.55, marginBottom: 6 }}>{day.intent}</div>
-            <div style={{ fontSize: 11, color: "#7A7A84", lineHeight: 1.5 }}>{activeVariant.modeNote}</div>
-          </SectionCard>
-
           <SectionCard title="Antrenman Öncesi Check-in" accent="#2A9D8F">
             <div style={{ display: "grid", gap: 10 }}>
               <div>
@@ -332,6 +335,20 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
     <div style={{ padding: "0 12px 12px" }}>
       <SectionCard title="Seans Sonu Check-out" accent="#FFA726">
         <div style={{ display: "grid", gap: 10 }}>
+          <div style={{
+            background: post.completed ? "rgba(0,200,83,.08)" : "#17171B",
+            border: `1px solid ${post.completed ? "rgba(0,200,83,.28)" : "#2A2A30"}`,
+            borderRadius: 10,
+            padding: 10,
+          }}>
+            <div style={{ fontSize: 11, color: post.completed ? "#9EF0BA" : "#FFA726", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
+              Son Adım
+            </div>
+            <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5, marginTop: 6 }}>
+              RPE, semptom ve kısa skill kaydını doldur; ardından seansı tamamlandı olarak işaretle.
+            </div>
+          </div>
+
           <div>
             <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Genel RPE</div>
             <FieldButtons value={post.rpe} onChange={(v) => update("rpe", v)} options={[6, 7, 8].map((v) => ({ value: String(v), label: String(v) }))} />

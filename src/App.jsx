@@ -61,23 +61,49 @@ export default function App() {
     try { localStorage.setItem("yb_program_mode", mode); } catch { return }
   };
 
-  const ProgramSelector = () => (
-    <div className="prog-mode-bar">
-      {[
-        { id: "hybrid",  label: "🎯 Hibrit" },
-        { id: "home",     label: "🏠 Ev" },
-        { id: "classic",  label: "Klasik Split" },
-        { id: "full",     label: "Full Activation" },
-        { id: "athletic", label: "Atletik ⚡" },
-      ].map(p => (
-        <button key={p.id}
-          className={`prog-mode-btn ${programMode === p.id ? "prog-mode-active" : ""}`}
-          onClick={() => setMode(p.id)}>
-          {p.label}
+  const ProgramSelector = () => {
+    const [open, setOpen] = useState(false);
+    const options = [
+      { id: "hybrid", label: "🎯 Hibrit" },
+      { id: "home", label: "🏠 Ev" },
+      { id: "classic", label: "Klasik Split" },
+      { id: "full", label: "Full Activation" },
+      { id: "athletic", label: "Atletik ⚡" },
+    ];
+    const active = options.find((item) => item.id === programMode) || options[0];
+
+    return (
+      <div className="prog-selector-wrap">
+        <button
+          className="prog-selector-toggle"
+          onClick={() => setOpen((value) => !value)}
+        >
+          <div>
+            <div className="prog-selector-label">Program</div>
+            <div className="prog-selector-value">{active.label}</div>
+          </div>
+          <div className="prog-selector-caret">{open ? "−" : "+"}</div>
         </button>
-      ))}
-    </div>
-  );
+
+        {open && (
+          <div className="prog-mode-bar">
+            {options.map((item) => (
+              <button
+                key={item.id}
+                className={`prog-mode-btn ${programMode === item.id ? "prog-mode-active" : ""}`}
+                onClick={() => {
+                  setMode(item.id);
+                  setOpen(false);
+                }}
+              >
+                {item.label}
+              </button>
+            ))}
+          </div>
+        )}
+      </div>
+    );
+  };
 
   if (programMode === "hybrid")  return renderProgram(<HybridView user={user} logout={logout} ProgramSelector={ProgramSelector} />);
   if (programMode === "home")     return renderProgram(<HomeView user={user} logout={logout} ProgramSelector={ProgramSelector} />);

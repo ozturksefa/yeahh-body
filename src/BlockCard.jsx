@@ -131,7 +131,7 @@ function ExerciseCard({ ex, blockColor, isOpen, onToggle, dayIndex, blockName, o
   );
 }
 
-function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartRest, swaps, onSwap, forceOpen, onAdvance, isLastEx, workoutActive, onAllSetsDone }) {
+function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartRest, swaps, onSwap, forceOpen, onAdvance, isLastEx, workoutActive, onAllSetsDone, progress }) {
   const [manualOpen, setManualOpen] = useState(false);
   const open = forceOpen || manualOpen;
   return (
@@ -141,6 +141,8 @@ function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartR
           <div className="block-name">{block.name}</div>
           <div className="block-count">
             {block.exercises.length} hareket
+            {progress?.completed > 0 ? <span className="block-kcal"> · {progress.completed}/{progress.total} tamam</span> : null}
+            {progress?.completed === 0 && progress?.touched > 0 ? <span className="block-kcal"> · {progress.touched} başladı</span> : null}
             {(() => {
               const w = getUserWeight();
               const { kcal, durationMin } = calcBlockCalories(block, w);

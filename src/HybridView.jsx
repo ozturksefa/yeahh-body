@@ -60,16 +60,40 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     return { ...defaults, ...loadJson(SKILL_KEY, {}) };
   });
   const [workoutState, setWorkoutState] = useState({ loaded: false, started: false, completed: false });
+  const [workoutSnapshot, setWorkoutSnapshot] = useState(null);
+  const [supportOpen, setSupportOpen] = useState(false);
   const finishWorkoutRef = useRef(null);
+  const checkoutRef = useRef(null);
 
   const day = allDays[selectedDay];
   const todaySub = todayContext.sub;
   const todayIndex = getTodayIndex(allDays, todaySub);
+  const showDayTabs = page === "program" || page === "nutrition";
+  const workoutDayIndex = selectedDay + (mode === "gym" ? 400 : 300);
   const weekProfile = PROGRAM_HYBRID.periodization.find((item) => item.week === activeWeek) || PROGRAM_HYBRID.periodization[0];
   const baseVariant = getHybridDayVariant(day, mode);
   const activeVariant = useMemo(() => applyWeekToVariant(baseVariant, weekProfile), [baseVariant, weekProfile]);
   const entryDate = todayContext.key;
   const entryKey = `${entryDate}|${day.sub}|${mode}`;
+  const hasWorkoutInput = useMemo(() => Object.keys(workoutSnapshot?.exercises || {}).length > 0, [workoutSnapshot]);
+  const blockProgress = useMemo(() => {
+    const exercises = workoutSnapshot?.exercises || {};
+    return Object.fromEntries(
+      activeVariant.blocks.map((block, index) => {
+        const total = block.exercises.length;
+        let completed = 0;
+        let touched = 0;
+        block.exercises.forEach((exercise) => {
+          const sets = exercises[exercise.name];
+          if (!Array.isArray(sets) || sets.length === 0) return;
+          const hasInput = sets.some((set) => Number(set.weight || 0) > 0 || Number(set.reps || 0) > 0 || !!set.done);
+          if (hasInput) touched += 1;
+          if (sets.every((set) => set.done)) completed += 1;
+        });
+        return [index, { total, completed, touched }];
+      })
+    );
+  }, [activeVariant.blocks, workoutSnapshot]);
 
   useEffect(() => {
     if (!lockedMode) {
@@ -88,6 +112,23 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   useEffect(() => {
     saveJson(SKILL_KEY, skillState);
   }, [skillState]);
+
+  useEffect(() => {
+    let active = true;
+
+    const syncWorkoutSnapshot = async () => {
+      const next = await loadWorkout(workoutDayIndex);
+      if (active) setWorkoutSnapshot(next);
+    };
+
+    syncWorkoutSnapshot();
+    window.addEventListener("yb-workout-updated", syncWorkoutSnapshot);
+
+    return () => {
+      active = false;
+      window.removeEventListener("yb-workout-updated", syncWorkoutSnapshot);
+    };
+  }, [workoutDayIndex]);
 
   useEffect(() => {
     const syncToday = () => {
@@ -137,8 +178,6 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     });
   };
 
-  const workoutDayIndex = selectedDay + (mode === "gym" ? 400 : 300);
-
   const setSkillLevel = (skill, level) => {
     setSkillState((prev) => ({
       ...prev,
@@ -182,11 +221,13 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const handleWorkoutStart = () => {
     setWorkoutState({ loaded: true, started: true, completed: false });
     updateEntry("post", (prev) => ({ ...prev, completed: false }));
+    loadWorkout(workoutDayIndex).then(setWorkoutSnapshot);
   };
 
   const handleWorkoutFinish = () => {
     setWorkoutState({ loaded: true, started: false, completed: true });
     updateEntry("post", (prev) => ({ ...prev, completed: true }));
+    loadWorkout(workoutDayIndex).then(setWorkoutSnapshot);
   };
 
   const handleCompleteSession = async () => {
@@ -207,6 +248,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       });
       await markWorkoutDone(workoutDayIndex);
       setWorkoutState({ loaded: true, started: false, completed: true });
+      const next = await loadWorkout(workoutDayIndex);
+      setWorkoutSnapshot(next);
     }
 
     updateEntry("post", (prev) => ({ ...prev, completed: true }));
@@ -240,34 +283,52 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           ))}
         </div>
 
-        <div className="tabs">
-          {allDays.map((item, index) => (
-            <button
-              key={item.sub}
-              className={`tab ${selectedDay === index ? "tab-active" : ""}`}
-              style={selectedDay === index ? { background: item.color } : item.sub === todaySub ? { boxShadow: "inset 0 0 0 1px rgba(79,195,247,.55)" } : {}}
-              onClick={() => handleDayChange(index)}
-            >
-              <div className="tab-t">{item.sub.slice(0, 3)}</div>
-              <div className="tab-s">{item.sub === todaySub ? "Bugün" : item.type === "training" ? "Ana Gün" : "Off"}</div>
-            </button>
-          ))}
-        </div>
+        {showDayTabs ? (
+          <>
+            <div className="tabs">
+              {allDays.map((item, index) => (
+                <button
+                  key={item.sub}
+                  className={`tab ${selectedDay === index ? "tab-active" : ""}`}
+                  style={selectedDay === index ? { background: item.color } : item.sub === todaySub ? { boxShadow: "inset 0 0 0 1px rgba(79,195,247,.55)" } : {}}
+                  onClick={() => handleDayChange(index)}
+                >
+                  <div className="tab-t">{item.sub.slice(0, 3)}</div>
+                  <div className="tab-s">{item.sub === todaySub ? "Bugün" : item.type === "training" ? "Ana Gün" : "Off"}</div>
+                </button>
+              ))}
+            </div>
 
-        {selectedDay !== todayIndex && (
-          <div style={{ paddingTop: 10 }}>
-            <button
-              onClick={() => handleDayChange(todayIndex)}
-              style={{
-                ...buttonBase,
-                width: "100%",
-                background: "rgba(79,195,247,.1)",
-                borderColor: "rgba(79,195,247,.32)",
-                color: "#fff",
-              }}
-            >
-              📍 Bugünün programına dön · {todaySub}
-            </button>
+            {selectedDay !== todayIndex && (
+              <div style={{ paddingTop: 8 }}>
+                <button
+                  onClick={() => handleDayChange(todayIndex)}
+                  style={{
+                    ...buttonBase,
+                    width: "100%",
+                    background: "rgba(79,195,247,.1)",
+                    borderColor: "rgba(79,195,247,.32)",
+                    color: "#fff",
+                    padding: "10px 12px",
+                    fontSize: 12,
+                  }}
+                >
+                  📍 Bugünün programına dön · {todaySub}
+                </button>
+              </div>
+            )}
+          </>
+        ) : (
+          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", paddingTop: 8 }}>
+            <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#fff", fontWeight: 700 }}>
+              {day.sub}
+            </div>
+            <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#C4C4CC", fontWeight: 700 }}>
+              {mode === "home" ? "Ev" : "Macfit"}
+            </div>
+            <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#C4C4CC", fontWeight: 700 }}>
+              {page === "skill" ? "Skill" : page === "plan" ? "8 Hafta" : "Durum"}
+            </div>
           </div>
         )}
       </header>
@@ -283,9 +344,16 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               <div className="day-badge" style={{ background: day.color }}>{day.sub}</div>
             </div>
             {activeVariant.injury && <div className="injury">{activeVariant.injury}</div>}
-            <div style={{ marginTop: 10, background: "rgba(79,195,247,.08)", border: "1px solid rgba(79,195,247,.22)", borderRadius: 10, padding: 10 }}>
-              <div style={{ fontSize: 11, color: "#4FC3F7", fontWeight: 800, marginBottom: 4 }}>Aktif Hafta {weekProfile.week} · {weekProfile.label}</div>
-              <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5 }}>{activeVariant.weekExecutionNote || weekProfile.note}</div>
+            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
+              <div style={{ background: "rgba(79,195,247,.08)", border: "1px solid rgba(79,195,247,.22)", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#4FC3F7", fontWeight: 800 }}>
+                Hafta {weekProfile.week} · {weekProfile.label}
+              </div>
+              <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#C4C4CC", fontWeight: 700 }}>
+                {day.type === "training" ? "Ana gün" : "Aktif off"}
+              </div>
+            </div>
+            <div style={{ marginTop: 8, fontSize: 11, color: "#C4C4CC", lineHeight: 1.5 }}>
+              {activeVariant.weekExecutionNote || weekProfile.note}
             </div>
           </div>
 
@@ -310,6 +378,26 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           </div>
 
           <main className="main">
+            <div style={{
+              background: "rgba(255,167,38,.08)",
+              border: "1px solid rgba(255,167,38,.20)",
+              borderRadius: 12,
+              padding: 10,
+              marginBottom: 10,
+            }}>
+              <div style={{ fontSize: 10, color: "#FFA726", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 6 }}>
+                Kısa Güvenlik Özeti
+              </div>
+              <div style={{ display: "grid", gap: 4 }}>
+                {[
+                  "Ağrı 2/10'u geçerse aynı paterni regress et veya swap kullan.",
+                  "Keskin ağrı, boşalma hissi, uyuşma veya yayılım varsa hareket biter.",
+                ].map((item) => (
+                  <div key={item} style={{ fontSize: 11, color: "#F7D7A0", lineHeight: 1.45 }}>• {item}</div>
+                ))}
+              </div>
+            </div>
+
             {activeVariant.blocks.map((block, bi) => (
               <BlockCard
                 key={`${mode}-${selectedDay}-${bi}`}
@@ -326,32 +414,62 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                 swaps={swaps}
                 onSwap={handleSwap}
                 forceOpen={!!openBlocks[bi]}
+                progress={blockProgress[bi]}
               />
             ))}
-
-            <div className="pain-card">
-              <div className="pain-title">⚠️ Kırmızı Çizgiler</div>
-              {[
-                "Ağrı 2/10'u geçerse aynı paterni regress et veya swap kullan.",
-                "Keskin ağrı, boşalma hissi, uyuşma veya yayılım varsa hareket biter.",
-                "Bugün iyi hissediyor olman yarın da iyi kalacağın anlamına gelmez; Pazar mantığını bozma.",
-              ].map((item) => (
-                <div key={item} className="pain-row"><span>•</span><span>{item}</span></div>
-              ))}
-            </div>
-
-            <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" />
-            <CoachControlPanel program={PROGRAM_HYBRID} />
           </main>
 
-          <DailyCheckoutPanel
-            post={currentEntry.post}
-            setPost={(updater) => updateEntry("post", updater)}
-            daySub={day.sub}
-            skillPaths={PROGRAM_HYBRID.skillPaths}
-            skillState={skillState}
-            onComplete={handleCompleteSession}
-          />
+          <div ref={checkoutRef}>
+            <DailyCheckoutPanel
+              post={currentEntry.post}
+              setPost={(updater) => updateEntry("post", updater)}
+              daySub={day.sub}
+              skillPaths={PROGRAM_HYBRID.skillPaths}
+              skillState={skillState}
+              onComplete={handleCompleteSession}
+            />
+          </div>
+
+          <div style={{ padding: "0 12px 12px" }}>
+            <div style={{ background: "#131316", border: "1px solid #2A2A30", borderRadius: 12, overflow: "hidden" }}>
+              <button
+                onClick={() => setSupportOpen((value) => !value)}
+                style={{
+                  width: "100%",
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  gap: 12,
+                  textAlign: "left",
+                  border: "none",
+                  background: "transparent",
+                  color: "inherit",
+                  padding: "12px",
+                  cursor: "pointer",
+                }}
+              >
+                <div>
+                  <div style={{ fontSize: 11, color: "#7A7A84", fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>
+                    Yardımcı Alan
+                  </div>
+                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginTop: 4 }}>
+                    Rehber, denetim profili ve ek notlar
+                  </div>
+                  <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginTop: 4 }}>
+                    Programı bitirdikten sonra veya ihtiyaç olduğunda aç.
+                  </div>
+                </div>
+                <div style={{ color: "#7A7A84", fontSize: 18 }}>{supportOpen ? "−" : "+"}</div>
+              </button>
+
+              {supportOpen && (
+                <div style={{ padding: "0 0 12px" }}>
+                  <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" embedded />
+                  <CoachControlPanel program={PROGRAM_HYBRID} embedded />
+                </div>
+              )}
+            </div>
+          </div>
 
           {restTimer && (
             <RestTimer
@@ -362,6 +480,30 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               onDismiss={() => setRestTimer(null)}
               onAdjust={adjustRest}
             />
+          )}
+
+          {!currentEntry.post.completed && (workoutState.started || hasWorkoutInput) && (
+            <button
+              onClick={() => checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
+              style={{
+                position: "fixed",
+                left: "50%",
+                bottom: 14,
+                transform: "translateX(-50%)",
+                width: "min(456px, calc(100vw - 24px))",
+                background: "#D41920",
+                color: "#fff",
+                border: "1px solid #D41920",
+                borderRadius: 12,
+                padding: "12px 14px",
+                fontSize: 13,
+                fontWeight: 800,
+                boxShadow: "0 10px 30px rgba(0,0,0,.35)",
+                zIndex: 90,
+              }}
+            >
+              ✅ Seans notları ve tamamlama alanına git
+            </button>
           )}
         </>
       )}

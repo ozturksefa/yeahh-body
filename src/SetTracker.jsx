@@ -55,6 +55,7 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       const next = [...prev];
       next[i] = { ...next[i], [field]: val };
       saveExerciseSets(dayIndex, ex.name, next);
+      emitWorkoutUpdate();
       return next;
     });
   };
@@ -65,6 +66,7 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       const wasDone = next[i].done;
       next[i] = { ...next[i], done: !wasDone };
       saveExerciseSets(dayIndex, ex.name, next);
+      emitWorkoutUpdate();
 
       if (!wasDone && navigator.vibrate) navigator.vibrate(30);
 
@@ -96,6 +98,7 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
     setSets(prev => {
       const next = prev.map(s => ({ ...s, weight }));
       saveExerciseSets(dayIndex, ex.name, next);
+      emitWorkoutUpdate();
       return next;
     });
   };
@@ -178,3 +181,6 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
 }
 
 export default SetTracker;
+  const emitWorkoutUpdate = () => {
+    window.dispatchEvent(new CustomEvent("yb-workout-updated"));
+  };

@@ -36,7 +36,7 @@ body{
 /* ═══ HEADER ═══ */
 .hdr{
   background:var(--bg);
-  padding:16px 16px 10px;
+  padding:14px 12px 8px;
   position:sticky;top:0;z-index:100;
   border-bottom:1px solid var(--border);
 }
@@ -63,21 +63,22 @@ body{
 }
 
 /* ═══ NAV ═══ */
-.page-nav{display:flex;gap:3px;margin:10px 0 8px;background:var(--card);border-radius:var(--r);padding:3px}
+.page-nav{display:flex;gap:6px;margin:8px 0 6px;overflow-x:auto;scrollbar-width:none;padding:0}
+.page-nav::-webkit-scrollbar{display:none}
 .page-tab{
-  flex:1;padding:9px 4px;border:none;border-radius:6px;
-  background:transparent;color:var(--text3);
+  flex:0 0 auto;padding:8px 12px;border:1px solid var(--border);border-radius:999px;
+  background:var(--card);color:var(--text3);
   font-size:12px;font-weight:600;cursor:pointer;
   text-align:center;transition:.2s;
   font-family:inherit;white-space:nowrap;
 }
-.page-tab-active{background:var(--red);color:#fff}
+.page-tab-active{background:var(--red);color:#fff;border-color:var(--red)}
 
 /* ═══ DAY TABS ═══ */
-.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0}
+.tabs{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;padding:2px 0 0}
 .tabs::-webkit-scrollbar{display:none}
 .tab{
-  flex:0 0 auto;padding:10px 20px;border-radius:var(--r);
+  flex:0 0 auto;min-width:72px;padding:10px 14px;border-radius:var(--r);
   border:1px solid var(--border);background:var(--card);
   color:var(--text3);cursor:pointer;font-weight:600;
   transition:.15s;font-family:inherit;
@@ -87,9 +88,9 @@ body{
 .tab-s{font-size:10px;opacity:.65;margin-top:2px}
 
 /* ═══ DAY HEADER ═══ */
-.day-hdr{padding:18px 16px 14px;border-bottom:1px solid var(--border)}
-.day-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:10px}
-.day-focus{font-size:22px;font-weight:900;letter-spacing:-.3px}
+.day-hdr{padding:14px 12px 12px;border-bottom:1px solid var(--border)}
+.day-top{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:8px;gap:10px}
+.day-focus{font-size:20px;font-weight:900;letter-spacing:-.3px;line-height:1.15}
 .day-meta{font-size:12px;color:var(--text3);margin-top:4px;font-family:var(--mono);font-weight:600}
 .day-badge{color:#fff;border-radius:6px;padding:5px 14px;font-size:11px;font-weight:700;letter-spacing:.5px}
 .injury{
@@ -98,10 +99,10 @@ body{
   padding:10px 14px;font-size:13px;color:var(--warn);line-height:1.55;
 }
 
-.main{padding:6px 10px 120px}
+.main{padding:8px 12px 120px}
 
 /* ═══ BLOCKS ═══ */
-.block{margin-bottom:4px}
+.block{margin-bottom:8px}
 .block-head{
   width:100%;display:flex;align-items:center;justify-content:space-between;
   border:none;border-radius:var(--r);padding:12px 14px;
@@ -112,8 +113,8 @@ body{
 .block-body{
   background:var(--card);
   border-left:2px solid var(--border);
-  margin-left:14px;
-  border-radius:0 0 var(--r) 0;
+  margin-left:8px;
+  border-radius:0 0 var(--r) var(--r);
 }
 
 /* ═══ EXERCISES ═══ */
@@ -996,8 +997,50 @@ body{
 
 /* ═══ PROGRAM SELECTOR BAR ═══ */
 .prog-mode-bar {
-  display: flex; gap: 4px; padding: 8px 14px;
-  background: var(--card); border-bottom: 1px solid var(--border);
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 6px;
+  padding: 8px 0 0;
+}
+
+.prog-selector-wrap {
+  padding-top: 8px;
+}
+
+.prog-selector-toggle {
+  width: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+  padding: 10px 12px;
+  background: var(--card);
+  border: 1px solid var(--border);
+  border-radius: 10px;
+  color: var(--text);
+  cursor: pointer;
+  font-family: inherit;
+  text-align: left;
+}
+
+.prog-selector-label {
+  font-size: 10px;
+  color: var(--text3);
+  font-weight: 700;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+}
+
+.prog-selector-value {
+  font-size: 13px;
+  color: var(--text);
+  font-weight: 800;
+  margin-top: 4px;
+}
+
+.prog-selector-caret {
+  font-size: 18px;
+  color: var(--text3);
 }
 
 /* ═══ DASHBOARD — Body Tracker & Charts ═══ */
