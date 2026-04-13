@@ -6,7 +6,7 @@ import CoachControlPanel from "./CoachControlPanel";
 import DayCoachGuide from "./DayCoachGuide";
 import { PROGRAM_HYBRID, getHybridDayVariant } from "./dataHybrid";
 import { HYBRID_COACH_GUIDES } from "./hybridCoachGuides";
-import { loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
+import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
 import {
   DailyCheckinPanel,
   DailyCheckoutPanel,
@@ -23,6 +23,7 @@ import {
   formatShortDateLabel,
   getTodayContext,
   getTodayIndex,
+  getWorkoutRepGoalMet,
   getWeekProgress,
   getWeekExecutionNote,
   getWeekShiftPreview,
@@ -71,6 +72,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   });
   const [workoutState, setWorkoutState] = useState({ loaded: false, started: false, completed: false });
   const [workoutSnapshot, setWorkoutSnapshot] = useState(null);
+  const [weekCompletedWorkouts, setWeekCompletedWorkouts] = useState([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [supportOpen, setSupportOpen] = useState(false);
   const [focusedBlockIndex, setFocusedBlockIndex] = useState(null);
@@ -125,7 +127,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       return progress && progress.completed < progress.total;
     }) || null;
   }, [activeVariant.blocks, blockProgress, focusedBlockIndex]);
-  const weekProgress = useMemo(() => getWeekProgress({
+  const weekProgressBase = useMemo(() => getWeekProgress({
     entries: allEntries,
     startDate,
     activeWeek,
@@ -133,6 +135,19 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     weekLog,
     trainingDays: allDays,
   }), [activeWeek, allDays, allEntries, startDate, todayContext.key, weekLog]);
+  const weekProgress = useMemo(() => ({
+    ...weekProgressBase,
+    repGoalMet: getWorkoutRepGoalMet({
+      completedEntries: weekProgressBase.completedEntries,
+      completedWorkouts: weekCompletedWorkouts,
+      allDays,
+      resolveVariant: (daySub, entryMode) => {
+        const targetDay = allDays.find((item) => item.sub === daySub);
+        if (!targetDay) return null;
+        return applyWeekToVariant(getHybridDayVariant(targetDay, entryMode), weekProfile);
+      },
+    }),
+  }), [allDays, weekCompletedWorkouts, weekProfile, weekProgressBase]);
   const nextWeekProfile = PROGRAM_HYBRID.periodization.find((item) => item.week === activeWeek + 1) || null;
   const nextWeekPreview = useMemo(
     () => (nextWeekProfile ? getWeekShiftPreview(baseVariant, weekProfile, nextWeekProfile) : null),
@@ -234,6 +249,25 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       window.removeEventListener("yb-workout-updated", syncWorkoutSnapshot);
     };
   }, [workoutDayIndex]);
+
+  useEffect(() => {
+    let active = true;
+
+    const loadWeekCompletedWorkouts = async () => {
+      if (!weekProgressBase.weekStartDate || !weekProgressBase.weekEndDate) {
+        if (active) setWeekCompletedWorkouts([]);
+        return;
+      }
+
+      const next = await getCompletedWorkoutsInRange(weekProgressBase.weekStartDate, weekProgressBase.weekEndDate);
+      if (active) setWeekCompletedWorkouts(next);
+    };
+
+    loadWeekCompletedWorkouts();
+    return () => {
+      active = false;
+    };
+  }, [weekProgressBase.weekEndDate, weekProgressBase.weekStartDate]);
 
   useEffect(() => {
     const syncToday = () => {

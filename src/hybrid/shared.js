@@ -199,7 +199,7 @@ export function getCompletedWeekEntries(entries, weekStartDate, weekEndDate, tra
   ));
 }
 
-export function getRepGoalMet(completedEntries = []) {
+function getRecoveryBasedGoalMet(completedEntries = []) {
   if (!completedEntries.length) return false;
   const successCount = completedEntries.filter((entry) => {
     const nextAction = entry.post?.nextAction || "aynı";
@@ -208,6 +208,68 @@ export function getRepGoalMet(completedEntries = []) {
     return nextAction === "aynı" && (rpe === 0 || rpe <= 8) && cardio !== "fazla";
   }).length;
   return successCount / completedEntries.length >= 0.75;
+}
+
+export function getExerciseRepFloor(setsLabel = "") {
+  const parsed = parseSetRange(setsLabel);
+  if (!parsed) return null;
+
+  const suffix = String(parsed.suffix || "").toLowerCase();
+  if (suffix.includes("sn") || suffix.includes("dakika") || suffix.includes("dk")) return null;
+
+  const rangeMatch = suffix.match(/(\d+)\s*-\s*(\d+)/);
+  if (rangeMatch) return Number(rangeMatch[1]);
+
+  const repMatch = suffix.match(/(\d+)/);
+  return repMatch ? Number(repMatch[1]) : null;
+}
+
+export function getWorkoutRepGoalMet({ completedEntries = [], completedWorkouts = [], allDays = [], resolveVariant } = {}) {
+  if (!completedEntries.length) return false;
+  if (!completedWorkouts.length || typeof resolveVariant !== "function") {
+    return getRecoveryBasedGoalMet(completedEntries);
+  }
+
+  const entryLookup = new Map(
+    completedEntries.map((entry) => [`${entry.date}|${entry.day}`, entry])
+  );
+
+  let totalTrackedSets = 0;
+  let successfulSets = 0;
+
+  completedWorkouts.forEach((workout) => {
+    const day = allDays[workout.day_index];
+    if (!day?.sub) return;
+
+    const matchingEntry = entryLookup.get(`${workout.workout_date}|${day.sub}`);
+    if (!matchingEntry?.mode) return;
+
+    const variant = resolveVariant(day.sub, matchingEntry.mode);
+    if (!variant?.blocks?.length) return;
+
+    const repTargets = new Map();
+    variant.blocks.forEach((block) => {
+      (block.exercises || []).forEach((exercise) => {
+        const repFloor = getExerciseRepFloor(exercise.sets);
+        if (repFloor) repTargets.set(exercise.name, repFloor);
+      });
+    });
+
+    Object.entries(workout.exercises || {}).forEach(([exerciseName, sets]) => {
+      const repFloor = repTargets.get(exerciseName);
+      if (!repFloor || !Array.isArray(sets) || sets.length === 0) return;
+
+      totalTrackedSets += sets.length;
+      sets.forEach((set) => {
+        if (set.done && Number(set.reps || 0) >= repFloor) {
+          successfulSets += 1;
+        }
+      });
+    });
+  });
+
+  if (!totalTrackedSets) return getRecoveryBasedGoalMet(completedEntries);
+  return successfulSets / totalTrackedSets >= 0.7;
 }
 
 export function getWeekProgress({ entries, startDate, activeWeek, today, weekLog = [], trainingDays = [] }) {
@@ -231,7 +293,7 @@ export function getWeekProgress({ entries, startDate, activeWeek, today, weekLog
   const weekEndDate = getWeekEndDate(startDate, activeWeek);
   const completedEntries = getCompletedWeekEntries(entries, weekStartDate, weekEndDate, trainingDays);
   const sessionCount = completedEntries.length;
-  const repGoalMet = getRepGoalMet(completedEntries);
+  const repGoalMet = getRecoveryBasedGoalMet(completedEntries);
   const daysElapsed = diffLocalDays(weekStartDate, today);
   const logged = weekLog.some((item) => item.week === activeWeek);
   const reason = sessionCount >= 4 ? "sessions" : daysElapsed >= 7 ? "days" : null;

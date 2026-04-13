@@ -104,7 +104,32 @@ export async function loadWorkout(dayIndex) {
     .maybeSingle();
 
   if (!data) return null;
-  return { exercises: data.exercises || {}, startTime: data.start_time, endTime: data.end_time, completed: data.completed };
+  return {
+    exercises: data.exercises || {},
+    startTime: data.start_time,
+    endTime: data.end_time,
+    completed: data.completed,
+    day_index: data.day_index,
+    workout_date: data.workout_date,
+  };
+}
+
+export async function getCompletedWorkoutsInRange(startDate, endDate) {
+  if (!startDate || !endDate) return [];
+
+  const user = await getUser();
+  if (!user) return fallbackGetCompletedWorkoutsInRange(startDate, endDate);
+
+  const { data } = await supabase
+    .from('workouts')
+    .select('workout_date, day_index, exercises, completed')
+    .eq('user_id', user.id)
+    .eq('completed', true)
+    .gte('workout_date', startDate)
+    .lte('workout_date', endDate)
+    .order('workout_date', { ascending: true });
+
+  return data || [];
 }
 
 export async function markWorkoutDone(dayIndex) {
@@ -400,6 +425,8 @@ function fallbackLoadWorkout(di) {
     startTime: workout.startTime ?? workout.start_time ?? null,
     endTime: workout.endTime ?? workout.end_time ?? null,
     completed: !!workout.completed,
+    day_index: di,
+    workout_date: todayStr(),
   };
 }
 function fallbackMarkDone(di) {
@@ -438,6 +465,21 @@ function fallbackGetHistory(n,l) {
   const a=lsL(),r=[];
   for(const[k,w]of Object.entries(a)){if(w.exercises?.[n])r.push({date:k.split("_")[0],sets:w.exercises[n]});}
   r.sort((a,b)=>b.date.localeCompare(a.date)); return r.slice(0,l);
+}
+function fallbackGetCompletedWorkoutsInRange(startDate, endDate) {
+  const all = lsL();
+  return Object.entries(all)
+    .map(([key, workout]) => {
+      const [workoutDate, dayToken] = key.split('_day');
+      const dayIndex = Number(dayToken);
+      return {
+        workout_date: workoutDate,
+        day_index: Number.isFinite(dayIndex) ? dayIndex : null,
+        exercises: workout.exercises || {},
+        completed: !!workout.completed,
+      };
+    })
+    .filter((workout) => workout.completed && workout.workout_date >= startDate && workout.workout_date <= endDate);
 }
 function fallbackWeeklyStats() {
   const a=lsL(),now=new Date(),ws=new Date(now);ws.setDate(now.getDate()-now.getDay()+1);const wsS=formatLocalDate(ws);
