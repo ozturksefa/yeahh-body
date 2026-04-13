@@ -38,6 +38,13 @@
   --r-lg: 14px;
   --shadow-soft: 0 10px 30px rgba(0,0,0,0.24);
   --shadow-panel: 0 18px 40px rgba(0,0,0,0.28);
+  --red: var(--accent);
+  --red2: var(--accent-2);
+  --red-soft: var(--accent-soft);
+  --red-glow: var(--accent-glow);
+  --green: var(--success);
+  --green-soft: var(--success-soft);
+  --green-border: var(--success-border);
 }
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 body{
@@ -1112,7 +1119,7 @@ body{
   font-family: var(--mono);
 }
 .meal-summary-protein {
-  font-size: 12px; color: #4FC3F7; margin-bottom: 8px;
+  font-size: 12px; color: var(--info); margin-bottom: 8px;
 }
 .meal-summary-tips { display: flex; flex-direction: column; gap: 4px; }
 .meal-summary-tip {
@@ -1128,7 +1135,7 @@ body{
   border: 1px solid var(--border); border-radius: var(--r);
   background: var(--card2); margin-bottom: 8px; overflow: hidden;
 }
-.meal-card-top { border-color: #4FC3F744; }
+.meal-card-top { border-color: rgba(79,163,255,.28); box-shadow: 0 10px 24px rgba(79,163,255,.08); }
 
 .meal-card-head {
   width: 100%; display: flex; align-items: center;
@@ -1155,7 +1162,26 @@ body{
 .meal-macro-pill {
   font-size: 11px; padding: 3px 8px; border-radius: 20px; font-weight: 600;
 }
+.meal-macro-pill strong{font-family:var(--mono);font-weight:700}
 .meal-foods { display: flex; flex-direction: column; gap: 6px; margin-bottom: 10px; }
+.meal-section-item{padding:10px 0;border-bottom:1px solid rgba(255,255,255,.06)}
+.meal-section-item:last-child{border-bottom:none;padding-bottom:0}
+.meal-card-head-static{cursor:default}
+.meal-tag-row,.meal-filter-row{display:flex;flex-wrap:wrap;gap:8px}
+.meal-tag-row{margin-top:8px}
+.meal-filter-row{margin:10px 0 14px}
+.meal-tag,
+.meal-filter-chip{
+  font-size:10px;padding:4px 8px;border-radius:999px;border:1px solid var(--border);
+  color:var(--text2);background:rgba(255,255,255,.04);font-weight:600;
+}
+.meal-filter-chip{
+  padding:6px 10px;font-size:11px;cursor:pointer;transition:all .18s var(--ease-out, ease);
+}
+.meal-filter-chip-active{
+  border-color:rgba(79,163,255,.28);background:var(--info-soft);color:#EAF4FF;
+  box-shadow:0 8px 18px rgba(79,163,255,.12);
+}
 .meal-food-row {
   display: flex; justify-content: space-between; align-items: center;
   font-size: 12px; gap: 8px;
@@ -1163,10 +1189,10 @@ body{
 .meal-food-name { color: var(--text2); flex: 1; }
 .meal-food-macros { display: flex; gap: 6px; flex-shrink: 0; }
 .meal-food-cal { color: var(--warn); font-weight: 700; font-family: var(--mono); font-size: 11px; }
-.meal-food-pro { color: #4FC3F7; font-weight: 600; font-size: 11px; }
+.meal-food-pro { color: var(--info); font-weight: 600; font-size: 11px; }
 .meal-tip {
-  font-size: 11px; color: #66BB6A; background: rgba(102,187,106,.08);
-  padding: 8px 10px; border-radius: 6px; border: 1px solid rgba(102,187,106,.2);
+  font-size: 11px; color: var(--success); background: var(--success-soft);
+  padding: 8px 10px; border-radius: 6px; border: 1px solid var(--success-border);
   line-height: 1.4;
 }
 .meal-rec-note {

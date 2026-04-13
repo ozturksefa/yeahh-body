@@ -2,6 +2,15 @@ import { useState, useEffect } from "react";
 import "./Nutrition.css";
 import { daysAgoLocal, shiftLocalDate, todayLocalDate, yesterdayLocalDate } from "./dateUtils";
 
+const NUTRI_MACRO_THEMES = {
+  calories: { fg: "var(--accent)", bg: "rgba(217,106,29,.14)" },
+  protein: { fg: "var(--info)", bg: "rgba(79,163,255,.14)" },
+  carbs: { fg: "var(--success)", bg: "rgba(56,193,114,.14)" },
+  fat: { fg: "var(--warn)", bg: "rgba(230,162,60,.14)" },
+  danger: "var(--danger)",
+  ringTrack: "var(--card4)",
+};
+
 function loadTargets() {
   try { return JSON.parse(localStorage.getItem("yb_targets") || "null") || { calories: 2200, protein: 150, carbs: 250, fat: 70, bodyWeight: 75 }; } catch { return { calories: 2200, protein: 150, carbs: 250, fat: 70, bodyWeight: 75 }; }
 }
@@ -452,27 +461,27 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
 
       {/* Macro rings */}
       <div className="nutri-rings">
-        <MacroRing label="Kalori" val={totals.calories} target={targets.calories} unit="kcal" color="#FF6B35" />
-        <MacroRing label="Protein" val={totals.protein} target={targets.protein} unit="g" color="#4FC3F7" />
-        <MacroRing label="Karb" val={totals.carbs} target={targets.carbs} unit="g" color="#66BB6A" />
-        <MacroRing label="Yağ" val={totals.fat} target={targets.fat} unit="g" color="#FFA726" />
+        <MacroRing label="Kalori" val={totals.calories} target={targets.calories} unit="kcal" color={NUTRI_MACRO_THEMES.calories.fg} />
+        <MacroRing label="Protein" val={totals.protein} target={targets.protein} unit="g" color={NUTRI_MACRO_THEMES.protein.fg} />
+        <MacroRing label="Karb" val={totals.carbs} target={targets.carbs} unit="g" color={NUTRI_MACRO_THEMES.carbs.fg} />
+        <MacroRing label="Yağ" val={totals.fat} target={targets.fat} unit="g" color={NUTRI_MACRO_THEMES.fat.fg} />
       </div>
 
       {/* Progress bars */}
       <div className="nutri-bars">
         {[
-          { label: "Kalori", val: totals.calories, target: targets.calories, color: "#FF6B35", unit: "kcal" },
-          { label: "Protein", val: totals.protein, target: targets.protein, color: "#4FC3F7", unit: "g" },
-          { label: "Karb", val: totals.carbs, target: targets.carbs, color: "#66BB6A", unit: "g" },
-          { label: "Yağ", val: totals.fat, target: targets.fat, color: "#FFA726", unit: "g" },
+          { label: "Kalori", val: totals.calories, target: targets.calories, color: NUTRI_MACRO_THEMES.calories.fg, unit: "kcal" },
+          { label: "Protein", val: totals.protein, target: targets.protein, color: NUTRI_MACRO_THEMES.protein.fg, unit: "g" },
+          { label: "Karb", val: totals.carbs, target: targets.carbs, color: NUTRI_MACRO_THEMES.carbs.fg, unit: "g" },
+          { label: "Yağ", val: totals.fat, target: targets.fat, color: NUTRI_MACRO_THEMES.fat.fg, unit: "g" },
         ].map(b => (
           <div key={b.label} className="nutri-bar-row">
             <span className="nutri-bar-label">{b.label}</span>
             <div className="nutri-bar-track">
               <div className="nutri-bar-fill"
-                style={{ width: `${pct(b.val, b.target)}%`, background: b.val > b.target ? "#FF5252" : b.color }} />
+                style={{ width: `${pct(b.val, b.target)}%`, background: b.val > b.target ? NUTRI_MACRO_THEMES.danger : b.color }} />
             </div>
-            <span className="nutri-bar-val" style={{ color: b.val > b.target ? "#FF5252" : b.color }}>
+            <span className="nutri-bar-val" style={{ color: b.val > b.target ? NUTRI_MACRO_THEMES.danger : b.color }}>
               {b.val}/{b.target}{b.unit}
             </span>
           </div>
@@ -660,14 +669,14 @@ function MacroRing({ label, val, target, unit, color }) {
   return (
     <div className="macro-ring">
       <svg width="68" height="68" viewBox="0 0 68 68">
-        <circle cx="34" cy="34" r={r} fill="none" stroke="#222" strokeWidth="5" />
-        <circle cx="34" cy="34" r={r} fill="none" stroke={over ? "#FF5252" : color} strokeWidth="5"
+        <circle cx="34" cy="34" r={r} fill="none" stroke={NUTRI_MACRO_THEMES.ringTrack} strokeWidth="5" />
+        <circle cx="34" cy="34" r={r} fill="none" stroke={over ? NUTRI_MACRO_THEMES.danger : color} strokeWidth="5"
           strokeDasharray={circ} strokeDashoffset={offset}
           strokeLinecap="round" transform="rotate(-90 34 34)"
           style={{ transition: "stroke-dashoffset 0.5s ease" }} />
       </svg>
       <div className="macro-ring-inner">
-        <span className="macro-ring-val" style={{ color: over ? "#FF5252" : "#fff" }}>{val}</span>
+        <span className="macro-ring-val" style={{ color: over ? NUTRI_MACRO_THEMES.danger : "var(--text)" }}>{val}</span>
         <span className="macro-ring-unit">{unit}</span>
       </div>
       <div className="macro-ring-label">{label}</div>

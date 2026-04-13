@@ -3,10 +3,16 @@ import { getHomeMealSections, getMealPlan, getDayType, getWorkoutSchedule } from
 import { calcDayCalories, getUserWeight } from "./calorieCalc";
 
 const HOME_FILTERS = ["ekonomik", "yüksek protein", "çok pratik"];
+const MEAL_MACRO_THEMES = {
+  calories: { fg: "var(--accent)", bg: "rgba(217,106,29,.14)" },
+  protein: { fg: "var(--info)", bg: "rgba(79,163,255,.14)" },
+  carbs: { fg: "var(--success)", bg: "rgba(56,193,114,.14)" },
+  fat: { fg: "var(--warn)", bg: "rgba(230,162,60,.14)" },
+};
 
-function MacroPill({ label, value, unit, color }) {
+function MacroPill({ label, value, unit, theme }) {
   return (
-    <span className="meal-macro-pill" style={{ background: color + "22", color }}>
+    <span className="meal-macro-pill" style={{ background: theme.bg, color: theme.fg }}>
       {label} <strong>{value}{unit}</strong>
     </span>
   );
@@ -44,10 +50,10 @@ function MealCard({ meal, rank }) {
       {open && (
         <div className="meal-card-body">
           <div className="meal-macros">
-            <MacroPill label="Kalori" value={meal.total.cal} unit="kcal" color="#FF6B35" />
-            <MacroPill label="Protein" value={meal.total.pro} unit="g" color="#4FC3F7" />
-            <MacroPill label="Karb" value={meal.total.carb} unit="g" color="#66BB6A" />
-            <MacroPill label="Yağ" value={meal.total.fat} unit="g" color="#FFA726" />
+            <MacroPill label="Kalori" value={meal.total.cal} unit="kcal" theme={MEAL_MACRO_THEMES.calories} />
+            <MacroPill label="Protein" value={meal.total.pro} unit="g" theme={MEAL_MACRO_THEMES.protein} />
+            <MacroPill label="Karb" value={meal.total.carb} unit="g" theme={MEAL_MACRO_THEMES.carbs} />
+            <MacroPill label="Yağ" value={meal.total.fat} unit="g" theme={MEAL_MACRO_THEMES.fat} />
           </div>
           <div className="meal-foods">
             {meal.foods.map((f, i) => <FoodRow key={i} food={f} />)}
@@ -64,7 +70,7 @@ function MealCard({ meal, rank }) {
 function SectionMealCard({ title, icon, meals }) {
   return (
     <div className="meal-card">
-      <div className="meal-card-head" style={{ cursor: "default" }}>
+      <div className="meal-card-head meal-card-head-static">
         <div className="meal-card-left">
           <span className="meal-rank">{icon}</span>
           <div>
@@ -75,34 +81,24 @@ function SectionMealCard({ title, icon, meals }) {
       </div>
       <div className="meal-card-body">
         {meals.map((meal) => (
-          <div key={meal.name} style={{ padding: "10px 0", borderBottom: "1px solid rgba(255,255,255,.06)" }}>
-            <div className="meal-name" style={{ fontSize: 14 }}>{meal.name}</div>
-            <div className="meal-desc" style={{ marginTop: 4 }}>{meal.desc}</div>
+          <div key={meal.name} className="meal-section-item">
+            <div className="meal-name">{meal.name}</div>
+            <div className="meal-desc">{meal.desc}</div>
             {meal.homeTags?.length > 0 && (
-              <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 8 }}>
+              <div className="meal-tag-row">
                 {meal.homeTags.map((tag) => (
-                  <span
-                    key={`${meal.name}-${tag}`}
-                    style={{
-                      fontSize: 10,
-                      padding: "4px 8px",
-                      borderRadius: 999,
-                      border: "1px solid rgba(255,255,255,.12)",
-                      color: "#C4C4CC",
-                      background: "rgba(255,255,255,.04)",
-                    }}
-                  >
+                  <span key={`${meal.name}-${tag}`} className="meal-tag">
                     {tag}
                   </span>
                 ))}
               </div>
             )}
-            <div className="meal-macros" style={{ marginTop: 8 }}>
-              <MacroPill label="Kalori" value={meal.total.cal} unit="kcal" color="#FF6B35" />
-              <MacroPill label="Protein" value={meal.total.pro} unit="g" color="#4FC3F7" />
-              <MacroPill label="Karb" value={meal.total.carb} unit="g" color="#66BB6A" />
+            <div className="meal-macros meal-tag-row">
+              <MacroPill label="Kalori" value={meal.total.cal} unit="kcal" theme={MEAL_MACRO_THEMES.calories} />
+              <MacroPill label="Protein" value={meal.total.pro} unit="g" theme={MEAL_MACRO_THEMES.protein} />
+              <MacroPill label="Karb" value={meal.total.carb} unit="g" theme={MEAL_MACRO_THEMES.carbs} />
             </div>
-            <div className="meal-foods" style={{ marginTop: 10 }}>
+            <div className="meal-foods">
               {meal.foods.map((food, index) => <FoodRow key={`${meal.name}-${index}`} food={food} />)}
             </div>
             {meal.tip && <div className="meal-tip">💡 {meal.tip}</div>}
@@ -170,23 +166,15 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
             Fasted antrenman → insulin düşük → yağ yakımı yüksek. Antrenman sonrası ilk öğün kritik.
           </div>
         </div>
-        <div className="meal-rec-title" style={{ marginTop: 14 }}>Bugünün ev tipi beslenme akışı</div>
-        <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "10px 0 14px" }}>
+        <div className="meal-rec-title">Bugünün ev tipi beslenme akışı</div>
+        <div className="meal-filter-row">
           {HOME_FILTERS.map((filter) => {
             const active = activeFilters.includes(filter);
             return (
               <button
                 key={filter}
                 onClick={() => toggleFilter(filter)}
-                style={{
-                  borderRadius: 999,
-                  border: `1px solid ${active ? "#2A9D8F" : "#2A2A30"}`,
-                  background: active ? "rgba(42,157,143,.12)" : "#17171B",
-                  color: active ? "#E6FFFA" : "#C4C4CC",
-                  padding: "6px 10px",
-                  fontSize: 11,
-                  cursor: "pointer",
-                }}
+                className={`meal-filter-chip ${active ? "meal-filter-chip-active" : ""}`}
               >
                 {filter}
               </button>
@@ -240,32 +228,24 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
           Protein hedefi: <strong>{summary.proteinTarget}g</strong>
         </div>
         {(contextLabel || contextNote) && (
-          <div className="meal-summary-tips" style={{ marginTop: 8 }}>
+          <div className="meal-summary-tips">
             {contextLabel && <div className="meal-summary-tip">• Gün tipi: {contextLabel}</div>}
             {contextNote && <div className="meal-summary-tip">• {contextNote}</div>}
           </div>
         )}
       </div>
 
-      <div className="meal-rec-title" style={{ marginTop: 18 }}>
+      <div className="meal-rec-title">
         {filteredSections.mode === 'rest' ? 'Off day ev tipi öneriler' : 'Spor günü ev tipi öneriler'}
       </div>
-      <div style={{ display: "flex", flexWrap: "wrap", gap: 8, margin: "10px 0 14px" }}>
+      <div className="meal-filter-row">
         {HOME_FILTERS.map((filter) => {
           const active = activeFilters.includes(filter);
           return (
             <button
               key={filter}
               onClick={() => toggleFilter(filter)}
-              style={{
-                borderRadius: 999,
-                border: `1px solid ${active ? "#2A9D8F" : "#2A2A30"}`,
-                background: active ? "rgba(42,157,143,.12)" : "#17171B",
-                color: active ? "#E6FFFA" : "#C4C4CC",
-                padding: "6px 10px",
-                fontSize: 11,
-                cursor: "pointer",
-              }}
+              className={`meal-filter-chip ${active ? "meal-filter-chip-active" : ""}`}
             >
               {filter}
             </button>

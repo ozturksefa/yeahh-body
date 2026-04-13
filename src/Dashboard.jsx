@@ -10,10 +10,20 @@ import { todayLocalDate } from "./dateUtils";
 
 // ─── Renk paleti ───────────────────────────────────────────────
 const C = {
-  red: "#D41920", green: "#00C853", warn: "#FFA726",
-  blue: "#4FC3F7", teal: "#2A9D8F", purple: "#8338EC",
-  card: "#131316", card2: "#1A1A1E", card3: "#222226",
-  border: "#2A2A30", text: "#FFFFFF", text2: "#C4C4CC", text3: "#7A7A84",
+  red: "var(--accent)",
+  green: "var(--success)",
+  warn: "var(--warn)",
+  blue: "var(--info)",
+  teal: "var(--accent-2)",
+  purple: "var(--purple)",
+  danger: "var(--danger)",
+  card: "var(--card)",
+  card2: "var(--card2)",
+  card3: "var(--card3)",
+  border: "var(--border)",
+  text: "var(--text)",
+  text2: "var(--text2)",
+  text3: "var(--text3)",
 };
 
 // ─── Vücut Ölçüm Takibi ────────────────────────────────────────
@@ -73,7 +83,7 @@ function BodyTracker() {
           <button key={f.key} onClick={() => setActiveField(f.key)} style={{
             padding:"5px 10px", borderRadius:20, border:"none", cursor:"pointer",
             background: activeField===f.key ? C.teal : C.card3,
-            color: activeField===f.key ? "#fff" : C.text3,
+            color: activeField===f.key ? "#130B04" : C.text3,
             fontSize:11, fontWeight:700,
           }}>{f.icon} {f.label}</button>
         ))}
@@ -146,7 +156,7 @@ function BodyTracker() {
           <div style={{ display:"flex", gap:6 }}>
             <button onClick={save} style={{
               flex:1, padding:"10px", background:C.teal, border:"none",
-              borderRadius:6, color:"#fff", fontSize:13, fontWeight:700, cursor:"pointer",
+              borderRadius:6, color:"#130B04", fontSize:13, fontWeight:700, cursor:"pointer",
             }}>Kaydet</button>
             <button onClick={() => setOpen(false)} style={{
               padding:"10px 14px", background:C.card3, border:`1px solid ${C.border}`,
@@ -220,7 +230,7 @@ function ExerciseProgressChart({ exerciseProgress }) {
           <button key={name} onClick={() => setSelected(name)} style={{
             padding:"4px 10px", borderRadius:20, border:"none", cursor:"pointer",
             background: selected===name ? C.red : C.card3,
-            color: selected===name ? "#fff" : C.text3,
+            color: selected===name ? "#130B04" : C.text3,
             fontSize:10, fontWeight:700, whiteSpace:"nowrap",
           }}>{name}</button>
         ))}
@@ -239,11 +249,11 @@ function ExerciseProgressChart({ exerciseProgress }) {
           <div style={{ display:"flex", alignItems:"center", color:C.text3, fontSize:16 }}>→</div>
           <div>
             <div style={{ fontSize:10, color:C.text3 }}>Güncel</div>
-            <div style={{ fontSize:16, fontWeight:800, fontFamily:"monospace", color:gain>0?C.green:C.red }}>{last}kg</div>
+            <div style={{ fontSize:16, fontWeight:800, fontFamily:"var(--mono)", color:gain>0?C.green:C.danger }}>{last}kg</div>
           </div>
           <div style={{ marginLeft:"auto", textAlign:"right" }}>
             <div style={{ fontSize:10, color:C.text3 }}>Toplam Kazanım</div>
-            <div style={{ fontSize:16, fontWeight:800, color:gain>0?C.green:C.red }}>
+            <div style={{ fontSize:16, fontWeight:800, color:gain>0?C.green:C.danger }}>
               {gain>0?"+":""}{gain}kg
             </div>
           </div>
@@ -301,9 +311,9 @@ function MuscleChart({ data }) {
   const entries = Object.entries(data).sort((a,b) => b[1]-a[1]);
   const max = entries[0]?.[1] || 1;
   const colors = {
-    'Sırt':'#4FC3F7','Göğüs':'#FF7043','Bacak':'#66BB6A',
-    'Kalça':'#AB47BC','Biceps':'#FFA726','Triceps':'#EF5350',
-    'Omuz':'#26C6DA','Core':'#FFEE58','Diğer':'#78909C',
+    'Sırt':'var(--info)','Göğüs':'var(--accent-2)','Bacak':'var(--success)',
+    'Kalça':'var(--purple)','Biceps':'var(--warn)','Triceps':'var(--danger)',
+    'Omuz':'var(--info)','Core':'var(--warn)','Diğer':'var(--text3)',
   };
   return (
     <div style={{ display:"flex", flexDirection:"column", gap:6 }}>
@@ -313,7 +323,7 @@ function MuscleChart({ data }) {
           <div style={{ flex:1, height:8, background:C.card3, borderRadius:4, overflow:"hidden" }}>
             <div style={{
               height:"100%", width:`${(vol/max)*100}%`,
-              background: colors[name]||"#666", borderRadius:4, transition:"width .6s ease",
+              background: colors[name]||"var(--text3)", borderRadius:4, transition:"width .6s ease",
             }}/>
           </div>
           <span style={{ fontSize:10, color:C.text3, fontFamily:"monospace", minWidth:36, textAlign:"right" }}>
@@ -414,7 +424,7 @@ function SessionNotes() {
                 <button key={v} onClick={() => setEnergy(v)} style={{
                   flex:1, height:28, borderRadius:4, border:"none", cursor:"pointer",
                   background: v<=energy ? C.warn : C.card3,
-                  fontSize:10, fontWeight:700, color: v<=energy ? "#000" : C.text3,
+                  fontSize:10, fontWeight:700, color: v<=energy ? "#130B04" : C.text3,
                 }}>{v}</button>
               ))}
             </div>
@@ -439,7 +449,7 @@ function SessionNotes() {
           }} />
         <button onClick={save} disabled={!text.trim()} style={{
           width:"100%", padding:"10px", background:text.trim() ? C.red : C.card3,
-          border:"none", borderRadius:6, color:text.trim() ? "#fff" : C.text3,
+          border:"none", borderRadius:6, color:text.trim() ? "#130B04" : C.text3,
           fontSize:13, fontWeight:700, cursor:text.trim() ? "pointer" : "default",
         }}>💾 Kaydet</button>
       </div>
@@ -448,7 +458,7 @@ function SessionNotes() {
       {notes.length > 0 && notes.slice(0,5).map((n,i) => (
         <div key={i} style={{
           background:C.card2, borderRadius:8, padding:"10px 12px", marginBottom:6,
-          borderLeft:`3px solid ${n.energy >= 4 ? C.green : n.energy <= 2 ? C.red : C.warn}`,
+          borderLeft:`3px solid ${n.energy >= 4 ? C.green : n.energy <= 2 ? C.danger : C.warn}`,
         }}>
           <div style={{ display:"flex", justifyContent:"space-between", marginBottom:4 }}>
             <span style={{ fontSize:11, color:C.text3 }}>{n.date} {n.time}</span>
@@ -478,9 +488,9 @@ export function WeeklyStats() {
         { label:"Toplam Set", val:stats.totalSets },
         { label:"Süre", val:stats.totalDuration+"dk" },
       ].map(s => (
-        <div key={s.label} style={{ flex:1, background:"#131316", borderRadius:6, padding:"8px 10px" }}>
-          <div style={{ fontSize:16, fontWeight:800, color:"#fff" }}>{s.val}</div>
-          <div style={{ fontSize:10, color:"#7A7A84" }}>{s.label}</div>
+        <div key={s.label} style={{ flex:1, background:C.card, border:`1px solid ${C.border}`, borderRadius:8, padding:"8px 10px" }}>
+          <div style={{ fontSize:16, fontWeight:800, color:C.text }}>{s.val}</div>
+          <div style={{ fontSize:10, color:C.text3 }}>{s.label}</div>
         </div>
       ))}
     </div>
