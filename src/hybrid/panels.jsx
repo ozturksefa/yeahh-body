@@ -328,7 +328,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
 
           {relevantSkills.length > 0 && (
             <div style={{ display: "grid", gap: 8 }}>
-              <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 2 }}>Skill Kaydı</div>
+              <div className="panel-meta-text" style={{ marginBottom: 2 }}>Skill Kaydı</div>
               {relevantSkills.map(([skillKey, path]) => {
                 const level = skillState?.[skillKey]?.level || 1;
                 const step = path.steps.find((item) => item.level === level) || path.steps[0];
@@ -336,21 +336,21 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
                 const data = post.skillWork?.[skillKey] || { done: false, metric, value: 0, seconds: 0, reps: 0 };
                 const value = getSkillValue(data);
                 return (
-                  <div key={skillKey} style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
+                  <div key={skillKey} className="panel-mini-card skill-log-card">
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center", marginBottom: 8 }}>
                       <div>
-                        <div style={{ fontSize: 12, color: "#fff", fontWeight: 800 }}>{path.name}</div>
-                        <div style={{ fontSize: 10, color: "#B8B8C2", marginTop: 4 }}>Aktif seviye: {step?.name}</div>
-                        <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 4 }}>{path.weeklyGoal}</div>
+                        <div className="skill-log-title">{path.name}</div>
+                        <div className="skill-log-meta">Aktif seviye: {step?.name}</div>
+                        <div className="panel-meta-text" style={{ marginTop: 4 }}>{path.weeklyGoal}</div>
                       </div>
                       <button
                         onClick={() => updateSkill(skillKey, { done: !data.done })}
                         style={{
                           ...buttonBase,
                           minWidth: 96,
-                          background: data.done ? "rgba(131,56,236,.16)" : "#17171B",
-                          borderColor: data.done ? "#8338EC" : "#2A2A30",
-                          color: data.done ? "#fff" : "#C4C4CC",
+                          background: data.done ? "rgba(138,99,246,.16)" : "var(--card)",
+                          borderColor: data.done ? "var(--purple)" : "var(--border)",
+                          color: data.done ? "#F6F0FF" : "var(--text2)",
                         }}
                       >
                         {data.done ? "✓ Yapıldı" : "Yapılmadı"}
@@ -359,7 +359,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
 
                     {data.done && (
                       <div>
-                        <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>
+                        <div className="panel-meta-text" style={{ marginBottom: 6 }}>
                           En iyi temiz {metric === "reps" ? "tekrar" : "süre"}
                         </div>
                         <input
@@ -474,7 +474,7 @@ export function WeeklyReview({ entries, activeWeek }) {
         <div className="panel-mini-grid">
           {Object.entries(PROGRAM_HYBRID.skillPaths).map(([key, path]) => (
             <div key={key} className="panel-mini-card">
-              <div style={{ fontSize: 11, color: "#fff", fontWeight: 800 }}>{path.name}</div>
+              <div className="skill-log-title">{path.name}</div>
               <div style={{ fontSize: 13, color: "var(--purple)", fontWeight: 800, marginTop: 6 }}>{skillContacts[key]} temas</div>
               <div className="panel-meta-text" style={{ marginTop: 4 }}>{path.weeklyGoal}</div>
             </div>

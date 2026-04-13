@@ -81,10 +81,10 @@ function SkillTimerCard({ exerciseName, targetSeconds }) {
     <div className="skill-timer-widget">
       <div className="skill-timer-ring-wrap">
         <svg width="100" height="100" viewBox="0 0 100 100">
-          <circle cx="50" cy="50" r="44" fill="none" stroke="#1a1a1e" strokeWidth="6" />
+          <circle cx="50" cy="50" r="44" fill="none" stroke="var(--card4)" strokeWidth="6" />
           {pct !== null && (
             <circle cx="50" cy="50" r="44" fill="none"
-              stroke={pct >= 100 ? "#00C853" : elapsed > 0 ? "#8338EC" : "#2a2a30"}
+              stroke={pct >= 100 ? "var(--success)" : elapsed > 0 ? "var(--purple)" : "var(--border)"}
               strokeWidth="6"
               strokeDasharray={`${(pct/100)*276.5} 276.5`}
               strokeLinecap="round" transform="rotate(-90 50 50)"
