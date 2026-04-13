@@ -13,20 +13,15 @@ import {
 
 export function FieldButtons({ value, options, onChange }) {
   return (
-    <div style={{ display: "flex", gap: 6, flexWrap: "wrap" }}>
+    <div className="panel-choice-row">
       {options.map((option) => {
         const active = value === option.value;
         return (
           <button
             key={option.value}
             onClick={() => onChange(option.value)}
-            style={{
-              ...buttonBase,
-              background: active ? "rgba(212,25,32,.14)" : "#17171B",
-              borderColor: active ? "#D41920" : "#2A2A30",
-              color: active ? "#fff" : "#C4C4CC",
-              minWidth: 60,
-            }}
+            style={{ ...buttonBase, minWidth: 60 }}
+            className={`panel-choice-btn ${active ? "panel-choice-btn-active" : ""}`}
           >
             {option.label}
           </button>
@@ -41,15 +36,7 @@ export function FieldSelect({ value, onChange }) {
     <select
       value={value}
       onChange={(e) => onChange(e.target.value)}
-      style={{
-        width: "100%",
-        background: "#17171B",
-        color: "#fff",
-        border: "1px solid #2A2A30",
-        borderRadius: 10,
-        padding: "10px 12px",
-        fontSize: 12,
-      }}
+      className="panel-select"
     >
       {[0, 1, 2, 3, 4, 5].map((score) => (
         <option key={score} value={score}>{score}/5</option>
@@ -60,8 +47,8 @@ export function FieldSelect({ value, onChange }) {
 
 export function SectionCard({ title, children, accent = "#7A7A84" }) {
   return (
-    <div style={{ background: "#131316", border: "1px solid #2A2A30", borderRadius: 12, padding: 12 }}>
-      <div style={{ fontSize: 11, color: accent, fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 10 }}>
+    <div className="panel-card" style={{ "--panel-accent": accent }}>
+      <div className="panel-card-title">
         {title}
       </div>
       {children}
@@ -84,7 +71,7 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
   );
 
   return (
-    <div style={{ padding: "12px", display: "grid", gap: 10 }}>
+    <div className="panel-stack">
       <SectionCard title="Skill İlerleme" accent="#8338EC">
         <div className="skill-tracker" style={{ paddingBottom: 0 }}>
           {Object.entries(skillPaths).map(([key, path]) => {
@@ -128,24 +115,24 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
                   <span className="skill-current-target">{step?.target}</span>
                 </div>
 
-                <div style={{ fontSize: 11, color: "#7A7A84", lineHeight: 1.5, marginBottom: 8 }}>
+                <div className="panel-detail-text" style={{ marginBottom: 8 }}>
                   {step?.detail}
                 </div>
 
-                <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8, marginBottom: 8 }}>
-                  <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 8, padding: 8 }}>
-                    <div style={{ fontSize: 10, color: "#7A7A84", textTransform: "uppercase", fontWeight: 700 }}>Haftalık Temas</div>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginTop: 4 }}>{weeklyContacts}</div>
+                <div className="panel-mini-grid" style={{ marginBottom: 8 }}>
+                  <div className="panel-mini-card">
+                    <div className="panel-mini-label">Haftalık Temas</div>
+                    <div className="panel-mini-value">{weeklyContacts}</div>
                   </div>
-                  <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 8, padding: 8 }}>
-                    <div style={{ fontSize: 10, color: "#7A7A84", textTransform: "uppercase", fontWeight: 700 }}>
+                  <div className="panel-mini-card">
+                    <div className="panel-mini-label">
                       En İyi {currentMetric === "reps" ? "Tekrar" : "Süre"}
                     </div>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginTop: 4 }}>{bestValue} {getSkillUnit(currentMetric)}</div>
+                    <div className="panel-mini-value">{bestValue} {getSkillUnit(currentMetric)}</div>
                   </div>
-                  <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 8, padding: 8 }}>
-                    <div style={{ fontSize: 10, color: "#7A7A84", textTransform: "uppercase", fontWeight: 700 }}>Semptom Ort.</div>
-                    <div style={{ fontSize: 14, fontWeight: 800, color: symptomAvg <= 2 ? "#00C853" : "#FFA726", marginTop: 4 }}>{symptomAvg || 0}/5</div>
+                  <div className="panel-mini-card">
+                    <div className="panel-mini-label">Semptom Ort.</div>
+                    <div className="panel-mini-value" style={{ color: symptomAvg <= 2 ? "var(--success)" : "var(--warn)" }}>{symptomAvg || 0}/5</div>
                   </div>
                 </div>
 
@@ -156,23 +143,14 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
                   </div>
                 )}
 
-                <div style={{
-                  background: readyToProgress ? "rgba(0,200,83,.08)" : "rgba(255,167,38,.08)",
-                  border: `1px solid ${readyToProgress ? "rgba(0,200,83,.28)" : "rgba(255,167,38,.24)"}`,
-                  borderRadius: 8,
-                  padding: 10,
-                  fontSize: 11,
-                  color: readyToProgress ? "#9EF0BA" : "#F7C97B",
-                  lineHeight: 1.5,
-                  marginBottom: 8,
-                }}>
+                <div className={`panel-status-box ${readyToProgress ? "panel-status-success" : "panel-status-warn"}`} style={{ marginBottom: 8 }}>
                   {readyToProgress
                     ? `İlerlemeye yakınsın: ${path.successRule}.`
                     : `Henüz erken: ${path.weeklyGoal} ve ${step?.target || "hedef kalite"} civarı temiz kalite arıyoruz.`}
                 </div>
 
-                <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginBottom: 8 }}>• {path.successRule}</div>
-                <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginBottom: 8 }}>• {path.caution}</div>
+                <div className="panel-detail-text" style={{ marginBottom: 8 }}>• {path.successRule}</div>
+                <div className="panel-detail-text" style={{ marginBottom: 8 }}>• {path.caution}</div>
 
                 <div className="skill-level-btns">
                   <button onClick={() => onSetSkillLevel(key, Math.max(1, current - 1))} disabled={current <= 1}>‹</button>
@@ -196,19 +174,11 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
   const summaryTone = symptomMax >= 3 ? "#FF5252" : pre.energy === "düşük" || pre.sleep === "kötü" ? "#FFA726" : "#2A9D8F";
 
   return (
-    <div style={{ padding: "10px 12px 0", display: "grid", gap: 10 }}>
+    <div className="panel-stack" style={{ padding: "10px 12px 0" }}>
       <button
         onClick={() => setOpen((value) => !value)}
-        style={{
-          width: "100%",
-          background: "#131316",
-          border: `1px solid ${summaryTone}33`,
-          borderRadius: 12,
-          padding: 12,
-          color: "inherit",
-          textAlign: "left",
-          cursor: "pointer",
-        }}
+        className="checkin-summary"
+        style={{ borderColor: `${summaryTone}44` }}
       >
         <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 12 }}>
           <div>
@@ -229,8 +199,8 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
         </div>
       </button>
 
-      <div style={{ display: "grid", gap: 8 }}>
-        <div style={{ display: "flex", gap: 8 }}>
+        <div style={{ display: "grid", gap: 8 }}>
+        <div className="panel-mode-row">
           {[
             { id: "home", label: "🏠 Ev" },
             { id: "gym", label: "🏋️ Macfit" },
@@ -241,30 +211,15 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
                 key={item.id}
                 onClick={() => modeSwitchEnabled && setMode(item.id)}
                 disabled={!modeSwitchEnabled}
-                style={{
-                  ...buttonBase,
-                  flex: 1,
-                  background: active ? "rgba(79,195,247,.12)" : "#17171B",
-                  borderColor: active ? "#4FC3F7" : "#2A2A30",
-                  color: active ? "#fff" : "#C4C4CC",
-                  opacity: modeSwitchEnabled ? 1 : 0.72,
-                  cursor: modeSwitchEnabled ? "pointer" : "default",
-                }}
+                style={{ ...buttonBase, flex: 1, opacity: modeSwitchEnabled ? 1 : 0.72, cursor: modeSwitchEnabled ? "pointer" : "default" }}
+                className={`panel-choice-btn panel-mode-btn ${active ? "panel-choice-btn-active panel-mode-btn-active" : ""}`}
               >
                 {item.label}
               </button>
             );
           })}
         </div>
-        <div style={{
-          background: "#17171B",
-          border: "1px solid #2A2A30",
-          borderRadius: 10,
-          padding: "9px 10px",
-          fontSize: 11,
-          color: "#C4C4CC",
-          lineHeight: 1.45,
-        }}>
+        <div className="panel-note-box">
           {modeSwitchEnabled
             ? activeVariant.modeNote
             : `Bu ekran sabit olarak ${mode === "home" ? "Ev" : "Macfit"} yolunu gösterir.`}
@@ -276,24 +231,24 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
           <SectionCard title="Antrenman Öncesi Check-in" accent="#2A9D8F">
             <div style={{ display: "grid", gap: 10 }}>
               <div>
-                <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Enerji</div>
+                  <div className="panel-field-label">Enerji</div>
                 <FieldButtons value={pre.energy} onChange={(v) => update("energy", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "düşük", label: "Düşük" }]} />
               </div>
               <div>
-                <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Uyku</div>
+                  <div className="panel-field-label">Uyku</div>
                 <FieldButtons value={pre.sleep} onChange={(v) => update("sleep", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "kötü", label: "Kötü" }]} />
               </div>
               <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
                 <div>
-                  <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Omuz</div>
+                  <div className="panel-field-label">Omuz</div>
                   <FieldSelect value={pre.shoulder} onChange={(v) => update("shoulder", v)} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Diz</div>
+                  <div className="panel-field-label">Diz</div>
                   <FieldSelect value={pre.knee} onChange={(v) => update("knee", v)} />
                 </div>
                 <div>
-                  <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bel/Boyun</div>
+                  <div className="panel-field-label">Bel/Boyun</div>
                   <FieldSelect value={pre.spine} onChange={(v) => update("spine", v)} />
                 </div>
               </div>
@@ -335,12 +290,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
     <div style={{ padding: "0 12px 12px" }}>
       <SectionCard title="Seans Sonu Check-out" accent="#FFA726">
         <div style={{ display: "grid", gap: 10 }}>
-          <div style={{
-            background: post.completed ? "rgba(0,200,83,.08)" : "#17171B",
-            border: `1px solid ${post.completed ? "rgba(0,200,83,.28)" : "#2A2A30"}`,
-            borderRadius: 10,
-            padding: 10,
-          }}>
+          <div className={`panel-status-box ${post.completed ? "panel-status-success" : "panel-status-neutral"}`}>
             <div style={{ fontSize: 11, color: post.completed ? "#9EF0BA" : "#FFA726", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
               Son Adım
             </div>
@@ -426,15 +376,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
                               reps: metric === "reps" ? nextValue : 0,
                             });
                           }}
-                          style={{
-                            width: "100%",
-                            background: "#111114",
-                            color: "#fff",
-                            border: "1px solid #2A2A30",
-                            borderRadius: 10,
-                            padding: "10px 12px",
-                            fontSize: 12,
-                          }}
+                          className="panel-input"
                         />
                         <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 6 }}>Hedef: {step?.target || path.steps[0]?.target}</div>
                       </div>
@@ -447,13 +389,8 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
 
           <button
             onClick={onComplete}
-            style={{
-              ...buttonBase,
-              width: "100%",
-              background: post.completed ? "rgba(0,200,83,.12)" : "#17171B",
-              borderColor: post.completed ? "#00C853" : "#2A2A30",
-              color: post.completed ? "#fff" : "#C4C4CC",
-            }}
+            style={{ ...buttonBase, width: "100%" }}
+            className={`panel-complete-btn ${post.completed ? "panel-complete-btn-done" : ""}`}
           >
             {post.completed ? "✅ Seans kaydedildi" : "Seansı tamamlandı olarak işaretle"}
           </button>
@@ -501,9 +438,9 @@ export function WeeklyReview({ entries, activeWeek }) {
   const decision = getWeeklyDecision({ last7, totals, skillContacts, activeWeek, skillPaths: PROGRAM_HYBRID.skillPaths });
 
   return (
-    <div style={{ padding: "10px 12px 12px", display: "grid", gap: 10 }}>
+    <div className="panel-stack" style={{ padding: "10px 12px 12px" }}>
       <SectionCard title="Haftalık Özet" accent="#4FC3F7">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
+        <div className="panel-mini-grid">
           {[
             ["Tamamlanan Seans", String(last7.length)],
             ["Aerobik Dakika", `${totals.aerobic} dk`],
@@ -512,9 +449,9 @@ export function WeeklyReview({ entries, activeWeek }) {
             ["Omuz / Diz", `${totals.avgShoulder || 0} / ${totals.avgKnee || 0}`],
             ["Bel-Boyun", totals.avgSpine ? String(totals.avgSpine) : "0"],
           ].map(([label, value]) => (
-            <div key={label} style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
-              <div style={{ fontSize: 10, color: "#7A7A84", textTransform: "uppercase", fontWeight: 700 }}>{label}</div>
-              <div style={{ fontSize: 15, fontWeight: 800, color: "#fff", marginTop: 4 }}>{value}</div>
+            <div key={label} className="panel-mini-card">
+              <div className="panel-mini-label">{label}</div>
+              <div className="panel-mini-value">{value}</div>
             </div>
           ))}
         </div>
@@ -522,24 +459,24 @@ export function WeeklyReview({ entries, activeWeek }) {
 
       <SectionCard title="Sistem Kararı" accent={decision.tone}>
         <div style={{ display: "grid", gap: 8 }}>
-          <div style={{ background: "#17171B", border: `1px solid ${decision.tone}44`, borderRadius: 10, padding: 10 }}>
+          <div className="panel-status-box" style={{ borderColor: `${decision.tone}44` }}>
             <div style={{ fontSize: 12, fontWeight: 800, color: decision.tone }}>{decision.label}</div>
-            <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.55, marginTop: 6 }}>{decision.summary}</div>
-            <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 8 }}>Aktif hafta: {activeWeek.week} · {activeWeek.label}</div>
+            <div className="panel-detail-text" style={{ marginTop: 6 }}>{decision.summary}</div>
+            <div className="panel-meta-text" style={{ marginTop: 8 }}>Aktif hafta: {activeWeek.week} · {activeWeek.label}</div>
           </div>
           {decision.actions.map((item) => (
-            <div key={item} style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.55 }}>• {item}</div>
+            <div key={item} className="panel-detail-text">• {item}</div>
           ))}
         </div>
       </SectionCard>
 
       <SectionCard title="Skill Teması" accent="#8338EC">
-        <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
+        <div className="panel-mini-grid">
           {Object.entries(PROGRAM_HYBRID.skillPaths).map(([key, path]) => (
-            <div key={key} style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
+            <div key={key} className="panel-mini-card">
               <div style={{ fontSize: 11, color: "#fff", fontWeight: 800 }}>{path.name}</div>
-              <div style={{ fontSize: 13, color: "#8338EC", fontWeight: 800, marginTop: 6 }}>{skillContacts[key]} temas</div>
-              <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 4 }}>{path.weeklyGoal}</div>
+              <div style={{ fontSize: 13, color: "var(--purple)", fontWeight: 800, marginTop: 6 }}>{skillContacts[key]} temas</div>
+              <div className="panel-meta-text" style={{ marginTop: 4 }}>{path.weeklyGoal}</div>
             </div>
           ))}
         </div>
@@ -547,17 +484,17 @@ export function WeeklyReview({ entries, activeWeek }) {
 
       <SectionCard title="Son Seanslar" accent="#7A7A84">
         <div style={{ display: "grid", gap: 8 }}>
-          {last7.length === 0 && <div style={{ fontSize: 12, color: "#7A7A84" }}>Henüz tamamlanmış seans yok.</div>}
+          {last7.length === 0 && <div className="panel-meta-text" style={{ fontSize: 12 }}>Henüz tamamlanmış seans yok.</div>}
           {last7.map((entry) => (
-            <div key={`${entry.date}-${entry.day}-${entry.mode}`} style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
+            <div key={`${entry.date}-${entry.day}-${entry.mode}`} className="panel-mini-card">
               <div style={{ display: "flex", justifyContent: "space-between", gap: 8 }}>
                 <div>
                   <div style={{ fontSize: 12, fontWeight: 800, color: "#fff" }}>{entry.day} · {entry.mode === "home" ? "Ev" : "Macfit"}</div>
-                  <div style={{ fontSize: 11, color: "#7A7A84", marginTop: 4 }}>{entry.date}</div>
+                  <div className="panel-meta-text" style={{ marginTop: 4 }}>{entry.date}</div>
                 </div>
-                <div style={{ fontSize: 11, color: "#C4C4CC" }}>RPE {entry.post?.rpe || "—"}</div>
+                <div className="panel-detail-text" style={{ fontSize: 11 }}>RPE {entry.post?.rpe || "—"}</div>
               </div>
-              <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 8, lineHeight: 1.5 }}>
+              <div className="panel-detail-text" style={{ marginTop: 8 }}>
                 Omuz {entry.post?.shoulderAfter ?? entry.pre?.shoulder ?? 0}/5 · Diz {entry.post?.kneeAfter ?? entry.pre?.knee ?? 0}/5 · Bel-Boyun {entry.post?.spineAfter ?? entry.pre?.spine ?? 0}/5
               </div>
             </div>

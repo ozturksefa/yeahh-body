@@ -100,9 +100,12 @@ function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, on
     };
     return (
       <div className="timer-bar timer-completed">
-        <div>
-          <span>✅ Tamamlandı!</span>
-          {dur > 0 && <span className="timer-dur"> · {dur} dk</span>}
+        <div className="timer-left">
+          <span className="timer-dot">●</span>
+          <div className="timer-meta">
+            <span className="timer-kicker">Seans kapandı</span>
+            <span className="timer-clock">✅ Tamamlandı{dur > 0 && <span className="timer-dur"> · {dur} dk</span>}</span>
+          </div>
         </div>
         <div className="timer-actions">
           <button className="timer-continue" onClick={handleContinue}>▶ Devam Et</button>
@@ -114,19 +117,23 @@ function WorkoutTimer({ dayIndex, onWorkoutStart, onWorkoutFinish, finishRef, on
 
   if (!started) {
     return (
-      <button className="timer-start" onClick={startWorkout}>
-        ▶ Antrenmana Başla
+      <button className="timer-start" data-testid="workout-start" onClick={startWorkout}>
+        <span className="timer-start-title">▶ Antrenmana Başla</span>
+        <span className="timer-start-note">Timer başlar, kaldığın yere yönlendirir ve set takibini açar</span>
       </button>
     );
   }
 
   return (
-    <div className="timer-bar">
+    <div className="timer-bar" data-testid="workout-active-timer">
       <div className="timer-left">
         <span className="timer-dot">●</span>
-        <span className="timer-clock">{String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}</span>
+        <div className="timer-meta">
+          <span className="timer-kicker">Aktif seans</span>
+          <span className="timer-clock">{String(mins).padStart(2, "0")}:{String(secs).padStart(2, "0")}</span>
+        </div>
       </div>
-      <button className="timer-finish" onClick={finishWorkout}>Bitir ✓</button>
+      <button className="timer-finish" data-testid="workout-finish" onClick={finishWorkout}>Bitir ✓</button>
     </div>
   );
 }

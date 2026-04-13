@@ -146,7 +146,7 @@ function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartR
   return (
     <div className="block">
       <button className="block-head" onClick={handleBlockToggle} style={{ background: block.color }}>
-        <div>
+        <div className="block-head-main">
           <div className="block-name">{block.name}</div>
           <div className="block-count">
             {block.exercises.length} hareket
@@ -159,7 +159,7 @@ function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartR
             })()}
           </div>
         </div>
-        <span style={{ color: "#fff", fontSize: 20, transition: "transform 0.25s", transform: open ? "rotate(180deg)" : "none" }}>▾</span>
+        <span className="block-chevron" style={{ transform: open ? "rotate(180deg)" : "none" }}>▾</span>
       </button>
       {open && (
         <div className="block-body" style={{ borderColor: block.color + "44" }}>

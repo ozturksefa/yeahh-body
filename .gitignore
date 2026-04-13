@@ -6,3 +6,5 @@ dist/
 .env.local
 .env.*.local
 devserver.log
+test-results/
+playwright-report/

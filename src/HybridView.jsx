@@ -468,7 +468,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             ["status", "📊 Durum"],
             ["nutrition", "🍽 Beslenme"],
           ].map(([id, label]) => (
-            <button key={id} className={`page-tab ${page === id ? "page-tab-active" : ""}`} onClick={() => setPage(id)}>{label}</button>
+            <button key={id} data-testid={`page-tab-${id}`} className={`page-tab ${page === id ? "page-tab-active" : ""}`} onClick={() => setPage(id)}>{label}</button>
           ))}
         </div>
 
@@ -554,6 +554,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                     Bugünü başlangıç tarihi olarak kaydeder ve haftayı `Hafta 1 — Kurulum` olarak başlatır.
                   </div>
                   <button
+                    data-testid="program-start-button"
                     onClick={handleStartProgram}
                     style={{
                       ...buttonBase,
@@ -716,6 +717,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           {nextStepHint && !currentEntry.post.completed && (
             <div style={{ padding: "0 12px 12px" }}>
               <button
+                data-testid="next-step-button"
                 onClick={() => jumpToTarget(nextStepHint)}
                 style={{
                   width: "100%",
