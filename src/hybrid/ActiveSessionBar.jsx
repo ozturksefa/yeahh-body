@@ -74,7 +74,7 @@ export default function ActiveSessionBar({
         <div style={{ display: "flex", flexDirection: "column", gap: 6, flexShrink: 0 }}>
           <button
             data-testid="next-step-button"
-            onClick={() => canAdvance && onNextStep?.(nextStepHint)}
+            onClick={() => onNextStep?.()}
             disabled={!canAdvance}
             style={{
               border: "1px solid rgba(79,195,247,.55)",

@@ -163,29 +163,52 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     return { kind: "advance" };
   }, [activeWeek, snoozeDate, startDate, todayContext.key, weekProgress.ready]);
 
-  const findNextExerciseTarget = (exerciseMap = {}) => {
-    for (let blockIdx = 0; blockIdx < activeVariant.blocks.length; blockIdx += 1) {
-      const block = activeVariant.blocks[blockIdx];
-      for (let exIdx = 0; exIdx < block.exercises.length; exIdx += 1) {
-        const exercise = block.exercises[exIdx];
-        const sets = exerciseMap?.[exercise.name];
-        if (!Array.isArray(sets) || sets.length === 0) {
-          return { blockIdx, exIdx, blockName: block.name, exerciseName: exercise.name };
-        }
+  // Flat ordered list of all exercises across blocks — used to walk forward
+  // relative to a current position rather than always scanning from the top.
+  const flatExercises = useMemo(
+    () => activeVariant.blocks.flatMap((block, blockIdx) =>
+      block.exercises.map((exercise, exIdx) => ({
+        blockIdx,
+        exIdx,
+        blockName: block.name,
+        exerciseName: exercise.name,
+      }))
+    ),
+    [activeVariant.blocks]
+  );
 
-        const isDone = sets.every((set) => set.done);
-        if (!isDone) {
-          return { blockIdx, exIdx, blockName: block.name, exerciseName: exercise.name };
-        }
-      }
+  const isExerciseUnfinished = (target, exerciseMap) => {
+    const sets = exerciseMap?.[target.exerciseName];
+    if (!Array.isArray(sets) || sets.length === 0) return true;
+    return !sets.every((set) => set.done);
+  };
+
+  // Find the next unfinished exercise AFTER a given position. Warmup entries
+  // never get tracked sets, so treating them as "unfinished" is fine — walking
+  // from a specific position ensures we never loop back to earlier items.
+  // When currentKey is null, falls back to first-in-list behavior.
+  const findNextExerciseFrom = (currentKey, exerciseMap = {}) => {
+    if (flatExercises.length === 0) return null;
+
+    let startIndex = 0;
+    if (currentKey) {
+      const [bi, ei] = String(currentKey).split("-").map(Number);
+      const idx = flatExercises.findIndex((t) => t.blockIdx === bi && t.exIdx === ei);
+      if (idx !== -1) startIndex = idx + 1;
     }
 
-    const fallbackBlock = activeVariant.blocks[0];
-    const fallbackExercise = fallbackBlock?.exercises?.[0];
-    return fallbackBlock && fallbackExercise
-      ? { blockIdx: 0, exIdx: 0, blockName: fallbackBlock.name, exerciseName: fallbackExercise.name }
-      : null;
+    // Walk forward from startIndex, pick the first unfinished.
+    for (let i = startIndex; i < flatExercises.length; i += 1) {
+      if (isExerciseUnfinished(flatExercises[i], exerciseMap)) return flatExercises[i];
+    }
+    // Nothing left after the current position — return next in order regardless
+    // of done state, so the user can step past finished items manually. If we
+    // are at the very end, return null to disable the button.
+    return flatExercises[startIndex] || null;
   };
+
+  const findNextExerciseTarget = (exerciseMap = {}) =>
+    findNextExerciseFrom(null, exerciseMap) || flatExercises[0] || null;
 
   const jumpToTarget = (target) => {
     if (!target) return;
@@ -556,11 +579,14 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               isTransition={restTimer.isTransition}
               onDismiss={() => {
                 const wasTransition = restTimer.isTransition;
+                const finishedExerciseName = restTimer.exerciseName;
                 setRestTimer(null);
-                // On exercise transitions, auto-advance focus to the next
-                // unfinished exercise so the user doesn't have to scroll.
+                // On exercise transitions, auto-advance focus to the exercise
+                // immediately after the one that just wrapped up.
                 if (wasTransition) {
-                  jumpToTarget(findNextExerciseTarget(workoutSnapshot?.exercises || {}));
+                  const finishedAt = flatExercises.find((t) => t.exerciseName === finishedExerciseName);
+                  const fromKey = finishedAt ? `${finishedAt.blockIdx}-${finishedAt.exIdx}` : null;
+                  jumpToTarget(findNextExerciseFrom(fromKey, workoutSnapshot?.exercises || {}));
                 }
               }}
               onAdjust={adjustRest}
@@ -574,7 +600,14 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             elapsedSeconds={elapsedSeconds}
             workoutStarted={workoutState.started}
             nextStepHint={nextStepHint}
-            onNextStep={jumpToTarget}
+            onNextStep={() => {
+              // Always advance RELATIVE to the exercise the user is currently
+              // viewing, never from the top of the list. For warmup (which has
+              // no tracked sets), this is the only way to progress.
+              const currentKey = expandedEx || nextStepHint?.key || null;
+              const target = findNextExerciseFrom(currentKey, workoutSnapshot?.exercises || {});
+              if (target) jumpToTarget(target);
+            }}
             onJumpToCheckout={() => checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
           />
         </>
