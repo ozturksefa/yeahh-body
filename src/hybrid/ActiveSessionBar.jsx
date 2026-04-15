@@ -1,8 +1,10 @@
 /**
- * Fixed floating bottom bar that shows active workout status and a "Bitir"
- * shortcut. Rendered while the session is open or has input but not yet
- * marked complete. Extracted verbatim from HybridView.jsx; no behavior
- * changes.
+ * Fixed floating bottom bar — primary action surface during a workout.
+ * Shows the block/exercise the user should be working on, the clock, and
+ * two shortcut buttons:
+ *   1. "Sonraki →" — jumps focus to the next unfinished exercise
+ *      (previously lived in a separate NextStepButton card).
+ *   2. "Bitir" — scrolls to the checkout panel.
  */
 export default function ActiveSessionBar({
   visible,
@@ -10,6 +12,8 @@ export default function ActiveSessionBar({
   currentBlockProgress,
   elapsedSeconds,
   workoutStarted,
+  nextStepHint,
+  onNextStep,
   onJumpToCheckout,
 }) {
   if (!visible) return null;
@@ -21,6 +25,17 @@ export default function ActiveSessionBar({
   const subtitle = workoutStarted
     ? `${clock} · ${movementText}`
     : "Set girdin, seansı kapatmayı unutma";
+
+  // Primary line: show the exercise the user should focus on right now.
+  // Fallback to block name when no hint is available (e.g. session just paused).
+  const primaryText = nextStepHint?.exerciseName
+    || currentBlock?.name
+    || "Program akışı";
+  const secondaryText = nextStepHint?.blockName && nextStepHint.blockName !== primaryText
+    ? nextStepHint.blockName
+    : null;
+
+  const canAdvance = !!nextStepHint;
 
   return (
     <div
@@ -40,34 +55,59 @@ export default function ActiveSessionBar({
       }}
     >
       <div style={{ display: "flex", alignItems: "center", justifyContent: "space-between", gap: 10, padding: "10px 12px 8px" }}>
-        <div style={{ minWidth: 0 }}>
+        <div style={{ minWidth: 0, flex: 1 }}>
           <div style={{ fontSize: 10, color: "#7A7A84", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
-            Aktif Seans
+            Aktif Görev
           </div>
           <div style={{ fontSize: 13, color: "#fff", fontWeight: 800, marginTop: 4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
-            {currentBlock ? currentBlock.name : "Program akışı"}
+            {primaryText}
           </div>
+          {secondaryText && (
+            <div style={{ fontSize: 11, color: "#9EA2AA", marginTop: 2, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {secondaryText}
+            </div>
+          )}
           <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 4, lineHeight: 1.4 }}>
             {subtitle}
           </div>
         </div>
-        <button
-          data-testid="checkout-jump-button"
-          onClick={onJumpToCheckout}
-          style={{
-            border: "1px solid #D41920",
-            background: "#D41920",
-            color: "#fff",
-            borderRadius: 10,
-            padding: "10px 12px",
-            fontSize: 12,
-            fontWeight: 800,
-            cursor: "pointer",
-            flexShrink: 0,
-          }}
-        >
-          Bitir
-        </button>
+        <div style={{ display: "flex", flexDirection: "column", gap: 6, flexShrink: 0 }}>
+          <button
+            data-testid="next-step-button"
+            onClick={() => canAdvance && onNextStep?.(nextStepHint)}
+            disabled={!canAdvance}
+            style={{
+              border: "1px solid rgba(79,195,247,.55)",
+              background: canAdvance ? "rgba(79,195,247,.14)" : "rgba(79,195,247,.06)",
+              color: canAdvance ? "#fff" : "#7A7A84",
+              borderRadius: 10,
+              padding: "8px 12px",
+              fontSize: 12,
+              fontWeight: 800,
+              cursor: canAdvance ? "pointer" : "default",
+              minWidth: 108,
+            }}
+          >
+            Sonraki →
+          </button>
+          <button
+            data-testid="checkout-jump-button"
+            onClick={onJumpToCheckout}
+            style={{
+              border: "1px solid #D41920",
+              background: "#D41920",
+              color: "#fff",
+              borderRadius: 10,
+              padding: "8px 12px",
+              fontSize: 12,
+              fontWeight: 800,
+              cursor: "pointer",
+              minWidth: 108,
+            }}
+          >
+            Bitir
+          </button>
+        </div>
       </div>
     </div>
   );
