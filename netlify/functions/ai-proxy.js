@@ -5,6 +5,26 @@ export default async (req) => {
     return new Response("Method not allowed", { status: 405 });
   }
 
+  // Origin allowlist — configured via ALLOWED_ORIGINS env (comma-separated).
+  // Falls back to request host to support Netlify preview/prod deploys.
+  const origin = req.headers.get("origin") || "";
+  const allowedEnv = Deno.env.get("ALLOWED_ORIGINS") || "";
+  const allowed = allowedEnv.split(",").map((s) => s.trim()).filter(Boolean);
+  const hostOrigin = (() => {
+    try { return new URL(req.url).origin; } catch { return ""; }
+  })();
+  const isAllowed =
+    !origin ||
+    origin === hostOrigin ||
+    allowed.includes(origin) ||
+    /^http:\/\/localhost(:\d+)?$/.test(origin);
+  if (!isAllowed) {
+    return new Response(JSON.stringify({ error: "Origin not allowed" }), {
+      status: 403,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
   const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "API key not configured" }), {

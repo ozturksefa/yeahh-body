@@ -7,6 +7,8 @@ import DayCoachGuide from "./DayCoachGuide";
 import { PROGRAM_HYBRID, getHybridDayVariant } from "./dataHybrid";
 import { HYBRID_COACH_GUIDES } from "./hybridCoachGuides";
 import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
+import DayHeader from "./hybrid/DayHeader";
+import HybridHeader from "./hybrid/HybridHeader";
 import {
   DailyCheckinPanel,
   DailyCheckoutPanel,
@@ -452,99 +454,25 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
   return (
     <div className="app">
-      <header className="hdr">
-        <div className="hdr-top">
-          <div className="brand">YEAHH BODY</div>
-          <button className="logout-btn" onClick={logout}>Çıkış</button>
-        </div>
-        <div className="prog-title">{PROGRAM_HYBRID.meta.name}</div>
-        {ProgramSelector && <ProgramSelector />}
-
-        <div className="page-nav">
-          {[
-            ["program", "Program"],
-            ["skill", "🎯 Skill"],
-            ["plan", "8 Hafta"],
-            ["status", "📊 Durum"],
-            ["nutrition", "🍽 Beslenme"],
-          ].map(([id, label]) => (
-            <button key={id} data-testid={`page-tab-${id}`} className={`page-tab ${page === id ? "page-tab-active" : ""}`} onClick={() => setPage(id)}>{label}</button>
-          ))}
-        </div>
-
-        {showDayTabs ? (
-          <>
-            <div className="tabs">
-              {allDays.map((item, index) => (
-                <button
-                  key={item.sub}
-                  className={`tab ${selectedDay === index ? "tab-active" : ""}`}
-                  style={selectedDay === index ? { background: item.color } : item.sub === todaySub ? { boxShadow: "inset 0 0 0 1px rgba(79,195,247,.55)" } : {}}
-                  onClick={() => handleDayChange(index)}
-                >
-                  <div className="tab-t">{item.sub.slice(0, 3)}</div>
-                  <div className="tab-s">{item.sub === todaySub ? "Bugün" : item.type === "training" ? "Ana Gün" : "Off"}</div>
-                </button>
-              ))}
-            </div>
-
-            {selectedDay !== todayIndex && (
-              <div style={{ paddingTop: 8 }}>
-                <button
-                  onClick={() => handleDayChange(todayIndex)}
-                  style={{
-                    ...buttonBase,
-                    width: "100%",
-                    background: "rgba(79,195,247,.1)",
-                    borderColor: "rgba(79,195,247,.32)",
-                    color: "#fff",
-                    padding: "10px 12px",
-                    fontSize: 12,
-                  }}
-                >
-                  📍 Bugünün programına dön · {todaySub}
-                </button>
-              </div>
-            )}
-          </>
-        ) : (
-          <div style={{ display: "flex", gap: 6, flexWrap: "wrap", paddingTop: 8 }}>
-            <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#fff", fontWeight: 700 }}>
-              {day.sub}
-            </div>
-            <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#C4C4CC", fontWeight: 700 }}>
-              {mode === "home" ? "Ev" : "Macfit"}
-            </div>
-            <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#C4C4CC", fontWeight: 700 }}>
-              {page === "skill" ? "Skill" : page === "plan" ? "8 Hafta" : "Durum"}
-            </div>
-          </div>
-        )}
-      </header>
+      <HybridHeader
+        programName={PROGRAM_HYBRID.meta.name}
+        ProgramSelector={ProgramSelector}
+        logout={logout}
+        page={page}
+        setPage={setPage}
+        showDayTabs={showDayTabs}
+        allDays={allDays}
+        selectedDay={selectedDay}
+        todaySub={todaySub}
+        todayIndex={todayIndex}
+        handleDayChange={handleDayChange}
+        day={day}
+        mode={mode}
+      />
 
       {page === "program" && (
         <>
-          <div className="day-hdr">
-            <div className="day-top">
-              <div>
-                <div className="day-focus">{day.focus}</div>
-                <div className="day-meta">{activeVariant.duration} · {mode === "home" ? "Ev versiyonu" : "Macfit versiyonu"}</div>
-              </div>
-              <div className="day-badge" style={{ background: day.color }}>{day.sub}</div>
-            </div>
-            {activeVariant.injury && <div className="injury">{activeVariant.injury}</div>}
-            <div style={{ display: "flex", flexWrap: "wrap", gap: 6, marginTop: 10 }}>
-              <div style={{ background: "rgba(79,195,247,.08)", border: "1px solid rgba(79,195,247,.22)", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#4FC3F7", fontWeight: 800 }}>
-                Hafta {weekProfile.week} · {weekProfile.label}
-              </div>
-              <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 999, padding: "6px 10px", fontSize: 11, color: "#C4C4CC", fontWeight: 700 }}>
-                {day.type === "training" ? "Ana gün" : "Aktif off"}
-              </div>
-            </div>
-            <div style={{ marginTop: 8, fontSize: 11, color: "#C4C4CC", lineHeight: 1.5 }}>
-              {activeVariant.weekExecutionNote || weekProfile.note}
-            </div>
-          </div>
+          <DayHeader day={day} activeVariant={activeVariant} mode={mode} weekProfile={weekProfile} />
 
           {!startDate && (
             <div style={{ padding: "0 12px 12px" }}>

@@ -9,7 +9,7 @@
   for = "/*"
   [headers.values]
     X-Frame-Options = "SAMEORIGIN"
-    Content-Security-Policy = "default-src 'self' 'unsafe-inline' 'unsafe-eval' blob: data:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; img-src 'self' data: https://*.ytimg.com https://*.ggpht.com https://static.exercisedb.dev; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://www.youtube.com https://*.supabase.co https://ljonlnnhkpznmvjdicze.supabase.co https://api.anthropic.com;"
+    Content-Security-Policy = "default-src 'self' blob: data:; frame-src https://www.youtube.com https://www.youtube-nocookie.com; img-src 'self' data: https://*.ytimg.com https://*.ggpht.com https://static.exercisedb.dev; script-src 'self' 'unsafe-inline' https://www.youtube.com https://s.ytimg.com; style-src 'self' 'unsafe-inline' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; connect-src 'self' https://www.youtube.com https://*.supabase.co https://api.anthropic.com;"
 
 [[headers]]
   for = "/sw.js"
