@@ -9,6 +9,10 @@ import { HYBRID_COACH_GUIDES } from "./hybridCoachGuides";
 import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
+import NextStepButton from "./hybrid/NextStepButton";
+import SafetyNotice from "./hybrid/SafetyNotice";
+import StartProgramCard from "./hybrid/StartProgramCard";
+import WeekTransitionPanel from "./hybrid/WeekTransitionPanel";
 import {
   DailyCheckinPanel,
   DailyCheckoutPanel,
@@ -474,108 +478,19 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
         <>
           <DayHeader day={day} activeVariant={activeVariant} mode={mode} weekProfile={weekProfile} />
 
-          {!startDate && (
-            <div style={{ padding: "0 12px 12px" }}>
-              <SectionCard title="🏁 8 Haftalık Programa Başla" accent="#00C853">
-                <div style={{ display: "grid", gap: 10 }}>
-                  <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5 }}>
-                    Bugünü başlangıç tarihi olarak kaydeder ve haftayı `Hafta 1 — Kurulum` olarak başlatır.
-                  </div>
-                  <button
-                    data-testid="program-start-button"
-                    onClick={handleStartProgram}
-                    style={{
-                      ...buttonBase,
-                      width: "100%",
-                      background: "#00C853",
-                      borderColor: "#00C853",
-                      color: "#07140B",
-                      padding: "12px 14px",
-                      fontSize: 13,
-                      fontWeight: 900,
-                    }}
-                  >
-                    Programa Başla
-                  </button>
-                </div>
-              </SectionCard>
-            </div>
-          )}
+          {!startDate && <StartProgramCard onStart={handleStartProgram} />}
 
-          {transitionPrompt?.kind === "advance" && (
-            <div style={{ padding: "0 12px 12px" }}>
-              <SectionCard title={`🎉 Hafta ${activeWeek} tamamlandı!`} accent="#00C853" data-testid="week-advance-prompt">
-                <div style={{ display: "grid", gap: 10 }}>
-                  <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5 }}>
-                    {weekProgress.sessionCount} seans · Rep hedefi: <span style={{ color: weekProgress.repGoalMet ? "#00C853" : "#FFA726", fontWeight: 800 }}>{weekProgress.repGoalMet ? "✓ tutuldu" : "△ kısmen"}</span>
-                  </div>
-                  {nextWeekProfile && (
-                    <div style={{ background: "#17171B", border: "1px solid #2A2A30", borderRadius: 10, padding: 10 }}>
-                      <div style={{ fontSize: 12, color: "#fff", fontWeight: 800 }}>
-                        Sonraki: Hafta {nextWeekProfile.week} — {nextWeekProfile.label}
-                      </div>
-                      <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginTop: 6 }}>
-                        {nextWeekPreview}
-                      </div>
-                    </div>
-                  )}
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button
-                      data-testid="week-advance-button"
-                      onClick={handleAdvanceWeek}
-                      style={{
-                        ...buttonBase,
-                        flex: 1,
-                        background: "#4FC3F7",
-                        borderColor: "#4FC3F7",
-                        color: "#071119",
-                        padding: "12px 14px",
-                        fontSize: 13,
-                        fontWeight: 900,
-                      }}
-                    >
-                      Hafta {nextWeekProfile?.week}'ye Geç
-                    </button>
-                    <button data-testid="week-snooze-button" onClick={handleSnoozeWeekPrompt} style={{ ...buttonBase, flex: 1, padding: "12px 14px", fontSize: 13 }}>
-                      Bekle
-                    </button>
-                  </div>
-                </div>
-              </SectionCard>
-            </div>
-          )}
-
-          {transitionPrompt?.kind === "complete" && (
-            <div style={{ padding: "0 12px 12px" }}>
-              <SectionCard title="🏆 8 Hafta tamamlandı!" accent="#FFD166">
-                <div style={{ display: "grid", gap: 10 }}>
-                  <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5 }}>
-                    H1'den H8'e ilerleme kaydın hazır. Dilersen bu bloğu kapat, dilersen yeni bir döngü başlat.
-                  </div>
-                  <div style={{ display: "flex", gap: 8 }}>
-                    <button onClick={handleResetProgram} style={{ ...buttonBase, flex: 1, padding: "12px 14px", fontSize: 13 }}>
-                      Programı Sıfırla
-                    </button>
-                    <button
-                      onClick={handleAcknowledgeCompletion}
-                      style={{
-                        ...buttonBase,
-                        flex: 1,
-                        background: "#FFD166",
-                        borderColor: "#FFD166",
-                        color: "#171105",
-                        padding: "12px 14px",
-                        fontSize: 13,
-                        fontWeight: 900,
-                      }}
-                    >
-                      Devam Et
-                    </button>
-                  </div>
-                </div>
-              </SectionCard>
-            </div>
-          )}
+          <WeekTransitionPanel
+            transitionPrompt={transitionPrompt}
+            activeWeek={activeWeek}
+            weekProgress={weekProgress}
+            nextWeekProfile={nextWeekProfile}
+            nextWeekPreview={nextWeekPreview}
+            onAdvance={handleAdvanceWeek}
+            onSnooze={handleSnoozeWeekPrompt}
+            onReset={handleResetProgram}
+            onAcknowledgeCompletion={handleAcknowledgeCompletion}
+          />
 
           <DailyCheckinPanel
             day={day}
@@ -599,25 +514,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           </div>
 
           <main className="main">
-            <div style={{
-              background: "rgba(255,167,38,.08)",
-              border: "1px solid rgba(255,167,38,.20)",
-              borderRadius: 12,
-              padding: 10,
-              marginBottom: 10,
-            }}>
-              <div style={{ fontSize: 10, color: "#FFA726", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase", marginBottom: 6 }}>
-                Kısa Güvenlik Özeti
-              </div>
-              <div style={{ display: "grid", gap: 4 }}>
-                {[
-                  "Ağrı 2/10'u geçerse aynı paterni regress et veya swap kullan.",
-                  "Keskin ağrı, boşalma hissi, uyuşma veya yayılım varsa hareket biter.",
-                ].map((item) => (
-                  <div key={item} style={{ fontSize: 11, color: "#F7D7A0", lineHeight: 1.45 }}>• {item}</div>
-                ))}
-              </div>
-            </div>
+            <SafetyNotice />
 
             {activeVariant.blocks.map((block, bi) => (
               <BlockCard
@@ -643,34 +540,10 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             ))}
           </main>
 
-          {nextStepHint && !currentEntry.post.completed && (
-            <div style={{ padding: "0 12px 12px" }}>
-              <button
-                data-testid="next-step-button"
-                onClick={() => jumpToTarget(nextStepHint)}
-                style={{
-                  width: "100%",
-                  background: "rgba(79,195,247,.08)",
-                  border: "1px solid rgba(79,195,247,.24)",
-                  borderRadius: 12,
-                  padding: "12px 14px",
-                  color: "#fff",
-                  textAlign: "left",
-                  cursor: "pointer",
-                }}
-              >
-                <div style={{ fontSize: 10, color: "#4FC3F7", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
-                  Sonraki Adım
-                </div>
-                <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 4 }}>
-                  {nextStepHint.blockName} · {nextStepHint.exerciseName}
-                </div>
-                <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 4, lineHeight: 1.45 }}>
-                  Kaldığın veya başlaman gereken harekete dön.
-                </div>
-              </button>
-            </div>
-          )}
+          <NextStepButton
+            hint={!currentEntry.post.completed ? nextStepHint : null}
+            onJump={jumpToTarget}
+          />
 
           <div ref={checkoutRef}>
             <DailyCheckoutPanel
