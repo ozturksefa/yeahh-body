@@ -336,6 +336,30 @@ body{
 .tracker-input-large{
   min-height:58px;font-size:22px;padding:12px 8px;border-radius:12px;
 }
+.tracker-stepper{
+  display:grid;grid-template-columns:52px 1fr 52px;gap:6px;align-items:stretch;
+}
+.tracker-stepper-btn{
+  min-height:58px;border:1px solid var(--border-strong);background:var(--card3);color:var(--text);
+  border-radius:12px;font-size:26px;font-weight:800;cursor:pointer;font-family:inherit;
+  user-select:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:background .15s ease, transform .05s ease;
+}
+.tracker-stepper-btn:hover{background:var(--card4)}
+.tracker-stepper-btn:active{transform:scale(.96);background:var(--accent-soft)}
+.tracker-stepper-input{
+  min-height:58px;font-size:24px;font-weight:800;padding:12px 8px;border-radius:12px;
+  text-align:center;background:var(--card2);border:1px solid var(--border);color:var(--text);
+  font-family:var(--mono, inherit);
+  -moz-appearance:textfield;
+}
+.tracker-stepper-input::-webkit-outer-spin-button,
+.tracker-stepper-input::-webkit-inner-spin-button{
+  -webkit-appearance:none;margin:0;
+}
+.tracker-stepper-input:focus{
+  outline:none;border-color:var(--accent);background:var(--card3);
+}
 .tracker-quick-actions{
   display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;
 }
