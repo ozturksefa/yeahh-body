@@ -2,16 +2,14 @@ import { lazy, Suspense, useEffect, useMemo, useRef, useState } from "react";
 import BlockCard from "./BlockCard";
 import RestTimer from "./RestTimer";
 import WorkoutTimer from "./WorkoutTimer";
-import CoachControlPanel from "./CoachControlPanel";
-import DayCoachGuide from "./DayCoachGuide";
 import { PROGRAM_HYBRID, getHybridDayVariant } from "./dataHybrid";
-import { HYBRID_COACH_GUIDES } from "./hybridCoachGuides";
 import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
 import NextStepButton from "./hybrid/NextStepButton";
 import SafetyNotice from "./hybrid/SafetyNotice";
 import StartProgramCard from "./hybrid/StartProgramCard";
+import SupportDrawer from "./hybrid/SupportDrawer";
 import WeekTransitionPanel from "./hybrid/WeekTransitionPanel";
 import {
   DailyCheckinPanel,
@@ -80,7 +78,6 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const [workoutSnapshot, setWorkoutSnapshot] = useState(null);
   const [weekCompletedWorkouts, setWeekCompletedWorkouts] = useState([]);
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
-  const [supportOpen, setSupportOpen] = useState(false);
   const [focusedBlockIndex, setFocusedBlockIndex] = useState(null);
   const [nextStepHint, setNextStepHint] = useState(null);
   const finishWorkoutRef = useRef(null);
@@ -556,46 +553,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             />
           </div>
 
-          <div style={{ padding: "0 12px 12px" }}>
-            <div style={{ background: "#131316", border: "1px solid #2A2A30", borderRadius: 12, overflow: "hidden" }}>
-              <button
-                onClick={() => setSupportOpen((value) => !value)}
-                style={{
-                  width: "100%",
-                  display: "flex",
-                  alignItems: "center",
-                  justifyContent: "space-between",
-                  gap: 12,
-                  textAlign: "left",
-                  border: "none",
-                  background: "transparent",
-                  color: "inherit",
-                  padding: "12px",
-                  cursor: "pointer",
-                }}
-              >
-                <div>
-                  <div style={{ fontSize: 11, color: "#7A7A84", fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>
-                    Yardımcı Alan
-                  </div>
-                  <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginTop: 4 }}>
-                    Rehber, denetim profili ve ek notlar
-                  </div>
-                  <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginTop: 4 }}>
-                    Programı bitirdikten sonra veya ihtiyaç olduğunda aç.
-                  </div>
-                </div>
-                <div style={{ color: "#7A7A84", fontSize: 18 }}>{supportOpen ? "−" : "+"}</div>
-              </button>
-
-              {supportOpen && (
-                <div style={{ padding: "0 0 12px" }}>
-                  <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" embedded />
-                  <CoachControlPanel program={PROGRAM_HYBRID} embedded />
-                </div>
-              )}
-            </div>
-          </div>
+          <SupportDrawer day={day} program={PROGRAM_HYBRID} />
 
           {restTimer && (
             <RestTimer
