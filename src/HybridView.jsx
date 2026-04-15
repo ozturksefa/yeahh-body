@@ -7,7 +7,6 @@ import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout 
 import ActiveSessionBar from "./hybrid/ActiveSessionBar";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
-import NextStepButton from "./hybrid/NextStepButton";
 import PlanPage from "./hybrid/PlanPage";
 import SafetyNotice from "./hybrid/SafetyNotice";
 import StartProgramCard from "./hybrid/StartProgramCard";
@@ -536,11 +535,6 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             ))}
           </main>
 
-          <NextStepButton
-            hint={!currentEntry.post.completed ? nextStepHint : null}
-            onJump={jumpToTarget}
-          />
-
           <div ref={checkoutRef}>
             <DailyCheckoutPanel
               post={currentEntry.post}
@@ -560,7 +554,15 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               seconds={restTimer.seconds}
               exerciseName={restTimer.exerciseName}
               isTransition={restTimer.isTransition}
-              onDismiss={() => setRestTimer(null)}
+              onDismiss={() => {
+                const wasTransition = restTimer.isTransition;
+                setRestTimer(null);
+                // On exercise transitions, auto-advance focus to the next
+                // unfinished exercise so the user doesn't have to scroll.
+                if (wasTransition) {
+                  jumpToTarget(findNextExerciseTarget(workoutSnapshot?.exercises || {}));
+                }
+              }}
               onAdjust={adjustRest}
             />
           )}
@@ -571,6 +573,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             currentBlockProgress={currentBlock ? blockProgress[activeVariant.blocks.indexOf(currentBlock)] : null}
             elapsedSeconds={elapsedSeconds}
             workoutStarted={workoutState.started}
+            nextStepHint={nextStepHint}
+            onNextStep={jumpToTarget}
             onJumpToCheckout={() => checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
           />
         </>
