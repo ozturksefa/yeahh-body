@@ -12,9 +12,11 @@ function localDateOffset(days = 0) {
 
 test.beforeEach(async ({ page }) => {
   await page.addInitScript(() => {
+    if (sessionStorage.getItem('yb_e2e_seeded') === '1') return;
     localStorage.clear();
     localStorage.setItem('yb_e2e_auth_bypass', '1');
     localStorage.setItem('yb_program_mode', 'hybrid');
+    sessionStorage.setItem('yb_e2e_seeded', '1');
   });
 });
 
@@ -98,6 +100,7 @@ test('weekly progression prompt can advance the active week', async ({ page }) =
   };
 
   await page.addInitScript(({ startDate, entries }) => {
+    sessionStorage.setItem('yb_e2e_seeded', '1');
     localStorage.setItem('yb_hybrid_start', JSON.stringify(startDate));
     localStorage.setItem('yb_hybrid_week_v1', JSON.stringify(1));
     localStorage.setItem('yb_hybrid_week_log', JSON.stringify([]));
@@ -129,4 +132,43 @@ test('nutrition quick add flow logs a food entry', async ({ page }) => {
 
   await expect(page.getByTestId('nutrition-log')).toBeVisible();
   await expect(page.getByTestId('nutrition-log').getByText(/Yumurta \(1 adet\)/i)).toBeVisible();
+});
+
+test('skill logging updates weekly contacts and persists the entry', async ({ page }) => {
+  await page.goto('/?e2eAuth=1');
+
+  await page.getByRole('button', { name: /SAL Ana Gün/i }).click();
+  await page.getByTestId('program-start-button').click();
+  await page.getByTestId('workout-start').click();
+  await page.getByTestId('checkout-jump-button').click();
+
+  await expect(page.getByTestId('skill-log-handstand')).toBeVisible();
+  await page.getByTestId('skill-log-toggle-handstand').click();
+  await page.getByTestId('skill-log-input-handstand').fill('12');
+  await page.getByTestId('checkout-complete-button').click();
+
+  await page.getByTestId('page-tab-skill').click();
+  await expect(page.getByTestId('skill-page')).toBeVisible();
+  await expect(page.getByTestId('skill-contacts-handstand')).toContainText('1');
+  await expect(page.getByTestId('skill-card-handstand')).toContainText('12 sn');
+
+  const entries = await page.evaluate(() => JSON.parse(localStorage.getItem('yb_hybrid_entries_v1') || '{}'));
+  const values = Object.values(entries);
+  expect(values.some((entry) => entry?.post?.skillWork?.handstand?.done === true && Number(entry?.post?.skillWork?.handstand?.seconds) === 12)).toBeTruthy();
+});
+
+test('selected hybrid mode persists after reload', async ({ page }) => {
+  await page.goto('/?e2eAuth=1');
+
+  const gymModeButton = page.getByRole('button', { name: '🏋️ Macfit', exact: true });
+
+  await gymModeButton.click();
+  await expect(gymModeButton).toHaveClass(/panel-mode-btn-active/);
+  await expect.poll(async () => page.evaluate(() => localStorage.getItem('yb_hybrid_mode'))).toBe('gym');
+
+  await page.reload();
+
+  await expect(gymModeButton).toHaveClass(/panel-mode-btn-active/);
+  const savedMode = await page.evaluate(() => localStorage.getItem('yb_hybrid_mode'));
+  expect(savedMode).toBe('gym');
 });

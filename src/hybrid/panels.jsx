@@ -71,7 +71,7 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
   );
 
   return (
-    <div className="panel-stack">
+    <div className="panel-stack" data-testid="skill-page">
       <SectionCard title="Skill İlerleme" accent="#8338EC">
         <div className="skill-tracker" style={{ paddingBottom: 0 }}>
           {Object.entries(skillPaths).map(([key, path]) => {
@@ -93,7 +93,7 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
             const readyToProgress = !!nextStep && weeklyContacts >= 2 && (targetValue === 0 || bestValue >= targetValue) && symptomAvg <= 2;
 
             return (
-              <div key={key} className="skill-card">
+              <div key={key} className="skill-card" data-testid={`skill-card-${key}`}>
                 <div className="skill-card-header">
                   <span className="skill-name">{path.name}</span>
                   <span className="skill-level">Seviye {current}/{path.steps.length}</span>
@@ -120,7 +120,7 @@ export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel 
                 </div>
 
                 <div className="panel-mini-grid" style={{ marginBottom: 8 }}>
-                  <div className="panel-mini-card">
+                  <div className="panel-mini-card" data-testid={`skill-contacts-${key}`}>
                     <div className="panel-mini-label">Haftalık Temas</div>
                     <div className="panel-mini-value">{weeklyContacts}</div>
                   </div>
@@ -336,7 +336,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
                 const data = post.skillWork?.[skillKey] || { done: false, metric, value: 0, seconds: 0, reps: 0 };
                 const value = getSkillValue(data);
                 return (
-                  <div key={skillKey} className="panel-mini-card skill-log-card">
+                  <div key={skillKey} className="panel-mini-card skill-log-card" data-testid={`skill-log-${skillKey}`}>
                     <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center", marginBottom: 8 }}>
                       <div>
                         <div className="skill-log-title">{path.name}</div>
@@ -345,6 +345,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
                       </div>
                       <button
                         onClick={() => updateSkill(skillKey, { done: !data.done })}
+                        data-testid={`skill-log-toggle-${skillKey}`}
                         style={{
                           ...buttonBase,
                           minWidth: 96,
@@ -367,6 +368,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
                           min="0"
                           step="1"
                           value={value}
+                          data-testid={`skill-log-input-${skillKey}`}
                           onChange={(e) => {
                             const nextValue = Math.max(0, Number(e.target.value) || 0);
                             updateSkill(skillKey, {
