@@ -11,6 +11,12 @@ const ex = (name, sets, muscle, how, options = {}) => ({
 
 const block = (name, color, exercises) => ({ name, color, exercises });
 
+const cooldownBlock = () => block("🧊 SOĞUMA — Sistem Kapatma", "#264653", [
+  ex("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Burundan nefes al", "Omuzları gevşet", "Karnı yumuşat"], { warn: "Nabzı düşür ve seansı sakin kapat" }),
+  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Kaburgayı dışarı itme", "Nefesi uzat", "Omuzu sıkıştırma"]),
+  ex("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak rahatlatma", ["Dizi hafif yumuşak tut", "Çekişi agresif yapma", "Nefesi uzat"]),
+]);
+
 export const PROGRAM_HYBRID = {
   meta: {
     name: "Hibrit Performans Sistemi",
@@ -142,6 +148,7 @@ export const PROGRAM_HYBRID = {
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5 bandında kal", "Nefesi toparlayıcı tempoda tut"], { warn: "Amaç yormak değil açılmak" }),
             ]),
+            cooldownBlock(),
           ],
         },
         gym: {
@@ -160,6 +167,7 @@ export const PROGRAM_HYBRID = {
             block("🚴 KONDİSYON", "#990000", [
               ex("Stationary Bike", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5", "Kalça-diz hattını rahat tut"], { alts: ["Incline Walk"], alt_reasons: ["Diz bike üzerinde hoşlanmıyorsa yürüyüşe dön"] }),
             ]),
+            cooldownBlock(),
           ],
         },
       },
@@ -204,6 +212,7 @@ export const PROGRAM_HYBRID = {
               ex("Dead Bug", "3 × 8-10 (her taraf)", "Anti-extension core", ["Bel boşluğunu sabit tut", "Yavaş uzat"], { warn: "Bel için ana core" }),
               ex("Hızlı Yürüyüş", "24-30 dakika", "Interval aerobik", ["2 dk hızlı + 2 dk rahat", "Konuşabilecek tempo"], { warn: "Dayanıklılık hedefinin ana parçası" }),
             ]),
+            cooldownBlock(),
           ],
         },
         gym: {
@@ -231,6 +240,7 @@ export const PROGRAM_HYBRID = {
               ex("Pallof Press", "3 × 10 (her taraf)", "Anti-rotasyon", ["Göğüs hizasında it", "2 sn bekle"], { warn: "Skolyoz/kifoz için değerli" }),
               ex("Rower", "12-15 dk interval", "Kısa interval", ["30 sn sert + 60 sn kolay", "Çekişi belden değil kalça-itme + kol senkronundan üret", "Servikal nötral kal"], { alts: ["Stationary Bike", "Incline Walk"], alt_reasons: ["Bel veya boyun rower'da hoşlanmıyorsa bike'a dön", "Diz veya teknik yorgunlukta incline walk ile ritmi koru"] }),
             ]),
+            cooldownBlock(),
           ],
         },
       },
@@ -260,6 +270,7 @@ export const PROGRAM_HYBRID = {
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "20-25 dakika", "Aktif toparlanma", ["Rahat tempo", "Adım ritmini akıcı tut"]),
             ]),
+            cooldownBlock(),
           ],
         },
         gym: {
@@ -278,6 +289,7 @@ export const PROGRAM_HYBRID = {
             block("🚴 KONDİSYON", "#990000", [
               ex("Incline Walk", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5", "Koşuya dönme"]),
             ]),
+            cooldownBlock(),
           ],
         },
       },
@@ -321,6 +333,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisini koru"], { warn: "Skolyoz/kifoz için ana blok" }),
               ex("Hızlı Yürüyüş", "15-20 dakika tempo", "Tempo aerobik", ["RPE 5-6", "Koşuya kaçma"]),
             ]),
+            cooldownBlock(),
           ],
         },
         gym: {
@@ -350,6 +363,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30-40sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
               ex("Incline Walk", "12-15 dakika tempo", "Tempo aerobik", ["RPE 5-6", "Koşu yok"]),
             ]),
+            cooldownBlock(),
           ],
         },
       },
@@ -377,6 +391,7 @@ export const PROGRAM_HYBRID = {
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "15 dakika kolay", "Aktif toparlanma", ["RPE 4-5"]),
             ]),
+            cooldownBlock(),
           ],
         },
         gym: {
@@ -393,6 +408,7 @@ export const PROGRAM_HYBRID = {
             block("🚴 KONDİSYON", "#990000", [
               ex("Stationary Bike", "15 dakika kolay", "Aktif toparlanma", ["RPE 4-5"]),
             ]),
+            cooldownBlock(),
           ],
         },
       },
@@ -438,6 +454,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
               ex("Hızlı Yürüyüş", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Ritim temiz ve rahat"], { warn: "Haftanın ana dayanıklılık bloğu" }),
             ]),
+            cooldownBlock(),
           ],
         },
         gym: {
@@ -469,6 +486,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisi"]),
               ex("Rower", "20-25 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Sakin ritim"], { alts: ["Stationary Bike"], alt_reasons: ["Bel rower'da hoşlanmıyorsa bike'a dön"] }),
             ]),
+            cooldownBlock(),
           ],
         },
       },
@@ -499,6 +517,7 @@ export const PROGRAM_HYBRID = {
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Konuşabilir tempo"], { warn: "Haftayı toparlayarak kapat" }),
             ]),
+            cooldownBlock(),
           ],
         },
         gym: {
@@ -521,6 +540,7 @@ export const PROGRAM_HYBRID = {
             block("🚴 KONDİSYON", "#990000", [
               ex("Incline Walk", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Rahat tempo"], { alts: ["Stationary Bike"], alt_reasons: ["Diz veya ayak için bike daha rahat olabilir"] }),
             ]),
+            cooldownBlock(),
           ],
         },
       },
