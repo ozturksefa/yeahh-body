@@ -85,8 +85,8 @@ export default function App() {
       { id: "athletic", label: "Atletik ⚡", hint: "Hibritin Macfit görünümü" },
     ];
     const legacyOptions = [
-      { id: "classic", label: "Klasik Split", hint: "Eski program" },
-      { id: "full", label: "Full Activation", hint: "Eski program" },
+      { id: "classic", label: "Klasik Split", hint: "Arşiv akış" },
+      { id: "full", label: "Full Activation", hint: "Arşiv akış" },
     ];
     const options = [...primaryOptions, ...legacyOptions];
     const active = options.find((item) => item.id === programMode) || options[0];
@@ -131,7 +131,7 @@ export default function App() {
               className={`prog-legacy-toggle ${legacyOpen || isLegacyActive ? "prog-legacy-toggle-open" : ""}`}
               onClick={() => setLegacyOpen((value) => !value)}
             >
-              <span>Diğer Programlar</span>
+              <span>Arşiv Programlar</span>
               <span>{legacyOpen || isLegacyActive ? "−" : "+"}</span>
             </button>
 
@@ -161,7 +161,7 @@ export default function App() {
 
   if (programMode === "hybrid")  return renderProgram(<HybridView user={user} logout={logout} ProgramSelector={ProgramSelector} />);
   if (programMode === "home")     return renderProgram(<HomeView user={user} logout={logout} ProgramSelector={ProgramSelector} />);
-  if (programMode === "full")     return renderProgram(<Program2View user={user} logout={logout} ProgramSelector={ProgramSelector} />);
+  if (programMode === "full")     return renderProgram(<Program2View user={user} logout={logout} ProgramSelector={ProgramSelector} onSwitchToHybrid={() => setMode("hybrid")} />);
   if (programMode === "athletic") return renderProgram(<Program3View user={user} logout={logout} ProgramSelector={ProgramSelector} />);
-  return renderProgram(<ClassicView user={user} logout={logout} ProgramSelector={ProgramSelector} />);
+  return renderProgram(<ClassicView user={user} logout={logout} ProgramSelector={ProgramSelector} onSwitchToHybrid={() => setMode("hybrid")} />);
 }

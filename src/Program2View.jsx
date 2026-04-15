@@ -108,7 +108,7 @@ function OffDayView({ day }) {
 }
 
 
-export default function Program2View({ user, logout, ProgramSelector }) {
+export default function Program2View({ user, logout, ProgramSelector, onSwitchToHybrid }) {
   const DAY_ORDER = {'PAZARTESİ':1,'SALI':2,'ÇARŞAMBA':3,'PERŞEMBE':4,'CUMA':5,'CUMARTESİ':6,'PAZAR':7};
   const allDays = [...PROGRAM2.days].sort((a,b) => (DAY_ORDER[a.sub]||9) - (DAY_ORDER[b.sub]||9));
 
@@ -330,6 +330,17 @@ export default function Program2View({ user, logout, ProgramSelector }) {
           <button className={`page-tab ${page2 === "nutrition" ? "page-tab-active" : ""}`} onClick={() => setPage2("nutrition")}>🍽 Beslenme</button>
         </div>
       </header>
+
+      <div className="legacy-shell-note">
+        <div>
+          <div className="legacy-shell-kicker">Arşiv Program</div>
+          <div className="legacy-shell-title">Full Activation korunuyor, ama ana ürün akışı artık `🎯 Hibrit`.</div>
+          <div className="legacy-shell-text">Bu ekran kullanılabilir durumda; haftalık akış, skill ve yeni koç mantığı hibritte daha güncel.</div>
+        </div>
+        {onSwitchToHybrid && (
+          <button className="legacy-shell-btn" onClick={onSwitchToHybrid}>🎯 Hibrit'e Dön</button>
+        )}
+      </div>
 
       {page2 === "stats" ? (
         <main className="main"><Program2Stats /></main>

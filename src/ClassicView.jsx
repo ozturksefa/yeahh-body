@@ -10,7 +10,7 @@ import WorkoutTimer from "./WorkoutTimer";
 import BlockCard from "./BlockCard";
 import { parseSets } from "./setTrackerUtils";
 
-export default function ClassicView({ user, logout, ProgramSelector }) {
+export default function ClassicView({ user, logout, ProgramSelector, onSwitchToHybrid }) {
   const [page, setPage] = useState("program");
   const [day, setDay] = useState(0);
   const [expandedEx, setExpandedEx] = useState(null);
@@ -255,6 +255,17 @@ export default function ClassicView({ user, logout, ProgramSelector }) {
           </div>
         )}
       </header>
+
+      <div className="legacy-shell-note">
+        <div>
+          <div className="legacy-shell-kicker">Arşiv Program</div>
+          <div className="legacy-shell-title">Klasik Split aktif, ama önerilen ana akış artık `🎯 Hibrit`.</div>
+          <div className="legacy-shell-text">Bu ekran korunuyor; yeni geliştirmeler öncelikle hibrit sistemde devam ediyor.</div>
+        </div>
+        {onSwitchToHybrid && (
+          <button className="legacy-shell-btn" onClick={onSwitchToHybrid}>🎯 Hibrit'e Dön</button>
+        )}
+      </div>
 
       {page === "dashboard" ? (
         <main className="main"><Dashboard /></main>

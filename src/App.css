@@ -1398,6 +1398,55 @@ body{
   color: var(--text);
 }
 
+.legacy-shell-note{
+  margin:10px 12px 0;
+  padding:12px 14px;
+  border-radius:12px;
+  border:1px solid rgba(230,162,60,.22);
+  background:linear-gradient(180deg, rgba(230,162,60,.10), rgba(17,19,23,.98));
+  display:flex;
+  justify-content:space-between;
+  gap:12px;
+  align-items:flex-start;
+  box-shadow:var(--shadow-soft);
+}
+
+.legacy-shell-kicker{
+  font-size:10px;
+  font-weight:800;
+  color:var(--warn);
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+.legacy-shell-title{
+  margin-top:4px;
+  font-size:13px;
+  color:var(--text);
+  font-weight:800;
+  line-height:1.45;
+}
+
+.legacy-shell-text{
+  margin-top:6px;
+  font-size:12px;
+  color:var(--text2);
+  line-height:1.5;
+}
+
+.legacy-shell-btn{
+  flex:0 0 auto;
+  padding:10px 12px;
+  border:none;
+  border-radius:10px;
+  cursor:pointer;
+  font-family:inherit;
+  background:linear-gradient(135deg, var(--accent), var(--accent-2));
+  color:#130B04;
+  font-weight:800;
+  box-shadow:0 10px 20px rgba(217,106,29,.18);
+}
+
 /* ═══ DASHBOARD — Body Tracker & Charts ═══ */
 .recharts-tooltip-wrapper { outline: none !important; }
 
