@@ -11,10 +11,51 @@ const ex = (name, sets, muscle, how, options = {}) => ({
 
 const block = (name, color, exercises) => ({ name, color, exercises });
 
-const cooldownBlock = () => block("🧊 SOĞUMA — Sistem Kapatma", "#264653", [
-  ex("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Burundan nefes al", "Omuzları gevşet", "Karnı yumuşat"], { warn: "Nabzı düşür ve seansı sakin kapat" }),
+const offdayCooldownBlock = () => block("🧊 SOĞUMA — Hafif Kapat", "#264653", [
+  ex("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Burundan nefes al", "Omuzları gevşet", "Karnı yumuşat"], { warn: "Amaç nabzı düşürüp sistemi sakin kapatmak" }),
   ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Kaburgayı dışarı itme", "Nefesi uzat", "Omuzu sıkıştırma"]),
-  ex("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak rahatlatma", ["Dizi hafif yumuşak tut", "Çekişi agresif yapma", "Nefesi uzat"]),
+]);
+
+const upperCooldownBlock = () => block("🧊 SOĞUMA — Üst Gövde Boşalt", "#264653", [
+  ex("Child's Pose", "2 × 20sn", "Nefes + sırt rahatlama", ["Burundan nefes al", "Kolları uzatırken boynu gevşet"]),
+  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Göğüs önünü nazikçe aç", "Kaburgayı dışarı itme"]),
+  ex("Shoulder Cross Stretch", "2 × 20sn", "Arka omuz", ["Omuzu kulağa çekme", "Gerilimi boyna taşıma"]),
+]);
+
+const lowerCooldownBlock = () => block("🧊 SOĞUMA — Alt Gövde Boşalt", "#264653", [
+  ex("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça kapsülü", ["Gövdeden yüklenme", "Ağrısız aralıkta kal", "Nefesi uzat"]),
+  ex("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Dizi hafif yumuşak tut", "Çekişi agresif yapma"]),
+  ex("Child's Pose", "2 × 20sn", "Bel + nefes", ["Belini bırak", "Omuzları yumuşat"]),
+]);
+
+const volumeCooldownBlock = () => block("🧊 SOĞUMA — Hacim Günü Kapat", "#264653", [
+  ex("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Nefesi uzat", "Omuz ve bel hattını gevşet"]),
+  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Press sonrası göğüs önünü aç", "Omuzu sıkıştırma"]),
+  ex("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Posterior chain'i rahatlat", "Nefesi uzat"]),
+]);
+
+const recoveryCooldownBlock = () => block("🧊 SOĞUMA — Recovery Kapat", "#264653", [
+  ex("Child's Pose", "2 × 20sn", "Nefes + sistem sakinleşmesi", ["Burundan nefes al", "Seansı sakin bitir"]),
+  ex("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça rahatlatma", ["Nazik açıl", "Ağrısız aralıkta kal"]),
+  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Uzun nefesle gevşe"]),
+]);
+
+const recoveryWarmupBlock = () => block("🔥 ISINMA — Hafif Hazırlık", "#CC5500", [
+  ex("Cat-Cow Mobilite", "2 × 6-8", "Omurga hazırlık", ["Acele etme", "Nefesle ak"]),
+  ex("Hip Circle", "2 × 8-10", "Kalça hazırlık", ["Belden değil kalçadan dön"]),
+  ex("Shoulder Cross Stretch", "2 × 15-20sn", "Omuz hazırlık", ["Omuzu kulağa çekme"]),
+]);
+
+const careBlockHome = () => block("🛡 BAKIM — Omuz & Boyun", "#7B241C", [
+  ex("External Rotation (Towel/Yerçekimi)", "2 × 15", "Rotator cuff", ["Tempo yavaş", "Omuz başını öne kaçırma"]),
+  ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı içerde tut"]),
+  ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["Boynu nötrle", "2 sn tut"]),
+]);
+
+const careBlockGym = () => block("🛡 BAKIM — Omuz & Boyun", "#7B241C", [
+  ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Dirseği sabit tut", "Yavaş aç-kapat"]),
+  ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı dışarı kaçırma", "Yavaş tempo"]),
+  ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut", "Boynu nötral hisset"]),
 ]);
 
 export const PROGRAM_HYBRID = {
@@ -135,6 +176,7 @@ export const PROGRAM_HYBRID = {
           modeNote: "Ev modu bugün yeterli; amaç hazırlık ve rahatlama.",
           injury: "⚠️ Bugün antrenman yok; omuz-boyun hazırlığı ve hafif yürüyüş var.",
           blocks: [
+            recoveryWarmupBlock(),
             block("🛡 BAKIM — Boyun & Skapula", "#2A9D8F", [
               ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["Çeneyi hafif geri al", "Boynu aşağı bükme", "2 sn tut"], { warn: "Servikal nötral hissi ara" }),
               ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı kapalı tut", "Yavaş yukarı kay", "Omuzu kulağa sıkıştırma"]),
@@ -148,7 +190,7 @@ export const PROGRAM_HYBRID = {
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5 bandında kal", "Nefesi toparlayıcı tempoda tut"], { warn: "Amaç yormak değil açılmak" }),
             ]),
-            cooldownBlock(),
+            offdayCooldownBlock(),
           ],
         },
         gym: {
@@ -157,6 +199,7 @@ export const PROGRAM_HYBRID = {
           modeNote: "Macfit'teysen yürüyüş yerine bike veya incline walk kullanabilirsin.",
           injury: "⚠️ Bugün salonda da yüklenme yok; toparlanma odaklı kal.",
           blocks: [
+            recoveryWarmupBlock(),
             block("🛡 BAKIM — Boyun & Skapula", "#2A9D8F", [
               ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Dirseği sabit tut", "Yavaş aç-kapat"], { warn: "Isıtma değil bakım dozu" }),
               ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburga dışarı kaçmasın", "Yavaş tempo"]),
@@ -167,7 +210,7 @@ export const PROGRAM_HYBRID = {
             block("🚴 KONDİSYON", "#990000", [
               ex("Stationary Bike", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5", "Kalça-diz hattını rahat tut"], { alts: ["Incline Walk"], alt_reasons: ["Diz bike üzerinde hoşlanmıyorsa yürüyüşe dön"] }),
             ]),
-            cooldownBlock(),
+            offdayCooldownBlock(),
           ],
         },
       },
@@ -205,14 +248,13 @@ export const PROGRAM_HYBRID = {
               ex("Incline Push-up", "4 × 8-12", "Göğüs + triceps", ["Yüksekliği omuza göre ayarla", "Dirsekleri 30-45° tut"], { warn: "Bugünün güvenli itişi", alts: ["Wall Push-up"], alt_reasons: ["Omuz hassassa açıyı daha da yükselt"] }),
               ex("Close Grip Push Up", "2 × 8-10", "Triceps + iç göğüs", ["Elleri biraz daha dar al", "Gerekirse incline yap", "Omuz öne düşmesin"], { warn: "Triceps ve göğüs için düşük riskli ek hacim", alts: ["Wall Push-up"], alt_reasons: ["Dar tutuş omuz veya bileği rahatsız ederse açıyı yükselt"] }),
               ex("Single Leg Glute Bridge", "3 × 10-12 (her bacak)", "Glute + hamstring", ["Bel değil kalça itişi", "Üstte 1 sn sık"], { warn: "Posterior chain'i güvenli besler" }),
-              ex("Towel Curl Isometric", "2 × 20-30sn", "Biceps", ["Havluyu ayağın altına sabitle", "Dirseği gövdeye yakın tut", "Boynu kasma"], { warn: "Evde ekipmansız biceps yükleme için pratik çözüm" }),
               ex("Wall Sit", "2 × 20-30sn", "Quad izometrik", ["Ağrısız açı bul", "Topuğu yükle"], { avoid: "Derin açı", warn: "Diz baskısı artarsa çıkar", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Diz bugün hoşlanmıyorsa glute dominanta dön"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Dead Bug", "3 × 8-10 (her taraf)", "Anti-extension core", ["Bel boşluğunu sabit tut", "Yavaş uzat"], { warn: "Bel için ana core" }),
               ex("Hızlı Yürüyüş", "24-30 dakika", "Interval aerobik", ["2 dk hızlı + 2 dk rahat", "Konuşabilecek tempo"], { warn: "Dayanıklılık hedefinin ana parçası" }),
             ]),
-            cooldownBlock(),
+            upperCooldownBlock(),
           ],
         },
         gym: {
@@ -223,9 +265,10 @@ export const PROGRAM_HYBRID = {
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
               ex("Foam Roller Upper Back Roll", "2 × 30sn", "Torasik hazırlık", ["Kısa geçişler yap", "Bel boşluğunu büyütme"]),
-              ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Yavaş tempo", "Dirseği sabit tut"]),
-              ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut"]),
+              ex("Hip Circle", "2 × 10", "Kalça mobilite", ["Belden değil kalçadan dön", "Kalçayı rahat aç"]),
+              ex("Shoulder Cross Stretch", "2 × 20sn", "Omuz hazırlığı", ["Omuzu kulağa çekme"]),
             ]),
+            careBlockGym(),
             block("🤸 TEKNİK ÇEKİŞ", "#8338EC", [
               ex("Assisted Pull Up", "4 × 6-8", "Dikey çekiş", ["Omuzları aşağı çek", "Ayak desteğini sakince kullan"], { warn: "Tam barfiks yerine kontrollü relatif kuvvet çalışması", alts: ["Lat Pulldown"], alt_reasons: ["Omuz veya dirsek rahatsızsa makineye dön"] }),
             ]),
@@ -240,7 +283,7 @@ export const PROGRAM_HYBRID = {
               ex("Pallof Press", "3 × 10 (her taraf)", "Anti-rotasyon", ["Göğüs hizasında it", "2 sn bekle"], { warn: "Skolyoz/kifoz için değerli" }),
               ex("Rower", "12-15 dk interval", "Kısa interval", ["30 sn sert + 60 sn kolay", "Çekişi belden değil kalça-itme + kol senkronundan üret", "Servikal nötral kal"], { alts: ["Stationary Bike", "Incline Walk"], alt_reasons: ["Bel veya boyun rower'da hoşlanmıyorsa bike'a dön", "Diz veya teknik yorgunlukta incline walk ile ritmi koru"] }),
             ]),
-            cooldownBlock(),
+            upperCooldownBlock(),
           ],
         },
       },
@@ -259,6 +302,7 @@ export const PROGRAM_HYBRID = {
           modeNote: "Bugün ev yolu yeterli; aktif toparlanma günü.",
           injury: "⚠️ Skill bugün teknik temas seviyesinde kalır.",
           blocks: [
+            recoveryWarmupBlock(),
             block("🛡 BAKIM", "#2A9D8F", [
               ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut"]),
               ex("Scapular Wall Slide", "2 × 10", "Skapula", ["Yavaş kaydır"]),
@@ -270,7 +314,7 @@ export const PROGRAM_HYBRID = {
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "20-25 dakika", "Aktif toparlanma", ["Rahat tempo", "Adım ritmini akıcı tut"]),
             ]),
-            cooldownBlock(),
+            offdayCooldownBlock(),
           ],
         },
         gym: {
@@ -279,6 +323,7 @@ export const PROGRAM_HYBRID = {
           modeNote: "Salondaysan gün yine hafif; bike veya incline walk kullan.",
           injury: "⚠️ Yüklenme günü değil; sadece akışı koru.",
           blocks: [
+            recoveryWarmupBlock(),
             block("🛡 BAKIM", "#2A9D8F", [
               ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Yavaş tempo"]),
               ex("Scapular Wall Slide", "2 × 10", "Skapula", ["Kaburga kontrolü"]),
@@ -289,7 +334,7 @@ export const PROGRAM_HYBRID = {
             block("🚴 KONDİSYON", "#990000", [
               ex("Incline Walk", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5", "Koşuya dönme"]),
             ]),
-            cooldownBlock(),
+            offdayCooldownBlock(),
           ],
         },
       },
@@ -333,7 +378,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisini koru"], { warn: "Skolyoz/kifoz için ana blok" }),
               ex("Hızlı Yürüyüş", "15-20 dakika tempo", "Tempo aerobik", ["RPE 5-6", "Koşuya kaçma"]),
             ]),
-            cooldownBlock(),
+            lowerCooldownBlock(),
           ],
         },
         gym: {
@@ -344,9 +389,10 @@ export const PROGRAM_HYBRID = {
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
               ex("Foam Roller Upper Back Roll", "2 × 30sn", "Torasik hazırlık", ["Kısa geçişler"]),
-              ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Dirseği sabit tut"]),
-              ex("Chin Tuck", "2 × 12", "Boyun", ["2 sn tut"]),
+              ex("Cat-Cow Mobilite", "2 × 8", "Omurga hazırlık", ["Ritmik ilerle", "Bel-boynu zorlamadan akıt"]),
+              ex("Hip Circle", "2 × 10", "Kalça mobilite", ["Kalçayı aç", "Belden değil kalçadan dön"]),
             ]),
+            careBlockGym(),
             block("🤸 SKILL — Support", "#8338EC", [
               ex("L-sit Tuck Hold", "3 × 8-12sn", "Core + support", ["Support pozisyonunda omuzları aşağı it"], { warn: "Omuz baskısı artarsa çıkar" }),
             ]),
@@ -363,7 +409,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30-40sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
               ex("Incline Walk", "12-15 dakika tempo", "Tempo aerobik", ["RPE 5-6", "Koşu yok"]),
             ]),
-            cooldownBlock(),
+            lowerCooldownBlock(),
           ],
         },
       },
@@ -388,10 +434,11 @@ export const PROGRAM_HYBRID = {
               ex("Glute Bridge / Hip Thrust", "2 × 12", "Glute aktivasyon", ["Üstte hafif sık"]),
               ex("Wrist Rotation", "2 × 30sn", "Bilek", ["Küçük daireler"]),
             ]),
+            careBlockHome(),
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "15 dakika kolay", "Aktif toparlanma", ["RPE 4-5"]),
             ]),
-            cooldownBlock(),
+            offdayCooldownBlock(),
           ],
         },
         gym: {
@@ -401,14 +448,15 @@ export const PROGRAM_HYBRID = {
           injury: "⚠️ Bugün yük ekleme günü değil.",
           blocks: [
             block("🧩 HAZIRLIK", "#2A9D8F", [
-              ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Yavaş tempo"]),
-              ex("Scapular Wall Slide", "2 × 10", "Skapula", ["Yavaş kaydır"]),
+              ex("Cat-Cow Mobilite", "2 × 8", "Omurga", ["Akıcı ilerle"]),
+              ex("Hip Circle", "2 × 10", "Kalça", ["Rahat tempo"]),
               ex("Glute Bridge / Hip Thrust", "2 × 12", "Glute aktivasyon", ["Hafif sıkışma"]),
             ]),
+            careBlockGym(),
             block("🚴 KONDİSYON", "#990000", [
               ex("Stationary Bike", "15 dakika kolay", "Aktif toparlanma", ["RPE 4-5"]),
             ]),
-            cooldownBlock(),
+            offdayCooldownBlock(),
           ],
         },
       },
@@ -454,7 +502,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
               ex("Hızlı Yürüyüş", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Ritim temiz ve rahat"], { warn: "Haftanın ana dayanıklılık bloğu" }),
             ]),
-            cooldownBlock(),
+            volumeCooldownBlock(),
           ],
         },
         gym: {
@@ -465,9 +513,10 @@ export const PROGRAM_HYBRID = {
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
               ex("Foam Roller Upper Back Roll", "2 × 30sn", "Torasik hazırlık", ["Kısa geçişler"]),
-              ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Yavaş tempo"]),
-              ex("Chin Tuck", "2 × 12", "Boyun", ["2 sn tut"]),
+              ex("Hip Circle", "2 × 10", "Kalça", ["Kalçayı aç"]),
+              ex("Shoulder Cross Stretch", "2 × 20sn", "Omuz", ["Aşırı çekme yok"]),
             ]),
+            careBlockGym(),
             block("🤸 SKILL — Hafif Teknik", "#8338EC", [
               ex("Pike Hold", "2 × 15sn", "Omuz aktivasyon", ["Kısa ve temiz set"]),
               ex("L-sit Tuck Hold", "2 × 8-10sn", "Core + support", ["Submax kal"]),
@@ -486,7 +535,7 @@ export const PROGRAM_HYBRID = {
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisi"]),
               ex("Rower", "20-25 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Sakin ritim"], { alts: ["Stationary Bike"], alt_reasons: ["Bel rower'da hoşlanmıyorsa bike'a dön"] }),
             ]),
-            cooldownBlock(),
+            volumeCooldownBlock(),
           ],
         },
       },
@@ -505,6 +554,7 @@ export const PROGRAM_HYBRID = {
           modeNote: "Yorgun günlerde pazarı özellikle home ve hafif tutmak mantıklı.",
           injury: "⚠️ Bugünü asla max test gibi yapma. Amaç toparlanmak.",
           blocks: [
+            recoveryWarmupBlock(),
             block("🛡 BAKIM", "#7B241C", [
               ex("Scapular Wall Slide", "2 × 10", "Skapula", ["Yavaş kaydır"]),
               ex("Chin Tuck", "2 × 12", "Boyun", ["2 sn tut"]),
@@ -517,7 +567,7 @@ export const PROGRAM_HYBRID = {
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Konuşabilir tempo"], { warn: "Haftayı toparlayarak kapat" }),
             ]),
-            cooldownBlock(),
+            recoveryCooldownBlock(),
           ],
         },
         gym: {
@@ -526,6 +576,7 @@ export const PROGRAM_HYBRID = {
           modeNote: "Macfit'te de pazar recovery mantığı değişmez.",
           injury: "⚠️ Pazar artık test günü değil. Hafif row + core + Zone 2 yeterli.",
           blocks: [
+            recoveryWarmupBlock(),
             block("🛡 BAKIM", "#7B241C", [
               ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Yavaş tempo"]),
               ex("Scapular Wall Slide", "2 × 10", "Skapula", ["Yavaş kaydır"]),
@@ -540,7 +591,7 @@ export const PROGRAM_HYBRID = {
             block("🚴 KONDİSYON", "#990000", [
               ex("Incline Walk", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Rahat tempo"], { alts: ["Stationary Bike"], alt_reasons: ["Diz veya ayak için bike daha rahat olabilir"] }),
             ]),
-            cooldownBlock(),
+            recoveryCooldownBlock(),
           ],
         },
       },
