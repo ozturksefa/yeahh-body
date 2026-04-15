@@ -576,7 +576,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
           {transitionPrompt?.kind === "advance" && (
             <div style={{ padding: "0 12px 12px" }}>
-              <SectionCard title={`🎉 Hafta ${activeWeek} tamamlandı!`} accent="#00C853">
+              <SectionCard title={`🎉 Hafta ${activeWeek} tamamlandı!`} accent="#00C853" data-testid="week-advance-prompt">
                 <div style={{ display: "grid", gap: 10 }}>
                   <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5 }}>
                     {weekProgress.sessionCount} seans · Rep hedefi: <span style={{ color: weekProgress.repGoalMet ? "#00C853" : "#FFA726", fontWeight: 800 }}>{weekProgress.repGoalMet ? "✓ tutuldu" : "△ kısmen"}</span>
@@ -593,6 +593,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                   )}
                   <div style={{ display: "flex", gap: 8 }}>
                     <button
+                      data-testid="week-advance-button"
                       onClick={handleAdvanceWeek}
                       style={{
                         ...buttonBase,
@@ -607,7 +608,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                     >
                       Hafta {nextWeekProfile?.week}'ye Geç
                     </button>
-                    <button onClick={handleSnoozeWeekPrompt} style={{ ...buttonBase, flex: 1, padding: "12px 14px", fontSize: 13 }}>
+                    <button data-testid="week-snooze-button" onClick={handleSnoozeWeekPrompt} style={{ ...buttonBase, flex: 1, padding: "12px 14px", fontSize: 13 }}>
                       Bekle
                     </button>
                   </div>
@@ -838,6 +839,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                   </div>
                 </div>
                 <button
+                  data-testid="checkout-jump-button"
                   onClick={() => checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
                   style={{
                     border: "1px solid #D41920",

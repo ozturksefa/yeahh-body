@@ -45,9 +45,9 @@ export function FieldSelect({ value, onChange }) {
   );
 }
 
-export function SectionCard({ title, children, accent = "#7A7A84" }) {
+export function SectionCard({ title, children, accent = "#7A7A84", ...props }) {
   return (
-    <div className="panel-card" style={{ "--panel-accent": accent }}>
+    <div className="panel-card" style={{ "--panel-accent": accent }} {...props}>
       <div className="panel-card-title">
         {title}
       </div>
@@ -287,7 +287,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
   };
 
   return (
-    <div style={{ padding: "0 12px 12px" }}>
+    <div style={{ padding: "0 12px 12px" }} data-testid="checkout-panel">
       <SectionCard title="Seans Sonu Check-out" accent="#FFA726">
         <div style={{ display: "grid", gap: 10 }}>
           <div className={`panel-status-box ${post.completed ? "panel-status-success" : "panel-status-neutral"}`}>
@@ -391,6 +391,7 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
             onClick={onComplete}
             style={{ ...buttonBase, width: "100%" }}
             className={`panel-complete-btn ${post.completed ? "panel-complete-btn-done" : ""}`}
+            data-testid="checkout-complete-button"
           >
             {post.completed ? "✅ Seans kaydedildi" : "Seansı tamamlandı olarak işaretle"}
           </button>

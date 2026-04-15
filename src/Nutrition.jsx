@@ -417,7 +417,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
   }, {});
 
   return (
-    <div className="nutrition">
+    <div className="nutrition" data-testid="nutrition-page">
 
       {/* Hedef düzenleme */}
       <button className="nutri-target-toggle" onClick={() => setShowTargets(s => !s)}>
@@ -515,7 +515,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
 
       {isToday && nutritionContext && (
         <>
-          <button className="nutri-quick-toggle"
+          <button data-testid="nutrition-meal-toggle" className="nutri-quick-toggle"
             onClick={() => setShowMealRec(s => !s)}>
             {showMealRec ? "✕ Öğün Önerisini Kapat" : "🍽 Hibrit Gününe Göre Öğün Önerisi"}
           </button>
@@ -535,7 +535,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
 
       {/* Miktar seçici popup */}
       {pendingFood && (
-        <div className="nutri-mult-overlay" onClick={() => setPendingFood(null)}>
+        <div className="nutri-mult-overlay" data-testid="nutrition-multiplier-overlay" onClick={() => setPendingFood(null)}>
           <div className="nutri-mult-box" onClick={e => e.stopPropagation()}>
             <div className="nutri-mult-name">{pendingFood.food.name}</div>
             <div className="nutri-mult-macros">
@@ -552,7 +552,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
                 </button>
               ))}
             </div>
-            <button className="nutri-mult-add" onClick={() => addFood(pendingFood.food, pendingFood.multiplier)}>
+            <button data-testid="nutrition-multiplier-add" className="nutri-mult-add" onClick={() => addFood(pendingFood.food, pendingFood.multiplier)}>
               ✓ Ekle
             </button>
           </div>
@@ -562,7 +562,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
       {/* Hızlı ekle — sadece bugün */}
       {isToday && (
         <>
-          <button className="nutri-quick-toggle"
+          <button data-testid="nutrition-quick-toggle" className="nutri-quick-toggle"
             onClick={() => { setShowQuick(!showQuick); setManualOpen(false); }}>
             {showQuick ? "✕ Kapat" : "🍽 Hızlı Ekle"}
           </button>
@@ -588,7 +588,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
                   </div>
                 )}
                 {listFoods.map((f, i) => (
-                  <button key={i} className="nutri-food-btn" onClick={() => handleFoodTap(f)}>
+                  <button key={i} data-testid={`nutrition-food-${i}`} className="nutri-food-btn" onClick={() => handleFoodTap(f)}>
                     <div className="nutri-food-left">
                       <span className="nutri-food-name">{f.name}</span>
                       {f.count && <span className="nutri-food-freq">{f.count}x</span>}
@@ -600,7 +600,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
             </div>
           )}
 
-          <button className="nutri-manual-toggle"
+          <button data-testid="nutrition-manual-toggle" className="nutri-manual-toggle"
             onClick={() => { setManualOpen(!manualOpen); setShowQuick(false); }}>
             {manualOpen ? "✕ Kapat" : "✏️ Manuel Ekle"}
           </button>
@@ -620,7 +620,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
                 <input className="nutri-m-num" type="number" inputMode="numeric" value={manual.fat}
                   onChange={e => setManual(p => ({ ...p, fat: e.target.value }))} placeholder="yağ g" />
               </div>
-              <button className="nutri-m-save" onClick={addManual}>Ekle</button>
+              <button data-testid="nutrition-manual-save" className="nutri-m-save" onClick={addManual}>Ekle</button>
             </div>
           )}
         </>
@@ -628,7 +628,7 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
 
       {/* Günlük log — öğüne göre gruplu */}
       {entries.length > 0 ? (
-        <div className="nutri-log">
+        <div className="nutri-log" data-testid="nutrition-log">
           <div className="nutri-log-title">{formatDate(activeDate)} — {entries.length} öğün · {totals.calories}kcal</div>
           {Object.entries(grouped).map(([meal, items]) => (
             <div key={meal} className="nutri-meal-group">
