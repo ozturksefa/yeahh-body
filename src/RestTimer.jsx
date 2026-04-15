@@ -46,27 +46,51 @@ function RestTimerCard({ seconds, exerciseName, isTransition, onDismiss, onAdjus
     );
   }
 
+  const primaryLabel = done
+    ? (isTransition ? "Sonraki Hareket →" : "Sonraki Set →")
+    : "Atla";
+  const headline = done
+    ? (isTransition ? "Sonraki harekete geç" : "Bir sonraki sete hazır ol")
+    : (isTransition ? "Hareket bitti — kısa nefes" : "Set arası dinlenme");
+  const subLine = isTransition
+    ? `${exerciseName} tamamlandı`
+    : exerciseName;
+
   return (
-    <div className={`rest-timer ${done ? "rest-timer-done" : ""}`}>
+    <div className={`rest-timer ${done ? "rest-timer-done" : ""} ${isTransition ? "rest-timer-transition" : ""}`}>
       <div className="rest-progress" style={{ width: `${pct}%` }} />
-      <div className="rest-content">
-        <div className="rest-left">
-          <div className="rest-label">{done ? "✅ DİNLENME BİTTİ" : isTransition ? "🔄 HAREKET ARASI" : "⏱ SET ARASI"}</div>
-          <div className="rest-ex-name">{isTransition ? `${exerciseName} bitti → Sonraki harekete geç` : exerciseName}</div>
-        </div>
-        <div className="rest-right">
+      <div className="rest-content rest-content-v2">
+        <div className="rest-head">
+          <span className="rest-kicker">{done ? "✅ HAZIR" : isTransition ? "🔄 HAREKET ARASI" : "⏱ SET ARASI"}</span>
           {!done && (
-            <div className="rest-countdown" onClick={() => setMini(true)} style={{cursor:"pointer"}}>{timeStr}</div>
+            <button
+              type="button"
+              className="rest-countdown-btn"
+              onClick={() => setMini(true)}
+              aria-label="Timer'ı küçült"
+            >
+              {timeStr}
+            </button>
           )}
-          <div className="rest-actions">
-            {!done && (
-              <>
-                <button className="rest-adj" onClick={() => onAdjust(-15)}>-15</button>
-                <button className="rest-adj" onClick={() => onAdjust(15)}>+15</button>
-              </>
-            )}
-            <button className="rest-dismiss" onClick={onDismiss}>{done ? (isTransition ? "Sonraki Hareket →" : "Sonraki Set →") : "Atla"}</button>
-          </div>
+        </div>
+        <div className="rest-body">
+          <div className="rest-headline">{headline}</div>
+          <div className="rest-subline">{subLine}</div>
+        </div>
+        <div className="rest-actions rest-actions-v2">
+          {!done && (
+            <>
+              <button type="button" className="rest-adj" onClick={() => onAdjust(-15)}>−15 sn</button>
+              <button type="button" className="rest-adj" onClick={() => onAdjust(15)}>+15 sn</button>
+            </>
+          )}
+          <button
+            type="button"
+            className={`rest-dismiss ${done ? "rest-dismiss-primary" : ""}`}
+            onClick={onDismiss}
+          >
+            {primaryLabel}
+          </button>
         </div>
       </div>
     </div>

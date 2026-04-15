@@ -239,11 +239,6 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
     persistSets(nextSets);
   };
 
-  const applySuggestionToActive = () => {
-    if (!suggestion?.weight) return;
-    updateActiveSet("weight", suggestion.weight);
-  };
-
   const applyWarmupWeight = () => {
     if (!warmupWeight) return;
     updateActiveSet("weight", warmupWeight);
@@ -287,203 +282,189 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
 
   if (!loaded) return <div className="tracker" style={{ textAlign: "center", padding: 12, color: "#555", fontSize: 11 }}>Yükleniyor...</div>;
 
+  const showSuggestionBanner = suggestion
+    && (suggestion.type === "up" || suggestion.type === "down" || suggestion.type === "first")
+    && suggestion.weight > 0
+    && Number(activeSet.weight) !== Number(suggestion.weight);
+  const suggestIcon = suggestion?.type === "up" ? "⬆"
+    : suggestion?.type === "down" ? "⬇"
+    : suggestion?.type === "first" ? "🆕"
+    : "➡";
+
   return (
     <div className="tracker">
-      <div className="tracker-head">
-        <span className="tracker-title">📝 SET TAKİBİ</span>
-        {allDone ? <span className="tracker-done-badge">✓ Tamamlandı</span> : <span className="tracker-progress-badge">Set {Math.min(activeSetIndex + 1, setCount)}/{setCount}</span>}
-      </div>
-
       {prFlash !== null && <div className="pr-flash">🏆 YENİ REKOR!</div>}
 
-      <div className="tracker-summary-card">
-        <div className="tracker-summary-top">
-          <div>
-            <div className="tracker-summary-label">Hedef</div>
-            <div className="tracker-summary-value">{setCount} × {targetReps}</div>
-          </div>
-          <div>
-            <div className="tracker-summary-label">Önceki</div>
-            <div className="tracker-summary-value">{formatSetValue(activePreviousSet)}</div>
-          </div>
-          <div>
-            <div className="tracker-summary-label">En İyi</div>
-            <div className="tracker-summary-value">{bestPreviousWeight > 0 ? `${bestPreviousWeight} kg` : "—"}</div>
-          </div>
+      <div className="tracker-meta">
+        <div className="tracker-meta-line">
+          <span className="tracker-meta-badge">
+            Set {Math.min(activeSetIndex + 1, setCount)}/{setCount}
+          </span>
+          <span className="tracker-meta-target">🎯 {setCount}×{targetReps}</span>
+          {activePreviousSet?.weight > 0 && (
+            <span className="tracker-meta-prev">· Önceki {formatSetValue(activePreviousSet)}</span>
+          )}
+          {bestPreviousWeight > 0 && (
+            <span className="tracker-meta-pr">· PR {bestPreviousWeight}kg</span>
+          )}
         </div>
-
-        {suggestion && (
-          <div className={`tracker-suggest suggest-${suggestion.type}`}>
-            <div className="suggest-row">
-              <span className="suggest-icon">
-                {suggestion.type === "up" ? "⬆" : suggestion.type === "down" ? "⬇" : suggestion.type === "confirm" ? "🔁" : suggestion.type === "first" ? "🆕" : "➡"}
-              </span>
-              <span className="suggest-reason">{suggestion.reason}</span>
-            </div>
-            <div className="tracker-quick-actions">
-              {(suggestion.type === "up" || suggestion.type === "down") && suggestion.weight > 0 && (
-                <button className="tracker-chip tracker-chip-primary" onClick={() => applyWeightToAll(suggestion.weight)}>
-                  {suggestion.weight} kg tüm setlere uygula
-                </button>
-              )}
-              {suggestion.weight > 0 && (
-                <button className="tracker-chip" onClick={applySuggestionToActive}>
-                  Sadece aktif sete uygula
-                </button>
-              )}
-            </div>
-          </div>
-        )}
-
-        {(warmupWeight > 0 || recommendedWorkingWeight > 0 || bodyweightStyle) && (
-          <div className="tracker-quick-actions">
-            {bodyweightStyle ? (
-              <>
-                <button className="tracker-chip tracker-chip-primary" onClick={() => updateActiveSet("weight", 0)}>
-                  BW / ek yük yok
-                </button>
-                <div className="tracker-inline-note">Bodyweight hareketlerde `0` değeri ek yük kullanmadığını gösterir.</div>
-              </>
-            ) : (
-              <>
-                {activeSetIndex === 0 && warmupWeight > 0 && (
-                  <button className="tracker-chip" onClick={applyWarmupWeight}>
-                    Isınma: {warmupWeight} kg
-                  </button>
-                )}
-                {recommendedWorkingWeight > 0 && (
-                  <button className="tracker-chip tracker-chip-primary" onClick={applyWorkingWeight}>
-                    Çalışma: {recommendedWorkingWeight} kg
-                  </button>
-                )}
-                <div className="tracker-inline-note">
-                  {activeSetIndex === 0 && warmupWeight > 0
-                    ? "İlk seti biraz hafif başlat, çalışma ağırlığına sonra çık."
-                    : "Çalışma setlerinde temiz tekrar ve form kalitesini koru."}
-                </div>
-              </>
-            )}
-          </div>
-        )}
+        <div className="tracker-dots" aria-label={`${completedCount} / ${setCount} set tamamlandı`}>
+          {sets.map((set, index) => (
+            <span
+              key={index}
+              className={`tracker-dot ${set.done ? "tracker-dot-done" : ""} ${index === activeSetIndex ? "tracker-dot-active" : ""}`}
+              aria-hidden
+            />
+          ))}
+        </div>
       </div>
 
-      <div className="tracker-active-card">
-        <div className="tracker-active-head">
-          <div>
-            <div className="tracker-active-label">Aktif Set</div>
-            <div className="tracker-active-value">Set {Math.min(activeSetIndex + 1, setCount)} / {setCount}</div>
-          </div>
-          <div className="tracker-active-status">{completedCount}/{setCount} tamam</div>
-        </div>
-
-        {transitionNote && (
-          <div className="tracker-transition-note">{transitionNote}</div>
-        )}
-
-        <div className="tracker-active-grid">
-          <div>
-            <div className="tracker-field-label">{bodyweightStyle ? "Ek yük / destek" : "Ağırlık"}</div>
-            <div className="tracker-stepper">
-              <button
-                type="button"
-                className="tracker-stepper-btn"
-                onClick={() => adjustActiveWeight(-weightStep)}
-                aria-label={`${weightStep} kg azalt`}
-              >−</button>
-              <input
-                ref={weightInputRef}
-                type="number"
-                inputMode="decimal"
-                step={weightStep}
-                className="tracker-stepper-input"
-                value={activeSet.weight ? formatWeight(activeSet.weight) : ""}
-                placeholder={activePreviousSet?.weight ? String(activePreviousSet.weight) : bodyweightStyle ? "0" : "kg"}
-                onChange={(event) => updateActiveSet("weight", parseFloat(event.target.value) || 0)}
-                onKeyDown={handleWeightKeyDown}
-              />
-              <button
-                type="button"
-                className="tracker-stepper-btn"
-                onClick={() => adjustActiveWeight(weightStep)}
-                aria-label={`${weightStep} kg arttır`}
-              >+</button>
-            </div>
-            <div className="tracker-inline-note">
-              {bodyweightStyle
-                ? "0 = sadece kendi vücut ağırlığın."
-                : `−/+ ile ${weightStep} kg'lık adım. Farklı bir değer girmek istersen rakama dokun.`}
-            </div>
-          </div>
-
-          <div>
-            <div className="tracker-field-label">Tekrar</div>
-            <div className="tracker-stepper">
-              <button
-                type="button"
-                className="tracker-stepper-btn"
-                onClick={() => adjustActiveReps(-1)}
-                aria-label="1 tekrar azalt"
-              >−</button>
-              <input
-                ref={repsInputRef}
-                type="number"
-                inputMode="numeric"
-                step={1}
-                className="tracker-stepper-input"
-                value={activeSet.reps || ""}
-                placeholder={String(targetReps)}
-                onChange={(event) => updateActiveSet("reps", parseInt(event.target.value, 10) || 0)}
-                onKeyDown={handleRepsKeyDown}
-              />
-              <button
-                type="button"
-                className="tracker-stepper-btn"
-                onClick={() => adjustActiveReps(1)}
-                aria-label="1 tekrar arttır"
-              >+</button>
-            </div>
-          </div>
-        </div>
-
-        <div className="tracker-quick-actions">
-          <button className="tracker-chip" onClick={copyPreviousToActive} disabled={!activePreviousSet && !activeLocalPreviousSet}>
-            Öncekini kopyala
-          </button>
-          <button className="tracker-chip" onClick={() => applyWeightToAll(Number(activeSet.weight || 0), true)} disabled={!activeSet.weight}>
-            Kalan setlere yay
-          </button>
-        </div>
-
-        <button className={`tracker-complete-btn ${activeSet.done ? "tracker-complete-btn-done" : ""}`} onClick={() => markSetDone(activeSetIndex)}>
-          {activeSet.done ? "✓ Bu set tamam" : "Bu seti tamamla"}
+      {showSuggestionBanner && (
+        <button
+          type="button"
+          className="tracker-suggest-banner"
+          onClick={() => applyWeightToAll(suggestion.weight)}
+          aria-label={`${suggestion.weight} kg öneriyi tüm setlere uygula`}
+        >
+          <span className="tracker-suggest-icon">{suggestIcon}</span>
+          <span className="tracker-suggest-text">{suggestion.reason}</span>
+          <span className="tracker-suggest-cta">Uygula</span>
         </button>
+      )}
+
+      {transitionNote && (
+        <div className="tracker-transition-note">{transitionNote}</div>
+      )}
+
+      <div className="tracker-active-grid">
+        <div>
+          <div className="tracker-field-label">{bodyweightStyle ? "Ek yük" : "Ağırlık"}</div>
+          <div className="tracker-stepper">
+            <button
+              type="button"
+              className="tracker-stepper-btn"
+              onClick={() => adjustActiveWeight(-weightStep)}
+              aria-label={`${weightStep} kg azalt`}
+            >−</button>
+            <input
+              ref={weightInputRef}
+              type="number"
+              inputMode="decimal"
+              step={weightStep}
+              className="tracker-stepper-input"
+              value={activeSet.weight ? formatWeight(activeSet.weight) : ""}
+              placeholder={activePreviousSet?.weight ? String(activePreviousSet.weight) : bodyweightStyle ? "0" : "kg"}
+              onChange={(event) => updateActiveSet("weight", parseFloat(event.target.value) || 0)}
+              onKeyDown={handleWeightKeyDown}
+            />
+            <button
+              type="button"
+              className="tracker-stepper-btn"
+              onClick={() => adjustActiveWeight(weightStep)}
+              aria-label={`${weightStep} kg arttır`}
+            >+</button>
+          </div>
+        </div>
+
+        <div>
+          <div className="tracker-field-label">Tekrar</div>
+          <div className="tracker-stepper">
+            <button
+              type="button"
+              className="tracker-stepper-btn"
+              onClick={() => adjustActiveReps(-1)}
+              aria-label="1 tekrar azalt"
+            >−</button>
+            <input
+              ref={repsInputRef}
+              type="number"
+              inputMode="numeric"
+              step={1}
+              className="tracker-stepper-input"
+              value={activeSet.reps || ""}
+              placeholder={String(targetReps)}
+              onChange={(event) => updateActiveSet("reps", parseInt(event.target.value, 10) || 0)}
+              onKeyDown={handleRepsKeyDown}
+            />
+            <button
+              type="button"
+              className="tracker-stepper-btn"
+              onClick={() => adjustActiveReps(1)}
+              aria-label="1 tekrar arttır"
+            >+</button>
+          </div>
+        </div>
       </div>
 
-      <div className="tracker-set-pills">
-        {sets.map((set, index) => (
-          <button
-            key={index}
-            className={`tracker-set-pill ${index === activeSetIndex ? "tracker-set-pill-active" : ""} ${set.done ? "tracker-set-pill-done" : ""}`}
-            onClick={() => setActiveSetIndex(index)}
-          >
-            <span className="tracker-set-pill-index">Set {index + 1}</span>
-            <span className="tracker-set-pill-value">{formatSetValue(set)}</span>
-          </button>
-        ))}
-      </div>
+      <button
+        className={`tracker-complete-btn ${activeSet.done ? "tracker-complete-btn-done" : ""}`}
+        onClick={() => markSetDone(activeSetIndex)}
+      >
+        {activeSet.done ? "✓ Bu set tamam" : "Bu seti tamamla"}
+      </button>
+
+      <details className="tracker-more">
+        <summary>Daha fazla · önceki · ısınma · setlere git</summary>
+        <div className="tracker-more-body">
+          <div className="tracker-quick-actions">
+            {bodyweightStyle && (
+              <button className="tracker-chip tracker-chip-primary" onClick={() => updateActiveSet("weight", 0)}>
+                BW / ek yük yok
+              </button>
+            )}
+            {!bodyweightStyle && activeSetIndex === 0 && warmupWeight > 0 && (
+              <button className="tracker-chip" onClick={applyWarmupWeight}>
+                Isınma: {warmupWeight} kg
+              </button>
+            )}
+            {!bodyweightStyle && recommendedWorkingWeight > 0 && (
+              <button className="tracker-chip" onClick={applyWorkingWeight}>
+                Çalışma: {recommendedWorkingWeight} kg
+              </button>
+            )}
+            <button
+              className="tracker-chip"
+              onClick={copyPreviousToActive}
+              disabled={!activePreviousSet && !activeLocalPreviousSet}
+            >
+              Öncekini kopyala
+            </button>
+            <button
+              className="tracker-chip"
+              onClick={() => applyWeightToAll(Number(activeSet.weight || 0), true)}
+              disabled={!activeSet.weight}
+            >
+              Kalan setlere yay
+            </button>
+          </div>
+
+          <div className="tracker-set-pills">
+            {sets.map((set, index) => (
+              <button
+                key={index}
+                className={`tracker-set-pill ${index === activeSetIndex ? "tracker-set-pill-active" : ""} ${set.done ? "tracker-set-pill-done" : ""}`}
+                onClick={() => setActiveSetIndex(index)}
+              >
+                <span className="tracker-set-pill-index">Set {index + 1}</span>
+                <span className="tracker-set-pill-value">{formatSetValue(set)}</span>
+              </button>
+            ))}
+          </div>
+
+          {history.length > 0 && (
+            <div className="tracker-history">
+              <span className="tracker-hist-label">Son seanslar:</span>
+              {history.map((item, index) => {
+                const best = Math.max(...item.sets.map((set) => set.weight || 0));
+                const reps = item.sets.map((set) => set.reps).join("/");
+                return <span key={index} className="tracker-hist-item">{item.date.slice(5)}: {best}kg ({reps})</span>;
+              })}
+            </div>
+          )}
+        </div>
+      </details>
 
       {allDone && <ExertionRating exerciseName={ex.name} dayIndex={dayIndex} />}
-
-      {history.length > 0 && (
-        <div className="tracker-history">
-          <span className="tracker-hist-label">Geçmiş:</span>
-          {history.map((item, index) => {
-            const best = Math.max(...item.sets.map((set) => set.weight || 0));
-            const reps = item.sets.map((set) => set.reps).join("/");
-            return <span key={index} className="tracker-hist-item">{item.date.slice(5)}: {best}kg ({reps})</span>;
-          })}
-        </div>
-      )}
     </div>
   );
 }
