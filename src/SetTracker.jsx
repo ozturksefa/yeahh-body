@@ -74,7 +74,27 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
       ]);
       if (cancelled) return;
 
-      const nextSets = saved && saved.length === setCount ? saved : makeEmptySets(setCount);
+      // Pre-fill every set with the suggested weight + target reps when the
+      // user has never touched this exercise today. The user can override any
+      // set; the happy path becomes "tap Tamamla" with no input work.
+      let nextSets = saved && saved.length === setCount ? saved : makeEmptySets(setCount);
+      const isFresh = !saved || saved.length !== setCount
+        || saved.every((s) => !s.done && !Number(s.weight) && !Number(s.reps));
+      if (isFresh) {
+        const previousFirstSet = hist?.[0]?.sets?.[0];
+        const prefillWeight = sug?.weight > 0
+          ? Number(sug.weight)
+          : Number(previousFirstSet?.weight || 0);
+        const prefillReps = Number(targetReps) || Number(previousFirstSet?.reps || 0);
+        if (prefillWeight > 0 || prefillReps > 0) {
+          nextSets = Array.from({ length: setCount }, () => ({
+            weight: prefillWeight,
+            reps: prefillReps,
+            done: false,
+          }));
+        }
+      }
+
       setSets(nextSets);
       setSuggestion(sug);
       setHistoryData(hist);
@@ -106,7 +126,6 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
     return values.length > 0 ? Math.max(...values) : 0;
   }, [history]);
   const completedCount = sets.filter((set) => set.done).length;
-  const quickWeightDeltas = useMemo(() => (isUpper(ex.name) ? [-2.5, 2.5] : [-5, 5]), [ex.name]);
   const recommendedWorkingWeight = useMemo(() => {
     if (suggestion?.weight > 0) return Number(suggestion.weight);
     if (activePreviousSet?.weight > 0) return Number(activePreviousSet.weight);
@@ -123,8 +142,13 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
   useEffect(() => {
     if (!loaded || allDone) return;
     if (document.activeElement === weightInputRef.current || document.activeElement === repsInputRef.current) return;
+    // If the set is already pre-filled with a suggested weight, don't auto
+    // focus — opening the mobile keyboard is intrusive when the user can
+    // simply tap "Bu seti tamamla" without editing.
+    const current = sets[activeSetIndex];
+    if (current && (Number(current.weight) > 0 || Number(current.reps) > 0)) return;
     weightInputRef.current?.focus();
-  }, [activeSetIndex, allDone, loaded]);
+  }, [activeSetIndex, allDone, loaded, sets]);
 
   if (!shouldRender) return null;
 
@@ -148,6 +172,22 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
     const nextSets = [...sets];
     const wasDone = nextSets[index].done;
     nextSets[index] = { ...nextSets[index], done: !wasDone };
+
+    // When a set is just marked done, mirror its weight/reps into the next
+    // undone set so the user doesn't have to re-enter them. Only overrides
+    // pre-fill-era values; any set already marked done keeps its recorded
+    // numbers.
+    if (!wasDone) {
+      const nextIndex = index + 1;
+      if (nextIndex < nextSets.length && !nextSets[nextIndex].done) {
+        nextSets[nextIndex] = {
+          ...nextSets[nextIndex],
+          weight: nextSets[index].weight,
+          reps: nextSets[index].reps,
+        };
+      }
+    }
+
     persistSets(nextSets);
 
     if (!wasDone && navigator.vibrate) navigator.vibrate(30);
@@ -217,6 +257,18 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
   const adjustActiveWeight = (delta) => {
     const nextWeight = Math.max(0, Number(activeSet.weight || 0) + delta);
     updateActiveSet("weight", nextWeight);
+  };
+
+  const adjustActiveReps = (delta) => {
+    const nextReps = Math.max(0, Number(activeSet.reps || 0) + delta);
+    updateActiveSet("reps", nextReps);
+  };
+
+  const weightStep = isUpper(ex.name) ? 2.5 : 5;
+  const formatWeight = (value) => {
+    const n = Number(value || 0);
+    if (!n) return "";
+    return Number.isInteger(n) ? String(n) : n.toFixed(1);
   };
 
   const handleWeightKeyDown = (event) => {
@@ -331,44 +383,69 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
         <div className="tracker-active-grid">
           <div>
             <div className="tracker-field-label">{bodyweightStyle ? "Ek yük / destek" : "Ağırlık"}</div>
-            <input
-              ref={weightInputRef}
-              type="number"
-              inputMode="decimal"
-              className="tracker-input tracker-input-large"
-              value={activeSet.weight || ""}
-              placeholder={activePreviousSet?.weight ? String(activePreviousSet.weight) : bodyweightStyle ? "0" : "kg"}
-              onChange={(event) => updateActiveSet("weight", parseFloat(event.target.value) || 0)}
-              onKeyDown={handleWeightKeyDown}
-            />
+            <div className="tracker-stepper">
+              <button
+                type="button"
+                className="tracker-stepper-btn"
+                onClick={() => adjustActiveWeight(-weightStep)}
+                aria-label={`${weightStep} kg azalt`}
+              >−</button>
+              <input
+                ref={weightInputRef}
+                type="number"
+                inputMode="decimal"
+                step={weightStep}
+                className="tracker-stepper-input"
+                value={activeSet.weight ? formatWeight(activeSet.weight) : ""}
+                placeholder={activePreviousSet?.weight ? String(activePreviousSet.weight) : bodyweightStyle ? "0" : "kg"}
+                onChange={(event) => updateActiveSet("weight", parseFloat(event.target.value) || 0)}
+                onKeyDown={handleWeightKeyDown}
+              />
+              <button
+                type="button"
+                className="tracker-stepper-btn"
+                onClick={() => adjustActiveWeight(weightStep)}
+                aria-label={`${weightStep} kg arttır`}
+              >+</button>
+            </div>
             <div className="tracker-inline-note">
               {bodyweightStyle
-                ? "0 = sadece kendi vücut ağırlığın. Pozitif değer = ek yük / makine desteği notun."
-                : "İstersen önceki seti kopyala veya hızlı artış çiplerini kullan."}
+                ? "0 = sadece kendi vücut ağırlığın."
+                : `−/+ ile ${weightStep} kg'lık adım. Farklı bir değer girmek istersen rakama dokun.`}
             </div>
           </div>
 
           <div>
             <div className="tracker-field-label">Tekrar</div>
-            <input
-              ref={repsInputRef}
-              type="number"
-              inputMode="numeric"
-              className="tracker-input tracker-input-large"
-              value={activeSet.reps || ""}
-              placeholder={String(targetReps)}
-              onChange={(event) => updateActiveSet("reps", parseInt(event.target.value, 10) || 0)}
-              onKeyDown={handleRepsKeyDown}
-            />
+            <div className="tracker-stepper">
+              <button
+                type="button"
+                className="tracker-stepper-btn"
+                onClick={() => adjustActiveReps(-1)}
+                aria-label="1 tekrar azalt"
+              >−</button>
+              <input
+                ref={repsInputRef}
+                type="number"
+                inputMode="numeric"
+                step={1}
+                className="tracker-stepper-input"
+                value={activeSet.reps || ""}
+                placeholder={String(targetReps)}
+                onChange={(event) => updateActiveSet("reps", parseInt(event.target.value, 10) || 0)}
+                onKeyDown={handleRepsKeyDown}
+              />
+              <button
+                type="button"
+                className="tracker-stepper-btn"
+                onClick={() => adjustActiveReps(1)}
+                aria-label="1 tekrar arttır"
+              >+</button>
+            </div>
           </div>
         </div>
 
         <div className="tracker-quick-actions">
-          {quickWeightDeltas.map((delta) => (
-            <button key={delta} className="tracker-chip" onClick={() => adjustActiveWeight(delta)}>
-              {delta > 0 ? `+${delta}` : delta} kg
-            </button>
-          ))}
           <button className="tracker-chip" onClick={copyPreviousToActive} disabled={!activePreviousSet && !activeLocalPreviousSet}>
             Öncekini kopyala
           </button>
