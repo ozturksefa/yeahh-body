@@ -482,6 +482,44 @@ const YT_QUERY_MAP = {
   "Close Grip Push Up": "close grip push up exercise form",
 };
 
+// Alias layer — maps new hybrid-program exercise names to their closest
+// match already present in GIF_MAP. Picked by scanning the existing GIF
+// inventory (tools/gif-inventory script output). Each alias is the best
+// same-pattern movement already in the database.
+const GIF_ALIAS = {
+  // POWER (yeni eklenenler)
+  "Explosive Hip Thrust": "Hip Thrust",
+  "Explosive Hip Thrust (Barbell veya Plate)": "Hip Thrust",
+  "Explosive Push-up (Dizdan veya Incline)": "Incline Push Up",
+  "Explosive Push-up (Dizdan, ya da Incline)": "Incline Push Up",
+  "Wall Push-up Explosive": "Incline Push Up",
+
+  // CARRY (yeni eklenenler)
+  "Farmer Carry (Ağır Çanta / Su Bidonu)": "Farmer Carry (ağır)",
+  "Farmer Carry (Dumbbell / Trap Bar)": "Farmer Carry (dumbbell)",
+
+  // POSTERIOR (yeni eklenenler)
+  "Single Leg RDL (Bodyweight)": "Single Leg RDL",
+  "Single Leg RDL (Dumbbell Hafif)": "Single Leg RDL",
+  "Bridge Walkout": "Glute Bridge Hamstring Walk",
+
+  // SKILL (şartlı ve varyasyonlar)
+  "Dead Hang (Şartlı)": "Dead Hang",
+  "Pike Hold + Shoulder Shift": "Pike Hold",
+  "Tuck Support": "Support Hold",
+  "L-sit Tek Bacak Açılım": "L-sit Tuck Hold",
+
+  // CONDITIONING (yeni varyantlar)
+  "Rower — Progresif Threshold Protokolü": "Rowing Machine",
+  "Bike Sprint Intervalları (Şartlı)": "Stationary Bike",
+
+  // ARMS (yeni)
+  "Towel Curl (Bacak Dirençli)": "Cable Curl",
+
+  // Rotator cuff — var olan isim kaymaları
+  "External Rotation (Towel/Yerçekimi)": "Band External Rotation",
+};
+
 export function getGifUrl(name) {
   if (FORCE_YT_FALLBACK.has(name)) return null;
   const val = resolveId(name);
@@ -504,6 +542,14 @@ function resolveId(name) {
   // (G3) + Left/Right
   const noTagBase = noTag.replace(/ (Left|Right)$/i, "").trim();
   if (GIF_MAP[noTagBase]) return GIF_MAP[noTagBase];
+
+  // Alias fallback — newer exercise names mapped to closest GIF_MAP entry.
+  // Recurses back through resolveId so the alias can target any form
+  // (including arrays and Left/Right base names).
+  if (GIF_ALIAS[name]) return resolveId(GIF_ALIAS[name]);
+  if (GIF_ALIAS[base]) return resolveId(GIF_ALIAS[base]);
+  if (GIF_ALIAS[noTag]) return resolveId(GIF_ALIAS[noTag]);
+  if (GIF_ALIAS[noTagBase]) return resolveId(GIF_ALIAS[noTagBase]);
 
   return null;
 }
