@@ -73,5 +73,7 @@ SUPABASE_URL              = <aynı proje URL'i — function tarafı için>
 ### 4. Scheduled Function
 `netlify/functions/push-send-daily.js` zaten `schedule: "0 7 * * *"` ile tanımlı (07:00 UTC = 10:00 İstanbul). Netlify otomatik algılar; farklı saat istersen cron string'ini değiştir.
 
+**Manuel test:** Netlify Dashboard → Logs → Functions → `push-send-daily` → **"Test"** veya **"Invoke function"** butonu. Scheduled fonksiyonlar HTTP path'i ile çağrılamaz; Netlify cron dispatcher üzerinden çalışır.
+
 ### 5. Kullanıcı tarafı
 "Yardımcı Alan" paneline tıklayınca 🔔 "Günlük antrenman hatırlatması" kartı çıkar. Kullanıcı tek tap ile açar/kapar.
