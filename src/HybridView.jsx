@@ -7,6 +7,7 @@ import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout 
 import ActiveSessionBar from "./hybrid/ActiveSessionBar";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
+import InstallPrompt from "./hybrid/InstallPrompt";
 import PlanPage from "./hybrid/PlanPage";
 import SessionHistoryPage from "./hybrid/SessionHistoryPage";
 import StreakHeatmap from "./hybrid/StreakHeatmap";
@@ -662,6 +663,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       <ScrollToTopButton
         liftAboveBar={page === "program" && !currentEntry.post.completed && (workoutState.started || hasWorkoutInput)}
       />
+
+      <InstallPrompt />
     </div>
   );
 }

@@ -1,14 +1,17 @@
 {
   "name": "Yeahh Body",
   "short_name": "Yeahh",
-  "description": "Kişisel Antrenman Programı",
+  "description": "Hibrit Performans Sistemi — kişisel antrenman programı",
   "start_url": "/",
+  "scope": "/",
   "display": "standalone",
   "background_color": "#0C0C0E",
-  "theme_color": "#E02020",
+  "theme_color": "#0E0F10",
   "orientation": "portrait",
+  "categories": ["fitness", "health", "lifestyle"],
+  "lang": "tr",
   "icons": [
-    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png" },
-    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png" }
+    { "src": "/icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any maskable" },
+    { "src": "/icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable" }
   ]
 }

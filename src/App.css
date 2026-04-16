@@ -532,6 +532,33 @@ body{
 .scroll-top-btn:active{transform:scale(.92)}
 @keyframes fabFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
+/* ═══ PWA INSTALL PROMPT ═══ */
+.install-prompt{
+  position:fixed; left:50%; bottom:calc(112px + env(safe-area-inset-bottom, 0px));
+  transform:translateX(-50%);
+  width:min(440px, calc(100vw - 24px));
+  background:linear-gradient(135deg, rgba(217,106,29,.15), rgba(79,163,255,.10));
+  border:1px solid rgba(217,106,29,.38); border-radius:14px;
+  padding:12px 14px; z-index:80;
+  display:flex; align-items:center; gap:12px;
+  box-shadow:0 12px 28px rgba(0,0,0,.45);
+  backdrop-filter:blur(6px);
+  animation:installSlideUp .25s ease-out;
+}
+@keyframes installSlideUp{ from{opacity:0; transform:translate(-50%, 12px)} to{opacity:1; transform:translate(-50%, 0)} }
+.install-prompt-body{ flex:1; min-width:0; }
+.install-prompt-title{ font-size:13px; font-weight:800; color:var(--text); }
+.install-prompt-sub{ font-size:11px; color:var(--text2); margin-top:3px; line-height:1.4; }
+.install-prompt-actions{ display:flex; gap:6px; flex-shrink:0; }
+.install-prompt-dismiss{
+  background:transparent; border:1px solid var(--border); color:var(--text3);
+  border-radius:8px; padding:8px 10px; font-size:11px; font-weight:700; cursor:pointer; font-family:inherit;
+}
+.install-prompt-install{
+  background:var(--accent); border:none; color:#130B04;
+  border-radius:8px; padding:8px 14px; font-size:12px; font-weight:800; cursor:pointer; font-family:inherit;
+}
+
 /* ═══ STREAK HEATMAP CARD ═══ */
 .streak-card{
   display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center;

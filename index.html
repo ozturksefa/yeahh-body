@@ -29,14 +29,21 @@
   <body>
     <div id="root"></div>
     <script>
-      // Force clear old service workers and caches
-      if ('serviceWorker' in navigator) {
-        navigator.serviceWorker.getRegistrations().then(regs => {
-          regs.forEach(r => r.unregister());
+      // Register service worker (production only — dev uses Vite HMR which
+      // conflicts with SW caching). SW is scoped to '/' and handles app-
+      // shell + ExerciseDB GIF offline caching. See public/sw.js.
+      if ('serviceWorker' in navigator && location.hostname !== 'localhost' && location.hostname !== '127.0.0.1') {
+        window.addEventListener('load', function() {
+          navigator.serviceWorker.register('/sw.js').catch(function(err) {
+            console.warn('SW registration failed:', err);
+          });
         });
-      }
-      if ('caches' in window) {
-        caches.keys().then(keys => keys.forEach(k => caches.delete(k)));
+      } else if ('serviceWorker' in navigator) {
+        // On dev host, actively kill any previously-installed SW so the old
+        // kill-switch version from history doesn't sit around.
+        navigator.serviceWorker.getRegistrations().then(function(regs) {
+          regs.forEach(function(r) { r.unregister(); });
+        });
       }
       // Global error recovery — never show blank screen
       window.addEventListener('error', function(e) {
