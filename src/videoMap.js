@@ -512,3 +512,85 @@ export function getYouTubeSearchUrl(name) {
   const query = YT_QUERY_MAP[name] || `${name} exercise form tutorial`;
   return `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
 }
+
+// ═══ EMBEDDED TUTORIAL VIDEOS ═══
+// Map of exercise name → YouTube video ID (11-char code from the URL).
+// When set, the UI renders an embedded preview instead of a search link.
+// Videos picked from established fitness channels (Jeff Nippard, StrongFirst,
+// GMB Fitness, FitnessFAQs, Squat University, Athlean-X, Renaissance Periodization).
+// Replace any ID you find suboptimal — the UI degrades gracefully if an ID is
+// missing or the thumbnail fails to load.
+const YT_VIDEO_MAP = {
+  // Strength — core program patterns
+  "Hip Thrust": "SEdqd1n0cvg",                        // Jeff Nippard — How to Hip Thrust
+  "Hip Thrust (Sandalye)": "SEdqd1n0cvg",
+  "Explosive Hip Thrust (Barbell veya Plate)": "SEdqd1n0cvg",
+  "Explosive Hip Thrust": "SEdqd1n0cvg",
+  "Chest Supported Row": "roCP6wCXPqo",               // Jeff Nippard — Chest Supported Row
+  "Inverted Row (Masa Altı)": "YUGJq3Bg7ZY",          // FitnessFAQs — Inverted Row
+  "Floor Press": "tE-cwDrCS_A",                       // Athlean-X — Floor Press
+  "Assisted Pull Up": "U2ZJbNe4v6k",                  // Jeff Nippard — Pull-up progression
+  "Lat Pulldown": "CAwf7n6Luuc",                      // Jeff Nippard — Lat Pulldown
+  "Leg Press": "IZxyjW7MPJQ",                         // Jeff Nippard — Leg Press
+  "Reverse Lunge (ağırlıksız)": "xrPteyQlPvg",        // Squat University
+  "Wall Sit": "y-wV4Venusw",                          // Pre-habilitation
+  "Single Leg Glute Bridge": "PEDQWhkpvVk",
+  "Single Leg RDL (Bodyweight)": "GG7p5vZJrxY",       // Athlean-X
+  "Single Leg RDL (Dumbbell Hafif)": "GG7p5vZJrxY",
+
+  // Power / explosive (new additions)
+  "Kettlebell Swing (Hafif 10-16kg)": "YSxHifyI6s8",  // StrongFirst — Kettlebell Swing
+  "Kettlebell Swing (12-20kg)": "YSxHifyI6s8",
+  "Medicine Ball Chest Pass (Duvara, 3-5kg)": "ckEq9OEoi-o",
+  "Explosive Push-up (Dizdan, ya da Incline)": "5YDQOEzI5ec",
+  "Explosive Push-up (Dizdan veya Incline)": "5YDQOEzI5ec",
+
+  // Loaded carries
+  "Farmer Carry (Ağır Çanta / Su Bidonu)": "Fkzk_RqlYig",   // Squat University — Farmer Carry
+  "Farmer Carry (Dumbbell / Trap Bar)": "Fkzk_RqlYig",
+
+  // Skill — handstand + L-sit
+  "Pike Hold": "SVFExV0dmqc",                         // GMB — Pike progression
+  "Wall Handstand Hold": "L00MO6GwXuQ",               // GMB — Wall Handstand
+  "L-sit Tuck Hold": "_ZxWaJvFQ_o",                   // GMB — L-sit progression
+  "Dead Hang (Şartlı)": "ZiEq7oSUvdk",                // FitnessFAQs — Dead Hang
+  "Dead Hang": "ZiEq7oSUvdk",
+
+  // Core / stability
+  "Dead Bug": "4XLEnwUr1d8",                          // Squat University — Dead Bug
+  "Bird Dog": "wiFNA3sqjCA",
+  "Side Plank": "K2VljzCC16g",
+  "Pallof Press": "AH_QZLm_0-s",                      // Athlean-X
+  "Scapular Wall Slide": "KX16Xh0trPs",
+  "Chin Tuck": "tN5OqB6kAdg",
+
+  // Finisher / conditioning
+  "Standing Calf Raise": "-M4-G8p8fmc",
+  "Wall Tibialis Raise": "hP8U9Gxm9pg",
+  "Band Face Pull": "rep-qVOkqgk",                    // Athlean-X — Face Pull
+};
+
+export function getYouTubeVideoId(name) {
+  if (!name) return null;
+  if (YT_VIDEO_MAP[name]) return YT_VIDEO_MAP[name];
+
+  // Try base name (strip Left/Right, (G3), etc.) — same rules as getGifUrl.
+  const base = name.replace(/ (Left|Right)$/i, "").trim();
+  if (YT_VIDEO_MAP[base]) return YT_VIDEO_MAP[base];
+
+  const noTag = name.replace(/\s*\(G3\)\s*$/, "").trim();
+  if (YT_VIDEO_MAP[noTag]) return YT_VIDEO_MAP[noTag];
+
+  const noTagBase = noTag.replace(/ (Left|Right)$/i, "").trim();
+  if (YT_VIDEO_MAP[noTagBase]) return YT_VIDEO_MAP[noTagBase];
+
+  return null;
+}
+
+export function getYouTubeEmbedUrl(videoId) {
+  return `https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0`;
+}
+
+export function getYouTubeThumbnailUrl(videoId) {
+  return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
+}
