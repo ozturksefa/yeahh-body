@@ -5,14 +5,60 @@ import SetTracker from "./SetTracker";
 import ExerciseNote from "./ExerciseNote";
 import SkillTimer from "./SkillTimer";
 import ErrorBoundary from "./ErrorBoundary";
+import ExerciseDetailModal from "./hybrid/ExerciseDetailModal";
+
+// Long-press timer threshold (ms) — long enough to not collide with tap
+// toggle, short enough to feel responsive.
+const LONG_PRESS_MS = 450;
+
+function useLongPress(onLongPress) {
+  const timerRef = useRef(null);
+  // Use a mutable wrapper object for the "did long press" flag so callers
+  // can read and clear it. Ref properties themselves are writable; only
+  // ref.current reassignment trips React 19 lint.
+  const flag = useRef({ fired: false });
+
+  const cancel = () => {
+    if (timerRef.current) {
+      clearTimeout(timerRef.current);
+      timerRef.current = null;
+    }
+  };
+  const onPointerDown = () => {
+    flag.current.fired = false;
+    cancel();
+    timerRef.current = setTimeout(() => {
+      flag.current.fired = true;
+      onLongPress();
+    }, LONG_PRESS_MS);
+  };
+  return {
+    onPointerDown,
+    onPointerUp: cancel,
+    onPointerLeave: cancel,
+    onPointerCancel: cancel,
+    didFire: () => flag.current.fired,
+    clearFired: () => { flag.current.fired = false; },
+  };
+}
 
 function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAllSetsDone }) {
   const cardRef = useRef(null);
+  const [detailOpen, setDetailOpen] = useState(false);
   const originalName = ex.name;
   const swappedName = swaps?.[originalName] || null;
   const displayName = swappedName || originalName;
 
+  // Long-press on the header opens the detail modal. The modal uses the
+  // displayed (possibly swapped) name so history + alt lookups match.
+  const longPress = useLongPress(() => setDetailOpen(true));
+
   const handleToggle = () => {
+    // If a long-press just fired, don't also toggle.
+    if (longPress.didFire()) {
+      longPress.clearFired();
+      return;
+    }
     const wasOpen = isOpen;
     onToggle();
     if (!wasOpen) {
@@ -37,8 +83,16 @@ function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex,
 
   return (
     <div className="ex-wrap" ref={cardRef} data-ex-key={exerciseKey}>
-      <button className="ex-header" onClick={handleToggle}
-        style={{ borderLeft: `3px solid ${blockColor}` }}>
+      <button
+        className="ex-header"
+        onClick={handleToggle}
+        onPointerDown={longPress.onPointerDown}
+        onPointerUp={longPress.onPointerUp}
+        onPointerLeave={longPress.onPointerLeave}
+        onPointerCancel={longPress.onPointerCancel}
+        onContextMenu={(event) => { event.preventDefault(); setDetailOpen(true); }}
+        style={{ borderLeft: `3px solid ${blockColor}` }}
+      >
         <div className="ex-left">
           <div className="ex-name">
             {displayName}
@@ -59,6 +113,13 @@ function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex,
         </div>
         <span className="ex-toggle">{isOpen ? "✕" : "+"}</span>
       </button>
+
+      {detailOpen && (
+        <ExerciseDetailModal
+          exercise={{ ...ex, name: displayName }}
+          onClose={() => setDetailOpen(false)}
+        />
+      )}
 
       {isOpen && (
         <div className="ex-body">

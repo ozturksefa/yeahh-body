@@ -532,6 +532,73 @@ body{
 .scroll-top-btn:active{transform:scale(.92)}
 @keyframes fabFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
+/* ═══ EXERCISE DETAIL MODAL ═══ */
+.exd-backdrop{
+  position:fixed; inset:0; z-index:400; background:rgba(0,0,0,.72);
+  display:flex; align-items:flex-end; justify-content:center;
+  animation:exdFade .18s ease-out;
+}
+@keyframes exdFade{ from{opacity:0} to{opacity:1} }
+.exd-sheet{
+  width:100%; max-width:520px; height:calc(100vh - 40px);
+  background:var(--bg); border-top-left-radius:20px; border-top-right-radius:20px;
+  display:flex; flex-direction:column; overflow:hidden;
+  box-shadow:0 -24px 48px rgba(0,0,0,.6);
+  animation:exdSlide .24s ease-out;
+}
+@keyframes exdSlide{ from{transform:translateY(100%)} to{transform:translateY(0)} }
+.exd-head{
+  display:flex; align-items:center; justify-content:space-between; gap:12px;
+  padding:14px 16px; border-bottom:1px solid var(--border);
+  background:var(--card2);
+}
+.exd-title{ font-size:15px; font-weight:800; color:var(--text); line-height:1.3; }
+.exd-close{
+  background:var(--card3); border:1px solid var(--border); color:var(--text2);
+  width:36px; height:36px; border-radius:10px; font-size:14px; font-weight:700; cursor:pointer;
+  font-family:inherit; flex-shrink:0;
+}
+.exd-body{ flex:1; overflow-y:auto; padding:12px 14px calc(24px + env(safe-area-inset-bottom, 0px)); display:grid; gap:12px; }
+.exd-media{ background:var(--card2); border-radius:12px; padding:6px; display:flex; justify-content:center; }
+.exd-meta-row{ display:flex; gap:6px; flex-wrap:wrap; }
+.exd-chip{
+  padding:6px 10px; border-radius:999px; font-size:11px; font-weight:800;
+  background:rgba(217,106,29,.14); color:var(--accent-2);
+  border:1px solid rgba(217,106,29,.28);
+}
+.exd-chip-muted{ background:var(--card); color:var(--text3); border-color:var(--border); }
+.exd-section{
+  background:var(--card2); border:1px solid var(--border); border-radius:12px; padding:12px;
+}
+.exd-section-label{
+  font-size:10px; font-weight:800; color:var(--text3); letter-spacing:.08em;
+  text-transform:uppercase; margin-bottom:8px;
+}
+.exd-section > div, .exd-section > ol{ font-size:13px; color:var(--text); line-height:1.5; }
+.exd-steps{ margin:0; padding-left:20px; display:grid; gap:6px; }
+.exd-steps li{ line-height:1.5; }
+.exd-warn-neg{
+  background:rgba(212,25,32,.08); border-color:rgba(212,25,32,.28);
+}
+.exd-warn-neg .exd-section-label{ color:#FF8A8A; }
+.exd-warn-caution{
+  background:rgba(255,167,38,.08); border-color:rgba(255,167,38,.28);
+}
+.exd-warn-caution .exd-section-label{ color:var(--miss, #FFA726); }
+.exd-alts{ display:grid; gap:8px; }
+.exd-alt{ background:var(--card); border:1px solid var(--border); border-radius:10px; padding:10px; }
+.exd-alt-name{ font-size:13px; font-weight:700; color:var(--text); }
+.exd-alt-why{ font-size:11px; color:var(--text3); margin-top:4px; line-height:1.5; }
+.exd-history{ display:grid; gap:6px; }
+.exd-history-row{
+  display:flex; justify-content:space-between; align-items:center;
+  padding:6px 10px; background:var(--card); border:1px solid var(--border);
+  border-radius:8px; font-family:var(--mono, inherit); font-size:12px;
+}
+.exd-history-date{ color:var(--text3); }
+.exd-history-stats{ color:var(--text); font-weight:700; }
+.exd-history-empty{ color:var(--text3); font-size:12px; padding:6px 0; }
+
 /* ═══ AI COACH CARD ═══ */
 .ai-coach-card{
   background:linear-gradient(135deg, rgba(79,163,255,.08), rgba(131,56,236,.08));
