@@ -150,7 +150,7 @@ const GIF_MAP = {
   // ALTERNATİF HAREKETLER (swap için)
   // ══════════════════════════════════════════════════════
   "90/90 External Rotation":          "FWdVhcW",  // cable standing shoulder external rotation
-  "90/90 Hip Stretch":                "oMypNrz",  // roller hip stretch
+  "90/90 Hip Stretch":                "yn0LjwL",  // assisted lying glutes stretch (roller versiyonu yanlış hareket gösteriyordu)
   "Ab Wheel Rollout":                 "xnInPfE",  // barbell standing ab rollerout
   "Ankle Circles":                    "uL9CsKm",  // ankle circles
   "Ankle Mobility (duvara karşı)":    "m0tCHqc",  // calf stretch with hands against wall
@@ -229,8 +229,8 @@ const GIF_MAP = {
   "Kettlebell Swing (hafif)":        "UHJlbu3",  // kettlebell swing
   "Landmine Press":                  "eXMFHww",  // landmine lateral raise
   "Lat Foam Roll":                   "c3Pfhti",  // roller side lat stretch
-  "Lat Pulldown":                    "ecpY0rH",  // reverse grip machine lat pulldown
-  "Lat Pulldown (close grip)":       "ecpY0rH",  // reverse grip machine lat pulldown
+  "Lat Pulldown":                    ["qdRxqCj","7F1DVzn"],  // cable pulldown (pro lat bar) + lever front pulldown — kullanıcı tercihine iki versiyon
+  "Lat Pulldown (close grip)":       "qdRxqCj",  // cable pulldown pro lat bar
   "Lateral Lunge":                   "py1HSzx",  // barbell lateral lunge
   "Lateral Raise":                   "AQ0mC4Y",  // dumbbell full can lateral raise
   "Latissimus Stretch Assisted":     "f38OEuO",  // kneeling lat stretch
@@ -447,6 +447,7 @@ const FORCE_YT_FALLBACK = new Set([
   "Hollow Body Hold",
   "Hızlı Yürüyüş",
   "Rower",
+  "Rower — Progresif Threshold Protokolü",
   "Incline Walk",
   "Bird Dog",
   "Copenhagen Plank (Sandalye)",
@@ -456,6 +457,13 @@ const FORCE_YT_FALLBACK = new Set([
   "Prone Cobra",
   "Box Step Down (eccentric)",
   "Close Grip Push Up",
+  // Audit flagged: existing GIF was wrong, prefer curated short/search
+  "Doorway Chest Stretch",
+  "Towel Curl (Bacak Dirençli)",
+  "Dead Hang",
+  "Dead Hang (Şartlı)",
+  "Pike Hold",
+  "Pike Hold + Shoulder Shift",
 ]);
 
 const YT_QUERY_MAP = {
@@ -484,8 +492,9 @@ const YT_QUERY_MAP = {
 
 // Alias layer — maps new hybrid-program exercise names to their closest
 // match already present in GIF_MAP. Picked by scanning the existing GIF
-// inventory (tools/gif-inventory script output). Each alias is the best
-// same-pattern movement already in the database.
+// inventory. Each alias is the best same-pattern movement already in the
+// database. Removed entries below are handled either by YT_SHORT_MAP
+// (preferred, user-curated) or fall through to getYouTubeSearchUrl.
 const GIF_ALIAS = {
   // POWER (yeni eklenenler)
   "Explosive Hip Thrust": "Hip Thrust",
@@ -504,21 +513,58 @@ const GIF_ALIAS = {
   "Bridge Walkout": "Glute Bridge Hamstring Walk",
 
   // SKILL (şartlı ve varyasyonlar)
-  "Dead Hang (Şartlı)": "Dead Hang",
   "Pike Hold + Shoulder Shift": "Pike Hold",
   "Tuck Support": "Support Hold",
   "L-sit Tek Bacak Açılım": "L-sit Tuck Hold",
 
   // CONDITIONING (yeni varyantlar)
-  "Rower — Progresif Threshold Protokolü": "Rowing Machine",
   "Bike Sprint Intervalları (Şartlı)": "Stationary Bike",
-
-  // ARMS (yeni)
-  "Towel Curl (Bacak Dirençli)": "Cable Curl",
 
   // Rotator cuff — var olan isim kaymaları
   "External Rotation (Towel/Yerçekimi)": "Band External Rotation",
 };
+
+// User-curated YouTube Shorts — when no accurate GIF exists (or an existing
+// GIF has been flagged wrong in an audit), we embed a hand-picked Short.
+// These are *manually reviewed* videos, not algorithmic guesses — that's the
+// whole difference from the previous video experiment. Keys are normalized
+// with the same Left/Right + (G3) stripping rules as GIF_MAP.
+const YT_SHORT_MAP = {
+  // User-flagged as wrong — curated replacements
+  "Doorway Chest Stretch": "O8rJw_TmC1Y",
+  "Towel Curl (Bacak Dirençli)": "rNZ7V4wPhaE",
+
+  // Previously FORCE_YT_FALLBACK — user supplied better specific videos
+  "Bird Dog": "YO9bbyrgJkI",
+  "Box Step Down (eccentric)": "vNNBntHWCIk",
+  "Cat-Cow Mobilite": "2of247Kt0tU",
+  "Chin Tuck": "0tWxFbOHvRo",
+  "Close Grip Push Up": "zWWqJZzn2Xg",
+  "Hip Circle": "C4MDREc9ERg",
+  "Medicine Ball Chest Pass (Duvara, 3-5kg)": "0nAIDOVnGoo",
+  "Scapular Wall Slide": "OtgQDv7u1TM",
+  "Standing Calf Raise": "sNqa1ad2qIQ",
+  "Wall Sit": "mDdLC-yKudY",
+  "Wall Tibialis Raise": "PotNJd0qZDM",
+};
+
+export function getYouTubeShortId(name) {
+  if (!name) return null;
+  if (YT_SHORT_MAP[name]) return YT_SHORT_MAP[name];
+  const base = name.replace(/ (Left|Right)$/i, "").trim();
+  if (YT_SHORT_MAP[base]) return YT_SHORT_MAP[base];
+  const noTag = name.replace(/\s*\(G3\)\s*$/, "").trim();
+  if (YT_SHORT_MAP[noTag]) return YT_SHORT_MAP[noTag];
+  const noTagBase = noTag.replace(/ (Left|Right)$/i, "").trim();
+  if (YT_SHORT_MAP[noTagBase]) return YT_SHORT_MAP[noTagBase];
+  return null;
+}
+
+export function getYouTubeShortEmbedUrl(videoId) {
+  // youtube-nocookie + loop + no related + controls on. Loop via playlist
+  // param pointing at the same id is YouTube's documented loop workaround.
+  return `https://www.youtube-nocookie.com/embed/${videoId}?loop=1&playlist=${videoId}&rel=0&modestbranding=1`;
+}
 
 export function getGifUrl(name) {
   if (FORCE_YT_FALLBACK.has(name)) return null;

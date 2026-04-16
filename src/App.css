@@ -531,6 +531,17 @@ body{
 .scroll-top-btn:hover{background:var(--card3)}
 .scroll-top-btn:active{transform:scale(.92)}
 @keyframes fabFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+
+/* ═══ EMBEDDED YOUTUBE SHORT (no-GIF fallback) ═══ */
+.gif-short-wrap{
+  width:100%;max-width:320px;margin:0 auto;
+  background:#000;border:1px solid var(--border);border-radius:12px;overflow:hidden;
+  aspect-ratio:9/16;position:relative;
+}
+.gif-short-frame{
+  position:absolute;inset:0;width:100%;height:100%;border:0;
+}
+
 .tracker-quick-actions{
   display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;
 }
