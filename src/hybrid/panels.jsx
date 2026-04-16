@@ -261,8 +261,9 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
   );
 }
 
-export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillState, onComplete }) {
+export function DailyCheckoutPanel({ post, setPost, pre, setPre, daySub, skillPaths, skillState, onComplete }) {
   const update = (field, value) => setPost((prev) => ({ ...prev, [field]: value }));
+  const updatePre = (field, value) => setPre?.((prev) => ({ ...prev, [field]: value }));
   const relevantSkills = getRelevantSkillsForDay(daySub, skillPaths);
 
   const updateSkill = (skillKey, patch) => {
@@ -298,6 +299,38 @@ export function DailyCheckoutPanel({ post, setPost, daySub, skillPaths, skillSta
               RPE, semptom ve kısa skill kaydını doldur; ardından seansı tamamlandı olarak işaretle.
             </div>
           </div>
+
+          {pre && setPre && (
+            <details className="tracker-more" style={{ marginTop: -2 }}>
+              <summary>Seans öncesi durum · isteğe bağlı</summary>
+              <div className="tracker-more-body" style={{ paddingTop: 10 }}>
+                <div style={{ display: "grid", gap: 10 }}>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Enerji</div>
+                    <FieldButtons value={pre.energy} onChange={(v) => updatePre("energy", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "düşük", label: "Düşük" }]} />
+                  </div>
+                  <div>
+                    <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Uyku</div>
+                    <FieldButtons value={pre.sleep} onChange={(v) => updatePre("sleep", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "kötü", label: "Kötü" }]} />
+                  </div>
+                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+                    <div>
+                      <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Omuz önce</div>
+                      <FieldSelect value={pre.shoulder} onChange={(v) => updatePre("shoulder", v)} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Diz önce</div>
+                      <FieldSelect value={pre.knee} onChange={(v) => updatePre("knee", v)} />
+                    </div>
+                    <div>
+                      <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bel/Boyun önce</div>
+                      <FieldSelect value={pre.spine} onChange={(v) => updatePre("spine", v)} />
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </details>
+          )}
 
           <div>
             <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Genel RPE</div>

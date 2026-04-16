@@ -1,4 +1,5 @@
 import { PROGRAM_HYBRID } from "../dataHybrid";
+import StreakHeatmap from "./StreakHeatmap";
 import { SectionCard } from "./panels";
 import {
   buttonBase,
@@ -21,6 +22,8 @@ export default function PlanPage({
 }) {
   return (
     <div style={{ padding: "12px", display: "grid", gap: 10 }}>
+      <StreakHeatmap />
+
       <SectionCard title="Program Çizelgesi" accent="#4FC3F7">
         <div style={{ display: "grid", gap: 10 }}>
           <div style={{ display: "grid", gridTemplateColumns: "repeat(4, minmax(0, 1fr))", gap: 8 }}>

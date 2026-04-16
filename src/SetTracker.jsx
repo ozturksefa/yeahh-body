@@ -46,7 +46,9 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
   const trackBlocks = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER", "PRIMARY", "SECONDARY", "KALİSTENİK", "SKILL", "KOMPLİMENTER", "FULL BODY"];
   const showTracker = trackBlocks.some((block) => blockName?.toUpperCase().includes(block));
   const parsed = parseSets(ex.sets);
-  const shouldRender = showTracker && parsed && !parsed.timed;
+  const shouldRender = ex.trackable === false
+    ? false
+    : ((ex.trackable === true || showTracker) && parsed && !parsed.timed);
 
   const setCount = shouldRender ? parsed.setCount : 0;
   const targetReps = shouldRender ? parsed.reps : 0;

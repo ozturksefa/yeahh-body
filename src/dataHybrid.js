@@ -13,55 +13,61 @@ const ex = (name, sets, muscle, how, options = {}) => ({
   // matters — not for side-plank / dead-bug / bird-dog style "each
   // side" core work where stability is the point, not asymmetric load.
   unilateral: options.unilateral || false,
+  trackable: options.trackable,
+});
+
+const passiveEx = (name, sets, muscle, how, options = {}) => ex(name, sets, muscle, how, {
+  ...options,
+  trackable: false,
 });
 
 const block = (name, color, exercises) => ({ name, color, exercises });
 
 const offdayCooldownBlock = () => block("🧊 SOĞUMA — Hafif Kapat", "#264653", [
-  ex("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Burundan nefes al", "Omuzları gevşet", "Karnı yumuşat"], { warn: "Amaç nabzı düşürüp sistemi sakin kapatmak" }),
-  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Kaburgayı dışarı itme", "Nefesi uzat", "Omuzu sıkıştırma"]),
+  passiveEx("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Burundan nefes al", "Omuzları gevşet", "Karnı yumuşat"], { warn: "Amaç nabzı düşürüp sistemi sakin kapatmak" }),
+  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Kaburgayı dışarı itme", "Nefesi uzat", "Omuzu sıkıştırma"]),
 ]);
 
 const upperCooldownBlock = () => block("🧊 SOĞUMA — Üst Gövde Boşalt", "#264653", [
-  ex("Child's Pose", "2 × 20sn", "Nefes + sırt rahatlama", ["Burundan nefes al", "Kolları uzatırken boynu gevşet"]),
-  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Göğüs önünü nazikçe aç", "Kaburgayı dışarı itme"]),
-  ex("Shoulder Cross Stretch", "2 × 20sn", "Arka omuz", ["Omuzu kulağa çekme", "Gerilimi boyna taşıma"]),
+  passiveEx("Child's Pose", "2 × 20sn", "Nefes + sırt rahatlama", ["Burundan nefes al", "Kolları uzatırken boynu gevşet"]),
+  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Göğüs önünü nazikçe aç", "Kaburgayı dışarı itme"]),
+  passiveEx("Shoulder Cross Stretch", "2 × 20sn", "Arka omuz", ["Omuzu kulağa çekme", "Gerilimi boyna taşıma"]),
 ]);
 
 const lowerCooldownBlock = () => block("🧊 SOĞUMA — Alt Gövde Boşalt", "#264653", [
-  ex("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça kapsülü", ["Gövdeden yüklenme", "Ağrısız aralıkta kal", "Nefesi uzat"]),
-  ex("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Dizi hafif yumuşak tut", "Çekişi agresif yapma"]),
-  ex("Child's Pose", "2 × 20sn", "Bel + nefes", ["Belini bırak", "Omuzları yumuşat"]),
+  passiveEx("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça kapsülü", ["Gövdeden yüklenme", "Ağrısız aralıkta kal", "Nefesi uzat"]),
+  passiveEx("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Dizi hafif yumuşak tut", "Çekişi agresif yapma"]),
+  passiveEx("Child's Pose", "2 × 20sn", "Bel + nefes", ["Belini bırak", "Omuzları yumuşat"]),
 ]);
 
 const volumeCooldownBlock = () => block("🧊 SOĞUMA — Hacim Günü Kapat", "#264653", [
-  ex("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Nefesi uzat", "Omuz ve bel hattını gevşet"]),
-  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Press sonrası göğüs önünü aç", "Omuzu sıkıştırma"]),
-  ex("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Posterior chain'i rahatlat", "Nefesi uzat"]),
+  passiveEx("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Nefesi uzat", "Omuz ve bel hattını gevşet"]),
+  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Press sonrası göğüs önünü aç", "Omuzu sıkıştırma"]),
+  passiveEx("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Posterior chain'i rahatlat", "Nefesi uzat"]),
 ]);
 
 const recoveryCooldownBlock = () => block("🧊 SOĞUMA — Recovery Kapat", "#264653", [
-  ex("Child's Pose", "2 × 20sn", "Nefes + sistem sakinleşmesi", ["Burundan nefes al", "Seansı sakin bitir"]),
-  ex("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça rahatlatma", ["Nazik açıl", "Ağrısız aralıkta kal"]),
-  ex("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Uzun nefesle gevşe"]),
+  passiveEx("Child's Pose", "2 × 20sn", "Nefes + sistem sakinleşmesi", ["Burundan nefes al", "Seansı sakin bitir"]),
+  passiveEx("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça rahatlatma", ["Nazik açıl", "Ağrısız aralıkta kal"]),
+  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Uzun nefesle gevşe"]),
 ]);
 
 const recoveryWarmupBlock = () => block("🔥 ISINMA — Hafif Hazırlık", "#CC5500", [
-  ex("Cat-Cow Mobilite", "2 × 6-8", "Omurga hazırlık", ["Acele etme", "Nefesle ak"]),
-  ex("Hip Circle", "2 × 8-10", "Kalça hazırlık", ["Belden değil kalçadan dön"]),
-  ex("Shoulder Cross Stretch", "2 × 15-20sn", "Omuz hazırlık", ["Omuzu kulağa çekme"]),
+  passiveEx("Cat-Cow Mobilite", "2 × 6-8", "Omurga hazırlık", ["Acele etme", "Nefesle ak"]),
+  passiveEx("Hip Circle", "2 × 8-10", "Kalça hazırlık", ["Belden değil kalçadan dön"]),
+  passiveEx("Shoulder Cross Stretch", "2 × 15-20sn", "Omuz hazırlık", ["Omuzu kulağa çekme"]),
 ]);
 
 const careBlockHome = () => block("🛡 BAKIM — Omuz & Boyun", "#7B241C", [
-  ex("External Rotation (Towel/Yerçekimi)", "2 × 15", "Rotator cuff", ["Tempo yavaş", "Omuz başını öne kaçırma"]),
-  ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı içerde tut"]),
-  ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["Boynu nötrle", "2 sn tut"]),
+  passiveEx("External Rotation (Towel/Yerçekimi)", "2 × 15", "Rotator cuff", ["Tempo yavaş", "Omuz başını öne kaçırma"]),
+  passiveEx("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı içerde tut"]),
+  passiveEx("Chin Tuck", "2 × 12", "Boyun stabilite", ["Boynu nötrle", "2 sn tut"]),
 ]);
 
 const careBlockGym = () => block("🛡 BAKIM — Omuz & Boyun", "#7B241C", [
-  ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Dirseği sabit tut", "Yavaş aç-kapat"]),
-  ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı dışarı kaçırma", "Yavaş tempo"]),
-  ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut", "Boynu nötral hisset"]),
+  passiveEx("Band External Rotation", "2 × 15", "Rotator cuff", ["Dirseği sabit tut", "Yavaş aç-kapat"]),
+  passiveEx("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı dışarı kaçırma", "Yavaş tempo"]),
+  passiveEx("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut", "Boynu nötral hisset"]),
 ]);
 
 export const PROGRAM_HYBRID = {
@@ -259,8 +265,8 @@ export const PROGRAM_HYBRID = {
               ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["Çeneyi hafif geri al", "Boynu aşağı bükme", "2 sn tut"], { warn: "Servikal nötral hissi ara" }),
               ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburgayı kapalı tut", "Yavaş yukarı kay", "Omuzu kulağa sıkıştırma"]),
               ex("Wrist Rotation", "2 × 30sn", "Bilek hazırlığı", ["Küçük dairelerle başla", "Ağrılı yönü zorlamadan aç"]),
-              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve genel alt bacak dayanıklılığına destek" }),
-              ex("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek", "Hareketi sekmeden bitir"], { warn: "Diz ve ayak bileği hattını destekler" }),
+              passiveEx("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve genel alt bacak dayanıklılığına destek" }),
+              passiveEx("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek", "Hareketi sekmeden bitir"], { warn: "Diz ve ayak bileği hattını destekler" }),
             ]),
             block("🤸 HAFİF SKILL + GRIP", "#5B2C6F", [
               ex("Pike Hold", "2 × 15sn", "Omuz aktivasyon", ["Omuzları aktif it", "Beli çökertme", "Sadece hafif temas ver"], { alts: ["Downward Dog Hold"] }),
@@ -283,8 +289,8 @@ export const PROGRAM_HYBRID = {
               ex("Band External Rotation", "2 × 15", "Rotator cuff", ["Dirseği sabit tut", "Yavaş aç-kapat"], { warn: "Isıtma değil bakım dozu" }),
               ex("Scapular Wall Slide", "2 × 10", "Skapula kontrolü", ["Kaburga dışarı kaçmasın", "Yavaş tempo"]),
               ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut", "Boynu nötral hisset"]),
-              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve incline work kapasitesine destek" }),
-              ex("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek"], { warn: "Alt bacak dengesini destekler" }),
+              passiveEx("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve incline work kapasitesine destek" }),
+              passiveEx("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek"], { warn: "Alt bacak dengesini destekler" }),
             ]),
             block("🤸 HAFİF SKILL + GRIP", "#5B2C6F", [
               ex("Pike Hold", "2 × 15sn", "Omuz aktivasyon", ["Omuzları aktif it", "Beli çökertme", "Kısa temiz temas"], { alts: ["Downward Dog Hold"] }),
@@ -339,7 +345,7 @@ export const PROGRAM_HYBRID = {
               ex("Wall Sit", "2 × 20-30sn", "Quad izometrik", ["Ağrısız açı bul", "Topuğu yükle"], { avoid: "Derin açı", warn: "Diz baskısı artarsa çıkar", alts: ["DB Goblet Squat (5-8kg)", "DB Goblet Wall Sit (5-8kg)", "Single Leg Glute Bridge"], alt_reasons: ["Diz izin veriyorsa goblet squat — dumbbell göğüs önünde, kısa ROM'da 3×10-12 · menisküs için kontrollü ama progresyon verir", "Wall sit'te dumbbell göğüs önünde — quad yükü belirgin artar", "Diz bugün hoşlanmıyorsa glute dominanta dön"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
-              ex("Dead Bug", "3 × 8-10 (her taraf)", "Anti-extension core", ["Bel boşluğunu sabit tut", "Yavaş uzat"], { warn: "Bel için ana core" }),
+              ex("Dead Bug", "3 × 8-10 (her taraf)", "Anti-extension core", ["Bel boşluğunu sabit tut", "Yavaş uzat"], { warn: "Bel için ana core", trackable: false }),
               ex("Hızlı Yürüyüş", "24-30 dakika", "Interval aerobik", ["2 dk hızlı + 2 dk rahat", "Konuşabilecek tempo"], { warn: "Dayanıklılık hedefinin ana parçası" }),
             ]),
             upperCooldownBlock(),
@@ -373,7 +379,7 @@ export const PROGRAM_HYBRID = {
               ex("Triceps Pushdown", "2 × 10-12", "Triceps", ["Dirseği gövdeye yakın tut", "Omuzu yükseltme"], { warn: "Omuz dostu triceps hacmi" }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
-              ex("Pallof Press", "3 × 10 (her taraf)", "Anti-rotasyon", ["Göğüs hizasında it", "2 sn bekle"], { warn: "Skolyoz/kifoz için değerli" }),
+              ex("Pallof Press", "3 × 10 (her taraf)", "Anti-rotasyon", ["Göğüs hizasında it", "2 sn bekle"], { warn: "Skolyoz/kifoz için değerli", trackable: false }),
               ex("Rower", "12-15 dk interval", "Kısa interval", ["30 sn sert + 60 sn kolay", "Çekişi belden değil kalça-itme + kol senkronundan üret", "Servikal nötral kal"], { alts: ["Stationary Bike", "Incline Walk"], alt_reasons: ["Bel veya boyun rower'da hoşlanmıyorsa bike'a dön", "Diz veya teknik yorgunlukta incline walk ile ritmi koru"] }),
             ]),
             upperCooldownBlock(),
@@ -402,7 +408,7 @@ export const PROGRAM_HYBRID = {
             ]),
             block("🤸 SUPPORT SKILL", "#5B2C6F", [
               ex("L-sit Tuck Hold", "3 × 8-12sn", "Core + support", ["Omuzları aşağı bas", "Posterior tilt bul"], { warn: "Tamamen yeni skill; kısa temiz setler" }),
-              ex("Dead Bug", "2 × 8 (her taraf)", "Core kontrol", ["Bel boşluğunu kaçırma"]),
+              ex("Dead Bug", "2 × 8 (her taraf)", "Core kontrol", ["Bel boşluğunu kaçırma"], { trackable: false }),
             ]),
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "20-25 dakika", "Aktif toparlanma", ["Rahat tempo", "Adım ritmini akıcı tut"]),
@@ -471,8 +477,8 @@ export const PROGRAM_HYBRID = {
               ex("Farmer Carry (Ağır Çanta / Su Bidonu)", "2 × 30-40 sn", "Grip + core + locomotion", ["Yük gövde yanında, omuzlar aşağıda", "Göbek içeri, nefes ritmik", "Adım küçük ve stabil"], { warn: "Atletik taşıma kapasitesi (tactical athlete standartı); grip + core + kondisyon tek harekette", alts: ["DB Suitcase Carry (5kg veya 8kg tek el)", "Suitcase Carry (tek tarafta)", "Ağırlıksız Yavaş Yürüyüş (form odaklı)"], alt_reasons: ["Tek dumbbell ile tek el carry — 2×30sn her taraf, gövde yana eğilmemeli. Grip + anti-lateral core", "Asimetri çalışması istiyorsan suitcase", "Uygun yük yoksa formu sabit tutarak yürüyüş ritmine odaklan"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
-              ex("Bird Dog", "2 × 8 (her taraf)", "Anti-rotasyon", ["Kol-bacağı yavaş uzat", "Belini oynatma"], { warn: "Bel yorgun günlerde çok değerli" }),
-              ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisini koru"], { warn: "Skolyoz/kifoz için ana blok" }),
+              ex("Bird Dog", "2 × 8 (her taraf)", "Anti-rotasyon", ["Kol-bacağı yavaş uzat", "Belini oynatma"], { warn: "Bel yorgun günlerde çok değerli", trackable: false }),
+              passiveEx("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisini koru"], { warn: "Skolyoz/kifoz için ana blok" }),
               ex("Hızlı Yürüyüş", "15-20 dakika tempo", "Tempo aerobik", ["RPE 5-6", "Koşuya kaçma"]),
             ]),
             lowerCooldownBlock(),
@@ -507,7 +513,7 @@ export const PROGRAM_HYBRID = {
               ex("Farmer Carry (Dumbbell / Trap Bar)", "2 × 30-40 sn", "Grip + core + locomotion", ["Yük gövde yanında", "Omuzlar aşağıda, kaburga kapalı", "Adım kısa, stabil"], { warn: "Tactical athlete standartı. Ağır ama form üzerinde; bel hissetmiyorsa yük +2.5 kg.", alts: ["Suitcase Carry (tek tarafta)", "Overhead Carry (omuz tamamen iyiyse)"], alt_reasons: ["Asimetri için suitcase", "Overhead carry ancak omuz sakinse — şartlı ileri seviye"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
-              ex("Side Plank", "2 × 30-40sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
+              passiveEx("Side Plank", "2 × 30-40sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
               ex("Incline Walk", "12-15 dakika tempo", "Tempo aerobik", ["RPE 5-6", "Koşu yok"]),
             ]),
             lowerCooldownBlock(),
@@ -599,8 +605,8 @@ export const PROGRAM_HYBRID = {
               ex("Single Leg Glute Bridge", "2 × 10 (her bacak)", "Glute + hamstring", ["Kontrollü kaldır"], { alts: ["DB Single Leg Glute Bridge (5kg pelvis üstünde)", "Wall Sit"], alt_reasons: ["Dumbbell karşı tarafta pelvis üstünde — tek bacak yükü artar", "Diz iyi, quad dokunuş istiyorsan wall sit kullan"], unilateral: true }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
-              ex("Dead Bug", "2 × 8-10 (her taraf)", "Core", ["Bel sabit"]),
-              ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
+              ex("Dead Bug", "2 × 8-10 (her taraf)", "Core", ["Bel sabit"], { trackable: false }),
+              passiveEx("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
               ex("Hızlı Yürüyüş", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Ritim temiz ve rahat"], { warn: "Haftanın ana dayanıklılık bloğu" }),
             ]),
             volumeCooldownBlock(),
@@ -631,8 +637,8 @@ export const PROGRAM_HYBRID = {
               ex("Triceps Pushdown", "2 × 10-12", "Triceps", ["Dirseği gövdeye yakın tut"], { warn: "Omuz dostu triceps hacmi" }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
-              ex("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon", ["2 sn bekle"]),
-              ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisi"]),
+              ex("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon", ["2 sn bekle"], { trackable: false }),
+              passiveEx("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisi"]),
               ex("Rower — Progresif Threshold Protokolü", "Haftaya göre değişir (aşağıdaki talimat)", "Progresif threshold + aerobik baz", ["📅 HAFTA 1-3: Pure Zone 2 — 20-25 dk rahat (RPE 5-6). Önce aerobik baz otur.", "📅 HAFTA 4-6: 2×4dk threshold (RPE 7-8) + 15 dk Zone 2. Threshold'a giriş.", "📅 HAFTA 7-8: 4×4dk threshold (RPE 7-8) + 8-10 dk Zone 2. Tam hedef.", "Threshold dakikalarında konuşmak zor olmalı ama form bozulmamalı", "Bel-boyun rower formu kritik — kaburga kapalı, nötral omurga"], { warn: "Progresif: önce baz sonra threshold. Hafta 4 öncesi threshold yapma — form ve kapasite riski yüksek.", alts: ["Bike — aynı progresyon (aynı süre şemasını bike'da uygula)", "Pure Zone 2 (her hafta için yedek)"], alt_reasons: ["Rower bel/boyun için riskli hissederse bike'da aynı progresyonu uygula", "O gün enerji/form iyi değilse her haftada pure Zone 2'ye dön"] }),
             ]),
             volumeCooldownBlock(),
@@ -661,9 +667,9 @@ export const PROGRAM_HYBRID = {
             ]),
             block("💪 HAFİF KUVVET", "#F4A261", [
               ex("Glute Bridge / Hip Thrust", "2 × 15", "Glute", ["Hafif sıkışma"]),
-              ex("Dead Bug", "2 × 8 (her taraf)", "Core", ["Bel sabit"]),
-              ex("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kısa ama temiz tut"]),
-              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte 1 sn sık", "Topukları kontrollü indir"], { warn: "Zone 2 öncesi calf aktivasyonu; haftalık alt bacak tek direkt çalışmalarından biri" }),
+              ex("Dead Bug", "2 × 8 (her taraf)", "Core", ["Bel sabit"], { trackable: false }),
+              passiveEx("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kısa ama temiz tut"]),
+              passiveEx("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte 1 sn sık", "Topukları kontrollü indir"], { warn: "Zone 2 öncesi calf aktivasyonu; haftalık alt bacak tek direkt çalışmalarından biri" }),
             ]),
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Konuşabilir tempo"], { warn: "Haftayı toparlayarak kapat" }),
@@ -686,9 +692,9 @@ export const PROGRAM_HYBRID = {
             block("💪 HAFİF KUVVET", "#F4A261", [
               ex("Chest Supported Row", "2 × 12", "Sırt", ["Hafif yük", "Temiz hareket"], { warn: "Destek işi; zorlamaz" }),
               ex("Hip Thrust", "2 × 12", "Glute", ["Hafif yük"]),
-              ex("Pallof Press", "2 × 12 (her taraf)", "Core", ["2 sn bekle"]),
-              ex("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kısa ama temiz" ]),
-              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte 1 sn sık", "Topukları kontrollü indir"], { warn: "Zone 2 öncesi calf aktivasyonu" }),
+              ex("Pallof Press", "2 × 12 (her taraf)", "Core", ["2 sn bekle"], { trackable: false }),
+              passiveEx("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kısa ama temiz" ]),
+              passiveEx("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte 1 sn sık", "Topukları kontrollü indir"], { warn: "Zone 2 öncesi calf aktivasyonu" }),
             ]),
             block("🚴 KONDİSYON", "#990000", [
               ex("Incline Walk", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Rahat tempo"], { alts: ["Stationary Bike"], alt_reasons: ["Diz veya ayak için bike daha rahat olabilir"] }),

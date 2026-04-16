@@ -33,13 +33,13 @@ export default function SupportDrawer({ day, program }) {
         >
           <div>
             <div style={{ fontSize: 11, color: "#7A7A84", fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>
-              Yardımcı Alan
+              Ek Araçlar
             </div>
             <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginTop: 4 }}>
-              Rehber, denetim profili ve ek notlar
+              Bildirim ayarı, rehber ve ek kontrol paneli
             </div>
             <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginTop: 4 }}>
-              Programı bitirdikten sonra veya ihtiyaç olduğunda aç.
+              Ana akış için zorunlu değil; ihtiyaç olduğunda aç.
             </div>
           </div>
           <div style={{ color: "#7A7A84", fontSize: 18 }}>{open ? "−" : "+"}</div>

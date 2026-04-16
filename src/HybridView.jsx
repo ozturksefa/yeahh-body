@@ -7,7 +7,6 @@ import { getAllCompletedWorkouts, getCompletedWorkoutsInRange, loadWorkout, mark
 import { detectMilestone } from "./hybrid/motivationalBeats";
 import ActiveSessionBar from "./hybrid/ActiveSessionBar";
 import AiCoachCard from "./hybrid/AiCoachCard";
-import AsymmetryProtocolCard from "./hybrid/AsymmetryProtocolCard";
 import CinematicMoment from "./hybrid/CinematicMoment";
 import ContextualBanner from "./hybrid/ContextualBanner";
 import DayHeader from "./hybrid/DayHeader";
@@ -16,22 +15,19 @@ import InstallPrompt from "./hybrid/InstallPrompt";
 import PlaylistCard from "./hybrid/PlaylistCard";
 import PlanPage from "./hybrid/PlanPage";
 import SessionHistoryPage from "./hybrid/SessionHistoryPage";
-import StreakHeatmap from "./hybrid/StreakHeatmap";
 import ScrollToTopButton from "./hybrid/ScrollToTopButton";
-import SafetyNotice from "./hybrid/SafetyNotice";
 import StartProgramCard from "./hybrid/StartProgramCard";
 import SupportDrawer from "./hybrid/SupportDrawer";
 import WeekTransitionPanel from "./hybrid/WeekTransitionPanel";
 import {
-  DailyCheckinPanel,
   DailyCheckoutPanel,
-  SectionCard,
   SkillTracker,
   WeeklyReview,
 } from "./hybrid/panels";
 import {
   applyWeekToVariant,
   buildDefaultSkillState,
+  buttonBase,
   DAY_ORDER,
   ENTRIES_KEY,
   getTodayContext,
@@ -546,11 +542,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
           <ContextualBanner day={day} activeVariant={activeVariant} startDate={startDate} />
 
-          {day.type === "training" && <AsymmetryProtocolCard />}
-
           <PlaylistCard dayName={day.sub} />
-
-          <StreakHeatmap />
 
           {!startDate && <StartProgramCard onStart={handleStartProgram} />}
 
@@ -566,15 +558,28 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             onAcknowledgeCompletion={handleAcknowledgeCompletion}
           />
 
-          <DailyCheckinPanel
-            day={day}
-            mode={mode}
-            setMode={handleModeChange}
-            activeVariant={activeVariant}
-            pre={currentEntry.pre}
-            setPre={(updater) => updateEntry("pre", updater)}
-            lockedMode={lockedMode}
-          />
+          {!lockedMode && (
+            <div style={{ padding: "0 12px 12px" }}>
+              <div className="panel-mode-row">
+                {[
+                  { id: "home", label: "🏠 Ev" },
+                  { id: "gym", label: "🏋️ Macfit" },
+                ].map((item) => {
+                  const active = mode === item.id;
+                  return (
+                    <button
+                      key={item.id}
+                      onClick={() => handleModeChange(item.id)}
+                      style={{ ...buttonBase, flex: 1 }}
+                      className={`panel-choice-btn panel-mode-btn ${active ? "panel-choice-btn-active panel-mode-btn-active" : ""}`}
+                    >
+                      {item.label}
+                    </button>
+                  );
+                })}
+              </div>
+            </div>
+          )}
 
           <div style={{ padding: "0 12px 12px" }}>
             <WorkoutTimer
@@ -588,8 +593,6 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           </div>
 
           <main className="main">
-            <SafetyNotice />
-
             {activeVariant.blocks.map((block, bi) => (
               <BlockCard
                 key={`${mode}-${selectedDay}-${bi}`}
@@ -619,6 +622,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
           <div ref={checkoutRef}>
             <DailyCheckoutPanel
+              pre={currentEntry.pre}
+              setPre={(updater) => updateEntry("pre", updater)}
               post={currentEntry.post}
               setPost={(updater) => updateEntry("post", updater)}
               daySub={day.sub}
