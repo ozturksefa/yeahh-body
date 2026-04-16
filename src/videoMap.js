@@ -546,6 +546,15 @@ const YT_SHORT_MAP = {
   "Standing Calf Raise": "sNqa1ad2qIQ",
   "Wall Sit": "mDdLC-yKudY",
   "Wall Tibialis Raise": "PotNJd0qZDM",
+
+  // Audit v2 round — remaining gaps filled by user-curated shorts
+  "Dead Hang": "dOCQjaasbGs",
+  "Dead Hang (Şartlı)": "dOCQjaasbGs",
+  "Pike Hold": "eG20L9cl81w",
+  "Pike Hold + Shoulder Shift": "eG20L9cl81w",
+  "Rower": "cGy29PC4oPk",
+  "Rower — Progresif Threshold Protokolü": "cGy29PC4oPk",
+  "Shoulder Cross Stretch": "uWitbjDWp8c",
 };
 
 export function getYouTubeShortId(name) {
