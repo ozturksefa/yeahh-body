@@ -3,9 +3,12 @@ import BlockCard from "./BlockCard";
 import RestTimer from "./RestTimer";
 import WorkoutTimer from "./WorkoutTimer";
 import { PROGRAM_HYBRID, getHybridDayVariant } from "./dataHybrid";
-import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
+import { getAllCompletedWorkouts, getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
+import { detectMilestone } from "./hybrid/motivationalBeats";
 import ActiveSessionBar from "./hybrid/ActiveSessionBar";
 import AiCoachCard from "./hybrid/AiCoachCard";
+import CinematicMoment from "./hybrid/CinematicMoment";
+import ContextualBanner from "./hybrid/ContextualBanner";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
 import InstallPrompt from "./hybrid/InstallPrompt";
@@ -83,6 +86,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const [elapsedSeconds, setElapsedSeconds] = useState(0);
   const [focusedBlockIndex, setFocusedBlockIndex] = useState(null);
   const [nextStepHint, setNextStepHint] = useState(null);
+  const [cinematic, setCinematic] = useState(null);
   const finishWorkoutRef = useRef(null);
   const checkoutRef = useRef(null);
 
@@ -471,6 +475,32 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     }
 
     updateEntry("post", (prev) => ({ ...prev, completed: true }));
+
+    // Cinematic milestone check. Fires after the backend write so the
+    // newly-completed session is included in the workoutCount.
+    try {
+      const done = await getAllCompletedWorkouts(120);
+      const count = done.length;
+      // Simple streak calc: walk backward across scheduled training days.
+      const scheduledDow = new Set([2, 4, 6, 0]);
+      const doneDates = new Set(done.map((w) => w.date));
+      let streak = 0;
+      for (let i = 0; i < 60; i += 1) {
+        const d = new Date(); d.setDate(d.getDate() - i);
+        if (!scheduledDow.has(d.getDay())) continue;
+        const ds = d.toISOString().slice(0, 10);
+        if (doneDates.has(ds)) streak += 1;
+        else if (i > 0) break;
+      }
+      const hit = detectMilestone({
+        workoutCount: count,
+        streak,
+        prHit: null,
+        programComplete: activeWeek >= PROGRAM_HYBRID.periodization.length && weekProgress.ready,
+        programStarted: !!startDate,
+      });
+      if (hit) setCinematic(hit);
+    } catch { /* non-critical */ }
   };
 
   const lazyFallback = (
@@ -500,6 +530,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       {page === "program" && (
         <>
           <DayHeader day={day} activeVariant={activeVariant} mode={mode} weekProfile={weekProfile} />
+
+          <ContextualBanner day={day} activeVariant={activeVariant} startDate={startDate} />
 
           <StreakHeatmap />
 
@@ -673,6 +705,13 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       />
 
       <InstallPrompt />
+
+      {cinematic && (
+        <CinematicMoment
+          milestone={cinematic}
+          onDismiss={() => setCinematic(null)}
+        />
+      )}
     </div>
   );
 }
