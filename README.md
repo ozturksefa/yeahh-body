@@ -70,10 +70,15 @@ SUPABASE_SERVICE_ROLE_KEY = <Supabase Dashboard → Settings → API → service
 SUPABASE_URL              = <aynı proje URL'i — function tarafı için>
 ```
 
-### 4. Scheduled Function
-`netlify/functions/push-send-daily.js` zaten `schedule: "0 7 * * *"` ile tanımlı (07:00 UTC = 10:00 İstanbul). Netlify otomatik algılar; farklı saat istersen cron string'ini değiştir.
+### 4. Scheduled Functions
+İki scheduled function var, ortak mantık `netlify/lib/pushDaily.js`'de:
 
-**Manuel test:** Netlify Dashboard → Logs → Functions → `push-send-daily` → **"Test"** veya **"Invoke function"** butonu. Scheduled fonksiyonlar HTTP path'i ile çağrılamaz; Netlify cron dispatcher üzerinden çalışır.
+- `netlify/functions/push-send-daily.js` → **Haftaiçi 07:00 İstanbul** (`0 4 * * 1-5` UTC)
+- `netlify/functions/push-send-weekend.js` → **Haftasonu 09:00 İstanbul** (`0 6 * * 6,0` UTC)
+
+Netlify otomatik algılar. Farklı saat istersen cron string'ini değiştir.
+
+**Manuel test:** Netlify Dashboard → Logs → Functions → ilgili fonksiyon → **"Test"** / **"Invoke function"**. Scheduled fonksiyonlar HTTP path'i ile çağrılamaz; Netlify cron dispatcher üzerinden çalışır.
 
 ### 5. Kullanıcı tarafı
 "Yardımcı Alan" paneline tıklayınca 🔔 "Günlük antrenman hatırlatması" kartı çıkar. Kullanıcı tek tap ile açar/kapar.
