@@ -139,6 +139,20 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       return progress && progress.completed < progress.total;
     }) || null;
   }, [activeVariant.blocks, blockProgress, focusedBlockIndex]);
+  const currentExercise = useMemo(() => {
+    if (!expandedEx) return null;
+    const [blockIdx, exIdx] = String(expandedEx).split("-").map(Number);
+    const block = activeVariant.blocks[blockIdx];
+    const exercise = block?.exercises?.[exIdx];
+    if (!block || !exercise) return null;
+    return {
+      key: expandedEx,
+      blockIdx,
+      exIdx,
+      blockName: block.name,
+      exerciseName: exercise.name,
+    };
+  }, [activeVariant.blocks, expandedEx]);
   const weekProgressBase = useMemo(() => getWeekProgress({
     entries: allEntries,
     startDate,
@@ -212,10 +226,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     for (let i = startIndex; i < flatExercises.length; i += 1) {
       if (isExerciseUnfinished(flatExercises[i], exerciseMap)) return flatExercises[i];
     }
-    // Nothing left after the current position — return next in order regardless
-    // of done state, so the user can step past finished items manually. If we
-    // are at the very end, return null to disable the button.
-    return flatExercises[startIndex] || null;
+    return null;
   };
 
   const findNextExerciseTarget = (exerciseMap = {}) =>
@@ -227,7 +238,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     setOpenBlocks((prev) => ({ ...prev, [target.blockIdx]: true }));
     setFocusedBlockIndex(target.blockIdx);
     setExpandedEx(key);
-    setNextStepHint({ ...target, key });
+    setNextStepHint(findNextExerciseFrom(key, workoutSnapshot?.exercises || {}));
 
     window.setTimeout(() => {
       const node = document.querySelector(`[data-ex-key="${key}"]`);
@@ -369,8 +380,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     });
   };
 
-  const startRest = (seconds, exerciseName, isTransition = false) => {
-    setRestTimer({ key: Date.now(), seconds, exerciseName, isTransition });
+  const startRest = (seconds, exerciseName, isTransition = false, exerciseKey = null) => {
+    setRestTimer({ key: Date.now(), seconds, exerciseName, isTransition, exerciseKey });
   };
 
   const resetDayUiState = () => {
@@ -589,8 +600,11 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
                   const blockIdx = parseInt(String(key).split("-")[0], 10);
                   setOpenBlocks((prev) => ({ ...prev, [blockIdx]: true }));
                   setFocusedBlockIndex(blockIdx);
-                  setNextStepHint(null);
-                  setExpandedEx((prev) => prev === key ? null : key);
+                  setExpandedEx((prev) => {
+                    const nextExpanded = prev === key ? null : key;
+                    setNextStepHint(nextExpanded ? findNextExerciseFrom(nextExpanded, workoutSnapshot?.exercises || {}) : null);
+                    return nextExpanded;
+                  });
                 }}
                 dayIndex={workoutDayIndex}
                 onStartRest={startRest}
@@ -631,14 +645,12 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               isTransition={restTimer.isTransition}
               onDismiss={() => {
                 const wasTransition = restTimer.isTransition;
-                const finishedExerciseName = restTimer.exerciseName;
+                const finishedKey = restTimer.exerciseKey;
                 setRestTimer(null);
-                // On exercise transitions, auto-advance focus to the exercise
-                // immediately after the one that just wrapped up.
                 if (wasTransition) {
-                  const finishedAt = flatExercises.find((t) => t.exerciseName === finishedExerciseName);
-                  const fromKey = finishedAt ? `${finishedAt.blockIdx}-${finishedAt.exIdx}` : null;
-                  jumpToTarget(findNextExerciseFrom(fromKey, workoutSnapshot?.exercises || {}));
+                  const target = findNextExerciseFrom(finishedKey, workoutSnapshot?.exercises || {});
+                  if (target) jumpToTarget(target);
+                  else checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
                 }
               }}
               onAdjust={adjustRest}
@@ -647,18 +659,20 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
           <ActiveSessionBar
             visible={!currentEntry.post.completed && (workoutState.started || hasWorkoutInput)}
+            currentExercise={currentExercise}
             currentBlock={currentBlock}
             currentBlockProgress={currentBlock ? blockProgress[activeVariant.blocks.indexOf(currentBlock)] : null}
             elapsedSeconds={elapsedSeconds}
             workoutStarted={workoutState.started}
             nextStepHint={nextStepHint}
             onNextStep={() => {
-              // Always advance RELATIVE to the exercise the user is currently
-              // viewing, never from the top of the list. For warmup (which has
-              // no tracked sets), this is the only way to progress.
-              const currentKey = expandedEx || nextStepHint?.key || null;
-              const target = findNextExerciseFrom(currentKey, workoutSnapshot?.exercises || {});
-              if (target) jumpToTarget(target);
+              if (expandedEx) {
+                const target = findNextExerciseFrom(expandedEx, workoutSnapshot?.exercises || {});
+                if (target) jumpToTarget(target);
+                else checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+                return;
+              }
+              if (nextStepHint) jumpToTarget(nextStepHint);
             }}
             onJumpToCheckout={() => checkoutRef.current?.scrollIntoView({ behavior: "smooth", block: "start" })}
           />

@@ -42,7 +42,7 @@ function useLongPress(onLongPress) {
   };
 }
 
-function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex, blockName, onStartRest, swaps, onSwap, onAllSetsDone }) {
+function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex, blockName, swaps, onSwap, onAllSetsDone }) {
   const cardRef = useRef(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const originalName = ex.name;
@@ -146,7 +146,7 @@ function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex,
             </div>
           )}
 
-          <SetTracker ex={ex} dayIndex={dayIndex} blockName={blockName} onStartRest={onStartRest} onAllDone={onAllSetsDone} />
+          <SetTracker ex={ex} dayIndex={dayIndex} blockName={blockName} onAllDone={onAllSetsDone} />
           {/* Timed skill hareketler için timer */}
           {(() => {
             const timedMatch = ex.sets.match(/\d+\s*[×x]\s*(\d+)\s*sn/i);
@@ -205,7 +205,7 @@ function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex,
   );
 }
 
-function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartRest, swaps, onSwap, forceOpen, onAdvance, isLastEx, workoutActive, onAllSetsDone, progress, onFocus }) {
+function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, swaps, onSwap, forceOpen, onAdvance, isLastEx, workoutActive, onAllSetsDone, progress, onFocus }) {
   const [manualOpen, setManualOpen] = useState(false);
   const open = forceOpen || manualOpen;
 
@@ -246,7 +246,6 @@ function BlockCard({ block, blockIdx, expandedEx, onExToggle, dayIndex, onStartR
                   onToggle={() => onExToggle(key)}
                   dayIndex={dayIndex}
                   blockName={block.name}
-                  onStartRest={onStartRest}
                   swaps={swaps}
                   onSwap={onSwap}
                   onAdvance={onAdvance}

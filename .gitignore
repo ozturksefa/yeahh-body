@@ -8,3 +8,4 @@ dist/
 devserver.log
 test-results/
 playwright-report/
+.claude/

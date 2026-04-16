@@ -8,6 +8,7 @@
  */
 export default function ActiveSessionBar({
   visible,
+  currentExercise,
   currentBlock,
   currentBlockProgress,
   elapsedSeconds,
@@ -26,14 +27,13 @@ export default function ActiveSessionBar({
     ? `${clock} · ${movementText}`
     : "Set girdin, seansı kapatmayı unutma";
 
-  // Primary line: show the exercise the user should focus on right now.
-  // Fallback to block name when no hint is available (e.g. session just paused).
-  const primaryText = nextStepHint?.exerciseName
+  const primaryText = currentExercise?.exerciseName
     || currentBlock?.name
     || "Program akışı";
-  const secondaryText = nextStepHint?.blockName && nextStepHint.blockName !== primaryText
-    ? nextStepHint.blockName
+  const secondaryText = currentExercise?.blockName && currentExercise.blockName !== primaryText
+    ? currentExercise.blockName
     : null;
+  const upcomingText = nextStepHint?.exerciseName || null;
 
   const canAdvance = !!nextStepHint;
 
@@ -70,6 +70,11 @@ export default function ActiveSessionBar({
           <div style={{ fontSize: 11, color: "#C4C4CC", marginTop: 4, lineHeight: 1.4 }}>
             {subtitle}
           </div>
+          {upcomingText && (
+            <div style={{ fontSize: 11, color: "#7CC7FF", marginTop: 4, lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              Sıradaki: {upcomingText}
+            </div>
+          )}
         </div>
         <div style={{ display: "flex", flexDirection: "column", gap: 6, flexShrink: 0 }}>
           <button
@@ -88,7 +93,7 @@ export default function ActiveSessionBar({
               minWidth: 108,
             }}
           >
-            Sonraki →
+            {canAdvance ? "Sonraki Hareket →" : "Sıradaki Yok"}
           </button>
           <button
             data-testid="checkout-jump-button"
