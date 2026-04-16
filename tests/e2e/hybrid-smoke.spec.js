@@ -142,6 +142,7 @@ test('skill logging updates weekly contacts and persists the entry', async ({ pa
   await page.getByTestId('workout-start').click();
   await page.getByTestId('checkout-jump-button').click();
 
+  await page.getByTestId('checkout-skill-summary').click();
   await expect(page.getByTestId('skill-log-handstand')).toBeVisible();
   await page.getByTestId('skill-log-toggle-handstand').click();
   await page.getByTestId('skill-log-input-handstand').fill('12');

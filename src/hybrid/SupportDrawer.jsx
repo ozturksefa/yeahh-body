@@ -50,8 +50,21 @@ export default function SupportDrawer({ day, program }) {
             <div style={{ padding: "0 12px 8px" }}>
               <PushSettingsCard />
             </div>
-            <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" embedded />
-            <CoachControlPanel program={program} embedded />
+            <div style={{ padding: "0 12px" }}>
+              <details className="tracker-more">
+                <summary>Gün rehberi</summary>
+                <div className="tracker-more-body" style={{ padding: 0, paddingTop: 10 }}>
+                  <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" embedded />
+                </div>
+              </details>
+
+              <details className="tracker-more" style={{ marginTop: 8 }}>
+                <summary>Denetim profili</summary>
+                <div className="tracker-more-body" style={{ padding: 0, paddingTop: 10 }}>
+                  <CoachControlPanel program={program} embedded />
+                </div>
+              </details>
+            </div>
           </div>
         )}
       </div>

@@ -360,66 +360,70 @@ export function DailyCheckoutPanel({ post, setPost, pre, setPre, daySub, skillPa
           </div>
 
           {relevantSkills.length > 0 && (
-            <div style={{ display: "grid", gap: 8 }}>
-              <div className="panel-meta-text" style={{ marginBottom: 2 }}>Skill Kaydı</div>
-              {relevantSkills.map(([skillKey, path]) => {
-                const level = skillState?.[skillKey]?.level || 1;
-                const step = path.steps.find((item) => item.level === level) || path.steps[0];
-                const metric = getStepMetric(step);
-                const data = post.skillWork?.[skillKey] || { done: false, metric, value: 0, seconds: 0, reps: 0 };
-                const value = getSkillValue(data);
-                return (
-                  <div key={skillKey} className="panel-mini-card skill-log-card" data-testid={`skill-log-${skillKey}`}>
-                    <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center", marginBottom: 8 }}>
-                      <div>
-                        <div className="skill-log-title">{path.name}</div>
-                        <div className="skill-log-meta">Aktif seviye: {step?.name}</div>
-                        <div className="panel-meta-text" style={{ marginTop: 4 }}>{path.weeklyGoal}</div>
-                      </div>
-                      <button
-                        onClick={() => updateSkill(skillKey, { done: !data.done })}
-                        data-testid={`skill-log-toggle-${skillKey}`}
-                        style={{
-                          ...buttonBase,
-                          minWidth: 96,
-                          background: data.done ? "rgba(138,99,246,.16)" : "var(--card)",
-                          borderColor: data.done ? "var(--purple)" : "var(--border)",
-                          color: data.done ? "#F6F0FF" : "var(--text2)",
-                        }}
-                      >
-                        {data.done ? "✓ Yapıldı" : "Yapılmadı"}
-                      </button>
-                    </div>
-
-                    {data.done && (
-                      <div>
-                        <div className="panel-meta-text" style={{ marginBottom: 6 }}>
-                          En iyi temiz {metric === "reps" ? "tekrar" : "süre"}
+            <details className="tracker-more" style={{ marginTop: -2 }} data-testid="checkout-skill-section">
+              <summary data-testid="checkout-skill-summary">Skill kaydı · isteğe bağlı</summary>
+              <div className="tracker-more-body" style={{ paddingTop: 10 }}>
+                <div style={{ display: "grid", gap: 8 }}>
+                  {relevantSkills.map(([skillKey, path]) => {
+                    const level = skillState?.[skillKey]?.level || 1;
+                    const step = path.steps.find((item) => item.level === level) || path.steps[0];
+                    const metric = getStepMetric(step);
+                    const data = post.skillWork?.[skillKey] || { done: false, metric, value: 0, seconds: 0, reps: 0 };
+                    const value = getSkillValue(data);
+                    return (
+                      <div key={skillKey} className="panel-mini-card skill-log-card" data-testid={`skill-log-${skillKey}`}>
+                        <div style={{ display: "flex", justifyContent: "space-between", gap: 8, alignItems: "center", marginBottom: 8 }}>
+                          <div>
+                            <div className="skill-log-title">{path.name}</div>
+                            <div className="skill-log-meta">Aktif seviye: {step?.name}</div>
+                            <div className="panel-meta-text" style={{ marginTop: 4 }}>{path.weeklyGoal}</div>
+                          </div>
+                          <button
+                            onClick={() => updateSkill(skillKey, { done: !data.done })}
+                            data-testid={`skill-log-toggle-${skillKey}`}
+                            style={{
+                              ...buttonBase,
+                              minWidth: 96,
+                              background: data.done ? "rgba(138,99,246,.16)" : "var(--card)",
+                              borderColor: data.done ? "var(--purple)" : "var(--border)",
+                              color: data.done ? "#F6F0FF" : "var(--text2)",
+                            }}
+                          >
+                            {data.done ? "✓ Yapıldı" : "Yapılmadı"}
+                          </button>
                         </div>
-                        <input
-                          type="number"
-                          min="0"
-                          step="1"
-                          value={value}
-                          data-testid={`skill-log-input-${skillKey}`}
-                          onChange={(e) => {
-                            const nextValue = Math.max(0, Number(e.target.value) || 0);
-                            updateSkill(skillKey, {
-                              metric,
-                              value: nextValue,
-                              seconds: metric === "seconds" ? nextValue : 0,
-                              reps: metric === "reps" ? nextValue : 0,
-                            });
-                          }}
-                          className="panel-input"
-                        />
-                        <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 6 }}>Hedef: {step?.target || path.steps[0]?.target}</div>
+
+                        {data.done && (
+                          <div>
+                            <div className="panel-meta-text" style={{ marginBottom: 6 }}>
+                              En iyi temiz {metric === "reps" ? "tekrar" : "süre"}
+                            </div>
+                            <input
+                              type="number"
+                              min="0"
+                              step="1"
+                              value={value}
+                              data-testid={`skill-log-input-${skillKey}`}
+                              onChange={(e) => {
+                                const nextValue = Math.max(0, Number(e.target.value) || 0);
+                                updateSkill(skillKey, {
+                                  metric,
+                                  value: nextValue,
+                                  seconds: metric === "seconds" ? nextValue : 0,
+                                  reps: metric === "reps" ? nextValue : 0,
+                                });
+                              }}
+                              className="panel-input"
+                            />
+                            <div style={{ fontSize: 10, color: "#7A7A84", marginTop: 6 }}>Hedef: {step?.target || path.steps[0]?.target}</div>
+                          </div>
+                        )}
                       </div>
-                    )}
-                  </div>
-                );
-              })}
-            </div>
+                    );
+                  })}
+                </div>
+              </div>
+            </details>
           )}
 
           <button
