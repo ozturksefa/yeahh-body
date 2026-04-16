@@ -623,6 +623,10 @@ body{
   font-size:11px; color:var(--text3); text-decoration:none;
 }
 .playlist-card-fallback:hover{ color:var(--text); text-decoration:underline; }
+.playlist-card-hint{
+  font-size:11px; color:var(--text3); line-height:1.5;
+  padding:6px 0 2px;
+}
 
 /* ═══ CONTEXTUAL BANNER ═══ */
 .ctx-banner{
