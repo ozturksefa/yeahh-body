@@ -412,6 +412,108 @@ body{
 .tracker-more[open]>summary::after{content:"−"}
 .tracker-more[open]>summary{border-bottom:1px solid var(--border)}
 .tracker-more-body{padding:10px;display:grid;gap:8px}
+
+/* ═══ HERO SET LAYOUT ═══ */
+.tracker-hero{
+  display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:6px 0 10px;
+}
+.tracker-hero-tile{
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  gap:4px;padding:18px 8px;min-height:120px;
+  background:var(--card2);border:1px solid var(--border);border-radius:14px;
+  cursor:pointer;font-family:inherit;color:var(--text);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:background .15s ease, border-color .15s ease, transform .05s ease;
+}
+.tracker-hero-tile:hover{background:var(--card3);border-color:var(--border-strong)}
+.tracker-hero-tile:active{transform:scale(.98);border-color:var(--accent)}
+.tracker-hero-label{
+  font-size:10px;font-weight:800;color:var(--text3);
+  letter-spacing:.12em;text-transform:uppercase;
+}
+.tracker-hero-value{
+  font-size:42px;font-weight:800;line-height:1;font-family:var(--mono,inherit);
+  display:flex;align-items:baseline;gap:6px;color:var(--text);
+}
+.tracker-hero-unit{
+  font-size:13px;font-weight:700;color:var(--text3);letter-spacing:.04em;
+}
+.tracker-hero-hint{font-size:10px;color:var(--text3);opacity:.7}
+
+.tracker-complete-btn-hero{
+  min-height:64px;font-size:17px;letter-spacing:.02em;
+  border-radius:14px;
+  box-shadow:0 14px 28px rgba(217,106,29,.28);
+}
+
+/* ═══ NUMERIC PAD OVERLAY ═══ */
+.numpad-backdrop{
+  position:fixed;inset:0;z-index:300;background:rgba(0,0,0,.55);
+  display:flex;align-items:flex-end;justify-content:center;
+  animation:numpadFade .15s ease-out;
+}
+@keyframes numpadFade{from{opacity:0}to{opacity:1}}
+.numpad-sheet{
+  width:100%;max-width:480px;
+  background:linear-gradient(180deg,#161619,#121215);
+  border-top:2px solid var(--accent);border-radius:18px 18px 0 0;
+  padding:16px 14px calc(14px + env(safe-area-inset-bottom));
+  display:flex;flex-direction:column;gap:12px;
+  animation:numpadSlide .22s ease-out;
+  box-shadow:0 -20px 40px rgba(0,0,0,.55);
+}
+@keyframes numpadSlide{from{transform:translateY(100%)}to{transform:translateY(0)}}
+.numpad-head{
+  display:flex;align-items:flex-end;justify-content:space-between;gap:12px;
+  padding:4px 6px 0;
+}
+.numpad-label{
+  font-size:10px;font-weight:800;color:var(--text3);
+  letter-spacing:.14em;text-transform:uppercase;margin-bottom:2px;
+}
+.numpad-value{display:flex;align-items:baseline;gap:6px;line-height:1;}
+.numpad-value-num{
+  font-size:36px;font-weight:800;color:var(--text);font-family:var(--mono,inherit);
+  letter-spacing:-.02em;min-width:72px;
+}
+.numpad-value-unit{font-size:14px;color:var(--text3);font-weight:700}
+.numpad-close{
+  background:var(--card3);border:1px solid var(--border);color:var(--text2);
+  width:40px;height:40px;border-radius:12px;font-size:15px;font-weight:700;cursor:pointer;
+  font-family:inherit;
+}
+
+.numpad-bumps{
+  display:grid;grid-template-columns:1fr 1fr 1fr;gap:8px;
+}
+.numpad-bump{
+  min-height:44px;border:1px solid var(--border);background:var(--card3);color:var(--text);
+  border-radius:12px;font-size:14px;font-weight:800;cursor:pointer;font-family:inherit;
+  -webkit-tap-highlight-color:transparent;
+}
+.numpad-bump:active{background:var(--accent-soft);border-color:var(--accent)}
+
+.numpad-grid{
+  display:grid;grid-template-columns:repeat(3, 1fr);gap:8px;
+}
+.numpad-key{
+  min-height:60px;font-size:26px;font-weight:700;color:var(--text);
+  background:var(--card2);border:1px solid var(--border);border-radius:14px;
+  cursor:pointer;font-family:var(--mono,inherit);
+  -webkit-tap-highlight-color:transparent;touch-action:manipulation;
+  transition:background .1s ease, transform .05s ease;
+}
+.numpad-key:active{background:var(--accent-soft);transform:scale(.97)}
+.numpad-key-alt{font-size:20px;color:var(--text2);background:var(--card3)}
+.numpad-key-disabled{opacity:.3;cursor:not-allowed}
+
+.numpad-commit{
+  min-height:58px;font-size:16px;font-weight:900;letter-spacing:.02em;
+  background:linear-gradient(135deg, var(--accent), var(--accent-2));
+  border:none;color:#130B04;border-radius:14px;cursor:pointer;
+  font-family:inherit;box-shadow:0 10px 20px rgba(217,106,29,.25);
+}
+.numpad-commit:active{transform:translateY(1px)}
 .tracker-quick-actions{
   display:flex;flex-wrap:wrap;gap:6px;margin-top:8px;
 }
