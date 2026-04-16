@@ -1,19 +1,26 @@
 // ═══ Workout playlists ═══
-// Curated per-day YouTube playlists matched to the Hibrit program's
-// intent. Tone: Rocky montage + CBum hardstyle + disciplined grind —
-// not generic "workout mix" filler. Each entry has:
+// Per-day mood + BPM + genre guidance matched to the Hibrit program's
+// intent. Tone: Rocky montage + CBum hardstyle + disciplined grind.
+//
+// IMPORTANT: We don't ship hard-coded YouTube playlist IDs — curated
+// links go stale (channels delete, playlists go private, IDs invalidate)
+// and the "Video unavailable" UX that comes with a dead embed is worse
+// than no embed at all. Instead the default card shows a rich search
+// query ready to run, and the user pastes their own preferred playlist
+// ID via the ⚙ editor. Overrides persist in localStorage per day.
+//
+// Each entry has:
 //   - mood:      one-line descriptor shown on the card
 //   - bpm:       tempo window so the user knows what to expect
 //   - vibe:      genre shorthand
-//   - playlistId: YouTube playlist ID (used for inline iframe embed)
-//   - searchQuery: fallback search that opens YouTube with the same
-//                  mood if the playlist has been removed
+//   - searchQuery: opens YouTube search for the same mood — primary
+//                  "Aç" action when no override is set
 //
-// If the user swaps in their own playlist via the UI, the override
-// is stored in localStorage under yb_playlist_override_<DAY>.
+// When the user saves an override, playlistId becomes the base for
+// the inline iframe embed + the YT Music / YouTube links.
 
-const PL = (mood, bpm, vibe, playlistId, searchQuery) => ({
-  mood, bpm, vibe, playlistId, searchQuery,
+const PL = (mood, bpm, vibe, searchQuery) => ({
+  mood, bpm, vibe, searchQuery, playlistId: null,
 });
 
 export const WORKOUT_PLAYLISTS = {
@@ -21,56 +28,49 @@ export const WORKOUT_PLAYLISTS = {
     "Aktif recovery · yürüyüş temposu",
     "100-120 BPM",
     "Chill hip-hop / Lo-fi beats",
-    "PLww21QUFc5UE5JefupiTZXsNAbp8e5PT3",
-    "chill hip hop lofi walk workout",
+    "chill hip hop lofi beats for walking workout playlist",
   ),
 
   SALI: PL(
     "Pull + Press · anaerobik interval",
     "130-150 BPM",
-    "Hardstyle + Phonk motivation",
-    "PLx0sYbCqOb8R1MvvN9YHB-l4Sg-L4zQqa",
-    "cbum hardstyle phonk workout gym motivation",
+    "Hardstyle + Phonk (CBum vibe)",
+    "cbum hardstyle phonk gym workout playlist 1 hour",
   ),
 
   ÇARŞAMBA: PL(
     "Support skill · yumuşak odak",
     "80-100 BPM",
     "Instrumental focus / Deep ambient",
-    "PLrAl6rYAS4QY-nCZeBdidETeMSvDnF9yl",
-    "deep focus instrumental workout ambient",
+    "deep focus instrumental ambient playlist 1 hour",
   ),
 
   PERŞEMBE: PL(
     "Lower control · steady grind",
     "120-135 BPM",
     "Aggressive hip-hop + rap",
-    "PLwg2F-OaqHHlEhzHEHdNqGvSrYpYjZ08Y",
-    "aggressive hip hop rap gym workout hardcore",
+    "aggressive hip hop rap gym workout playlist hardcore",
   ),
 
   CUMA: PL(
     "Mobilite · hazırlık modu",
     "95-115 BPM",
     "Uplifting electronic",
-    "PLbjlkRRl3RMGRtqpDUyiv9qjnTq1OvwL2",
-    "uplifting electronic warm up running",
+    "uplifting electronic warm up running playlist",
   ),
 
   CUMARTESİ: PL(
     "Ana hacim günü · Rocky montage vibe",
     "125-145 BPM",
     "Rocky IV + 80s training + rock",
-    "PLx0sYbCqOb8STVxh0JUq8VRQSoqXDcodE",
-    "rocky training montage workout motivation eye of the tiger",
+    "rocky training montage workout playlist eye of the tiger full",
   ),
 
   PAZAR: PL(
     "Zone 2 · uzun süre odak",
     "115-130 BPM",
     "Deep house / progressive",
-    "PLm_FycPW9MZIM4KUhXzc4EN-cdb5bZHYs",
-    "deep house progressive running zone 2 long session",
+    "deep house progressive running zone 2 long workout playlist",
   ),
 };
 

@@ -53,6 +53,11 @@ export default function PlaylistCard({ dayName }) {
   // full page reload.
   void tick;
 
+  // Without a user-provided playlist ID we can't embed — the "Aç"
+  // button falls through to the YouTube search link so the user can
+  // pick a list and (optionally) paste it back via ⚙.
+  const hasEmbed = !!entry.playlistId;
+
   return (
     <div className="playlist-card" data-day={dayName}>
       <div className="playlist-card-head">
@@ -71,7 +76,7 @@ export default function PlaylistCard({ dayName }) {
         </div>
       </div>
 
-      {mode === "open" && (
+      {mode === "open" && hasEmbed && (
         <div className="playlist-embed-wrap">
           <iframe
             className="playlist-embed"
@@ -116,35 +121,50 @@ export default function PlaylistCard({ dayName }) {
       )}
 
       <div className="playlist-card-actions">
-        {mode !== "open" ? (
-          <button type="button" className="playlist-btn playlist-btn-primary" onClick={() => setMode("open")}>
-            ▶ Aç
-          </button>
+        {hasEmbed ? (
+          mode !== "open" ? (
+            <button type="button" className="playlist-btn playlist-btn-primary" onClick={() => setMode("open")}>
+              ▶ Aç
+            </button>
+          ) : (
+            <button type="button" className="playlist-btn playlist-btn-ghost" onClick={() => setMode("collapsed")}>
+              Kapat
+            </button>
+          )
         ) : (
-          <button type="button" className="playlist-btn playlist-btn-ghost" onClick={() => setMode("collapsed")}>
-            Kapat
-          </button>
+          <a
+            href={playlistSearchUrl(entry.searchQuery)}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="playlist-btn playlist-btn-primary"
+          >
+            🔍 YouTube'da ara
+          </a>
         )}
 
-        <a
-          href={playlistMusicUrl(entry.playlistId)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="playlist-btn playlist-btn-secondary"
-          aria-label="YouTube Music'te aç"
-        >
-          🎧 YT Music
-        </a>
+        {hasEmbed && (
+          <>
+            <a
+              href={playlistMusicUrl(entry.playlistId)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="playlist-btn playlist-btn-secondary"
+              aria-label="YouTube Music'te aç"
+            >
+              🎧 YT Music
+            </a>
 
-        <a
-          href={playlistWatchUrl(entry.playlistId)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="playlist-btn playlist-btn-secondary"
-          aria-label="YouTube'da aç"
-        >
-          YouTube
-        </a>
+            <a
+              href={playlistWatchUrl(entry.playlistId)}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="playlist-btn playlist-btn-secondary"
+              aria-label="YouTube'da aç"
+            >
+              YouTube
+            </a>
+          </>
+        )}
 
         {mode !== "editing" && (
           <button
@@ -159,15 +179,10 @@ export default function PlaylistCard({ dayName }) {
         )}
       </div>
 
-      {!entry.overridden && (
-        <a
-          href={playlistSearchUrl(entry.searchQuery)}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="playlist-card-fallback"
-        >
-          Beğenmedin mi? YouTube'da benzerini ara →
-        </a>
+      {!hasEmbed && mode !== "editing" && (
+        <div className="playlist-card-hint">
+          Kendi playlist'ini eklemek için ⚙ → YouTube URL'i yapıştır.
+        </div>
       )}
     </div>
   );
