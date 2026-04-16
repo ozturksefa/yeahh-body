@@ -147,3 +147,11 @@ export function playlistMusicUrl(playlistId) {
 export function playlistSearchUrl(query) {
   return `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
 }
+
+// YouTube Music search URL — on mobile with YT Music installed this
+// deep-links into the native app; on desktop/web it opens
+// music.youtube.com with the query pre-filled. Works for every user,
+// subscription or not.
+export function musicSearchUrl(query) {
+  return `https://music.youtube.com/search?q=${encodeURIComponent(query)}`;
+}

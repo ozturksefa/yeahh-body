@@ -1,10 +1,10 @@
 import { useState } from "react";
 import {
   getPlaylistFor,
+  musicSearchUrl,
   parsePlaylistId,
   playlistEmbedUrl,
   playlistMusicUrl,
-  playlistSearchUrl,
   playlistWatchUrl,
   savePlaylistOverride,
 } from "./workoutPlaylists";
@@ -121,6 +121,13 @@ export default function PlaylistCard({ dayName }) {
       )}
 
       <div className="playlist-card-actions">
+        {/* Primary action — always works:
+            - If the user pasted a playlist ID, "▶ Aç" opens the inline
+              youtube-nocookie embed right in the card.
+            - Otherwise the primary button deep-links into YT Music
+              (native app on mobile, web otherwise) with the day's
+              search query. Nothing here depends on a potentially-
+              stale hard-coded ID. */}
         {hasEmbed ? (
           mode !== "open" ? (
             <button type="button" className="playlist-btn playlist-btn-primary" onClick={() => setMode("open")}>
@@ -133,12 +140,12 @@ export default function PlaylistCard({ dayName }) {
           )
         ) : (
           <a
-            href={playlistSearchUrl(entry.searchQuery)}
+            href={musicSearchUrl(entry.searchQuery)}
             target="_blank"
             rel="noopener noreferrer"
             className="playlist-btn playlist-btn-primary"
           >
-            🔍 YouTube'da ara
+            🎧 YT Music'te Aç
           </a>
         )}
 
@@ -181,7 +188,7 @@ export default function PlaylistCard({ dayName }) {
 
       {!hasEmbed && mode !== "editing" && (
         <div className="playlist-card-hint">
-          Kendi playlist'ini eklemek için ⚙ → YouTube URL'i yapıştır.
+          Uygulama içinde çalmak istiyorsan ⚙ → YouTube playlist URL'i yapıştır.
         </div>
       )}
     </div>
