@@ -1,4 +1,5 @@
-/* global Deno */
+// Thin pass-through to Anthropic Messages API. Runs in Netlify's Node
+// runtime — env access uses process.env, not Deno.env.
 
 export default async (req) => {
   if (req.method !== "POST") {
@@ -8,7 +9,7 @@ export default async (req) => {
   // Origin allowlist — configured via ALLOWED_ORIGINS env (comma-separated).
   // Falls back to request host to support Netlify preview/prod deploys.
   const origin = req.headers.get("origin") || "";
-  const allowedEnv = Deno.env.get("ALLOWED_ORIGINS") || "";
+  const allowedEnv = process.env.ALLOWED_ORIGINS || "";
   const allowed = allowedEnv.split(",").map((s) => s.trim()).filter(Boolean);
   const hostOrigin = (() => {
     try { return new URL(req.url).origin; } catch { return ""; }
@@ -25,7 +26,7 @@ export default async (req) => {
     });
   }
 
-  const apiKey = Deno.env.get("ANTHROPIC_API_KEY");
+  const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     return new Response(JSON.stringify({ error: "API key not configured" }), {
       status: 500,
