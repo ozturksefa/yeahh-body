@@ -120,15 +120,36 @@ export const PROGRAM_HYBRID = {
   ],
 
   periodization: [
-    { week: 1, label: "Kurulum", sets_mod: 0.9, note: "Form, ağrısız ROM ve tempo kontrolü." },
+    { week: 1, label: "Kurulum", sets_mod: 0.9, note: "Form, ağrısız ROM ve tempo kontrolü. Baseline ölçüm al (evaluationBenchmarks)." },
     { week: 2, label: "Taban", sets_mod: 1.0, note: "Yazılı hacim. Ana setler RPE 6-7." },
     { week: 3, label: "Taban +", sets_mod: 1.05, note: "Sadece iyi tolere edilen ana hareketlere 1-2 tekrar ekle." },
-    { week: 4, label: "Kontrol", sets_mod: 1.0, note: "Hacim sabit; teknik kaliteyi ve semptomları kontrol et." },
-    { week: 5, label: "Deload", sets_mod: 0.7, note: "Setleri %30-40 düşür, kondisyonu koru." },
-    { week: 6, label: "Yoğunluk", sets_mod: 1.0, note: "Ana hareketlerde küçük yük veya tempo artışı." },
-    { week: 7, label: "Yoğunluk +", sets_mod: 1.05, note: "RPE 7-8 bandı; hâlâ failure yok." },
-    { week: 8, label: "Değerlendirme", sets_mod: 0.9, note: "Max test değil; aynı formda daha iyi tekrar/süre var mı bak." },
+    { week: 4, label: "Teknik Kontrol", sets_mod: 1.0, note: "Yük sabit. Tempo ve ROM kalitesine odaklan — 3-sn negatif, 1-sn pause gibi tempo notlarını gerçekten uygula." },
+    { week: 5, label: "Deload", sets_mod: 0.75, note: "Setleri %25 düşür; aerobik süreyi de %20 kısalt (sistem sakinleşsin). Tam dinlenme değil — küçük doz." },
+    { week: 6, label: "Yük Girişi", sets_mod: 1.025, note: "Ana hareketlerde küçük yük artışı (2.5-5 kg) veya +1 rep. Tempo sabit kalır." },
+    { week: 7, label: "Yoğunluk +", sets_mod: 1.05, note: "RPE 7-8 bandı; hâlâ failure yok. Yük ve hacim birlikte küçük artar." },
+    { week: 8, label: "Değerlendirme", sets_mod: 0.9, note: "Max test değil; evaluationBenchmarks metriklerini baseline ile kıyasla. Aynı formda daha iyi tekrar/süre arıyoruz." },
   ],
+
+  evaluationBenchmarks: {
+    title: "8 Hafta Değerlendirme Protokolü",
+    whenToMeasure: "Hafta 1 Pazartesi (baseline) ve Hafta 8 Pazartesi (final). Aynı günün aynı saatinde, aynı koşullarda.",
+    instructions: [
+      "Amaç max test değil — 'aynı koşulda daha iyi performans var mı?' sorusu.",
+      "Isınma + bakım bloğu normal yapılır, sonra her metriğe tek seferlik ölçüm.",
+      "Ağrı 2/10 üstüyse metriği atla; o gün ölçemediğini not düş.",
+      "Sonuçları haftada 1x (her pazar) yaz; Hafta 8'de baseline ile kıyasla.",
+    ],
+    metrics: [
+      { id: "pike_hold", name: "Pike Hold Max", unit: "saniye", target: "Baseline + %25", how: "Omuz üzerinde max temiz hold süresi. Form bozulduğu anda bitir." },
+      { id: "wall_handstand", name: "Wall Handstand Hold", unit: "saniye", target: "10-15 sn temiz", how: "Duvarda nötral omurga, bakış eller arasında; kaburga açılırsa bitir." },
+      { id: "lsit_tuck", name: "L-sit Tuck Hold", unit: "saniye", target: "12-15 sn temiz", how: "Omuzlar aşağıda, tuck pozisyonunda support; kalça düşerse bitir." },
+      { id: "row_reps", name: "Inverted Row (ev) / Assisted Pull-up (gym)", unit: "tekrar", target: "4×10 temiz (tempo 2-1-2)", how: "Üstte 1-sn sık, 2-sn indir. Form bozulursa set biter." },
+      { id: "hip_thrust_load", name: "Hip Thrust 10-rep çalışma yükü", unit: "kg", target: "Baseline + %15-20", how: "Son 2 tekrar RPE 7-8 olmalı; 10 temiz reps için bulduğun yük." },
+      { id: "zone2_hr", name: "30 dk Zone 2 sonrası nabız", unit: "bpm", target: "Baseline - 5-8 bpm", how: "Standart Zone 2 tempoda 30 dk yürü/bisiklet/rower; sonunda 1 dk içinde nabzı ölç." },
+      { id: "resting_hr", name: "Sabah istirahat nabzı", unit: "bpm", target: "Baseline - 5-8 bpm", how: "Uyanır uyanmaz, yataktan kalkmadan 60-sn sayım." },
+      { id: "pain_max", name: "Haftalık max ağrı skoru", unit: "0-10", target: "Baseline - 2 puan", how: "O haftanın en yüksek omuz/diz/bel/boyun ağrısı. Haftalık özet." },
+    ],
+  },
 
   skillPaths: {
     handstand: {
@@ -184,8 +205,9 @@ export const PROGRAM_HYBRID = {
               ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve genel alt bacak dayanıklılığına destek" }),
               ex("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek", "Hareketi sekmeden bitir"], { warn: "Diz ve ayak bileği hattını destekler" }),
             ]),
-            block("🤸 HAFİF SKILL", "#5B2C6F", [
+            block("🤸 HAFİF SKILL + GRIP", "#5B2C6F", [
               ex("Pike Hold", "2 × 15sn", "Omuz aktivasyon", ["Omuzları aktif it", "Beli çökertme", "Sadece hafif temas ver"], { alts: ["Downward Dog Hold"] }),
+              ex("Dead Hang (Şartlı)", "2 × 10-15sn", "Grip + omuz dekompresyon", ["Barı nötral tut", "Omuzları aktif çek", "Sadece ağrısızsa"], { avoid: "Sarkma veya kipping", warn: "Şartlı hareket: omuz 3/10 üstüyse atla", alts: ["Scapular Pull (Duvar Barda)"], alt_reasons: ["Bar yoksa scapular pull ile skapula kontrolünü koru"] }),
             ]),
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5 bandında kal", "Nefesi toparlayıcı tempoda tut"], { warn: "Amaç yormak değil açılmak" }),
@@ -206,6 +228,10 @@ export const PROGRAM_HYBRID = {
               ex("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut", "Boynu nötral hisset"]),
               ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte kısa dur", "Topukları kontrollü indir"], { warn: "Yürüyüş ve incline work kapasitesine destek" }),
               ex("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Duvara yaslan", "Parmak uçlarını yukarı çek"], { warn: "Alt bacak dengesini destekler" }),
+            ]),
+            block("🤸 HAFİF SKILL + GRIP", "#5B2C6F", [
+              ex("Pike Hold", "2 × 15sn", "Omuz aktivasyon", ["Omuzları aktif it", "Beli çökertme", "Kısa temiz temas"], { alts: ["Downward Dog Hold"] }),
+              ex("Dead Hang", "2 × 10-15sn", "Grip + omuz dekompresyon", ["Barı nötral tut", "Omuzları aktif çek", "Pasif sallanma yok"], { avoid: "Kipping", warn: "Şartlı: omuz 3/10 üstüyse atla", alts: ["Assisted Dead Hang (ayakla destek)"], alt_reasons: ["Full hang omuzda baskı yapıyorsa ayakla yükü hafiflet"] }),
             ]),
             block("🚴 KONDİSYON", "#990000", [
               ex("Stationary Bike", "20 dakika sürekli", "Aktif toparlanma", ["RPE 4-5", "Kalça-diz hattını rahat tut"], { alts: ["Incline Walk"], alt_reasons: ["Diz bike üzerinde hoşlanmıyorsa yürüyüşe dön"] }),
@@ -247,6 +273,7 @@ export const PROGRAM_HYBRID = {
               ex("Inverted Row (Masa Altı)", "4 × 6-10", "Sırt + biceps", ["Göğsü masaya çek", "Boynu öne uzatma", "Üstte 1 sn sık"], { warn: "Bugünün ana çekişi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh güvenli değilse ayak dirençli towel row kullan", "Hiçbir çekiş kurulamıyorsa prone cobra ile üst sırt aktivasyonunu koru"] }),
               ex("Incline Push-up", "4 × 8-12", "Göğüs + triceps", ["Yüksekliği omuza göre ayarla", "Dirsekleri 30-45° tut"], { warn: "Bugünün güvenli itişi", alts: ["Wall Push-up"], alt_reasons: ["Omuz hassassa açıyı daha da yükselt"] }),
               ex("Close Grip Push Up", "2 × 8-10", "Triceps + iç göğüs", ["Elleri biraz daha dar al", "Gerekirse incline yap", "Omuz öne düşmesin"], { warn: "Triceps ve göğüs için düşük riskli ek hacim", alts: ["Wall Push-up"], alt_reasons: ["Dar tutuş omuz veya bileği rahatsız ederse açıyı yükselt"] }),
+              ex("Towel Curl (Bacak Dirençli)", "2 × 12-15", "Biceps", ["Oturarak, havlunun uçlarını elinde tut", "Alt ucu tek ayakla bas, ayakla direnç ver", "Dirseği gövdeye yakın, omuzu öne alma"], { warn: "Evde direkt biceps hacmi — izometriğin aksine tam ROM verir", alts: ["Towel Curl Isometric"], alt_reasons: ["Ayakla direnç ayarı zor geliyorsa izometrik tut ile devam"] }),
               ex("Single Leg Glute Bridge", "3 × 10-12 (her bacak)", "Glute + hamstring", ["Bel değil kalça itişi", "Üstte 1 sn sık"], { warn: "Posterior chain'i güvenli besler" }),
               ex("Wall Sit", "2 × 20-30sn", "Quad izometrik", ["Ağrısız açı bul", "Topuğu yükle"], { avoid: "Derin açı", warn: "Diz baskısı artarsa çıkar", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Diz bugün hoşlanmıyorsa glute dominanta dön"] }),
             ]),
@@ -371,6 +398,7 @@ export const PROGRAM_HYBRID = {
               ex("Reverse Lunge (ağırlıksız)", "3 × 6-8 (her bacak)", "Quad + glute", ["Kısa kontrollü adım", "Diz çizgisini koru"], { avoid: "Büyük adım ve derin açı", warn: "Diz baskısı varsa wall sit'e dön", alts: ["Wall Sit"], alt_reasons: ["Menisküs hassassa izometrik seçenek daha güvenli olabilir"] }),
               ex("Wall Sit", "1-2 × 20-30sn", "Quad izometrik", ["Ağrısız diz açısında kal", "Topuğu yükle"], { warn: "Reverse lunge iyi gidiyorsa düşük doz quad finisher olarak kullan", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Diz o gün wall sit'i de sevmiyorsa glute dominanta dön"] }),
               ex("Hip Thrust (Sandalye)", "3 × 12-15", "Glute max", ["Üstte kısa sık", "Bel yerine kalçadan it"]),
+              ex("Single Leg RDL (Bodyweight)", "2 × 6-8 (her bacak)", "Posterior chain + denge", ["Kalçadan menteşelen, dizi hafif yumuşak tut", "Gövde ve arkadaki bacak paralel inecek", "Denge için duvar veya sandalye desteği kullan"], { warn: "Tek taraflı hinge + asimetri tespiti; skolyoz için değerli", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Denge tutmuyorsa glute dominanta dön"] }),
               ex("Bridge Walkout", "2 × 6-8", "Hamstring curl hattı", ["Köprüde kal", "Topukları yavaş uzağa yürüt", "Belini düşürme"], { warn: "Hamstring knee-flexion için evde güvenli başlangıç", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Bel veya arka bacak krampı olursa glute dominanta geri dön"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
@@ -400,6 +428,7 @@ export const PROGRAM_HYBRID = {
               ex("Leg Press", "3 × 10-12", "Quad", ["Kısa ROM kullan", "Dizini ağrısız açıda tut"], { warn: "Menisküs için ROM belirleyici", alts: ["Hip Thrust"], alt_reasons: ["Diz iyi hissetmiyorsa glute dominanta dön"] }),
               ex("Box Step Down (eccentric)", "2 × 5-6 (her bacak)", "Quad kontrol", ["Alçak kutu kullan", "3 sn yavaş iniş", "Destek alarak kalça-diz hattını koru"], { warn: "Quad toleransını güvenli progresyonla artırır", alts: ["Wall Sit"], alt_reasons: ["Step-down dizde hoş değilse izometrik seçeneğe dön"] }),
               ex("Machine Seated Leg Curl", "2 × 10-12", "Hamstring curl hattı", ["Kalçayı minderden kaldırma", "Topuğu kontrollü çek", "Belini sabit tut"], { warn: "Hamstring knee-flexion için güvenli makine seçeneği", alts: ["Machine Lying Leg Curl"], alt_reasons: ["Oturarak versiyon hoş değilse lying curl kullan"] }),
+              ex("Single Leg RDL (Dumbbell Hafif)", "2 × 8 (her bacak)", "Posterior chain + denge", ["Hafif dumbbell ile kalçadan menteşelen", "Dizi yumuşak tut, arkadaki bacak paralele inecek", "Boynu omurga ile aynı hizada tut"], { warn: "Tek taraflı hinge + asimetri tespiti", alts: ["Bodyweight Single Leg RDL"], alt_reasons: ["Denge yoksa ağırlıksız + duvar desteği ile başla"] }),
               ex("Chest Supported Row", "3 × 10", "Upper back", ["Bench desteğinde boynu uzun tut"], { warn: "Bugünün upper-back omurgası" }),
               ex("Band Face Pull", "2 × 12-15", "Arka omuz + alt trapez", ["Dirsekleri çok yükseltmeden çek"], { warn: "Kifoz eğilimine karşı iyi kapanış" }),
               ex("Cable Lateral Raise", "2 × 12-15", "Yan omuz", ["Skapular planda kaldır", "Hafif kilo kullan", "Ağrısız aralıkta kal"], { warn: "Omuz hacmi için şartlı ve hafif ek set" }),
@@ -494,7 +523,7 @@ export const PROGRAM_HYBRID = {
               ex("Hip Thrust (Sandalye)", "4 × 10-12", "Glute", ["Üstte 1 sn sık", "Belden itme"], { warn: "Bugünün posterior chain omurgası" }),
               ex("Inverted Row (Masa Altı)", "4 × 8-10", "Sırt", ["Göğsü çek", "Boynu nötr tut"], { warn: "Bugünün ana pull hacmi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh stabil değilse towel row ile devam et", "Kurulum yoksa prone cobra ile üst sırt hacmini en azından koru"] }),
               ex("Incline Push-up", "3 × 10-12", "Göğüs", ["Ağrısız ROM'da kal"], { warn: "Push destek hacmi; ana iş değil" }),
-              ex("Towel Curl Isometric", "2 × 20-30sn", "Biceps", ["Ayağınla direnci ayarla", "Dirseği sabit tut"], { warn: "Evde doğrudan kol çalışması için hafif hacim" }),
+              ex("Towel Curl (Bacak Dirençli)", "2 × 12-15", "Biceps", ["Oturarak havlunun uçlarını elinde tut", "Alt ucu tek ayakla bas, ayakla direnç ver", "Dirseği sabit, tempo kontrollü"], { warn: "Evde direkt biceps hacmi; tam ROM verir", alts: ["Towel Curl Isometric"], alt_reasons: ["Direnç ayarı zor geliyorsa izometrik tut ile devam"] }),
               ex("Single Leg Glute Bridge", "2 × 10 (her bacak)", "Glute + hamstring", ["Kontrollü kaldır"], { alts: ["Wall Sit"], alt_reasons: ["Diz iyi, quad dokunuş istiyorsan wall sit kullan"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
@@ -506,9 +535,9 @@ export const PROGRAM_HYBRID = {
           ],
         },
         gym: {
-          duration: "~92 dk",
+          duration: "~82 dk",
           aerobicMinutes: 25,
-          modeNote: "Enerji yüksekse gym versiyonu posterior chain ve row hacmini daha iyi yükler.",
+          modeNote: "Enerji yüksekse gym versiyonu posterior chain ve row hacmini daha iyi yükler. Quad PER'de alındığı için bugün saf posterior + pull hacmi.",
           injury: "⚠️ Hacim günü diye ego yok. Pull ve glute omurgası korunur; press destek rolde kalır.",
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
@@ -528,7 +557,6 @@ export const PROGRAM_HYBRID = {
               ex("Floor Press", "3 × 8-10", "Göğüs + triceps", ["Kontrollü tempo"], { warn: "Press destek rolde" }),
               ex("Cable Curl", "2 × 10-12", "Biceps", ["Dirseği sabit tut", "Tempo kontrollü"], { warn: "Haftalık kol hacmini dengeler" }),
               ex("Triceps Pushdown", "2 × 10-12", "Triceps", ["Dirseği gövdeye yakın tut"], { warn: "Omuz dostu triceps hacmi" }),
-              ex("Leg Press", "2 × 8-10", "Quad", ["Kısa ağrısız ROM"], { warn: "Sadece tolerans varsa" }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon", ["2 sn bekle"]),
@@ -563,6 +591,7 @@ export const PROGRAM_HYBRID = {
               ex("Glute Bridge / Hip Thrust", "2 × 15", "Glute", ["Hafif sıkışma"]),
               ex("Dead Bug", "2 × 8 (her taraf)", "Core", ["Bel sabit"]),
               ex("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kısa ama temiz tut"]),
+              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte 1 sn sık", "Topukları kontrollü indir"], { warn: "Zone 2 öncesi calf aktivasyonu; haftalık alt bacak tek direkt çalışmalarından biri" }),
             ]),
             block("🚶 KONDİSYON", "#990000", [
               ex("Hızlı Yürüyüş", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Konuşabilir tempo"], { warn: "Haftayı toparlayarak kapat" }),
@@ -587,6 +616,7 @@ export const PROGRAM_HYBRID = {
               ex("Hip Thrust", "2 × 12", "Glute", ["Hafif yük"]),
               ex("Pallof Press", "2 × 12 (her taraf)", "Core", ["2 sn bekle"]),
               ex("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kısa ama temiz" ]),
+              ex("Standing Calf Raise", "2 × 15-20", "Alt bacak", ["Üstte 1 sn sık", "Topukları kontrollü indir"], { warn: "Zone 2 öncesi calf aktivasyonu" }),
             ]),
             block("🚴 KONDİSYON", "#990000", [
               ex("Incline Walk", "30-40 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Rahat tempo"], { alts: ["Stationary Bike"], alt_reasons: ["Diz veya ayak için bike daha rahat olabilir"] }),
