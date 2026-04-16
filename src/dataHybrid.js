@@ -91,8 +91,8 @@ export const PROGRAM_HYBRID = {
     pillars: [
       { id: "strength", label: "Relatif Kuvvet", dose: "4 gün × RPE 6-8 · failure yok", focus: "Hip thrust, row, press, single-leg kontrol" },
       { id: "endurance", label: "Dayanıklılık (Zone 2)", dose: "150-175 dk/hafta · rahat konuşma tempo", focus: "Walk, bike, rower, incline walk" },
-      { id: "threshold", label: "Threshold + VO2", dose: "15-25 dk/hafta · RPE 7-8 intervaller", focus: "Rower 4×4dk veya bike sprint" },
-      { id: "power", label: "Güvenli Patlayıcı Güç", dose: "2 blok/hafta · submax hız", focus: "KB swing, med ball, carry, bike sprint" },
+      { id: "threshold", label: "Threshold + VO2 (Progresif)", dose: "H1-3 yok · H4-6 8dk · H7-8 16dk · RPE 7-8", focus: "Rower veya bike — pure Zone 2'den kademeli çıkış" },
+      { id: "power", label: "Güvenli Patlayıcı Güç", dose: "H1 yok · H2+ iki blok/hafta · submax hız", focus: "Explosive Hip Thrust, med ball, farmer carry, bike sprint" },
     ],
     rules: [
       "Patlayıcı hareketler submax ve form korunduğu sürece yapılır; form bozulunca set biter.",
@@ -124,9 +124,11 @@ export const PROGRAM_HYBRID = {
       "Ağrı 2/10'u geçerse aynı paterni daha kolay varyasyona çevir.",
       "Uyku kötü ve enerji düşükse her ana bloktan 1 set çıkar.",
       "Skill setleri submax yapılır; maksimum süre kovalanmaz.",
-      "Patlayıcı hareketler (KB swing, med ball, carry) submax hızda ve form korunduğu sürece yapılır; bir tekrar bozulursa set biter.",
+      "Patlayıcı hareketler (explosive hip thrust, med ball, carry) submax hızda ve form korunduğu sürece yapılır; bir tekrar bozulursa set biter.",
+      "HAFTA 1 = adaptasyon. Power bloğu ve threshold rower HAFTA 2'den itibaren devreye alınır — vücut yeni paterne hazırlansın.",
+      "Primary hip power: Explosive Hip Thrust. KB Swing sadece bel tamamen sakinse ve forma güven tamsa alternatif.",
+      "Threshold rower progresif: Hafta 1-3 pure Zone 2, Hafta 4-6 2×4dk, Hafta 7-8 tam 4×4dk.",
       "Koşu, zıplama, dip, ağır swing ve agresif rollout bu fazda yok.",
-      "KB swing ilk hafta 10-12 kg ile form odaklı; yük hafta hafta 2-4 kg artabilir (bel toleransı belirler).",
     ],
     swaps: [
       { trigger: "Omuz 3/10 üstü", action: "Overhead ve handstand'ı çıkar; row + floor press / incline push-up ile kal." },
@@ -297,8 +299,8 @@ export const PROGRAM_HYBRID = {
               ex("Wall Handstand Hold", "2 × 8-10sn", "Overhead stabilite", ["Duvara kontrollü çık", "Kaburgayı içeri al", "Bakış eller arasında"], { avoid: "Boynu yukarı kırma", warn: "Şartlı hareket: ağrısızsa" , alts: ["Pike Hold"], alt_reasons: ["Omuz veya boyun rahatsızsa direkt pike'a dön"] }),
             ]),
             block("⚡ POWER — Güvenli Patlayıcı", "#FFD166", [
-              ex("Kettlebell Swing (Hafif 10-16kg)", "3 × 10-12", "Hip patlayıcı güç + posterior", ["Hip hinge — çekiş kalçadan, kol pasif", "Göbek içeri, bel nötr", "Zirvede kollar omuz hizasında — kulağa çıkmaz"], { warn: "Form bozulursa set biter. Menisküs uyumu yüksek, bel toleransı öncelikli.", avoid: "Kolla savurma, bel hiperextansiyonu", alts: ["Explosive Hip Thrust (üstte hızlı sık)"], alt_reasons: ["Bel rahat değilse explosive hip thrust — aynı hat, daha güvenli"] }),
-              ex("Explosive Push-up (Dizdan, ya da Incline)", "3 × 6-8", "Üst patlayıcı itiş", ["İniş 2 sn yavaş, itiş hızlı", "Ayak+el yerde kalır (plyo yok)", "Omuzlar nötrde"], { warn: "Overhead yok; göğüs hizasında patlayıcı concentric. Omuz ağrısı varsa duvar versiyonuna dön.", alts: ["Wall Push-up Explosive"], alt_reasons: ["Yerden zor geliyorsa duvarla açı düşür"] }),
+              ex("Explosive Hip Thrust", "3 × 8-10", "Hip patlayıcı güç + posterior (bel için güvenli)", ["Yerde yatar pozisyon, omuzlar sandalyede", "Concentric fazı hızlı — kalçayı hızla yukarı it", "Eccentric fazı kontrollü 2 sn iniş"], { warn: "⏱ HAFTA 1'DE YAPMA — vücut yeni hareket paternine hazırlansın. Hafta 2'den itibaren başla. Bel-boyun fıtığı için swing'den çok daha güvenli aynı patern.", alts: ["Kettlebell Swing (Hafif 10-16kg)"], alt_reasons: ["Bel tam sakinse ve KB swing formuna güveniyorsan alternatif olarak geçebilirsin — ama form bozulunca acilen hip thrust'a dön"] }),
+              ex("Explosive Push-up (Dizdan veya Incline)", "3 × 6-8", "Üst patlayıcı itiş", ["İniş 2 sn yavaş, itiş hızlı", "Ayak+el yerde kalır (plyo yok)", "Omuzlar nötrde"], { warn: "⏱ HAFTA 1'DE YAPMA. Hafta 2'den itibaren devreye alınır. Overhead yok; göğüs hizasında patlayıcı concentric. Omuz ağrısı varsa duvar versiyonuna dön.", alts: ["Wall Push-up Explosive"], alt_reasons: ["Yerden zor geliyorsa duvarla açı düşür"] }),
             ]),
             block("💪 KUVVET — Temel Denge", "#F4A261", [
               ex("Inverted Row (Masa Altı)", "4 × 6-10", "Sırt + biceps", ["Göğsü masaya çek", "Boynu öne uzatma", "Üstte 1 sn sık"], { warn: "Bugünün ana çekişi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh güvenli değilse ayak dirençli towel row kullan", "Hiçbir çekiş kurulamıyorsa prone cobra ile üst sırt aktivasyonunu koru"] }),
@@ -331,9 +333,9 @@ export const PROGRAM_HYBRID = {
               ex("Assisted Pull Up", "4 × 6-8", "Dikey çekiş", ["Omuzları aşağı çek", "Ayak desteğini sakince kullan"], { warn: "Tam barfiks yerine kontrollü relatif kuvvet çalışması", alts: ["Lat Pulldown"], alt_reasons: ["Omuz veya dirsek rahatsızsa makineye dön"] }),
             ]),
             block("⚡ POWER — Güvenli Patlayıcı", "#FFD166", [
-              ex("Kettlebell Swing (12-20kg)", "3 × 10-12", "Hip patlayıcı güç + posterior", ["Hip hinge — kalçadan fırlat", "Göbek içeri, bel nötr", "Zirvede kollar omuz hizasında"], { warn: "Form bozulursa set biter. Yük hafta hafta 2-4 kg artabilir.", avoid: "Kolla savurma, bel hiperextansiyonu", alts: ["Explosive Hip Thrust"], alt_reasons: ["Bel swing'de rahat değilse platformda hızlı hip thrust"] }),
-              ex("Medicine Ball Chest Pass (Duvara)", "3 × 8", "Üst patlayıcı itiş", ["Göğüs hizasında tut", "Duvara patlayıcı it", "Top geri geldiğinde absorbe et"], { warn: "Overhead yok. Ball 3-5 kg yeterli.", alts: ["Explosive Push-up"], alt_reasons: ["Med ball yoksa explosive push-up ile concentric patlayıcılık kurulur"] }),
-              ex("Bike Sprint Intervalları (Şartlı)", "6 × 10sn all-out / 90sn easy", "Anaerobik patlayıcı kapasite", ["10 sn %95+ efor", "90 sn rahat pedal", "Bel ve diz sakinse yap"], { warn: "Enerji düşükse atla. Haftanın tek yüksek yoğunluk anaerobik bloğu.", avoid: "Form bozulmadan durmak", alts: ["Rower Sprint (aynı şema)"], alt_reasons: ["Bike hoşlanmazsa rower ile aynı zamanlamayı yap"] }),
+              ex("Explosive Hip Thrust (Barbell veya Plate)", "3 × 8-10", "Hip patlayıcı güç + posterior (bel için güvenli)", ["Omuzlar bench'te, ayaklar kalça genişliğinde", "Concentric fazı hızlı — kalçayı patlayıcı yukarı it", "Üstte kısa kilitle, iniş 2 sn kontrollü"], { warn: "⏱ HAFTA 1'DE YAPMA — vücut yeni paterne hazırlansın. Hafta 2+'dan başla. Bel-boyun fıtığı için KB swing'den çok daha güvenli aynı hat.", alts: ["Kettlebell Swing (12-20kg)"], alt_reasons: ["Bel tamamen sakinse ve KB formuna güveniyorsan alternatif; form bozulunca acilen hip thrust'a dön"] }),
+              ex("Medicine Ball Chest Pass (Duvara, 3-5kg)", "3 × 8", "Üst patlayıcı itiş", ["Göğüs hizasında tut — overhead yok", "Duvara patlayıcı it", "Top geri geldiğinde omuzu eccentric absorbe et"], { warn: "⏱ HAFTA 1'DE YAPMA. Hafta 2+'dan başla. Ball 3-5 kg yeterli.", alts: ["Explosive Push-up"], alt_reasons: ["Med ball yoksa explosive push-up ile concentric patlayıcılık kurulur"] }),
+              ex("Bike Sprint Intervalları (Şartlı)", "6 × 10sn all-out / 90sn easy", "Anaerobik patlayıcı kapasite", ["10 sn %95+ efor", "90 sn rahat pedal", "Bel ve diz sakinse yap"], { warn: "⏱ HAFTA 1'DE YAPMA. Hafta 2+'dan başla. Enerji düşükse atla. Haftanın tek yüksek yoğunluk anaerobik bloğu.", avoid: "Form bozulmadan durmak", alts: ["Rower Sprint (aynı şema)"], alt_reasons: ["Bike hoşlanmazsa rower ile aynı zamanlamayı yap"] }),
             ]),
             block("💪 KUVVET — Temel Denge", "#F4A261", [
               ex("Chest Supported Row", "3 × 8-10", "Mid sırt + lat", ["Bench desteğini kullan", "Boynu uzun tut", "Üstte kısa sık"], { warn: "Bugünün ana çekişi" }),
@@ -603,7 +605,7 @@ export const PROGRAM_HYBRID = {
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon", ["2 sn bekle"]),
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisi"]),
-              ex("Rower Threshold + Zone 2 Split", "4 × 4dk threshold (RPE 7-8) + 1dk easy arası, ardından 8-10 dk Zone 2", "Threshold + aerobik baz karışık hibrit stimulus", ["4 dk boyunca RPE 7-8 sabit tut — konuşmak zor olmalı", "1 dk easy pull — nabız biraz düşsün", "4 tekrar sonra 8-10 dk rahat Zone 2 (RPE 5-6) ile kapat", "Bel ve boyun rower'da hoşlanmıyorsa bike'a dön"], { warn: "Haftanın tek threshold bloğu; gerçek hibrit kondisyonun en önemli parçası", alts: ["Bike Threshold + Zone 2 (aynı şema)", "Rower 20-25 dk Zone 2 (sade versiyon)"], alt_reasons: ["Bike tercihen rower'a benzer kondisyon verir", "Threshold için enerji yoksa pure Zone 2'ye dön"] }),
+              ex("Rower — Progresif Threshold Protokolü", "Haftaya göre değişir (aşağıdaki talimat)", "Progresif threshold + aerobik baz", ["📅 HAFTA 1-3: Pure Zone 2 — 20-25 dk rahat (RPE 5-6). Önce aerobik baz otur.", "📅 HAFTA 4-6: 2×4dk threshold (RPE 7-8) + 15 dk Zone 2. Threshold'a giriş.", "📅 HAFTA 7-8: 4×4dk threshold (RPE 7-8) + 8-10 dk Zone 2. Tam hedef.", "Threshold dakikalarında konuşmak zor olmalı ama form bozulmamalı", "Bel-boyun rower formu kritik — kaburga kapalı, nötral omurga"], { warn: "Progresif: önce baz sonra threshold. Hafta 4 öncesi threshold yapma — form ve kapasite riski yüksek.", alts: ["Bike — aynı progresyon (aynı süre şemasını bike'da uygula)", "Pure Zone 2 (her hafta için yedek)"], alt_reasons: ["Rower bel/boyun için riskli hissederse bike'da aynı progresyonu uygula", "O gün enerji/form iyi değilse her haftada pure Zone 2'ye dön"] }),
             ]),
             volumeCooldownBlock(),
           ],
