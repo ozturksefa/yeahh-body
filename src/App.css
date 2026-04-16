@@ -532,6 +532,98 @@ body{
 .scroll-top-btn:active{transform:scale(.92)}
 @keyframes fabFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
+/* ═══ CONTEXTUAL BANNER ═══ */
+.ctx-banner{
+  display:flex; gap:12px; align-items:center;
+  margin:0 12px 10px;
+  padding:12px 14px;
+  border-radius:14px;
+  border:1px solid var(--border);
+  background:var(--card2);
+  animation:ctxFade .28s ease-out;
+}
+@keyframes ctxFade{ from{opacity:0; transform:translateY(-6px)} to{opacity:1; transform:translateY(0)} }
+.ctx-banner-icon{ font-size:22px; line-height:1; flex-shrink:0; }
+.ctx-banner-body{ min-width:0; }
+.ctx-banner-head{ font-size:13px; font-weight:800; color:var(--text); line-height:1.35; }
+.ctx-banner-sub{ font-size:11px; color:var(--text2); margin-top:3px; line-height:1.45; }
+.ctx-banner-kick{ background:linear-gradient(135deg, rgba(0,200,83,.14), rgba(0,200,83,.04)); border-color:rgba(0,200,83,.35); }
+.ctx-banner-today{ background:linear-gradient(135deg, rgba(217,106,29,.14), rgba(240,138,50,.05)); border-color:rgba(217,106,29,.35); }
+.ctx-banner-done{ background:linear-gradient(135deg, rgba(56,193,114,.12), rgba(56,193,114,.04)); border-color:rgba(56,193,114,.30); }
+.ctx-banner-recover{ background:linear-gradient(135deg, rgba(255,167,38,.14), rgba(255,167,38,.04)); border-color:rgba(255,167,38,.35); }
+.ctx-banner-rest{ background:linear-gradient(135deg, rgba(79,163,255,.10), rgba(79,163,255,.02)); border-color:rgba(79,163,255,.26); }
+
+/* ═══ CINEMATIC MOMENT — full-screen milestone takeover ═══ */
+.cine-backdrop{
+  position:fixed; inset:0; z-index:500;
+  background:#000;
+  display:flex; align-items:center; justify-content:center;
+  animation:cineFadeBg .24s ease-out;
+  padding:24px;
+}
+@keyframes cineFadeBg{ from{opacity:0} to{opacity:1} }
+.cine-inner{
+  max-width:520px; width:100%;
+  text-align:center;
+  color:var(--text);
+}
+.cine-kicker{
+  font-size:12px; font-weight:800; letter-spacing:.32em; text-transform:uppercase;
+  color:var(--accent-2);
+  opacity:0; animation:cineRise .45s ease-out .12s forwards;
+}
+.cine-big{
+  font-family:var(--mono, "SF Mono", Menlo, monospace);
+  font-size:clamp(72px, 22vw, 180px);
+  font-weight:900; line-height:1; letter-spacing:-.04em;
+  margin:18px 0 6px;
+  background:linear-gradient(180deg, #fff 0%, #F4A261 55%, var(--accent) 100%);
+  -webkit-background-clip:text; background-clip:text; color:transparent;
+  text-shadow:0 0 40px rgba(217,106,29,.45);
+  opacity:0; transform:scale(.5);
+  animation:cineBurst .55s cubic-bezier(.2,.9,.25,1.2) .3s forwards;
+}
+@keyframes cineBurst{
+  0%{ opacity:0; transform:scale(.5); }
+  60%{ opacity:1; transform:scale(1.12); }
+  100%{ opacity:1; transform:scale(1); }
+}
+.cine-meta{
+  font-size:14px; font-weight:700; color:var(--text2);
+  letter-spacing:.12em; text-transform:uppercase;
+  opacity:0; animation:cineRise .45s ease-out .72s forwards;
+}
+.cine-rule{
+  width:44px; height:3px; background:var(--accent);
+  margin:20px auto; border-radius:2px;
+  opacity:0; animation:cineRise .35s ease-out .92s forwards;
+}
+.cine-line{
+  font-size:17px; font-weight:600; line-height:1.5;
+  max-width:340px; margin:0 auto 28px; color:var(--text);
+  opacity:0; animation:cineRise .55s ease-out 1.05s forwards;
+}
+.cine-dismiss{
+  background:transparent; border:1px solid var(--accent);
+  color:var(--accent-2);
+  padding:12px 28px; font-size:13px; font-weight:800; letter-spacing:.08em;
+  text-transform:uppercase;
+  border-radius:999px; cursor:pointer; font-family:inherit;
+  opacity:0; animation:cineRise .4s ease-out 1.4s forwards;
+  transition:background .15s, color .15s;
+}
+.cine-dismiss:hover{ background:var(--accent); color:#130B04; }
+@keyframes cineRise{
+  from{ opacity:0; transform:translateY(12px); }
+  to{ opacity:1; transform:translateY(0); }
+}
+@media (prefers-reduced-motion: reduce){
+  .cine-kicker, .cine-big, .cine-meta, .cine-rule, .cine-line, .cine-dismiss{
+    animation:none; opacity:1; transform:none;
+  }
+  .cine-big{ background:none; color:var(--accent-2); text-shadow:none; }
+}
+
 /* ═══ EXERCISE DETAIL MODAL ═══ */
 .exd-backdrop{
   position:fixed; inset:0; z-index:400; background:rgba(0,0,0,.72);
