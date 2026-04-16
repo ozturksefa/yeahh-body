@@ -27,9 +27,9 @@ export default defineConfig([
     },
   },
   {
-    // Netlify Functions run in Node, not the browser — `process` and
-    // other Node globals are valid here.
-    files: ['netlify/functions/**/*.{js,mjs}'],
+    // Netlify Functions + their shared lib run in Node, not the
+    // browser — `process` and other Node globals are valid here.
+    files: ['netlify/functions/**/*.{js,mjs}', 'netlify/lib/**/*.{js,mjs}'],
     languageOptions: {
       globals: { ...globals.node },
     },
