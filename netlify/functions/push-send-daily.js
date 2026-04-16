@@ -128,9 +128,9 @@ function getIstanbulDow(now) {
   return ist.getDay();
 }
 
+// Scheduled functions can't have a custom path — Netlify owns routing.
+// The cron runs every morning at 07:00 UTC (10:00 Istanbul). Adjust here
+// or override via the Netlify UI once you know the local time you want.
 export const config = {
-  path: "/api/push-send-daily",
-  // Runs every morning at 07:00 UTC (10:00 Istanbul). Change via Netlify
-  // UI or this string once you know which local time you actually want.
   schedule: "0 7 * * *",
 };
