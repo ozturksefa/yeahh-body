@@ -557,6 +557,43 @@ body{
 .push-btn-secondary{ background:transparent; color:var(--text2); border-color:var(--border); }
 .push-card-error{ font-size:11px; color:#FF8A8A; margin-top:8px; }
 
+/* ═══ ASYMMETRY PROTOCOL CARD ═══ */
+.asym-card{
+  background:linear-gradient(135deg, rgba(255,209,102,.10), rgba(255,167,38,.05));
+  border:1px solid rgba(255,209,102,.28); border-radius:14px;
+  padding:12px 14px; margin:0 12px 12px;
+}
+.asym-head{
+  display:grid; grid-template-columns:auto 1fr auto; gap:10px; align-items:flex-start;
+  margin-bottom:10px;
+}
+.asym-icon{ font-size:22px; line-height:1; }
+.asym-title{ font-size:13px; font-weight:800; color:var(--text); }
+.asym-sub{ font-size:11px; color:var(--text3); margin-top:3px; line-height:1.4; }
+.asym-dismiss{
+  background:transparent; border:1px solid var(--border);
+  color:var(--text3); width:28px; height:28px; border-radius:8px;
+  font-size:12px; cursor:pointer; font-family:inherit;
+}
+.asym-dismiss:hover{ color:var(--text); border-color:var(--border-strong); }
+.asym-rules{
+  list-style:none; padding:0; margin:0; display:grid; gap:10px;
+}
+.asym-rules li{
+  display:flex; gap:10px; font-size:12px; line-height:1.5; color:var(--text2);
+}
+.asym-rule-tag{
+  flex-shrink:0;
+  width:22px; height:22px; border-radius:6px;
+  background:rgba(255,209,102,.18); border:1px solid rgba(255,209,102,.38);
+  color:#FFD166;
+  font-size:11px; font-weight:800;
+  display:flex; align-items:center; justify-content:center;
+  font-family:var(--mono, inherit);
+}
+.asym-rules strong{ color:var(--text); font-weight:800; }
+.asym-rules em{ font-style:italic; color:var(--text3); }
+
 /* ═══ WORKOUT PLAYLIST CARD ═══ */
 .playlist-card{
   background:linear-gradient(135deg, rgba(131,56,236,.12), rgba(255,90,90,.08));
