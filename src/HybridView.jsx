@@ -5,9 +5,13 @@ import WorkoutTimer from "./WorkoutTimer";
 import { PROGRAM_HYBRID, getHybridDayVariant } from "./dataHybrid";
 import { getCompletedWorkoutsInRange, loadWorkout, markWorkoutDone, saveWorkout } from "./tracker";
 import ActiveSessionBar from "./hybrid/ActiveSessionBar";
+import AiCoachCard from "./hybrid/AiCoachCard";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
+import InstallPrompt from "./hybrid/InstallPrompt";
 import PlanPage from "./hybrid/PlanPage";
+import SessionHistoryPage from "./hybrid/SessionHistoryPage";
+import StreakHeatmap from "./hybrid/StreakHeatmap";
 import ScrollToTopButton from "./hybrid/ScrollToTopButton";
 import SafetyNotice from "./hybrid/SafetyNotice";
 import StartProgramCard from "./hybrid/StartProgramCard";
@@ -497,6 +501,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
         <>
           <DayHeader day={day} activeVariant={activeVariant} mode={mode} weekProfile={weekProfile} />
 
+          <StreakHeatmap />
+
           {!startDate && <StartProgramCard onStart={handleStartProgram} />}
 
           <WeekTransitionPanel
@@ -570,6 +576,13 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             />
           </div>
 
+          <AiCoachCard
+            entryKey={entryKey}
+            entry={currentEntry}
+            workoutSnapshot={workoutSnapshot}
+            dayName={day.sub}
+          />
+
           <SupportDrawer day={day} program={PROGRAM_HYBRID} />
 
           {restTimer && (
@@ -625,6 +638,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
         />
       )}
 
+      {page === "history" && <SessionHistoryPage />}
+
       {page === "skill" && (
         <SkillTracker
           skillPaths={PROGRAM_HYBRID.skillPaths}
@@ -656,6 +671,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       <ScrollToTopButton
         liftAboveBar={page === "program" && !currentEntry.post.completed && (workoutState.started || hasWorkoutInput)}
       />
+
+      <InstallPrompt />
     </div>
   );
 }
