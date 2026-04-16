@@ -71,10 +71,10 @@ export const PROGRAM_HYBRID = {
     athlete: "Erkek · yeni baba · kontrollü alt-orta seviye sporcu",
     schedule: "4 ana gün + 3 aktif off gün · Ev ve Macfit paralel kullanılabilir",
     priorities: [
-      "1. Dayanıklılık / iş kapasitesi",
-      "2. Relatif kuvvet",
-      "3. Kontrol + denge",
-      "4. Postür + core stabilite",
+      "1. Hibrit performans: dayanıklılık + kontrollü patlayıcı güç",
+      "2. Relatif kuvvet (RPE 6-8, failure yok)",
+      "3. Work capacity (iş kapasitesi) + threshold aerobik",
+      "4. Kontrol + denge + postür",
       "İkincil skill: Handstand + L-sit",
     ],
     constraints: [
@@ -82,6 +82,31 @@ export const PROGRAM_HYBRID = {
       "Rotator cuff: dip ve agresif overhead yüklenme kısıtlı",
       "Bel-boyun fıtığı: nötral omurga ve servikal nötral şart",
       "Skolyoz + kifoz: çekiş, skapula kontrolü ve lateral core öncelikli",
+    ],
+  },
+
+  hybridModel: {
+    title: "Hibrit Performans Mantığı",
+    subtitle: "4 nitelik aynı fazda birlikte geliştirilir; her biri progrese edilir ama max değil.",
+    pillars: [
+      { id: "strength", label: "Relatif Kuvvet", dose: "4 gün × RPE 6-8 · failure yok", focus: "Hip thrust, row, press, single-leg kontrol" },
+      { id: "endurance", label: "Dayanıklılık (Zone 2)", dose: "150-175 dk/hafta · rahat konuşma tempo", focus: "Walk, bike, rower, incline walk" },
+      { id: "threshold", label: "Threshold + VO2", dose: "15-25 dk/hafta · RPE 7-8 intervaller", focus: "Rower 4×4dk veya bike sprint" },
+      { id: "power", label: "Güvenli Patlayıcı Güç", dose: "2 blok/hafta · submax hız", focus: "KB swing, med ball, carry, bike sprint" },
+    ],
+    rules: [
+      "Patlayıcı hareketler submax ve form korunduğu sürece yapılır; form bozulunca set biter.",
+      "KB swing + med ball gibi power araçları SAL + PER'de — aerobik öncesi.",
+      "Threshold (CMT rower) → Zone 2 (uzun kolay) sırası: yorgunluk yönü doğru olsun.",
+      "Interference effect: kuvvet ve threshold aynı gün olunca aralarında 4+ saat ideal, yoksa kuvvet önce.",
+      "Power blok günleri arka arkaya olmaz; SAL ve PER arasında 1 off günü var.",
+    ],
+    references: [
+      "Alex Viada — Complete Human Performance (The Hybrid Athlete)",
+      "Nick Bare — BPN Hybrid Programming",
+      "NSCA TSAC — Tactical Strength & Conditioning standartları",
+      "Stew Smith — Military.com Tactical Athlete",
+      "Fergus Crawley — Strength + Endurance Concurrent Training",
     ],
   },
 
@@ -99,7 +124,9 @@ export const PROGRAM_HYBRID = {
       "Ağrı 2/10'u geçerse aynı paterni daha kolay varyasyona çevir.",
       "Uyku kötü ve enerji düşükse her ana bloktan 1 set çıkar.",
       "Skill setleri submax yapılır; maksimum süre kovalanmaz.",
+      "Patlayıcı hareketler (KB swing, med ball, carry) submax hızda ve form korunduğu sürece yapılır; bir tekrar bozulursa set biter.",
       "Koşu, zıplama, dip, ağır swing ve agresif rollout bu fazda yok.",
+      "KB swing ilk hafta 10-12 kg ile form odaklı; yük hafta hafta 2-4 kg artabilir (bel toleransı belirler).",
     ],
     swaps: [
       { trigger: "Omuz 3/10 üstü", action: "Overhead ve handstand'ı çıkar; row + floor press / incline push-up ile kal." },
@@ -250,10 +277,10 @@ export const PROGRAM_HYBRID = {
       intent: "Haftanın en taze gününde çekiş-itiş dengesi kurulur; kısa interval kondisyonla bitirilir.",
       variants: {
         home: {
-          duration: "~72 dk",
+          duration: "~80 dk",
           aerobicMinutes: 28,
-          modeNote: "Vakit kısıtlıysa veya semptom yüksekse home yolu daha güvenli seçenek.",
-          injury: "⚠️ Omuz ağrılıysa handstand'ı çıkar, sadece pike + row + incline push-up ile kal.",
+          modeNote: "Vakit kısıtlıysa veya semptom yüksekse home yolu daha güvenli seçenek. Yeni: güvenli patlayıcı (KB swing / explosive push-up) bloğu.",
+          injury: "⚠️ Omuz ağrılıysa handstand'ı ve explosive push-up'ı çıkar, sadece pike + row + incline push-up ile kal.",
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
               ex("Cat-Cow Mobilite", "2 × 8", "Omurga mobilite", ["Ritmik ilerle", "Bel-boynu zorlamadan akıt"]),
@@ -268,6 +295,10 @@ export const PROGRAM_HYBRID = {
             block("🤸 SKILL — Hafif Overhead", "#8338EC", [
               ex("Pike Hold", "3 × 15-20sn", "Omuz + core", ["Omuzları yukarı it", "Kalçayı yüksekte tut"], { warn: "Omuz iyi değilse burada kal" }),
               ex("Wall Handstand Hold", "2 × 8-10sn", "Overhead stabilite", ["Duvara kontrollü çık", "Kaburgayı içeri al", "Bakış eller arasında"], { avoid: "Boynu yukarı kırma", warn: "Şartlı hareket: ağrısızsa" , alts: ["Pike Hold"], alt_reasons: ["Omuz veya boyun rahatsızsa direkt pike'a dön"] }),
+            ]),
+            block("⚡ POWER — Güvenli Patlayıcı", "#FFD166", [
+              ex("Kettlebell Swing (Hafif 10-16kg)", "3 × 10-12", "Hip patlayıcı güç + posterior", ["Hip hinge — çekiş kalçadan, kol pasif", "Göbek içeri, bel nötr", "Zirvede kollar omuz hizasında — kulağa çıkmaz"], { warn: "Form bozulursa set biter. Menisküs uyumu yüksek, bel toleransı öncelikli.", avoid: "Kolla savurma, bel hiperextansiyonu", alts: ["Explosive Hip Thrust (üstte hızlı sık)"], alt_reasons: ["Bel rahat değilse explosive hip thrust — aynı hat, daha güvenli"] }),
+              ex("Explosive Push-up (Dizdan, ya da Incline)", "3 × 6-8", "Üst patlayıcı itiş", ["İniş 2 sn yavaş, itiş hızlı", "Ayak+el yerde kalır (plyo yok)", "Omuzlar nötrde"], { warn: "Overhead yok; göğüs hizasında patlayıcı concentric. Omuz ağrısı varsa duvar versiyonuna dön.", alts: ["Wall Push-up Explosive"], alt_reasons: ["Yerden zor geliyorsa duvarla açı düşür"] }),
             ]),
             block("💪 KUVVET — Temel Denge", "#F4A261", [
               ex("Inverted Row (Masa Altı)", "4 × 6-10", "Sırt + biceps", ["Göğsü masaya çek", "Boynu öne uzatma", "Üstte 1 sn sık"], { warn: "Bugünün ana çekişi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh güvenli değilse ayak dirençli towel row kullan", "Hiçbir çekiş kurulamıyorsa prone cobra ile üst sırt aktivasyonunu koru"] }),
@@ -285,10 +316,10 @@ export const PROGRAM_HYBRID = {
           ],
         },
         gym: {
-          duration: "~78 dk",
+          duration: "~88 dk",
           aerobicMinutes: 15,
-          modeNote: "Enerji iyiyse ve semptom düşükse gym yolu daha iyi yüklenir; bu gün rower interval atletik dayanıklılık için en iyi seçeneklerden biri.",
-          injury: "⚠️ Omuz iyi değilse pull-up hattını lat pulldown'a, press'i machine press kısa ROM'a çek.",
+          modeNote: "Enerji iyiyse ve semptom düşükse gym yolu daha iyi yüklenir. Yeni: KB swing + med ball + opsiyonel bike sprint anaerobik bloğu.",
+          injury: "⚠️ Omuz iyi değilse pull-up hattını lat pulldown'a, press'i machine press kısa ROM'a çek. Bike sprint anaerobik — bel ve diz sakinse yap.",
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
               ex("Foam Roller Upper Back Roll", "2 × 30sn", "Torasik hazırlık", ["Kısa geçişler yap", "Bel boşluğunu büyütme"]),
@@ -298,6 +329,11 @@ export const PROGRAM_HYBRID = {
             careBlockGym(),
             block("🤸 TEKNİK ÇEKİŞ", "#8338EC", [
               ex("Assisted Pull Up", "4 × 6-8", "Dikey çekiş", ["Omuzları aşağı çek", "Ayak desteğini sakince kullan"], { warn: "Tam barfiks yerine kontrollü relatif kuvvet çalışması", alts: ["Lat Pulldown"], alt_reasons: ["Omuz veya dirsek rahatsızsa makineye dön"] }),
+            ]),
+            block("⚡ POWER — Güvenli Patlayıcı", "#FFD166", [
+              ex("Kettlebell Swing (12-20kg)", "3 × 10-12", "Hip patlayıcı güç + posterior", ["Hip hinge — kalçadan fırlat", "Göbek içeri, bel nötr", "Zirvede kollar omuz hizasında"], { warn: "Form bozulursa set biter. Yük hafta hafta 2-4 kg artabilir.", avoid: "Kolla savurma, bel hiperextansiyonu", alts: ["Explosive Hip Thrust"], alt_reasons: ["Bel swing'de rahat değilse platformda hızlı hip thrust"] }),
+              ex("Medicine Ball Chest Pass (Duvara)", "3 × 8", "Üst patlayıcı itiş", ["Göğüs hizasında tut", "Duvara patlayıcı it", "Top geri geldiğinde absorbe et"], { warn: "Overhead yok. Ball 3-5 kg yeterli.", alts: ["Explosive Push-up"], alt_reasons: ["Med ball yoksa explosive push-up ile concentric patlayıcılık kurulur"] }),
+              ex("Bike Sprint Intervalları (Şartlı)", "6 × 10sn all-out / 90sn easy", "Anaerobik patlayıcı kapasite", ["10 sn %95+ efor", "90 sn rahat pedal", "Bel ve diz sakinse yap"], { warn: "Enerji düşükse atla. Haftanın tek yüksek yoğunluk anaerobik bloğu.", avoid: "Form bozulmadan durmak", alts: ["Rower Sprint (aynı şema)"], alt_reasons: ["Bike hoşlanmazsa rower ile aynı zamanlamayı yap"] }),
             ]),
             block("💪 KUVVET — Temel Denge", "#F4A261", [
               ex("Chest Supported Row", "3 × 8-10", "Mid sırt + lat", ["Bench desteğini kullan", "Boynu uzun tut", "Üstte kısa sık"], { warn: "Bugünün ana çekişi" }),
@@ -375,10 +411,10 @@ export const PROGRAM_HYBRID = {
       intent: "Diz dostu alt vücut ve upper-back hacmiyle postür, kontrol ve L-sit altyapısı beslenir.",
       variants: {
         home: {
-          duration: "~65 dk",
+          duration: "~72 dk",
           aerobicMinutes: 18,
-          modeNote: "Diz hassas veya enerji düşük günlerde ev versiyonu daha yönetilebilir.",
-          injury: "⚠️ Diz baskısı varsa reverse lunge yerine wall sit; bel yorgunsa tempo row'u normal row'a çevir.",
+          modeNote: "Diz hassas veya enerji düşük günlerde ev versiyonu daha yönetilebilir. Yeni: Farmer Carry bloğu (ev için ağır çanta/su bidonu yeterli).",
+          injury: "⚠️ Diz baskısı varsa reverse lunge yerine wall sit; bel yorgunsa tempo row'u normal row'a çevir. Farmer carry yükü bel hissetmiyorken.",
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
               ex("Cat-Cow Mobilite", "2 × 8", "Omurga hazırlık", ["Acele etme"]),
@@ -401,6 +437,9 @@ export const PROGRAM_HYBRID = {
               ex("Single Leg RDL (Bodyweight)", "2 × 6-8 (her bacak)", "Posterior chain + denge", ["Kalçadan menteşelen, dizi hafif yumuşak tut", "Gövde ve arkadaki bacak paralel inecek", "Denge için duvar veya sandalye desteği kullan"], { warn: "Tek taraflı hinge + asimetri tespiti; skolyoz için değerli", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Denge tutmuyorsa glute dominanta dön"] }),
               ex("Bridge Walkout", "2 × 6-8", "Hamstring curl hattı", ["Köprüde kal", "Topukları yavaş uzağa yürüt", "Belini düşürme"], { warn: "Hamstring knee-flexion için evde güvenli başlangıç", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Bel veya arka bacak krampı olursa glute dominanta geri dön"] }),
             ]),
+            block("🏋 LOADED CARRY", "#E76F51", [
+              ex("Farmer Carry (Ağır Çanta / Su Bidonu)", "2 × 30-40 sn", "Grip + core + locomotion", ["Yük gövde yanında, omuzlar aşağıda", "Göbek içeri, nefes ritmik", "Adım küçük ve stabil"], { warn: "Atletik taşıma kapasitesi (tactical athlete standartı); grip + core + kondisyon tek harekette", alts: ["Suitcase Carry (tek tarafta)", "Ağırlıksız Yavaş Yürüyüş (form odaklı)"], alt_reasons: ["Asimetri çalışması istiyorsan suitcase", "Uygun yük yoksa formu sabit tutarak yürüyüş ritmine odaklan"] }),
+            ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Bird Dog", "2 × 8 (her taraf)", "Anti-rotasyon", ["Kol-bacağı yavaş uzat", "Belini oynatma"], { warn: "Bel yorgun günlerde çok değerli" }),
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisini koru"], { warn: "Skolyoz/kifoz için ana blok" }),
@@ -410,9 +449,9 @@ export const PROGRAM_HYBRID = {
           ],
         },
         gym: {
-          duration: "~70 dk",
+          duration: "~78 dk",
           aerobicMinutes: 15,
-          modeNote: "Gym yolu quad ve upper-back için daha ölçülebilir yük sağlar.",
+          modeNote: "Gym yolu quad ve upper-back için daha ölçülebilir yük sağlar. Yeni: Farmer Carry bloğu (tactical athlete standartı).",
           injury: "⚠️ Leg press sadece kısa ağrısız ROM. Landmine press opsiyonel; omuz sakinse girer.",
           blocks: [
             block("🔥 ISINMA — Hazırlık", "#CC5500", [
@@ -433,6 +472,9 @@ export const PROGRAM_HYBRID = {
               ex("Band Face Pull", "2 × 12-15", "Arka omuz + alt trapez", ["Dirsekleri çok yükseltmeden çek"], { warn: "Kifoz eğilimine karşı iyi kapanış" }),
               ex("Cable Lateral Raise", "2 × 12-15", "Yan omuz", ["Skapular planda kaldır", "Hafif kilo kullan", "Ağrısız aralıkta kal"], { warn: "Omuz hacmi için şartlı ve hafif ek set" }),
               ex("Landmine Press", "2 × 8-10", "Omuz dostu press", ["Kaburgayı kapat", "Barı çapraz yukarı it"], { warn: "Şartlı hareket: omuz ağrısızsa", alts: ["Floor Press"], alt_reasons: ["Landmine bile rahatsızsa floor press'e dön"] }),
+            ]),
+            block("🏋 LOADED CARRY", "#E76F51", [
+              ex("Farmer Carry (Dumbbell / Trap Bar)", "2 × 30-40 sn", "Grip + core + locomotion", ["Yük gövde yanında", "Omuzlar aşağıda, kaburga kapalı", "Adım kısa, stabil"], { warn: "Tactical athlete standartı. Ağır ama form üzerinde; bel hissetmiyorsa yük +2.5 kg.", alts: ["Suitcase Carry (tek tarafta)", "Overhead Carry (omuz tamamen iyiyse)"], alt_reasons: ["Asimetri için suitcase", "Overhead carry ancak omuz sakinse — şartlı ileri seviye"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Side Plank", "2 × 30-40sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
@@ -561,7 +603,7 @@ export const PROGRAM_HYBRID = {
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon", ["2 sn bekle"]),
               ex("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgisi"]),
-              ex("Rower", "20-25 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Sakin ritim"], { alts: ["Stationary Bike"], alt_reasons: ["Bel rower'da hoşlanmıyorsa bike'a dön"] }),
+              ex("Rower Threshold + Zone 2 Split", "4 × 4dk threshold (RPE 7-8) + 1dk easy arası, ardından 8-10 dk Zone 2", "Threshold + aerobik baz karışık hibrit stimulus", ["4 dk boyunca RPE 7-8 sabit tut — konuşmak zor olmalı", "1 dk easy pull — nabız biraz düşsün", "4 tekrar sonra 8-10 dk rahat Zone 2 (RPE 5-6) ile kapat", "Bel ve boyun rower'da hoşlanmıyorsa bike'a dön"], { warn: "Haftanın tek threshold bloğu; gerçek hibrit kondisyonun en önemli parçası", alts: ["Bike Threshold + Zone 2 (aynı şema)", "Rower 20-25 dk Zone 2 (sade versiyon)"], alt_reasons: ["Bike tercihen rower'a benzer kondisyon verir", "Threshold için enerji yoksa pure Zone 2'ye dön"] }),
             ]),
             volumeCooldownBlock(),
           ],
