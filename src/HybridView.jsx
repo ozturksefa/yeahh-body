@@ -7,6 +7,7 @@ import { getAllCompletedWorkouts, getCompletedWorkoutsInRange, loadWorkout, mark
 import { detectMilestone } from "./hybrid/motivationalBeats";
 import ActiveSessionBar from "./hybrid/ActiveSessionBar";
 import AiCoachCard from "./hybrid/AiCoachCard";
+import AsymmetryProtocolCard from "./hybrid/AsymmetryProtocolCard";
 import CinematicMoment from "./hybrid/CinematicMoment";
 import ContextualBanner from "./hybrid/ContextualBanner";
 import DayHeader from "./hybrid/DayHeader";
@@ -533,6 +534,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           <DayHeader day={day} activeVariant={activeVariant} mode={mode} weekProfile={weekProfile} />
 
           <ContextualBanner day={day} activeVariant={activeVariant} startDate={startDate} />
+
+          {day.type === "training" && <AsymmetryProtocolCard />}
 
           <PlaylistCard dayName={day.sub} />
 
