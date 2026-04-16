@@ -3,11 +3,11 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>GIF Eslesme Kontrolu</title>
+<title>GIF Eslesme Kontrolu v2</title>
 <style>
   :root { --bg:#0e0f10; --card:#17171B; --card2:#1e1e23; --border:#2A2A30;
     --text:#F3F1EA; --text2:#C8C2B8; --text3:#A39E94;
-    --accent:#D96A1D; --ok:#38C172; --miss:#FFA726; --hybrid:#4FA3FF; }
+    --accent:#D96A1D; --ok:#38C172; --short:#4FA3FF; --miss:#FFA726; --hybrid:#4FA3FF; }
   * { box-sizing: border-box; }
   body { margin:0; font-family:-apple-system,BlinkMacSystemFont,sans-serif;
     background:var(--bg); color:var(--text); line-height:1.5; }
@@ -16,7 +16,8 @@
     backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px; }
   h1 { margin:0 0 4px; font-size:18px; font-weight:800; }
   .summary { font-size:12px; color:var(--text3); }
-  .summary strong { color:var(--text); } .summary .good { color:var(--ok); } .summary .warn { color:var(--miss); }
+  .summary strong { color:var(--text); }
+  .summary .good { color:var(--ok); } .summary .short { color:var(--short); } .summary .warn { color:var(--miss); }
   .controls { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
   .search-input { flex:1; min-width:160px; padding:8px 12px; background:var(--card);
     border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; }
@@ -43,11 +44,16 @@
     font-size:10px; font-weight:700; }
   .tag-hybrid { background:rgba(79,163,255,.12); border-color:rgba(79,163,255,.35); color:var(--hybrid); }
   .status { margin-top:6px; font-size:11px; font-weight:700; }
-  .status-ok .status { color:var(--ok); } .status-miss .status { color:var(--miss); }
+  .status-ok .status { color:var(--ok); }
+  .status-short .status { color:var(--short); }
+  .status-miss .status { color:var(--miss); }
   .col-gif { min-width:220px; }
   .gif { max-width:220px; max-height:160px; border-radius:8px;
     border:1px solid var(--border); background:#000; display:block; }
   .gif + .gif { margin-top:6px; }
+  .short-wrap { width:200px; aspect-ratio:9/16; background:#000;
+    border:1px solid var(--border); border-radius:8px; overflow:hidden; position:relative; }
+  .short-wrap iframe { position:absolute; inset:0; width:100%; height:100%; border:0; }
   .no-gif { padding:18px 14px; background:var(--card); border:1px dashed var(--border);
     border-radius:8px; color:var(--miss); font-size:12px; font-weight:700; text-align:center; }
   .col-yt { width:110px; }
@@ -64,24 +70,26 @@
 </head>
 <body>
 <header>
-  <h1>GIF Eslesme Kontrolu</h1>
+  <h1>GIF Eslesme Kontrolu v2</h1>
   <div class="summary">
     Toplam <strong>62</strong> egzersiz - 
-    <span class="good">47 GIF var</span> - 
-    <span class="warn">15 eksik</span> - 
-    Hibrit: <strong>62</strong>, <span class="good">47 eslesti</span>
+    <span class="good">41 GIF</span> + 
+    <span class="short">13 Short</span> + 
+    <span class="warn">8 eksik</span> | 
+    Hibrit: <strong>62</strong> (41 GIF, 13 Short)
   </div>
   <div class="controls">
     <input type="search" class="search-input" placeholder="Egzersiz ara..." id="search">
     <button class="filter-btn active" data-filter="all">Tumu</button>
     <button class="filter-btn" data-filter="hybrid">Sadece Hibrit</button>
-    <button class="filter-btn" data-filter="missing">GIF'siz</button>
-    <button class="filter-btn" data-filter="hybrid-ok">Hibrit GIF'li</button>
+    <button class="filter-btn" data-filter="missing">Sadece arama</button>
+    <button class="filter-btn" data-filter="short">YT Short</button>
+    <button class="filter-btn" data-filter="gif">GIF</button>
     <button class="export-btn" id="export">Notlari Indir (JSON)</button>
   </div>
 </header>
 <table>
-  <thead><tr><th>#</th><th>Egzersiz</th><th>Mevcut GIF</th><th>YT</th><th>Kontrol</th></tr></thead>
+  <thead><tr><th>#</th><th>Egzersiz</th><th>Mevcut Medya</th><th>YT</th><th>Kontrol</th></tr></thead>
   <tbody>
 <tr class="status-ok" data-name="90/90 hip stretch">
   <td class="col-num">1</td>
@@ -90,7 +98,7 @@
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
     <div class="status">GIF var</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/oMypNrz.gif" alt="90/90 Hip Stretch" loading="lazy" class="gif"></td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/yn0LjwL.gif" alt="90/90 Hip Stretch" loading="lazy" class="gif"></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=90%2F90%20Hip%20Stretch%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-0" value="ok"> Dogru</label>
@@ -163,14 +171,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="bird dog">
+<tr class="status-short" data-name="bird dog">
   <td class="col-num">6</td>
   <td class="col-name">
     <div class="name">Bird Dog</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/YO9bbyrgJkI?loop=1&playlist=YO9bbyrgJkI&rel=0&modestbranding=1" title="Bird Dog" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=bird%20dog%20exercise%20form%20neutral%20spine" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-5" value="ok"> Dogru</label>
@@ -179,14 +187,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="box step down (eccentric)">
+<tr class="status-short" data-name="box step down (eccentric)">
   <td class="col-num">7</td>
   <td class="col-name">
     <div class="name">Box Step Down (eccentric)</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/vNNBntHWCIk?loop=1&playlist=vNNBntHWCIk&rel=0&modestbranding=1" title="Box Step Down (eccentric)" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=eccentric%20step%20down%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-6" value="ok"> Dogru</label>
@@ -243,14 +251,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="cat-cow mobilite">
+<tr class="status-short" data-name="cat-cow mobilite">
   <td class="col-num">11</td>
   <td class="col-name">
     <div class="name">Cat-Cow Mobilite</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/2of247Kt0tU?loop=1&playlist=2of247Kt0tU&rel=0&modestbranding=1" title="Cat-Cow Mobilite" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=cat%20cow%20mobility%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-10" value="ok"> Dogru</label>
@@ -291,14 +299,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="chin tuck">
+<tr class="status-short" data-name="chin tuck">
   <td class="col-num">14</td>
   <td class="col-name">
     <div class="name">Chin Tuck</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/0tWxFbOHvRo?loop=1&playlist=0tWxFbOHvRo&rel=0&modestbranding=1" title="Chin Tuck" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=chin%20tuck%20cervical%20retraction%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-13" value="ok"> Dogru</label>
@@ -307,14 +315,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="close grip push up">
+<tr class="status-short" data-name="close grip push up">
   <td class="col-num">15</td>
   <td class="col-name">
     <div class="name">Close Grip Push Up</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/zWWqJZzn2Xg?loop=1&playlist=zWWqJZzn2Xg&rel=0&modestbranding=1" title="Close Grip Push Up" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=close%20grip%20push%20up%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-14" value="ok"> Dogru</label>
@@ -339,14 +347,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-ok" data-name="dead hang">
+<tr class="status-miss" data-name="dead hang">
   <td class="col-num">17</td>
   <td class="col-name">
     <div class="name">Dead Hang</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF var</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/PXTIwgu.gif" alt="Dead Hang" loading="lazy" class="gif"></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Dead%20Hang%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-16" value="ok"> Dogru</label>
@@ -355,14 +363,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-ok" data-name="dead hang (şartlı)">
+<tr class="status-miss" data-name="dead hang (şartlı)">
   <td class="col-num">18</td>
   <td class="col-name">
     <div class="name">Dead Hang (Şartlı)</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF var</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/PXTIwgu.gif" alt="Dead Hang (Şartlı)" loading="lazy" class="gif"></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Dead%20Hang%20(%C5%9Eartl%C4%B1)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-17" value="ok"> Dogru</label>
@@ -371,14 +379,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-ok" data-name="doorway chest stretch">
+<tr class="status-short" data-name="doorway chest stretch">
   <td class="col-num">19</td>
   <td class="col-name">
     <div class="name">Doorway Chest Stretch</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF var</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/3uj0Ozg.gif" alt="Doorway Chest Stretch" loading="lazy" class="gif"></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/O8rJw_TmC1Y?loop=1&playlist=O8rJw_TmC1Y&rel=0&modestbranding=1" title="Doorway Chest Stretch" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Doorway%20Chest%20Stretch%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-18" value="ok"> Dogru</label>
@@ -536,9 +544,9 @@
   <td class="col-name">
     <div class="name">Hızlı Yürüyüş</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=power%20walking%20technique%20posture%20arm%20swing" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-28" value="ok"> Dogru</label>
@@ -547,14 +555,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="hip circle">
+<tr class="status-short" data-name="hip circle">
   <td class="col-num">30</td>
   <td class="col-name">
     <div class="name">Hip Circle</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/C4MDREc9ERg?loop=1&playlist=C4MDREc9ERg&rel=0&modestbranding=1" title="Hip Circle" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=standing%20hip%20circles%20mobility%20warm%20up" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-29" value="ok"> Dogru</label>
@@ -616,9 +624,9 @@
   <td class="col-name">
     <div class="name">Incline Walk</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=incline%20treadmill%20walking%20posture%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-33" value="ok"> Dogru</label>
@@ -682,7 +690,7 @@
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
     <div class="status">GIF var</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/ecpY0rH.gif" alt="Lat Pulldown" loading="lazy" class="gif"></td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qdRxqCj.gif" alt="Lat Pulldown" loading="lazy" class="gif"><img src="https://static.exercisedb.dev/media/7F1DVzn.gif" alt="Lat Pulldown" loading="lazy" class="gif"></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Lat%20Pulldown%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-37" value="ok"> Dogru</label>
@@ -723,14 +731,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="medicine ball chest pass (duvara, 3-5kg)">
+<tr class="status-short" data-name="medicine ball chest pass (duvara, 3-5kg)">
   <td class="col-num">41</td>
   <td class="col-name">
     <div class="name">Medicine Ball Chest Pass (Duvara, 3-5kg)</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/0nAIDOVnGoo?loop=1&playlist=0nAIDOVnGoo&rel=0&modestbranding=1" title="Medicine Ball Chest Pass (Duvara, 3-5kg)" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Medicine%20Ball%20Chest%20Pass%20(Duvara%2C%203-5kg)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-40" value="ok"> Dogru</label>
@@ -755,14 +763,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-ok" data-name="pike hold">
+<tr class="status-miss" data-name="pike hold">
   <td class="col-num">43</td>
   <td class="col-name">
     <div class="name">Pike Hold</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF var</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/sVvXT5J.gif" alt="Pike Hold" loading="lazy" class="gif"></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Pike%20Hold%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-42" value="ok"> Dogru</label>
@@ -792,9 +800,9 @@
   <td class="col-name">
     <div class="name">Rower</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=rowing%20machine%20technique%20posture%20beginner%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-44" value="ok"> Dogru</label>
@@ -803,14 +811,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-ok" data-name="rower — progresif threshold protokolü">
+<tr class="status-miss" data-name="rower — progresif threshold protokolü">
   <td class="col-num">46</td>
   <td class="col-name">
     <div class="name">Rower — Progresif Threshold Protokolü</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF var</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/vpQaQkH.gif" alt="Rower — Progresif Threshold Protokolü" loading="lazy" class="gif"></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Rower%20%E2%80%94%20Progresif%20Threshold%20Protokol%C3%BC%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-45" value="ok"> Dogru</label>
@@ -819,14 +827,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="scapular wall slide">
+<tr class="status-short" data-name="scapular wall slide">
   <td class="col-num">47</td>
   <td class="col-name">
     <div class="name">Scapular Wall Slide</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/OtgQDv7u1TM?loop=1&playlist=OtgQDv7u1TM&rel=0&modestbranding=1" title="Scapular Wall Slide" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=scapular%20wall%20slide%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-46" value="ok"> Dogru</label>
@@ -840,9 +848,9 @@
   <td class="col-name">
     <div class="name">Shoulder Cross Stretch</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">Sadece arama</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="no-gif">GIF + Short yok · YouTube araması kullanılıyor</div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=cross%20body%20shoulder%20stretch%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-47" value="ok"> Dogru</label>
@@ -915,14 +923,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="standing calf raise">
+<tr class="status-short" data-name="standing calf raise">
   <td class="col-num">53</td>
   <td class="col-name">
     <div class="name">Standing Calf Raise</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/sNqa1ad2qIQ?loop=1&playlist=sNqa1ad2qIQ&rel=0&modestbranding=1" title="Standing Calf Raise" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=standing%20calf%20raise%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-52" value="ok"> Dogru</label>
@@ -979,14 +987,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-ok" data-name="towel curl (bacak dirençli)">
+<tr class="status-short" data-name="towel curl (bacak dirençli)">
   <td class="col-num">57</td>
   <td class="col-name">
     <div class="name">Towel Curl (Bacak Dirençli)</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF var</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><img src="https://static.exercisedb.dev/media/G08RZcQ.gif" alt="Towel Curl (Bacak Dirençli)" loading="lazy" class="gif"></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/rNZ7V4wPhaE?loop=1&playlist=rNZ7V4wPhaE&rel=0&modestbranding=1" title="Towel Curl (Bacak Dirençli)" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Towel%20Curl%20(Bacak%20Diren%C3%A7li)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-56" value="ok"> Dogru</label>
@@ -1027,14 +1035,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="wall sit">
+<tr class="status-short" data-name="wall sit">
   <td class="col-num">60</td>
   <td class="col-name">
     <div class="name">Wall Sit</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/mDdLC-yKudY?loop=1&playlist=mDdLC-yKudY&rel=0&modestbranding=1" title="Wall Sit" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=wall%20sit%20exercise%20form%20knee%20friendly" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-59" value="ok"> Dogru</label>
@@ -1043,14 +1051,14 @@
     <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
   </td>
 </tr>
-<tr class="status-miss" data-name="wall tibialis raise">
+<tr class="status-short" data-name="wall tibialis raise">
   <td class="col-num">61</td>
   <td class="col-name">
     <div class="name">Wall Tibialis Raise</div>
     <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
-    <div class="status">GIF yok</div>
+    <div class="status">YT Short</div>
   </td>
-  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-gif"><div class="short-wrap"><iframe src="https://www.youtube-nocookie.com/embed/PotNJd0qZDM?loop=1&playlist=PotNJd0qZDM&rel=0&modestbranding=1" title="Wall Tibialis Raise" loading="lazy" allowfullscreen></iframe></div></td>
   <td class="col-yt"><a href="https://www.youtube.com/results?search_query=wall%20tibialis%20raise%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
   <td class="col-check">
     <label class="check-row"><input type="radio" name="verdict-60" value="ok"> Dogru</label>
@@ -1088,11 +1096,13 @@
       const tags = [...row.querySelectorAll(".tag")].map(t => t.textContent);
       const isHybrid = tags.includes("HYBRID");
       const hasGif = row.classList.contains("status-ok");
+      const hasShort = row.classList.contains("status-short");
       let show = true;
       if (q && !name.includes(q)) show = false;
       if (activeFilter === "hybrid" && !isHybrid) show = false;
-      if (activeFilter === "missing" && hasGif) show = false;
-      if (activeFilter === "hybrid-ok" && (!isHybrid || !hasGif)) show = false;
+      if (activeFilter === "missing" && (hasGif || hasShort)) show = false;
+      if (activeFilter === "short" && !hasShort) show = false;
+      if (activeFilter === "gif" && !hasGif) show = false;
       row.classList.toggle("hidden", !show);
     }
   }
@@ -1105,7 +1115,7 @@
       applyFilters();
     });
   }
-  const STORAGE_KEY = "yb_gif_audit_v1";
+  const STORAGE_KEY = "yb_gif_audit_v2";
   const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
   for (const row of rows) {
     const name = row.dataset.name;
@@ -1142,7 +1152,7 @@
     const url = URL.createObjectURL(blob);
     const a = document.createElement("a");
     a.href = url;
-    a.download = "gif-audit-" + new Date().toISOString().slice(0,10) + ".json";
+    a.download = "gif-audit-v2-" + new Date().toISOString().slice(0,10) + ".json";
     a.click();
     URL.revokeObjectURL(url);
   });

@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getGifUrl, getYouTubeSearchUrl } from "./videoMap";
+import { getGifUrl, getYouTubeSearchUrl, getYouTubeShortId, getYouTubeShortEmbedUrl } from "./videoMap";
 
 const MULTI_LABELS = {
   "Dumbbell 4 Ways Lateral Raise": ["Öne Kaldırma", "Yana Kaldırma", "Arkaya Kaldırma", "Çapraz Kaldırma"],
@@ -65,6 +65,24 @@ function SingleGif({ url, label, exerciseName }) {
   );
 }
 
+function YtShortEmbed({ videoId, name }) {
+  // User-curated YouTube Short — render as a looping inline iframe so the
+  // exercise "plays" the same way a GIF does. Small enough to sit in-line
+  // with the rest of the workout card.
+  return (
+    <div className="gif-wrap gif-short-wrap">
+      <iframe
+        className="gif-short-frame"
+        src={getYouTubeShortEmbedUrl(videoId)}
+        title={name || "Egzersiz videosu"}
+        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+        allowFullScreen
+        loading="lazy"
+      />
+    </div>
+  );
+}
+
 function YtFallback({ name }) {
   const ytUrl = getYouTubeSearchUrl(name);
   return (
@@ -80,7 +98,12 @@ function YtFallback({ name }) {
 function ExerciseGif({ name }) {
   const gifUrl = getGifUrl(name);
 
+  // Priority: GIF > user-curated YT Short > search-link fallback.
+  // A Short is preferred over a search link because it's a specific, vetted
+  // video; we only fall back to "YouTube'da izle" when nothing better exists.
   if (!gifUrl) {
+    const shortId = getYouTubeShortId(name);
+    if (shortId) return <YtShortEmbed videoId={shortId} name={name} />;
     return <YtFallback name={name} />;
   }
 
