@@ -114,6 +114,29 @@ export async function loadWorkout(dayIndex) {
   };
 }
 
+// All completed workouts, newest first. Returns a consistent shape whether
+// the user is on Supabase or the localStorage fallback.
+export async function getAllCompletedWorkouts(limit = 60) {
+  const user = await getUser();
+  if (!user) return fallbackGetAllCompletedWorkouts(limit);
+
+  const { data } = await supabase
+    .from('workouts')
+    .select('workout_date, day_index, exercises, start_time, end_time, completed')
+    .eq('user_id', user.id)
+    .eq('completed', true)
+    .order('workout_date', { ascending: false })
+    .limit(limit);
+
+  return (data || []).map((row) => ({
+    date: row.workout_date,
+    dayIndex: row.day_index,
+    exercises: row.exercises || {},
+    startTime: row.start_time,
+    endTime: row.end_time,
+  }));
+}
+
 export async function getCompletedWorkoutsInRange(startDate, endDate) {
   if (!startDate || !endDate) return [];
 
@@ -480,6 +503,25 @@ function fallbackGetCompletedWorkoutsInRange(startDate, endDate) {
       };
     })
     .filter((workout) => workout.completed && workout.workout_date >= startDate && workout.workout_date <= endDate);
+}
+function fallbackGetAllCompletedWorkouts(limit) {
+  const all = lsL();
+  const rows = Object.entries(all)
+    .map(([key, workout]) => {
+      const [workoutDate, dayToken] = key.split('_day');
+      const dayIndex = Number(dayToken);
+      return {
+        date: workoutDate,
+        dayIndex: Number.isFinite(dayIndex) ? dayIndex : null,
+        exercises: workout.exercises || {},
+        startTime: workout.startTime ?? workout.start_time ?? null,
+        endTime: workout.endTime ?? workout.end_time ?? null,
+        completed: !!workout.completed,
+      };
+    })
+    .filter((w) => w.completed);
+  rows.sort((a, b) => b.date.localeCompare(a.date));
+  return rows.slice(0, limit);
 }
 function fallbackWeeklyStats() {
   const a=lsL(),now=new Date(),ws=new Date(now);ws.setDate(now.getDate()-now.getDay()+1);const wsS=formatLocalDate(ws);

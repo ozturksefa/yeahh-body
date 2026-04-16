@@ -8,6 +8,7 @@ import ActiveSessionBar from "./hybrid/ActiveSessionBar";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
 import PlanPage from "./hybrid/PlanPage";
+import SessionHistoryPage from "./hybrid/SessionHistoryPage";
 import ScrollToTopButton from "./hybrid/ScrollToTopButton";
 import SafetyNotice from "./hybrid/SafetyNotice";
 import StartProgramCard from "./hybrid/StartProgramCard";
@@ -624,6 +625,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           weekProgress={weekProgress}
         />
       )}
+
+      {page === "history" && <SessionHistoryPage />}
 
       {page === "skill" && (
         <SkillTracker

@@ -2,6 +2,7 @@ import { buttonBase } from "./shared";
 
 const PAGE_TABS = [
   ["program", "Program"],
+  ["history", "📋 Geçmiş"],
   ["skill", "🎯 Skill"],
   ["plan", "8 Hafta"],
   ["status", "📊 Durum"],
