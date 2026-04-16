@@ -532,6 +532,42 @@ body{
 .scroll-top-btn:active{transform:scale(.92)}
 @keyframes fabFadeIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
 
+/* ═══ STREAK HEATMAP CARD ═══ */
+.streak-card{
+  display:grid; grid-template-columns:auto 1fr; gap:14px; align-items:center;
+  background:linear-gradient(135deg, rgba(217,106,29,.08), rgba(255,209,102,.04));
+  border:1px solid rgba(217,106,29,.24); border-radius:14px;
+  padding:12px 14px; margin:0 12px 12px;
+}
+.streak-card-loading{ opacity:.7; }
+.streak-left{ display:flex; gap:10px; align-items:center; min-width:130px; }
+.streak-card-flame{ font-size:28px; line-height:1; }
+.streak-big{ font-size:26px; font-weight:800; color:var(--text); line-height:1; font-family:var(--mono,inherit); }
+.streak-unit{ font-size:13px; font-weight:700; color:var(--text3); margin-left:4px; }
+.streak-sub{ font-size:11px; color:var(--text3); line-height:1.4; margin-top:4px; max-width:240px; }
+.streak-right{ min-width:0; }
+.streak-grid{
+  display:grid; grid-auto-flow:column; grid-auto-columns:minmax(0, 1fr);
+  gap:3px; overflow-x:hidden;
+}
+.streak-col{ display:grid; grid-template-rows:repeat(7, 1fr); gap:3px; }
+.streak-cell{ width:100%; aspect-ratio:1; border-radius:3px; min-height:10px; }
+.streak-cell-rest{ background:rgba(255,255,255,.05); border:1px solid rgba(255,255,255,.04); }
+.streak-cell-miss{ background:rgba(255,167,38,.12); border:1px solid rgba(255,167,38,.24); }
+.streak-cell-done{ background:var(--accent); border:1px solid var(--accent-2); box-shadow:0 0 4px rgba(217,106,29,.45); }
+.streak-cell-today{ background:rgba(79,195,247,.18); border:1px solid rgba(79,195,247,.55); }
+.streak-legend{ display:flex; gap:10px; flex-wrap:wrap; font-size:10px; color:var(--text3); margin-top:8px; }
+.streak-legend span{ display:inline-flex; align-items:center; gap:4px; }
+.streak-dot{ width:8px; height:8px; border-radius:2px; display:inline-block; }
+.streak-dot-done{ background:var(--accent); }
+.streak-dot-miss{ background:rgba(255,167,38,.32); border:1px solid rgba(255,167,38,.55); }
+.streak-dot-rest{ background:rgba(255,255,255,.08); }
+@media (max-width: 420px){
+  .streak-card{ grid-template-columns:1fr; }
+  .streak-left{ min-width:0; }
+  .streak-sub{ max-width:none; }
+}
+
 /* ═══ SESSION HISTORY PAGE ═══ */
 .history-stat-tile{
   background:var(--card2); border:1px solid var(--border); border-radius:10px;

@@ -9,6 +9,7 @@ import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
 import PlanPage from "./hybrid/PlanPage";
 import SessionHistoryPage from "./hybrid/SessionHistoryPage";
+import StreakHeatmap from "./hybrid/StreakHeatmap";
 import ScrollToTopButton from "./hybrid/ScrollToTopButton";
 import SafetyNotice from "./hybrid/SafetyNotice";
 import StartProgramCard from "./hybrid/StartProgramCard";
@@ -497,6 +498,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       {page === "program" && (
         <>
           <DayHeader day={day} activeVariant={activeVariant} mode={mode} weekProfile={weekProfile} />
+
+          <StreakHeatmap />
 
           {!startDate && <StartProgramCard onStart={handleStartProgram} />}
 
