@@ -557,6 +557,29 @@ body{
 .push-btn-secondary{ background:transparent; color:var(--text2); border-color:var(--border); }
 .push-card-error{ font-size:11px; color:#FF8A8A; margin-top:8px; }
 
+/* ═══ ASYMMETRY INLINE BADGE + HINT (unilateral exercises) ═══ */
+.asym-inline-badge{
+  display:inline-block; margin-left:6px; font-size:13px;
+  filter:drop-shadow(0 0 4px rgba(255,209,102,.45));
+}
+.asym-inline-hint{
+  background:rgba(255,209,102,.10);
+  border:1px solid rgba(255,209,102,.28);
+  border-radius:10px;
+  padding:8px 10px;
+  margin:10px 0;
+  font-size:11.5px; line-height:1.55; color:var(--text2);
+  display:flex; gap:8px; align-items:flex-start;
+}
+.asym-inline-hint-badge{
+  font-size:14px; line-height:1.2; flex-shrink:0;
+}
+.asym-inline-hint strong{ color:var(--text); font-weight:800; }
+.asym-inline-hint em{ font-style:italic; color:var(--text3); }
+.asym-inline-hint-bonus{
+  color:#FFD166; font-weight:700;
+}
+
 /* ═══ ASYMMETRY PROTOCOL CARD ═══ */
 .asym-card{
   background:linear-gradient(135deg, rgba(255,209,102,.10), rgba(255,167,38,.05));

@@ -97,6 +97,9 @@ function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex,
           <div className="ex-name">
             {displayName}
             {swappedName && <span className="swap-badge">🔄</span>}
+            {ex.unilateral && !swappedName && (
+              <span className="asym-inline-badge" title="Tek taraflı — sağ önce">⚖️</span>
+            )}
             {ex.warn && /ROTATOR CUFF|DİZ:|BEL FITIĞI|BOYUN FITIĞI|🔴|🟡/i.test(ex.warn) && !swappedName && (
               <span className="injury-badge">⚠️</span>
             )}
@@ -132,6 +135,16 @@ function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex,
           )}
 
           <ExerciseGif name={displayName} />
+
+          {ex.unilateral && (
+            <div className="asym-inline-hint" role="note">
+              <span className="asym-inline-hint-badge">⚖️</span>
+              <span>
+                <strong>Sağ önce.</strong> Zayıf tarafta kaç <em>temiz</em> rep yapıyorsan sol de aynı sayıda kapat.
+                {" "}<span className="asym-inline-hint-bonus">SAL + CMT:</span> sağ için +1 bonus set.
+              </span>
+            </div>
+          )}
 
           <SetTracker ex={ex} dayIndex={dayIndex} blockName={blockName} onStartRest={onStartRest} onAllDone={onAllSetsDone} />
           {/* Timed skill hareketler için timer */}
