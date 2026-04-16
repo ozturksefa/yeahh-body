@@ -1,12 +1,13 @@
-/* global Deno */
-
 // Subscribe / unsubscribe a Web Push endpoint for the authenticated user.
 // POST   body { endpoint, keys: { p256dh, auth }, user_agent }
 // DELETE body { endpoint }
 // Both require an Authorization: Bearer <supabase-access-token> header.
+//
+// Netlify runs this in the Node runtime (not Deno), so environment access
+// uses process.env and we ship a handler that returns a plain Response.
 
-const SUPABASE_URL = Deno.env.get("SUPABASE_URL") || Deno.env.get("VITE_SUPABASE_URL") || "";
-const SERVICE_ROLE_KEY = Deno.env.get("SUPABASE_SERVICE_ROLE_KEY") || "";
+const SUPABASE_URL = process.env.SUPABASE_URL || process.env.VITE_SUPABASE_URL || "";
+const SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY || "";
 
 export default async (req) => {
   if (!SUPABASE_URL || !SERVICE_ROLE_KEY) {
