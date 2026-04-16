@@ -8,6 +8,7 @@ import ActiveSessionBar from "./hybrid/ActiveSessionBar";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
 import PlanPage from "./hybrid/PlanPage";
+import ScrollToTopButton from "./hybrid/ScrollToTopButton";
 import SafetyNotice from "./hybrid/SafetyNotice";
 import StartProgramCard from "./hybrid/StartProgramCard";
 import SupportDrawer from "./hybrid/SupportDrawer";
@@ -651,6 +652,10 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           </main>
         </Suspense>
       )}
+
+      <ScrollToTopButton
+        liftAboveBar={page === "program" && !currentEntry.post.completed && (workoutState.started || hasWorkoutInput)}
+      />
     </div>
   );
 }
