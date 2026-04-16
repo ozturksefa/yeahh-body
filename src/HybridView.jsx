@@ -12,6 +12,7 @@ import ContextualBanner from "./hybrid/ContextualBanner";
 import DayHeader from "./hybrid/DayHeader";
 import HybridHeader from "./hybrid/HybridHeader";
 import InstallPrompt from "./hybrid/InstallPrompt";
+import PlaylistCard from "./hybrid/PlaylistCard";
 import PlanPage from "./hybrid/PlanPage";
 import SessionHistoryPage from "./hybrid/SessionHistoryPage";
 import StreakHeatmap from "./hybrid/StreakHeatmap";
@@ -532,6 +533,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           <DayHeader day={day} activeVariant={activeVariant} mode={mode} weekProfile={weekProfile} />
 
           <ContextualBanner day={day} activeVariant={activeVariant} startDate={startDate} />
+
+          <PlaylistCard dayName={day.sub} />
 
           <StreakHeatmap />
 

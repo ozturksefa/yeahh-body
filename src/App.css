@@ -557,6 +557,73 @@ body{
 .push-btn-secondary{ background:transparent; color:var(--text2); border-color:var(--border); }
 .push-card-error{ font-size:11px; color:#FF8A8A; margin-top:8px; }
 
+/* ═══ WORKOUT PLAYLIST CARD ═══ */
+.playlist-card{
+  background:linear-gradient(135deg, rgba(131,56,236,.12), rgba(255,90,90,.08));
+  border:1px solid rgba(131,56,236,.32); border-radius:14px;
+  padding:12px 14px; margin:0 12px 12px;
+  display:flex; flex-direction:column; gap:10px;
+}
+.playlist-card-head{ display:flex; gap:12px; align-items:flex-start; }
+.playlist-card-icon{ font-size:22px; line-height:1; flex-shrink:0; }
+.playlist-card-body{ min-width:0; flex:1; }
+.playlist-card-title{
+  font-size:13px; font-weight:800; color:var(--text); letter-spacing:.02em;
+  display:flex; align-items:center; gap:8px;
+}
+.playlist-card-badge{
+  font-size:9px; font-weight:800; padding:2px 8px; border-radius:999px;
+  background:rgba(255,209,102,.2); color:#FFD166; letter-spacing:.1em; text-transform:uppercase;
+}
+.playlist-card-mood{ font-size:12px; color:var(--text2); margin-top:3px; line-height:1.4; }
+.playlist-card-meta{
+  display:flex; gap:6px; flex-wrap:wrap;
+  font-size:10px; color:var(--text3); margin-top:5px;
+  font-family:var(--mono, inherit); letter-spacing:.03em;
+}
+.playlist-card-actions{ display:flex; gap:6px; flex-wrap:wrap; align-items:center; }
+.playlist-btn{
+  padding:8px 12px; border-radius:8px; font-size:12px; font-weight:700;
+  cursor:pointer; font-family:inherit; border:1px solid transparent;
+  text-decoration:none; display:inline-flex; align-items:center; gap:4px;
+}
+.playlist-btn:disabled{ opacity:.5; cursor:default; }
+.playlist-btn-primary{
+  background:linear-gradient(135deg, #8338EC, #D96A1D);
+  color:#fff; border:none; font-weight:800;
+}
+.playlist-btn-secondary{
+  background:rgba(0,0,0,.25); color:var(--text);
+  border:1px solid rgba(255,255,255,.12);
+}
+.playlist-btn-ghost{
+  background:transparent; color:var(--text3);
+  border:1px solid var(--border);
+}
+.playlist-btn-ghost:hover{ color:var(--text); border-color:var(--border-strong); }
+.playlist-embed-wrap{
+  width:100%; aspect-ratio:16/10; background:#000;
+  border-radius:10px; overflow:hidden; position:relative;
+}
+.playlist-embed{ position:absolute; inset:0; width:100%; height:100%; border:0; }
+.playlist-edit{
+  display:flex; flex-direction:column; gap:6px;
+  padding:10px; background:rgba(0,0,0,.22); border-radius:10px;
+  border:1px solid var(--border);
+}
+.playlist-edit-label{ font-size:10px; font-weight:700; color:var(--text3); letter-spacing:.04em; text-transform:uppercase; }
+.playlist-edit-input{
+  padding:10px 12px; background:var(--card2); border:1px solid var(--border);
+  border-radius:8px; color:var(--text); font-size:12px; font-family:inherit;
+}
+.playlist-edit-input:focus{ outline:none; border-color:var(--accent); }
+.playlist-edit-error{ font-size:11px; color:#FF8A8A; }
+.playlist-edit-actions{ display:flex; gap:6px; justify-content:flex-end; }
+.playlist-card-fallback{
+  font-size:11px; color:var(--text3); text-decoration:none;
+}
+.playlist-card-fallback:hover{ color:var(--text); text-decoration:underline; }
+
 /* ═══ CONTEXTUAL BANNER ═══ */
 .ctx-banner{
   display:flex; gap:12px; align-items:center;
