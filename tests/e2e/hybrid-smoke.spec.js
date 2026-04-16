@@ -53,10 +53,10 @@ test('mode switch and tab navigation work across hybrid pages', async ({ page })
   await page.goto('/?e2eAuth=1');
 
   await page.getByRole('button', { name: '🏋️ Macfit' }).click();
-  await expect(page.getByText('Macfit versiyonu')).toBeVisible();
+  await expect(page.locator('.day-meta')).toContainText('Macfit versiyonu');
 
   await page.getByRole('button', { name: '🏠 Ev' }).click();
-  await expect(page.getByText('Ev versiyonu')).toBeVisible();
+  await expect(page.locator('.day-meta')).toContainText('Ev versiyonu');
 
   await page.getByTestId('page-tab-skill').click();
   await expect(page.getByText('Skill İlerleme')).toBeVisible();

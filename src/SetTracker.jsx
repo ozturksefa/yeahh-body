@@ -1,6 +1,5 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { saveExerciseSets, loadExerciseSets, suggestWeight, getHistory } from "./tracker";
-import { getRestDuration } from "./restTimerUtils";
 import ExertionRating from "./ExertionRating";
 import { isUpper, parseSets } from "./setTrackerUtils";
 
@@ -42,7 +41,7 @@ function isBodyweightStyleExercise(name = "") {
   ].some((item) => lower.includes(item));
 }
 
-function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
+function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
   const trackBlocks = ["KUVVET", "CALİSTHENİCS", "CORE", "FİNİSHER", "PRIMARY", "SECONDARY", "KALİSTENİK", "SKILL", "KOMPLİMENTER", "FULL BODY"];
   const showTracker = trackBlocks.some((block) => blockName?.toUpperCase().includes(block));
   const parsed = parseSets(ex.sets);
@@ -199,13 +198,6 @@ function SetTracker({ ex, dayIndex, blockName, onStartRest, onAllDone }) {
         if (navigator.vibrate) navigator.vibrate([50, 50, 100]);
         setTimeout(() => setPrFlash(null), 3000);
       }
-    }
-
-    if (!wasDone && onStartRest) {
-      const doneCount = nextSets.filter((set) => set.done).length;
-      const isLastSet = doneCount >= setCount;
-      const baseRest = getRestDuration(blockName, ex.name);
-      onStartRest(isLastSet ? baseRest + 60 : baseRest, ex.name, isLastSet);
     }
 
     const firstUndone = nextSets.findIndex((set) => !set.done);
