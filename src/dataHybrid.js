@@ -110,6 +110,26 @@ export const PROGRAM_HYBRID = {
     ],
   },
 
+  homeEquipment: {
+    inventory: [
+      "1× sabit 5 kg dumbbell (tek)",
+      "1× ayarlanabilir dumbbell (2×2kg + 4×1kg plakalar, 4-8 kg aralığı)",
+      "Masa/bench/sandalye, havlu, zemin, duvar",
+    ],
+    constraints: [
+      "Tek taraflı (unilateral) hareketler primary yol — çift DB gerektiren bilateral lift yok.",
+      "8 kg tavanı olduğu için yük yerine tempo (3-1-1 eccentric), ROM ve rep progresyonu kullan.",
+      "Tek dumbbell ile offset/suitcase yükleme → asimetrik core stimulus bonus.",
+      "Plak değiştirmek zaman aldığı için bir set içinde yük sabit kalır; set'ler arası değiştir.",
+    ],
+    progression: [
+      "Hafta 1-2: 3×8 @ 5kg",
+      "Hafta 3-4: 3×10 @ 5kg",
+      "Hafta 5-6: 3×12 @ 5kg",
+      "Hafta 7-8: 3×8 @ 6-8kg (ayarlanabilir dumbbell) — tempo eccentric 3sn eklendi",
+    ],
+  },
+
   controlCenter: {
     badges: [
       { label: "Aerobik Hedef", value: "150–210 dk/hafta", tone: "good" },
@@ -118,6 +138,7 @@ export const PROGRAM_HYBRID = {
       { label: "Diz Politikası", value: "Derin fleksiyon yok", tone: "good" },
       { label: "Omuz Politikası", value: "Dip yok, overhead şartlı", tone: "warn" },
       { label: "Pazar Rolü", value: "Recovery + Zone 2", tone: "good" },
+      { label: "Ev Ekipmanı", value: "1× sabit 5kg + 1× ayarlanabilir 4-8kg DB", tone: "good" },
     ],
     rules: [
       "Ana kuvvet setleri RPE 6-8 aralığında kalır; failure yok.",
@@ -129,6 +150,7 @@ export const PROGRAM_HYBRID = {
       "Primary hip power: Explosive Hip Thrust. KB Swing sadece bel tamamen sakinse ve forma güven tamsa alternatif.",
       "Threshold rower progresif: Hafta 1-3 pure Zone 2, Hafta 4-6 2×4dk, Hafta 7-8 tam 4×4dk.",
       "Koşu, zıplama, dip, ağır swing ve agresif rollout bu fazda yok.",
+      "Ev modunda tek dumbbell var → bilateral yerine unilateral + asymmetric (suitcase/offset) yüklü varyantları tercih et. Yük yerine tempo (3-1-1 eccentric) ve rep range ile progresyon yap.",
     ],
     swaps: [
       { trigger: "Omuz 3/10 üstü", action: "Overhead ve handstand'ı çıkar; row + floor press / incline push-up ile kal." },
@@ -303,12 +325,12 @@ export const PROGRAM_HYBRID = {
               ex("Explosive Push-up (Dizdan veya Incline)", "3 × 6-8", "Üst patlayıcı itiş", ["İniş 2 sn yavaş, itiş hızlı", "Ayak+el yerde kalır (plyo yok)", "Omuzlar nötrde"], { warn: "⏱ HAFTA 1'DE YAPMA. Hafta 2'den itibaren devreye alınır. Overhead yok; göğüs hizasında patlayıcı concentric. Omuz ağrısı varsa duvar versiyonuna dön.", alts: ["Wall Push-up Explosive"], alt_reasons: ["Yerden zor geliyorsa duvarla açı düşür"] }),
             ]),
             block("💪 KUVVET — Temel Denge", "#F4A261", [
-              ex("Inverted Row (Masa Altı)", "4 × 6-10", "Sırt + biceps", ["Göğsü masaya çek", "Boynu öne uzatma", "Üstte 1 sn sık"], { warn: "Bugünün ana çekişi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh güvenli değilse ayak dirençli towel row kullan", "Hiçbir çekiş kurulamıyorsa prone cobra ile üst sırt aktivasyonunu koru"] }),
-              ex("Incline Push-up", "4 × 8-12", "Göğüs + triceps", ["Yüksekliği omuza göre ayarla", "Dirsekleri 30-45° tut"], { warn: "Bugünün güvenli itişi", alts: ["Wall Push-up"], alt_reasons: ["Omuz hassassa açıyı daha da yükselt"] }),
-              ex("Close Grip Push Up", "2 × 8-10", "Triceps + iç göğüs", ["Elleri biraz daha dar al", "Gerekirse incline yap", "Omuz öne düşmesin"], { warn: "Triceps ve göğüs için düşük riskli ek hacim", alts: ["Wall Push-up"], alt_reasons: ["Dar tutuş omuz veya bileği rahatsız ederse açıyı yükselt"] }),
-              ex("Towel Curl (Bacak Dirençli)", "2 × 12-15", "Biceps", ["Oturarak, havlunun uçlarını elinde tut", "Alt ucu tek ayakla bas, ayakla direnç ver", "Dirseği gövdeye yakın, omuzu öne alma"], { warn: "Evde direkt biceps hacmi — izometriğin aksine tam ROM verir", alts: ["Towel Curl Isometric"], alt_reasons: ["Ayakla direnç ayarı zor geliyorsa izometrik tut ile devam"] }),
-              ex("Single Leg Glute Bridge", "3 × 10-12 (her bacak)", "Glute + hamstring", ["Bel değil kalça itişi", "Üstte 1 sn sık"], { warn: "Posterior chain'i güvenli besler" }),
-              ex("Wall Sit", "2 × 20-30sn", "Quad izometrik", ["Ağrısız açı bul", "Topuğu yükle"], { avoid: "Derin açı", warn: "Diz baskısı artarsa çıkar", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Diz bugün hoşlanmıyorsa glute dominanta dön"] }),
+              ex("Inverted Row (Masa Altı)", "4 × 6-10", "Sırt + biceps", ["Göğsü masaya çek", "Boynu öne uzatma", "Üstte 1 sn sık"], { warn: "Bugünün ana çekişi", alts: ["Tek Kol DB Row (5kg, masa/bench destekli)", "Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Dumbbell'in varsa tek el row daha net yük — masa/bench'e diz ve el ile destek al, dirseği gövdene çek, 3×10-12 her taraf", "Masa veya tezgâh güvenli değilse ayak dirençli towel row kullan", "Hiçbir çekiş kurulamıyorsa prone cobra ile üst sırt aktivasyonunu koru"] }),
+              ex("Incline Push-up", "4 × 8-12", "Göğüs + triceps", ["Yüksekliği omuza göre ayarla", "Dirsekleri 30-45° tut"], { warn: "Bugünün güvenli itişi", alts: ["DB Floor Press (5kg tek el, tempo 3-1-1)", "Wall Push-up"], alt_reasons: ["Tek dumbbell varsa yere yat, tek kolla floor press 3×8-10 her taraf — omuz dostu press alternatifi", "Omuz hassassa açıyı daha da yükselt"] }),
+              ex("Close Grip Push Up", "2 × 8-10", "Triceps + iç göğüs", ["Elleri biraz daha dar al", "Gerekirse incline yap", "Omuz öne düşmesin"], { warn: "Triceps ve göğüs için düşük riskli ek hacim", alts: ["DB Tek Kol Triceps Ext. (5kg, oturarak overhead)", "Wall Push-up"], alt_reasons: ["Omuz sakinse tek kol triceps extension 5kg · 2×10-12 her taraf · dirseği kulağa yakın tut", "Dar tutuş omuz veya bileği rahatsız ederse açıyı yükselt"] }),
+              ex("Towel Curl (Bacak Dirençli)", "2 × 12-15", "Biceps", ["Oturarak, havlunun uçlarını elinde tut", "Alt ucu tek ayakla bas, ayakla direnç ver", "Dirseği gövdeye yakın, omuzu öne alma"], { warn: "Evde direkt biceps hacmi — izometriğin aksine tam ROM verir", alts: ["DB Tek Kol Curl (5kg veya ayarlanabilir 6-8kg)", "Towel Curl Isometric"], alt_reasons: ["Dumbbell'in varsa direkt 3×10-12 her kol — eccentric tempo 3sn; ağırlığı ayarlanabilir dumbbell ile 6-8kg'a çek", "Ayakla direnç ayarı zor geliyorsa izometrik tut ile devam"] }),
+              ex("Single Leg Glute Bridge", "3 × 10-12 (her bacak)", "Glute + hamstring", ["Bel değil kalça itişi", "Üstte 1 sn sık"], { warn: "Posterior chain'i güvenli besler", alts: ["DB Single Leg Glute Bridge (5kg pelvis üstünde)"], alt_reasons: ["Dumbbell pelvis üstünde — tek bacak için yeterli ek yük, 3×10 her bacak"] }),
+              ex("Wall Sit", "2 × 20-30sn", "Quad izometrik", ["Ağrısız açı bul", "Topuğu yükle"], { avoid: "Derin açı", warn: "Diz baskısı artarsa çıkar", alts: ["DB Goblet Squat (5-8kg)", "DB Goblet Wall Sit (5-8kg)", "Single Leg Glute Bridge"], alt_reasons: ["Diz izin veriyorsa goblet squat — dumbbell göğüs önünde, kısa ROM'da 3×10-12 · menisküs için kontrollü ama progresyon verir", "Wall sit'te dumbbell göğüs önünde — quad yükü belirgin artar", "Diz bugün hoşlanmıyorsa glute dominanta dön"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Dead Bug", "3 × 8-10 (her taraf)", "Anti-extension core", ["Bel boşluğunu sabit tut", "Yavaş uzat"], { warn: "Bel için ana core" }),
@@ -432,15 +454,15 @@ export const PROGRAM_HYBRID = {
               ex("L-sit Tuck Hold", "3 × 8-12sn", "Core + support", ["Dizleri yakın tut", "Omuzları aşağı bas"], { warn: "Yeni skill; kalite bozulmadan bitir" }),
             ]),
             block("💪 KUVVET — Kontrol Hattı", "#F4A261", [
-              ex("Tempo Inverted Row", "3 × 6-8", "Sırt + skapula", ["3 sn iniş", "Üstte 1 sn dur", "Boynu uzun tut"], { warn: "Bugünün upper-back omurgası", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa güvenli değilse towel row ile çekiş paterni korunur", "Belirgin ekipman kısıtında prone cobra ile skapula ve torasik kontrolü koru"] }),
-              ex("Reverse Lunge (ağırlıksız)", "3 × 6-8 (her bacak)", "Quad + glute", ["Kısa kontrollü adım", "Diz çizgisini koru"], { avoid: "Büyük adım ve derin açı", warn: "Diz baskısı varsa wall sit'e dön", alts: ["Wall Sit"], alt_reasons: ["Menisküs hassassa izometrik seçenek daha güvenli olabilir"] }),
-              ex("Wall Sit", "1-2 × 20-30sn", "Quad izometrik", ["Ağrısız diz açısında kal", "Topuğu yükle"], { warn: "Reverse lunge iyi gidiyorsa düşük doz quad finisher olarak kullan", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Diz o gün wall sit'i de sevmiyorsa glute dominanta dön"] }),
-              ex("Hip Thrust (Sandalye)", "3 × 12-15", "Glute max", ["Üstte kısa sık", "Bel yerine kalçadan it"]),
-              ex("Single Leg RDL (Bodyweight)", "2 × 6-8 (her bacak)", "Posterior chain + denge", ["Kalçadan menteşelen, dizi hafif yumuşak tut", "Gövde ve arkadaki bacak paralel inecek", "Denge için duvar veya sandalye desteği kullan"], { warn: "Tek taraflı hinge + asimetri tespiti; skolyoz için değerli", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Denge tutmuyorsa glute dominanta dön"] }),
+              ex("Tempo Inverted Row", "3 × 6-8", "Sırt + skapula", ["3 sn iniş", "Üstte 1 sn dur", "Boynu uzun tut"], { warn: "Bugünün upper-back omurgası", alts: ["Tek Kol DB Row Tempo (5kg, 3 sn iniş)", "Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Dumbbell varsa tek kol row + 3sn eccentric — aynı stimulus, ölçülebilir yük: 3×8-10 her taraf, masa/bench destekli", "Masa güvenli değilse towel row ile çekiş paterni korunur", "Belirgin ekipman kısıtında prone cobra ile skapula ve torasik kontrolü koru"] }),
+              ex("Reverse Lunge (ağırlıksız)", "3 × 6-8 (her bacak)", "Quad + glute", ["Kısa kontrollü adım", "Diz çizgisini koru"], { avoid: "Büyük adım ve derin açı", warn: "Diz baskısı varsa wall sit'e dön", alts: ["DB Suitcase Reverse Lunge (5kg tek el)", "Wall Sit"], alt_reasons: ["Tek dumbbell'i yük tarafında tutarak asymmetric yük — core extra stabilizasyon, 3×6 her bacak", "Menisküs hassassa izometrik seçenek daha güvenli olabilir"] }),
+              ex("Wall Sit", "1-2 × 20-30sn", "Quad izometrik", ["Ağrısız diz açısında kal", "Topuğu yükle"], { warn: "Reverse lunge iyi gidiyorsa düşük doz quad finisher olarak kullan", alts: ["DB Goblet Wall Sit (5-8kg)", "Single Leg Glute Bridge"], alt_reasons: ["Dumbbell göğüs önünde tut — quad yükü +%40, bel nötr", "Diz o gün wall sit'i de sevmiyorsa glute dominanta dön"] }),
+              ex("Hip Thrust (Sandalye)", "3 × 12-15", "Glute max", ["Üstte kısa sık", "Bel yerine kalçadan it"], { alts: ["DB Hip Thrust (8kg pelvis üstünde)", "Single Leg Hip Thrust"], alt_reasons: ["Ayarlanabilir dumbbell'i pelvis üstüne koy — yastık/havlu ile destekle, 3×10-12. Bugün yük almak için en güvenli yer", "Bir tek bacak ile yap — ağırlık yerine tek bacak stimulus"] }),
+              ex("Single Leg RDL (Bodyweight)", "2 × 6-8 (her bacak)", "Posterior chain + denge", ["Kalçadan menteşelen, dizi hafif yumuşak tut", "Gövde ve arkadaki bacak paralel inecek", "Denge için duvar veya sandalye desteği kullan"], { warn: "Tek taraflı hinge + asimetri tespiti; skolyoz için değerli", alts: ["DB Single Leg RDL (5kg karşı elde)", "Single Leg Glute Bridge"], alt_reasons: ["Dumbbell'i duran bacağın karşı tarafında tut — asymmetric yük denge ve skolyoz kontrolü için ideal, 3×6 her taraf", "Denge tutmuyorsa glute dominanta dön"] }),
               ex("Bridge Walkout", "2 × 6-8", "Hamstring curl hattı", ["Köprüde kal", "Topukları yavaş uzağa yürüt", "Belini düşürme"], { warn: "Hamstring knee-flexion için evde güvenli başlangıç", alts: ["Single Leg Glute Bridge"], alt_reasons: ["Bel veya arka bacak krampı olursa glute dominanta geri dön"] }),
             ]),
             block("🏋 LOADED CARRY", "#E76F51", [
-              ex("Farmer Carry (Ağır Çanta / Su Bidonu)", "2 × 30-40 sn", "Grip + core + locomotion", ["Yük gövde yanında, omuzlar aşağıda", "Göbek içeri, nefes ritmik", "Adım küçük ve stabil"], { warn: "Atletik taşıma kapasitesi (tactical athlete standartı); grip + core + kondisyon tek harekette", alts: ["Suitcase Carry (tek tarafta)", "Ağırlıksız Yavaş Yürüyüş (form odaklı)"], alt_reasons: ["Asimetri çalışması istiyorsan suitcase", "Uygun yük yoksa formu sabit tutarak yürüyüş ritmine odaklan"] }),
+              ex("Farmer Carry (Ağır Çanta / Su Bidonu)", "2 × 30-40 sn", "Grip + core + locomotion", ["Yük gövde yanında, omuzlar aşağıda", "Göbek içeri, nefes ritmik", "Adım küçük ve stabil"], { warn: "Atletik taşıma kapasitesi (tactical athlete standartı); grip + core + kondisyon tek harekette", alts: ["DB Suitcase Carry (5kg veya 8kg tek el)", "Suitcase Carry (tek tarafta)", "Ağırlıksız Yavaş Yürüyüş (form odaklı)"], alt_reasons: ["Tek dumbbell ile tek el carry — 2×30sn her taraf, gövde yana eğilmemeli. Grip + anti-lateral core", "Asimetri çalışması istiyorsan suitcase", "Uygun yük yoksa formu sabit tutarak yürüyüş ritmine odaklan"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Bird Dog", "2 × 8 (her taraf)", "Anti-rotasyon", ["Kol-bacağı yavaş uzat", "Belini oynatma"], { warn: "Bel yorgun günlerde çok değerli" }),
@@ -564,11 +586,11 @@ export const PROGRAM_HYBRID = {
               ex("L-sit Tuck Hold", "2 × 8-10sn", "Core + support", ["Kısa ve temiz set"]),
             ]),
             block("💪 KUVVET — Hacim", "#F4A261", [
-              ex("Hip Thrust (Sandalye)", "4 × 10-12", "Glute", ["Üstte 1 sn sık", "Belden itme"], { warn: "Bugünün posterior chain omurgası" }),
-              ex("Inverted Row (Masa Altı)", "4 × 8-10", "Sırt", ["Göğsü çek", "Boynu nötr tut"], { warn: "Bugünün ana pull hacmi", alts: ["Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Masa veya tezgâh stabil değilse towel row ile devam et", "Kurulum yoksa prone cobra ile üst sırt hacmini en azından koru"] }),
-              ex("Incline Push-up", "3 × 10-12", "Göğüs", ["Ağrısız ROM'da kal"], { warn: "Push destek hacmi; ana iş değil" }),
-              ex("Towel Curl (Bacak Dirençli)", "2 × 12-15", "Biceps", ["Oturarak havlunun uçlarını elinde tut", "Alt ucu tek ayakla bas, ayakla direnç ver", "Dirseği sabit, tempo kontrollü"], { warn: "Evde direkt biceps hacmi; tam ROM verir", alts: ["Towel Curl Isometric"], alt_reasons: ["Direnç ayarı zor geliyorsa izometrik tut ile devam"] }),
-              ex("Single Leg Glute Bridge", "2 × 10 (her bacak)", "Glute + hamstring", ["Kontrollü kaldır"], { alts: ["Wall Sit"], alt_reasons: ["Diz iyi, quad dokunuş istiyorsan wall sit kullan"] }),
+              ex("Hip Thrust (Sandalye)", "4 × 10-12", "Glute", ["Üstte 1 sn sık", "Belden itme"], { warn: "Bugünün posterior chain omurgası", alts: ["DB Hip Thrust (8kg pelvis üstünde)"], alt_reasons: ["Ayarlanabilir dumbbell'i pelvis üstüne havlu/yastık ile koy — 4×10-12. Hacim gününde yüklü versiyon çok daha iyi stimulus"] }),
+              ex("Inverted Row (Masa Altı)", "4 × 8-10", "Sırt", ["Göğsü çek", "Boynu nötr tut"], { warn: "Bugünün ana pull hacmi", alts: ["Tek Kol DB Row (5kg) + Inverted Row superset", "Towel Row (Ayak Dirençli)", "Prone Cobra"], alt_reasons: ["Hacim günü için: 2 set Inverted Row + 2 set DB Row her taraf — farklı açıdan sırt stimulus", "Masa veya tezgâh stabil değilse towel row ile devam et", "Kurulum yoksa prone cobra ile üst sırt hacmini en azından koru"] }),
+              ex("Incline Push-up", "3 × 10-12", "Göğüs", ["Ağrısız ROM'da kal"], { warn: "Push destek hacmi; ana iş değil", alts: ["DB Floor Press (5kg tek el, her taraf 3×10)"], alt_reasons: ["Omuz sakinse tek el floor press ile hacim — her taraf 3×10, eccentric 3sn tempo"] }),
+              ex("Towel Curl (Bacak Dirençli)", "2 × 12-15", "Biceps", ["Oturarak havlunun uçlarını elinde tut", "Alt ucu tek ayakla bas, ayakla direnç ver", "Dirseği sabit, tempo kontrollü"], { warn: "Evde direkt biceps hacmi; tam ROM verir", alts: ["DB Tek Kol Curl (6-8kg ayarlanabilir)", "Towel Curl Isometric"], alt_reasons: ["Ayarlanabilir dumbbell'i 6-8kg'a çek, her kol 3×8-10 — hacim günü direkt yük", "Direnç ayarı zor geliyorsa izometrik tut ile devam"] }),
+              ex("Single Leg Glute Bridge", "2 × 10 (her bacak)", "Glute + hamstring", ["Kontrollü kaldır"], { alts: ["DB Single Leg Glute Bridge (5kg pelvis üstünde)", "Wall Sit"], alt_reasons: ["Dumbbell karşı tarafta pelvis üstünde — tek bacak yükü artar", "Diz iyi, quad dokunuş istiyorsan wall sit kullan"] }),
             ]),
             block("🧠 CORE + KONDİSYON", "#1F618D", [
               ex("Dead Bug", "2 × 8-10 (her taraf)", "Core", ["Bel sabit"]),
