@@ -482,6 +482,44 @@ const YT_QUERY_MAP = {
   "Close Grip Push Up": "close grip push up exercise form",
 };
 
+// Alias layer — maps new hybrid-program exercise names to their closest
+// match already present in GIF_MAP. Picked by scanning the existing GIF
+// inventory (tools/gif-inventory script output). Each alias is the best
+// same-pattern movement already in the database.
+const GIF_ALIAS = {
+  // POWER (yeni eklenenler)
+  "Explosive Hip Thrust": "Hip Thrust",
+  "Explosive Hip Thrust (Barbell veya Plate)": "Hip Thrust",
+  "Explosive Push-up (Dizdan veya Incline)": "Incline Push Up",
+  "Explosive Push-up (Dizdan, ya da Incline)": "Incline Push Up",
+  "Wall Push-up Explosive": "Incline Push Up",
+
+  // CARRY (yeni eklenenler)
+  "Farmer Carry (Ağır Çanta / Su Bidonu)": "Farmer Carry (ağır)",
+  "Farmer Carry (Dumbbell / Trap Bar)": "Farmer Carry (dumbbell)",
+
+  // POSTERIOR (yeni eklenenler)
+  "Single Leg RDL (Bodyweight)": "Single Leg RDL",
+  "Single Leg RDL (Dumbbell Hafif)": "Single Leg RDL",
+  "Bridge Walkout": "Glute Bridge Hamstring Walk",
+
+  // SKILL (şartlı ve varyasyonlar)
+  "Dead Hang (Şartlı)": "Dead Hang",
+  "Pike Hold + Shoulder Shift": "Pike Hold",
+  "Tuck Support": "Support Hold",
+  "L-sit Tek Bacak Açılım": "L-sit Tuck Hold",
+
+  // CONDITIONING (yeni varyantlar)
+  "Rower — Progresif Threshold Protokolü": "Rowing Machine",
+  "Bike Sprint Intervalları (Şartlı)": "Stationary Bike",
+
+  // ARMS (yeni)
+  "Towel Curl (Bacak Dirençli)": "Cable Curl",
+
+  // Rotator cuff — var olan isim kaymaları
+  "External Rotation (Towel/Yerçekimi)": "Band External Rotation",
+};
+
 export function getGifUrl(name) {
   if (FORCE_YT_FALLBACK.has(name)) return null;
   const val = resolveId(name);
@@ -505,92 +543,18 @@ function resolveId(name) {
   const noTagBase = noTag.replace(/ (Left|Right)$/i, "").trim();
   if (GIF_MAP[noTagBase]) return GIF_MAP[noTagBase];
 
+  // Alias fallback — newer exercise names mapped to closest GIF_MAP entry.
+  // Recurses back through resolveId so the alias can target any form
+  // (including arrays and Left/Right base names).
+  if (GIF_ALIAS[name]) return resolveId(GIF_ALIAS[name]);
+  if (GIF_ALIAS[base]) return resolveId(GIF_ALIAS[base]);
+  if (GIF_ALIAS[noTag]) return resolveId(GIF_ALIAS[noTag]);
+  if (GIF_ALIAS[noTagBase]) return resolveId(GIF_ALIAS[noTagBase]);
+
   return null;
 }
 
 export function getYouTubeSearchUrl(name) {
   const query = YT_QUERY_MAP[name] || `${name} exercise form tutorial`;
   return `https://www.youtube.com/results?search_query=${encodeURIComponent(query)}`;
-}
-
-// ═══ EMBEDDED TUTORIAL VIDEOS ═══
-// Map of exercise name → YouTube video ID (11-char code from the URL).
-// When set, the UI renders an embedded preview instead of a search link.
-// Videos picked from established fitness channels (Jeff Nippard, StrongFirst,
-// GMB Fitness, FitnessFAQs, Squat University, Athlean-X, Renaissance Periodization).
-// Replace any ID you find suboptimal — the UI degrades gracefully if an ID is
-// missing or the thumbnail fails to load.
-const YT_VIDEO_MAP = {
-  // Strength — core program patterns
-  "Hip Thrust": "SEdqd1n0cvg",                        // Jeff Nippard — How to Hip Thrust
-  "Hip Thrust (Sandalye)": "SEdqd1n0cvg",
-  "Explosive Hip Thrust (Barbell veya Plate)": "SEdqd1n0cvg",
-  "Explosive Hip Thrust": "SEdqd1n0cvg",
-  "Chest Supported Row": "roCP6wCXPqo",               // Jeff Nippard — Chest Supported Row
-  "Inverted Row (Masa Altı)": "YUGJq3Bg7ZY",          // FitnessFAQs — Inverted Row
-  "Floor Press": "tE-cwDrCS_A",                       // Athlean-X — Floor Press
-  "Assisted Pull Up": "U2ZJbNe4v6k",                  // Jeff Nippard — Pull-up progression
-  "Lat Pulldown": "CAwf7n6Luuc",                      // Jeff Nippard — Lat Pulldown
-  "Leg Press": "IZxyjW7MPJQ",                         // Jeff Nippard — Leg Press
-  "Reverse Lunge (ağırlıksız)": "xrPteyQlPvg",        // Squat University
-  "Wall Sit": "y-wV4Venusw",                          // Pre-habilitation
-  "Single Leg Glute Bridge": "PEDQWhkpvVk",
-  "Single Leg RDL (Bodyweight)": "GG7p5vZJrxY",       // Athlean-X
-  "Single Leg RDL (Dumbbell Hafif)": "GG7p5vZJrxY",
-
-  // Power / explosive (new additions)
-  "Kettlebell Swing (Hafif 10-16kg)": "YSxHifyI6s8",  // StrongFirst — Kettlebell Swing
-  "Kettlebell Swing (12-20kg)": "YSxHifyI6s8",
-  "Medicine Ball Chest Pass (Duvara, 3-5kg)": "ckEq9OEoi-o",
-  "Explosive Push-up (Dizdan, ya da Incline)": "5YDQOEzI5ec",
-  "Explosive Push-up (Dizdan veya Incline)": "5YDQOEzI5ec",
-
-  // Loaded carries
-  "Farmer Carry (Ağır Çanta / Su Bidonu)": "Fkzk_RqlYig",   // Squat University — Farmer Carry
-  "Farmer Carry (Dumbbell / Trap Bar)": "Fkzk_RqlYig",
-
-  // Skill — handstand + L-sit
-  "Pike Hold": "SVFExV0dmqc",                         // GMB — Pike progression
-  "Wall Handstand Hold": "L00MO6GwXuQ",               // GMB — Wall Handstand
-  "L-sit Tuck Hold": "_ZxWaJvFQ_o",                   // GMB — L-sit progression
-  "Dead Hang (Şartlı)": "ZiEq7oSUvdk",                // FitnessFAQs — Dead Hang
-  "Dead Hang": "ZiEq7oSUvdk",
-
-  // Core / stability
-  "Dead Bug": "4XLEnwUr1d8",                          // Squat University — Dead Bug
-  "Bird Dog": "wiFNA3sqjCA",
-  "Side Plank": "K2VljzCC16g",
-  "Pallof Press": "AH_QZLm_0-s",                      // Athlean-X
-  "Scapular Wall Slide": "KX16Xh0trPs",
-  "Chin Tuck": "tN5OqB6kAdg",
-
-  // Finisher / conditioning
-  "Standing Calf Raise": "-M4-G8p8fmc",
-  "Wall Tibialis Raise": "hP8U9Gxm9pg",
-  "Band Face Pull": "rep-qVOkqgk",                    // Athlean-X — Face Pull
-};
-
-export function getYouTubeVideoId(name) {
-  if (!name) return null;
-  if (YT_VIDEO_MAP[name]) return YT_VIDEO_MAP[name];
-
-  // Try base name (strip Left/Right, (G3), etc.) — same rules as getGifUrl.
-  const base = name.replace(/ (Left|Right)$/i, "").trim();
-  if (YT_VIDEO_MAP[base]) return YT_VIDEO_MAP[base];
-
-  const noTag = name.replace(/\s*\(G3\)\s*$/, "").trim();
-  if (YT_VIDEO_MAP[noTag]) return YT_VIDEO_MAP[noTag];
-
-  const noTagBase = noTag.replace(/ (Left|Right)$/i, "").trim();
-  if (YT_VIDEO_MAP[noTagBase]) return YT_VIDEO_MAP[noTagBase];
-
-  return null;
-}
-
-export function getYouTubeEmbedUrl(videoId) {
-  return `https://www.youtube-nocookie.com/embed/${videoId}?modestbranding=1&rel=0`;
-}
-
-export function getYouTubeThumbnailUrl(videoId) {
-  return `https://i.ytimg.com/vi/${videoId}/hqdefault.jpg`;
 }

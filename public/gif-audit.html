@@ -1,0 +1,1150 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>GIF Eslesme Kontrolu</title>
+<style>
+  :root { --bg:#0e0f10; --card:#17171B; --card2:#1e1e23; --border:#2A2A30;
+    --text:#F3F1EA; --text2:#C8C2B8; --text3:#A39E94;
+    --accent:#D96A1D; --ok:#38C172; --miss:#FFA726; --hybrid:#4FA3FF; }
+  * { box-sizing: border-box; }
+  body { margin:0; font-family:-apple-system,BlinkMacSystemFont,sans-serif;
+    background:var(--bg); color:var(--text); line-height:1.5; }
+  header { position:sticky; top:0; z-index:10;
+    background:linear-gradient(180deg,rgba(14,15,16,.98),rgba(14,15,16,.85));
+    backdrop-filter:blur(10px); border-bottom:1px solid var(--border); padding:14px 20px; }
+  h1 { margin:0 0 4px; font-size:18px; font-weight:800; }
+  .summary { font-size:12px; color:var(--text3); }
+  .summary strong { color:var(--text); } .summary .good { color:var(--ok); } .summary .warn { color:var(--miss); }
+  .controls { margin-top:10px; display:flex; gap:8px; flex-wrap:wrap; align-items:center; }
+  .search-input { flex:1; min-width:160px; padding:8px 12px; background:var(--card);
+    border:1px solid var(--border); border-radius:8px; color:var(--text); font-size:13px; }
+  .search-input::placeholder { color:var(--text3); }
+  .filter-btn { padding:8px 12px; background:var(--card); border:1px solid var(--border);
+    border-radius:8px; color:var(--text2); font-size:12px; font-weight:700; cursor:pointer; }
+  .filter-btn.active { background:var(--accent); color:#000; border-color:var(--accent); }
+  .export-btn { padding:8px 12px; background:var(--ok); border:none; border-radius:8px;
+    color:#071; font-size:12px; font-weight:800; cursor:pointer; }
+  table { width:100%; border-collapse:collapse; }
+  thead th { position:sticky; top:98px; background:var(--card2); font-size:11px;
+    font-weight:800; text-transform:uppercase; letter-spacing:.08em; color:var(--text3);
+    padding:10px 8px; text-align:left; border-bottom:1px solid var(--border); }
+  tbody tr { border-bottom:1px solid var(--border); }
+  tbody tr:hover { background:var(--card); }
+  tbody tr.hidden { display:none; }
+  td { padding:10px 8px; vertical-align:top; }
+  .col-num { font-family:Menlo,monospace; color:var(--text3); font-size:12px; width:40px; text-align:right; }
+  .col-name { width:240px; }
+  .name { font-size:14px; font-weight:700; }
+  .tags { margin-top:6px; display:flex; gap:4px; flex-wrap:wrap; }
+  .tag { display:inline-block; padding:2px 8px; border-radius:999px;
+    background:var(--card); border:1px solid var(--border); color:var(--text3);
+    font-size:10px; font-weight:700; }
+  .tag-hybrid { background:rgba(79,163,255,.12); border-color:rgba(79,163,255,.35); color:var(--hybrid); }
+  .status { margin-top:6px; font-size:11px; font-weight:700; }
+  .status-ok .status { color:var(--ok); } .status-miss .status { color:var(--miss); }
+  .col-gif { min-width:220px; }
+  .gif { max-width:220px; max-height:160px; border-radius:8px;
+    border:1px solid var(--border); background:#000; display:block; }
+  .gif + .gif { margin-top:6px; }
+  .no-gif { padding:18px 14px; background:var(--card); border:1px dashed var(--border);
+    border-radius:8px; color:var(--miss); font-size:12px; font-weight:700; text-align:center; }
+  .col-yt { width:110px; }
+  .yt-btn { display:inline-block; padding:8px 12px; background:#c00; color:#fff;
+    text-decoration:none; border-radius:8px; font-size:12px; font-weight:700; }
+  .yt-btn:hover { background:#a00; }
+  .col-check { width:180px; }
+  .check-row { display:block; font-size:12px; margin-bottom:3px; cursor:pointer; color:var(--text2); }
+  .check-row input { margin-right:6px; }
+  .note { margin-top:6px; width:100%; padding:6px 8px; background:var(--card);
+    border:1px solid var(--border); border-radius:6px; color:var(--text);
+    font-size:11px; font-family:inherit; resize:vertical; }
+</style>
+</head>
+<body>
+<header>
+  <h1>GIF Eslesme Kontrolu</h1>
+  <div class="summary">
+    Toplam <strong>62</strong> egzersiz - 
+    <span class="good">47 GIF var</span> - 
+    <span class="warn">15 eksik</span> - 
+    Hibrit: <strong>62</strong>, <span class="good">47 eslesti</span>
+  </div>
+  <div class="controls">
+    <input type="search" class="search-input" placeholder="Egzersiz ara..." id="search">
+    <button class="filter-btn active" data-filter="all">Tumu</button>
+    <button class="filter-btn" data-filter="hybrid">Sadece Hibrit</button>
+    <button class="filter-btn" data-filter="missing">GIF'siz</button>
+    <button class="filter-btn" data-filter="hybrid-ok">Hibrit GIF'li</button>
+    <button class="export-btn" id="export">Notlari Indir (JSON)</button>
+  </div>
+</header>
+<table>
+  <thead><tr><th>#</th><th>Egzersiz</th><th>Mevcut GIF</th><th>YT</th><th>Kontrol</th></tr></thead>
+  <tbody>
+<tr class="status-ok" data-name="90/90 hip stretch">
+  <td class="col-num">1</td>
+  <td class="col-name">
+    <div class="name">90/90 Hip Stretch</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/oMypNrz.gif" alt="90/90 Hip Stretch" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=90%2F90%20Hip%20Stretch%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-0" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-0" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-0" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="assisted pull up">
+  <td class="col-num">2</td>
+  <td class="col-name">
+    <div class="name">Assisted Pull Up</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/kiJ4Z2K.gif" alt="Assisted Pull Up" loading="lazy" class="gif"><img src="https://static.exercisedb.dev/media/r1XNRYB.gif" alt="Assisted Pull Up" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Assisted%20Pull%20Up%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-1" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-1" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-1" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="band external rotation">
+  <td class="col-num">3</td>
+  <td class="col-name">
+    <div class="name">Band External Rotation</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/FWdVhcW.gif" alt="Band External Rotation" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Band%20External%20Rotation%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-2" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-2" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-2" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="band face pull">
+  <td class="col-num">4</td>
+  <td class="col-name">
+    <div class="name">Band Face Pull</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/tc5dYrf.gif" alt="Band Face Pull" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Band%20Face%20Pull%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-3" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-3" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-3" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="bike sprint intervalları (şartlı)">
+  <td class="col-num">5</td>
+  <td class="col-name">
+    <div class="name">Bike Sprint Intervalları (Şartlı)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/H1PESYI.gif" alt="Bike Sprint Intervalları (Şartlı)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Bike%20Sprint%20Intervallar%C4%B1%20(%C5%9Eartl%C4%B1)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-4" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-4" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-4" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="bird dog">
+  <td class="col-num">6</td>
+  <td class="col-name">
+    <div class="name">Bird Dog</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=bird%20dog%20exercise%20form%20neutral%20spine" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-5" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-5" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-5" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="box step down (eccentric)">
+  <td class="col-num">7</td>
+  <td class="col-name">
+    <div class="name">Box Step Down (eccentric)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=eccentric%20step%20down%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-6" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-6" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-6" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="bridge walkout">
+  <td class="col-num">8</td>
+  <td class="col-name">
+    <div class="name">Bridge Walkout</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/GibBPPg.gif" alt="Bridge Walkout" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=bridge%20walkout%20hamstring%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-7" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-7" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-7" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="cable curl">
+  <td class="col-num">9</td>
+  <td class="col-name">
+    <div class="name">Cable Curl</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/G08RZcQ.gif" alt="Cable Curl" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Cable%20Curl%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-8" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-8" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-8" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="cable lateral raise">
+  <td class="col-num">10</td>
+  <td class="col-name">
+    <div class="name">Cable Lateral Raise</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/goJ6ezq.gif" alt="Cable Lateral Raise" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Cable%20Lateral%20Raise%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-9" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-9" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-9" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="cat-cow mobilite">
+  <td class="col-num">11</td>
+  <td class="col-name">
+    <div class="name">Cat-Cow Mobilite</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=cat%20cow%20mobility%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-10" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-10" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-10" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="chest supported row">
+  <td class="col-num">12</td>
+  <td class="col-name">
+    <div class="name">Chest Supported Row</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/7vG5o25.gif" alt="Chest Supported Row" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Chest%20Supported%20Row%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-11" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-11" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-11" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="child's pose">
+  <td class="col-num">13</td>
+  <td class="col-name">
+    <div class="name">Child's Pose</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/f38OEuO.gif" alt="Child's Pose" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Child's%20Pose%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-12" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-12" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-12" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="chin tuck">
+  <td class="col-num">14</td>
+  <td class="col-name">
+    <div class="name">Chin Tuck</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=chin%20tuck%20cervical%20retraction%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-13" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-13" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-13" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="close grip push up">
+  <td class="col-num">15</td>
+  <td class="col-name">
+    <div class="name">Close Grip Push Up</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=close%20grip%20push%20up%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-14" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-14" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-14" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="dead bug">
+  <td class="col-num">16</td>
+  <td class="col-name">
+    <div class="name">Dead Bug</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/iny3m5y.gif" alt="Dead Bug" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Dead%20Bug%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-15" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-15" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-15" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="dead hang">
+  <td class="col-num">17</td>
+  <td class="col-name">
+    <div class="name">Dead Hang</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/PXTIwgu.gif" alt="Dead Hang" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Dead%20Hang%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-16" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-16" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-16" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="dead hang (şartlı)">
+  <td class="col-num">18</td>
+  <td class="col-name">
+    <div class="name">Dead Hang (Şartlı)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/PXTIwgu.gif" alt="Dead Hang (Şartlı)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Dead%20Hang%20(%C5%9Eartl%C4%B1)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-17" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-17" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-17" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="doorway chest stretch">
+  <td class="col-num">19</td>
+  <td class="col-name">
+    <div class="name">Doorway Chest Stretch</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/3uj0Ozg.gif" alt="Doorway Chest Stretch" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Doorway%20Chest%20Stretch%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-18" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-18" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-18" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="explosive hip thrust">
+  <td class="col-num">20</td>
+  <td class="col-name">
+    <div class="name">Explosive Hip Thrust</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qg2PGl6.gif" alt="Explosive Hip Thrust" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Explosive%20Hip%20Thrust%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-19" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-19" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-19" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="explosive hip thrust (barbell veya plate)">
+  <td class="col-num">21</td>
+  <td class="col-name">
+    <div class="name">Explosive Hip Thrust (Barbell veya Plate)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qg2PGl6.gif" alt="Explosive Hip Thrust (Barbell veya Plate)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Explosive%20Hip%20Thrust%20(Barbell%20veya%20Plate)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-20" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-20" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-20" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="explosive push-up (dizdan veya incline)">
+  <td class="col-num">22</td>
+  <td class="col-name">
+    <div class="name">Explosive Push-up (Dizdan veya Incline)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/CB8WET1.gif" alt="Explosive Push-up (Dizdan veya Incline)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Explosive%20Push-up%20(Dizdan%20veya%20Incline)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-21" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-21" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-21" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="external rotation (towel/yerçekimi)">
+  <td class="col-num">23</td>
+  <td class="col-name">
+    <div class="name">External Rotation (Towel/Yerçekimi)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/bmBf7LN.gif" alt="External Rotation (Towel/Yerçekimi)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=External%20Rotation%20(Towel%2FYer%C3%A7ekimi)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-22" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-22" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-22" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="farmer carry (ağır çanta / su bidonu)">
+  <td class="col-num">24</td>
+  <td class="col-name">
+    <div class="name">Farmer Carry (Ağır Çanta / Su Bidonu)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qPEzJjA.gif" alt="Farmer Carry (Ağır Çanta / Su Bidonu)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Farmer%20Carry%20(A%C4%9F%C4%B1r%20%C3%87anta%20%2F%20Su%20Bidonu)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-23" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-23" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-23" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="farmer carry (dumbbell / trap bar)">
+  <td class="col-num">25</td>
+  <td class="col-name">
+    <div class="name">Farmer Carry (Dumbbell / Trap Bar)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qPEzJjA.gif" alt="Farmer Carry (Dumbbell / Trap Bar)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Farmer%20Carry%20(Dumbbell%20%2F%20Trap%20Bar)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-24" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-24" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-24" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="floor press">
+  <td class="col-num">26</td>
+  <td class="col-name">
+    <div class="name">Floor Press</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/vtusOWT.gif" alt="Floor Press" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Floor%20Press%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-25" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-25" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-25" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="foam roller upper back roll">
+  <td class="col-num">27</td>
+  <td class="col-name">
+    <div class="name">Foam Roller Upper Back Roll</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/isofgzg.gif" alt="Foam Roller Upper Back Roll" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Foam%20Roller%20Upper%20Back%20Roll%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-26" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-26" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-26" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="glute bridge / hip thrust">
+  <td class="col-num">28</td>
+  <td class="col-name">
+    <div class="name">Glute Bridge / Hip Thrust</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qKBpF7I.gif" alt="Glute Bridge / Hip Thrust" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Glute%20Bridge%20%2F%20Hip%20Thrust%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-27" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-27" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-27" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="hızlı yürüyüş">
+  <td class="col-num">29</td>
+  <td class="col-name">
+    <div class="name">Hızlı Yürüyüş</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=power%20walking%20technique%20posture%20arm%20swing" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-28" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-28" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-28" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="hip circle">
+  <td class="col-num">30</td>
+  <td class="col-name">
+    <div class="name">Hip Circle</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=standing%20hip%20circles%20mobility%20warm%20up" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-29" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-29" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-29" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="hip thrust">
+  <td class="col-num">31</td>
+  <td class="col-name">
+    <div class="name">Hip Thrust</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qg2PGl6.gif" alt="Hip Thrust" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Hip%20Thrust%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-30" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-30" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-30" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="hip thrust (sandalye)">
+  <td class="col-num">32</td>
+  <td class="col-name">
+    <div class="name">Hip Thrust (Sandalye)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/qKBpF7I.gif" alt="Hip Thrust (Sandalye)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Hip%20Thrust%20(Sandalye)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-31" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-31" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-31" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="incline push-up">
+  <td class="col-num">33</td>
+  <td class="col-name">
+    <div class="name">Incline Push-up</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/B1EVP9F.gif" alt="Incline Push-up" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Incline%20Push-up%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-32" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-32" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-32" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="incline walk">
+  <td class="col-num">34</td>
+  <td class="col-name">
+    <div class="name">Incline Walk</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=incline%20treadmill%20walking%20posture%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-33" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-33" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-33" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="inverted row (masa altı)">
+  <td class="col-num">35</td>
+  <td class="col-name">
+    <div class="name">Inverted Row (Masa Altı)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/bZGHsAZ.gif" alt="Inverted Row (Masa Altı)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Inverted%20Row%20(Masa%20Alt%C4%B1)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-34" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-34" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-34" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="l-sit tuck hold">
+  <td class="col-num">36</td>
+  <td class="col-name">
+    <div class="name">L-sit Tuck Hold</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/UpWmA5E.gif" alt="L-sit Tuck Hold" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=L-sit%20Tuck%20Hold%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-35" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-35" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-35" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="landmine press">
+  <td class="col-num">37</td>
+  <td class="col-name">
+    <div class="name">Landmine Press</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/eXMFHww.gif" alt="Landmine Press" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Landmine%20Press%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-36" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-36" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-36" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="lat pulldown">
+  <td class="col-num">38</td>
+  <td class="col-name">
+    <div class="name">Lat Pulldown</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/ecpY0rH.gif" alt="Lat Pulldown" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Lat%20Pulldown%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-37" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-37" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-37" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="leg press">
+  <td class="col-num">39</td>
+  <td class="col-name">
+    <div class="name">Leg Press</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/10Z2DXU.gif" alt="Leg Press" loading="lazy" class="gif"><img src="https://static.exercisedb.dev/media/2Qh2J1e.gif" alt="Leg Press" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Leg%20Press%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-38" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-38" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-38" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="machine seated leg curl">
+  <td class="col-num">40</td>
+  <td class="col-name">
+    <div class="name">Machine Seated Leg Curl</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/Zg3XY7P.gif" alt="Machine Seated Leg Curl" loading="lazy" class="gif"><img src="https://static.exercisedb.dev/media/17lJ1kr.gif" alt="Machine Seated Leg Curl" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Machine%20Seated%20Leg%20Curl%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-39" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-39" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-39" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="medicine ball chest pass (duvara, 3-5kg)">
+  <td class="col-num">41</td>
+  <td class="col-name">
+    <div class="name">Medicine Ball Chest Pass (Duvara, 3-5kg)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Medicine%20Ball%20Chest%20Pass%20(Duvara%2C%203-5kg)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-40" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-40" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-40" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="pallof press">
+  <td class="col-num">42</td>
+  <td class="col-name">
+    <div class="name">Pallof Press</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/9pa4H5m.gif" alt="Pallof Press" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Pallof%20Press%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-41" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-41" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-41" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="pike hold">
+  <td class="col-num">43</td>
+  <td class="col-name">
+    <div class="name">Pike Hold</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/sVvXT5J.gif" alt="Pike Hold" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Pike%20Hold%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-42" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-42" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-42" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="reverse lunge (ağırlıksız)">
+  <td class="col-num">44</td>
+  <td class="col-name">
+    <div class="name">Reverse Lunge (ağırlıksız)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/VaP75jl.gif" alt="Reverse Lunge (ağırlıksız)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Reverse%20Lunge%20(a%C4%9F%C4%B1rl%C4%B1ks%C4%B1z)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-43" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-43" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-43" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="rower">
+  <td class="col-num">45</td>
+  <td class="col-name">
+    <div class="name">Rower</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=rowing%20machine%20technique%20posture%20beginner%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-44" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-44" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-44" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="rower — progresif threshold protokolü">
+  <td class="col-num">46</td>
+  <td class="col-name">
+    <div class="name">Rower — Progresif Threshold Protokolü</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/vpQaQkH.gif" alt="Rower — Progresif Threshold Protokolü" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Rower%20%E2%80%94%20Progresif%20Threshold%20Protokol%C3%BC%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-45" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-45" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-45" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="scapular wall slide">
+  <td class="col-num">47</td>
+  <td class="col-name">
+    <div class="name">Scapular Wall Slide</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=scapular%20wall%20slide%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-46" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-46" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-46" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="shoulder cross stretch">
+  <td class="col-num">48</td>
+  <td class="col-name">
+    <div class="name">Shoulder Cross Stretch</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=cross%20body%20shoulder%20stretch%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-47" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-47" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-47" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="side plank">
+  <td class="col-num">49</td>
+  <td class="col-name">
+    <div class="name">Side Plank</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/5VXmnV5.gif" alt="Side Plank" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Side%20Plank%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-48" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-48" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-48" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="single leg glute bridge">
+  <td class="col-num">50</td>
+  <td class="col-name">
+    <div class="name">Single Leg Glute Bridge</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/rmEukuS.gif" alt="Single Leg Glute Bridge" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Single%20Leg%20Glute%20Bridge%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-49" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-49" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-49" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="single leg rdl (bodyweight)">
+  <td class="col-num">51</td>
+  <td class="col-name">
+    <div class="name">Single Leg RDL (Bodyweight)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/gKozT8X.gif" alt="Single Leg RDL (Bodyweight)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Single%20Leg%20RDL%20(Bodyweight)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-50" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-50" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-50" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="single leg rdl (dumbbell hafif)">
+  <td class="col-num">52</td>
+  <td class="col-name">
+    <div class="name">Single Leg RDL (Dumbbell Hafif)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/gKozT8X.gif" alt="Single Leg RDL (Dumbbell Hafif)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Single%20Leg%20RDL%20(Dumbbell%20Hafif)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-51" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-51" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-51" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="standing calf raise">
+  <td class="col-num">53</td>
+  <td class="col-name">
+    <div class="name">Standing Calf Raise</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=standing%20calf%20raise%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-52" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-52" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-52" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="stationary bike">
+  <td class="col-num">54</td>
+  <td class="col-name">
+    <div class="name">Stationary Bike</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/H1PESYI.gif" alt="Stationary Bike" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Stationary%20Bike%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-53" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-53" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-53" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="supine hamstring stretch">
+  <td class="col-num">55</td>
+  <td class="col-name">
+    <div class="name">Supine Hamstring Stretch</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/99rWm7w.gif" alt="Supine Hamstring Stretch" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Supine%20Hamstring%20Stretch%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-54" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-54" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-54" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="tempo inverted row">
+  <td class="col-num">56</td>
+  <td class="col-name">
+    <div class="name">Tempo Inverted Row</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/bZGHsAZ.gif" alt="Tempo Inverted Row" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Tempo%20Inverted%20Row%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-55" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-55" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-55" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="towel curl (bacak dirençli)">
+  <td class="col-num">57</td>
+  <td class="col-name">
+    <div class="name">Towel Curl (Bacak Dirençli)</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/G08RZcQ.gif" alt="Towel Curl (Bacak Dirençli)" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Towel%20Curl%20(Bacak%20Diren%C3%A7li)%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-56" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-56" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-56" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="triceps pushdown">
+  <td class="col-num">58</td>
+  <td class="col-name">
+    <div class="name">Triceps Pushdown</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/gAwDzB3.gif" alt="Triceps Pushdown" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Triceps%20Pushdown%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-57" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-57" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-57" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="wall handstand hold">
+  <td class="col-num">59</td>
+  <td class="col-name">
+    <div class="name">Wall Handstand Hold</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/XooAdhl.gif" alt="Wall Handstand Hold" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Wall%20Handstand%20Hold%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-58" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-58" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-58" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="wall sit">
+  <td class="col-num">60</td>
+  <td class="col-name">
+    <div class="name">Wall Sit</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=wall%20sit%20exercise%20form%20knee%20friendly" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-59" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-59" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-59" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-miss" data-name="wall tibialis raise">
+  <td class="col-num">61</td>
+  <td class="col-name">
+    <div class="name">Wall Tibialis Raise</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF yok</div>
+  </td>
+  <td class="col-gif"><div class="no-gif">GIF yok - YouTube araması kullanılıyor</div></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=wall%20tibialis%20raise%20exercise%20form" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-60" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-60" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-60" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+<tr class="status-ok" data-name="wrist rotation">
+  <td class="col-num">62</td>
+  <td class="col-name">
+    <div class="name">Wrist Rotation</div>
+    <div class="tags"><span class="tag tag-hybrid">HYBRID</span></div>
+    <div class="status">GIF var</div>
+  </td>
+  <td class="col-gif"><img src="https://static.exercisedb.dev/media/2zNKRUB.gif" alt="Wrist Rotation" loading="lazy" class="gif"></td>
+  <td class="col-yt"><a href="https://www.youtube.com/results?search_query=Wrist%20Rotation%20exercise%20form%20tutorial" target="_blank" rel="noopener" class="yt-btn">YouTube</a></td>
+  <td class="col-check">
+    <label class="check-row"><input type="radio" name="verdict-61" value="ok"> Dogru</label>
+    <label class="check-row"><input type="radio" name="verdict-61" value="wrong"> Yanlis</label>
+    <label class="check-row"><input type="radio" name="verdict-61" value="meh"> Orta</label>
+    <textarea class="note" placeholder="Not / dogru GIF onerisi..." rows="2"></textarea>
+  </td>
+</tr>
+  </tbody>
+</table>
+<script>
+  const searchInput = document.getElementById("search");
+  const rows = [...document.querySelectorAll("tbody tr")];
+  let activeFilter = "all";
+  function applyFilters() {
+    const q = searchInput.value.toLowerCase().trim();
+    for (const row of rows) {
+      const name = row.dataset.name;
+      const tags = [...row.querySelectorAll(".tag")].map(t => t.textContent);
+      const isHybrid = tags.includes("HYBRID");
+      const hasGif = row.classList.contains("status-ok");
+      let show = true;
+      if (q && !name.includes(q)) show = false;
+      if (activeFilter === "hybrid" && !isHybrid) show = false;
+      if (activeFilter === "missing" && hasGif) show = false;
+      if (activeFilter === "hybrid-ok" && (!isHybrid || !hasGif)) show = false;
+      row.classList.toggle("hidden", !show);
+    }
+  }
+  searchInput.addEventListener("input", applyFilters);
+  for (const btn of document.querySelectorAll(".filter-btn")) {
+    btn.addEventListener("click", () => {
+      document.querySelectorAll(".filter-btn").forEach(b => b.classList.remove("active"));
+      btn.classList.add("active");
+      activeFilter = btn.dataset.filter;
+      applyFilters();
+    });
+  }
+  const STORAGE_KEY = "yb_gif_audit_v1";
+  const saved = JSON.parse(localStorage.getItem(STORAGE_KEY) || "{}");
+  for (const row of rows) {
+    const name = row.dataset.name;
+    const state = saved[name];
+    if (!state) continue;
+    if (state.verdict) {
+      const input = row.querySelector("input[value=\""+state.verdict+"\"]");
+      if (input) input.checked = true;
+    }
+    if (state.note) row.querySelector(".note").value = state.note;
+  }
+  function persist() {
+    const data = {};
+    for (const row of rows) {
+      const name = row.dataset.name;
+      const verdictEl = row.querySelector("input:checked");
+      const note = row.querySelector(".note").value.trim();
+      if (verdictEl || note) data[name] = { verdict: verdictEl ? verdictEl.value : null, note };
+    }
+    localStorage.setItem(STORAGE_KEY, JSON.stringify(data));
+  }
+  document.addEventListener("change", persist);
+  document.addEventListener("input", (e) => { if (e.target.classList.contains("note")) persist(); });
+  document.getElementById("export").addEventListener("click", () => {
+    const data = [];
+    for (const row of rows) {
+      const name = row.querySelector(".name").textContent;
+      const verdictEl = row.querySelector("input:checked");
+      const verdict = verdictEl ? verdictEl.value : "";
+      const note = row.querySelector(".note").value.trim();
+      if (verdict || note) data.push({ name, verdict, note });
+    }
+    const blob = new Blob([JSON.stringify(data, null, 2)], { type: "application/json" });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = "gif-audit-" + new Date().toISOString().slice(0,10) + ".json";
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
+</body></html>
