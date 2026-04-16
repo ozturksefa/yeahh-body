@@ -2,6 +2,7 @@ import { useState } from "react";
 import CoachControlPanel from "../CoachControlPanel";
 import DayCoachGuide from "../DayCoachGuide";
 import { HYBRID_COACH_GUIDES } from "../hybridCoachGuides";
+import PushSettingsCard from "./PushSettingsCard";
 
 /**
  * Collapsible "Yardımcı Alan" drawer showing coach guide + control panel.
@@ -46,6 +47,9 @@ export default function SupportDrawer({ day, program }) {
 
         {open && (
           <div style={{ padding: "0 0 12px" }}>
+            <div style={{ padding: "0 12px 8px" }}>
+              <PushSettingsCard />
+            </div>
             <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" embedded />
             <CoachControlPanel program={program} embedded />
           </div>

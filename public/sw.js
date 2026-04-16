@@ -122,3 +122,40 @@ async function networkFirst(request, cacheName) {
     throw err;
   }
 }
+
+// ═══ Web Push handler ═══
+// Shows the notification pushed by /netlify/functions/push-send-daily.
+// Payload shape: { title, body, url }. Defaults cover the empty push
+// case (some browsers wake the SW with no payload to budget battery).
+self.addEventListener("push", (event) => {
+  let data = {};
+  try { data = event.data ? event.data.json() : {}; }
+  catch { data = { body: event.data ? event.data.text() : "" }; }
+
+  const title = data.title || "Yeahh Body";
+  const options = {
+    body: data.body || "Bugün antrenman günü.",
+    icon: "/icon-192.png",
+    badge: "/icon-192.png",
+    tag: data.tag || "yb-daily",
+    renotify: false,
+    data: { url: data.url || "/" },
+    vibrate: [80, 40, 80],
+  };
+
+  event.waitUntil(self.registration.showNotification(title, options));
+});
+
+self.addEventListener("notificationclick", (event) => {
+  event.notification.close();
+  const url = event.notification.data?.url || "/";
+  event.waitUntil(
+    self.clients.matchAll({ type: "window", includeUncontrolled: true }).then((clients) => {
+      for (const client of clients) {
+        if (client.url.includes(url) && "focus" in client) return client.focus();
+      }
+      if (self.clients.openWindow) return self.clients.openWindow(url);
+      return null;
+    }),
+  );
+});
