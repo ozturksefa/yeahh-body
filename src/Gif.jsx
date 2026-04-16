@@ -1,5 +1,6 @@
 import { useState, useEffect } from "react";
-import { getGifUrl, getYouTubeSearchUrl } from "./videoMap";
+import { getGifUrl, getYouTubeSearchUrl, getYouTubeVideoId } from "./videoMap";
+import VideoPreview from "./VideoPreview";
 
 const MULTI_LABELS = {
   "Dumbbell 4 Ways Lateral Raise": ["Öne Kaldırma", "Yana Kaldırma", "Arkaya Kaldırma", "Çapraz Kaldırma"],
@@ -79,8 +80,17 @@ function YtFallback({ name }) {
 
 function ExerciseGif({ name }) {
   const gifUrl = getGifUrl(name);
+  const videoId = getYouTubeVideoId(name);
 
+  // No GIF — video preview becomes primary; otherwise fall back to search link.
   if (!gifUrl) {
+    if (videoId) {
+      return (
+        <div className="gif-wrap">
+          <VideoPreview videoId={videoId} title={name} />
+        </div>
+      );
+    }
     return <YtFallback name={name} />;
   }
 
@@ -91,6 +101,7 @@ function ExerciseGif({ name }) {
         {gifUrl.map((url, i) => (
           <SingleGif key={`${name}-${url}-${i}`} url={url} label={labels[i] || null} exerciseName={i === 0 ? name : null} />
         ))}
+        {videoId && <VideoPreview videoId={videoId} title={name} />}
       </div>
     );
   }
@@ -98,6 +109,7 @@ function ExerciseGif({ name }) {
   return (
     <div className="gif-wrap">
       <SingleGif key={`${name}-${gifUrl}`} url={gifUrl} exerciseName={name} />
+      {videoId && <VideoPreview videoId={videoId} title={name} />}
     </div>
   );
 }
