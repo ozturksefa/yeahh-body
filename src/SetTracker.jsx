@@ -1,6 +1,7 @@
-import { useEffect, useMemo, useRef, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { saveExerciseSets, loadExerciseSets, suggestWeight, getHistory } from "./tracker";
 import ExertionRating from "./ExertionRating";
+import NumericPad from "./NumericPad";
 import { isUpper, parseSets } from "./setTrackerUtils";
 
 function emitWorkoutUpdate() {
@@ -57,8 +58,7 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
   const [prFlash, setPrFlash] = useState(null);
   const [activeSetIndex, setActiveSetIndex] = useState(0);
   const [transitionNote, setTransitionNote] = useState("");
-  const weightInputRef = useRef(null);
-  const repsInputRef = useRef(null);
+  const [padField, setPadField] = useState(null); // "weight" | "reps" | null
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -138,16 +138,8 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
     return Math.max(step, Math.round((recommendedWorkingWeight * multiplier) / step) * step);
   }, [bodyweightStyle, ex.name, recommendedWorkingWeight]);
 
-  useEffect(() => {
-    if (!loaded || allDone) return;
-    if (document.activeElement === weightInputRef.current || document.activeElement === repsInputRef.current) return;
-    // If the set is already pre-filled with a suggested weight, don't auto
-    // focus — opening the mobile keyboard is intrusive when the user can
-    // simply tap "Bu seti tamamla" without editing.
-    const current = sets[activeSetIndex];
-    if (current && (Number(current.weight) > 0 || Number(current.reps) > 0)) return;
-    weightInputRef.current?.focus();
-  }, [activeSetIndex, allDone, loaded, sets]);
+  // (Removed auto-focus to native keyboard — the numeric pad overlay replaces
+  // the standard number input, so there is no ref to focus.)
 
   if (!shouldRender) return null;
 
@@ -241,35 +233,11 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
     updateActiveSet("weight", recommendedWorkingWeight);
   };
 
-  const adjustActiveWeight = (delta) => {
-    const nextWeight = Math.max(0, Number(activeSet.weight || 0) + delta);
-    updateActiveSet("weight", nextWeight);
-  };
-
-  const adjustActiveReps = (delta) => {
-    const nextReps = Math.max(0, Number(activeSet.reps || 0) + delta);
-    updateActiveSet("reps", nextReps);
-  };
-
   const weightStep = isUpper(ex.name) ? 2.5 : 5;
   const formatWeight = (value) => {
     const n = Number(value || 0);
     if (!n) return "";
     return Number.isInteger(n) ? String(n) : n.toFixed(1);
-  };
-
-  const handleWeightKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      repsInputRef.current?.focus();
-    }
-  };
-
-  const handleRepsKeyDown = (event) => {
-    if (event.key === "Enter") {
-      event.preventDefault();
-      markSetDone(activeSetIndex);
-    }
   };
 
   if (!loaded) return <div className="tracker" style={{ textAlign: "center", padding: 12, color: "#555", fontSize: 11 }}>Yükleniyor...</div>;
@@ -328,72 +296,59 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
         <div className="tracker-transition-note">{transitionNote}</div>
       )}
 
-      <div className="tracker-active-grid">
-        <div>
-          <div className="tracker-field-label">{bodyweightStyle ? "Ek yük" : "Ağırlık"}</div>
-          <div className="tracker-stepper">
-            <button
-              type="button"
-              className="tracker-stepper-btn"
-              onClick={() => adjustActiveWeight(-weightStep)}
-              aria-label={`${weightStep} kg azalt`}
-            >−</button>
-            <input
-              ref={weightInputRef}
-              type="number"
-              inputMode="decimal"
-              step={weightStep}
-              className="tracker-stepper-input"
-              value={activeSet.weight ? formatWeight(activeSet.weight) : ""}
-              placeholder={activePreviousSet?.weight ? String(activePreviousSet.weight) : bodyweightStyle ? "0" : "kg"}
-              onChange={(event) => updateActiveSet("weight", parseFloat(event.target.value) || 0)}
-              onKeyDown={handleWeightKeyDown}
-            />
-            <button
-              type="button"
-              className="tracker-stepper-btn"
-              onClick={() => adjustActiveWeight(weightStep)}
-              aria-label={`${weightStep} kg arttır`}
-            >+</button>
-          </div>
-        </div>
+      <div className="tracker-hero">
+        <button
+          type="button"
+          className="tracker-hero-tile"
+          onClick={() => setPadField("weight")}
+          data-testid="set-weight-tile"
+        >
+          <span className="tracker-hero-label">{bodyweightStyle ? "Ek yük" : "Ağırlık"}</span>
+          <span className="tracker-hero-value">
+            {activeSet.weight ? formatWeight(activeSet.weight) : (bodyweightStyle ? "0" : "—")}
+            <span className="tracker-hero-unit">kg</span>
+          </span>
+          <span className="tracker-hero-hint">Değiştirmek için dokun</span>
+        </button>
 
-        <div>
-          <div className="tracker-field-label">Tekrar</div>
-          <div className="tracker-stepper">
-            <button
-              type="button"
-              className="tracker-stepper-btn"
-              onClick={() => adjustActiveReps(-1)}
-              aria-label="1 tekrar azalt"
-            >−</button>
-            <input
-              ref={repsInputRef}
-              type="number"
-              inputMode="numeric"
-              step={1}
-              className="tracker-stepper-input"
-              value={activeSet.reps || ""}
-              placeholder={String(targetReps)}
-              onChange={(event) => updateActiveSet("reps", parseInt(event.target.value, 10) || 0)}
-              onKeyDown={handleRepsKeyDown}
-            />
-            <button
-              type="button"
-              className="tracker-stepper-btn"
-              onClick={() => adjustActiveReps(1)}
-              aria-label="1 tekrar arttır"
-            >+</button>
-          </div>
-        </div>
+        <button
+          type="button"
+          className="tracker-hero-tile"
+          onClick={() => setPadField("reps")}
+          data-testid="set-reps-tile"
+        >
+          <span className="tracker-hero-label">Tekrar</span>
+          <span className="tracker-hero-value">
+            {activeSet.reps || targetReps || "—"}
+            <span className="tracker-hero-unit">rep</span>
+          </span>
+          <span className="tracker-hero-hint">Değiştirmek için dokun</span>
+        </button>
       </div>
 
       <button
-        className={`tracker-complete-btn ${activeSet.done ? "tracker-complete-btn-done" : ""}`}
+        className={`tracker-complete-btn tracker-complete-btn-hero ${activeSet.done ? "tracker-complete-btn-done" : ""}`}
         onClick={() => markSetDone(activeSetIndex)}
+        data-testid="set-complete"
       >
-        {activeSet.done ? "✓ Bu set tamam" : "Bu seti tamamla"}
+        {activeSet.done ? "✓ Bu set tamam" : "✓ Seti Tamamla"}
       </button>
+
+      {padField && (
+        <NumericPad
+          field={padField}
+          initialValue={padField === "weight" ? activeSet.weight : activeSet.reps}
+          step={padField === "weight" ? weightStep : 1}
+          label={padField === "weight" ? (bodyweightStyle ? "Ek yük" : "Ağırlık") : "Tekrar"}
+          unit={padField === "weight" ? "kg" : "rep"}
+          allowDecimal={padField === "weight"}
+          onCommit={(value) => {
+            updateActiveSet(padField, value);
+            setPadField(null);
+          }}
+          onCancel={() => setPadField(null)}
+        />
+      )}
 
       <details className="tracker-more">
         <summary>Daha fazla · önceki · ısınma · setlere git</summary>
