@@ -2,7 +2,9 @@ import { useMemo, useState } from "react";
 import { PROGRAM_HYBRID } from "../dataHybrid";
 import {
   average,
+  buildSuggestions,
   buttonBase,
+  getSessionDecision,
   getRelevantSkillsForDay,
   getSkillUnit,
   getSkillValue,
@@ -10,6 +12,38 @@ import {
   getStepMetric,
   getWeeklyDecision,
 } from "./shared";
+
+function getDeltaText(before, after) {
+  const delta = Number(after || 0) - Number(before || 0);
+  if (delta > 0) return `+${delta}`;
+  if (delta < 0) return `${delta}`;
+  return "0";
+}
+
+function clampSymptom(value) {
+  return Math.max(0, Math.min(5, Number(value || 0)));
+}
+
+function SymptomDeltaButtons({ before, after, onChange }) {
+  const beforeValue = clampSymptom(before);
+  const afterValue = clampSymptom(after);
+  const current = afterValue < beforeValue ? "down" : afterValue > beforeValue ? "up" : "same";
+
+  return (
+    <FieldButtons
+      value={current}
+      onChange={(next) => {
+        const delta = next === "down" ? -1 : next === "up" ? 1 : 0;
+        onChange(String(clampSymptom(beforeValue + delta)));
+      }}
+      options={[
+        { value: "down", label: "Azaldı" },
+        { value: "same", label: "Aynı" },
+        { value: "up", label: "Arttı" },
+      ]}
+    />
+  );
+}
 
 export function FieldButtons({ value, options, onChange }) {
   return (
@@ -261,10 +295,96 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
   );
 }
 
-export function DailyCheckoutPanel({ post, setPost, pre, setPre, daySub, skillPaths, skillState, onComplete }) {
+export function SessionPrepCard({ pre, setPre, mode }) {
+  const { suggestions } = buildSuggestions(pre, mode);
+  const primarySuggestion = suggestions[0];
+
+  const toggleField = (field) => {
+    setPre((prev) => ({
+      ...prev,
+      [field]: Number(prev?.[field] || 0) >= 3 ? 0 : 3,
+    }));
+  };
+
+  const clearPrep = () => {
+    setPre((prev) => ({
+      ...prev,
+      energy: "orta",
+      sleep: "orta",
+      shoulder: 0,
+      knee: 0,
+      spine: 0,
+    }));
+  };
+
+  const hasFlag = pre.energy === "düşük" || Number(pre.shoulder || 0) >= 3 || Number(pre.knee || 0) >= 3 || Number(pre.spine || 0) >= 3;
+
+  return (
+    <div style={{ padding: "0 12px 12px" }}>
+      <SectionCard title="Bugün Notu" accent={primarySuggestion?.tone || "#4FC3F7"}>
+        <div style={{ display: "grid", gap: 8 }}>
+          <div className="panel-choice-row">
+            <button
+              type="button"
+              onClick={() => setPre((prev) => ({ ...prev, energy: prev.energy === "düşük" ? "orta" : "düşük" }))}
+              style={{ ...buttonBase, minWidth: 86 }}
+              className={`panel-choice-btn ${pre.energy === "düşük" ? "panel-choice-btn-active" : ""}`}
+            >
+              Düşük enerji
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleField("shoulder")}
+              style={{ ...buttonBase, minWidth: 72 }}
+              className={`panel-choice-btn ${Number(pre.shoulder || 0) >= 3 ? "panel-choice-btn-active" : ""}`}
+            >
+              Omuz
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleField("knee")}
+              style={{ ...buttonBase, minWidth: 72 }}
+              className={`panel-choice-btn ${Number(pre.knee || 0) >= 3 ? "panel-choice-btn-active" : ""}`}
+            >
+              Diz
+            </button>
+            <button
+              type="button"
+              onClick={() => toggleField("spine")}
+              style={{ ...buttonBase, minWidth: 92 }}
+              className={`panel-choice-btn ${Number(pre.spine || 0) >= 3 ? "panel-choice-btn-active" : ""}`}
+            >
+              Bel/Boyun
+            </button>
+          </div>
+
+          <div className="panel-note-box" style={{ minHeight: 0 }}>
+            {hasFlag
+              ? primarySuggestion?.text || "Bugün risk flag var; ana blokları daha kontrollü uygula."
+              : "Normal gün. Herhangi bir flag yoksa planı yazıldığı dozda uygula."}
+          </div>
+
+          {hasFlag && (
+            <button
+              type="button"
+              onClick={clearPrep}
+              style={{ ...buttonBase, width: "100%" }}
+              className="panel-choice-btn"
+            >
+              Notları temizle
+            </button>
+          )}
+        </div>
+      </SectionCard>
+    </div>
+  );
+}
+
+export function DailyCheckoutPanel({ post, setPost, pre, daySub, skillPaths, skillState, onComplete }) {
   const update = (field, value) => setPost((prev) => ({ ...prev, [field]: value }));
-  const updatePre = (field, value) => setPre?.((prev) => ({ ...prev, [field]: value }));
   const relevantSkills = getRelevantSkillsForDay(daySub, skillPaths);
+  const decision = getSessionDecision({ pre, post });
+  const effectiveNextAction = post.nextAction || decision.action;
 
   const updateSkill = (skillKey, patch) => {
     const level = skillState?.[skillKey]?.level || 1;
@@ -291,46 +411,15 @@ export function DailyCheckoutPanel({ post, setPost, pre, setPre, daySub, skillPa
     <div style={{ padding: "0 12px 12px" }} data-testid="checkout-panel">
       <SectionCard title="Seans Sonu Check-out" accent="#FFA726">
         <div style={{ display: "grid", gap: 10 }}>
-          <div className={`panel-status-box ${post.completed ? "panel-status-success" : "panel-status-neutral"}`}>
-            <div style={{ fontSize: 11, color: post.completed ? "#9EF0BA" : "#FFA726", fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
-              Son Adım
+          <div className={`panel-status-box ${post.completed ? "panel-status-success" : "panel-status-neutral"}`} style={{ borderColor: `${decision.tone}44` }}>
+            <div style={{ fontSize: 11, color: post.completed ? "#9EF0BA" : decision.tone, fontWeight: 800, letterSpacing: ".08em", textTransform: "uppercase" }}>
+              Seans Kararı
             </div>
+            <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 4 }}>{decision.label}</div>
             <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5, marginTop: 6 }}>
-              RPE, semptom ve kısa skill kaydını doldur; ardından seansı tamamlandı olarak işaretle.
+              {decision.summary}
             </div>
           </div>
-
-          {pre && setPre && (
-            <details className="tracker-more" style={{ marginTop: -2 }}>
-              <summary>Seans öncesi durum · isteğe bağlı</summary>
-              <div className="tracker-more-body" style={{ paddingTop: 10 }}>
-                <div style={{ display: "grid", gap: 10 }}>
-                  <div>
-                    <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Enerji</div>
-                    <FieldButtons value={pre.energy} onChange={(v) => updatePre("energy", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "düşük", label: "Düşük" }]} />
-                  </div>
-                  <div>
-                    <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Uyku</div>
-                    <FieldButtons value={pre.sleep} onChange={(v) => updatePre("sleep", v)} options={[{ value: "iyi", label: "İyi" }, { value: "orta", label: "Orta" }, { value: "kötü", label: "Kötü" }]} />
-                  </div>
-                  <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
-                    <div>
-                      <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Omuz önce</div>
-                      <FieldSelect value={pre.shoulder} onChange={(v) => updatePre("shoulder", v)} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Diz önce</div>
-                      <FieldSelect value={pre.knee} onChange={(v) => updatePre("knee", v)} />
-                    </div>
-                    <div>
-                      <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bel/Boyun önce</div>
-                      <FieldSelect value={pre.spine} onChange={(v) => updatePre("spine", v)} />
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </details>
-          )}
 
           <div>
             <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Genel RPE</div>
@@ -343,20 +432,24 @@ export function DailyCheckoutPanel({ post, setPost, pre, setPre, daySub, skillPa
           <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
             <div>
               <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Omuz sonrası</div>
-              <FieldSelect value={post.shoulderAfter} onChange={(v) => update("shoulderAfter", v)} />
+              <SymptomDeltaButtons before={pre?.shoulder} after={post.shoulderAfter} onChange={(v) => update("shoulderAfter", v)} />
+              <div className="panel-meta-text" style={{ marginTop: 6 }}>Önce {pre?.shoulder || 0}/5 → Sonra {post.shoulderAfter ?? 0}/5 · {getDeltaText(pre?.shoulder, post.shoulderAfter)}</div>
             </div>
             <div>
               <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Diz sonrası</div>
-              <FieldSelect value={post.kneeAfter} onChange={(v) => update("kneeAfter", v)} />
+              <SymptomDeltaButtons before={pre?.knee} after={post.kneeAfter} onChange={(v) => update("kneeAfter", v)} />
+              <div className="panel-meta-text" style={{ marginTop: 6 }}>Önce {pre?.knee || 0}/5 → Sonra {post.kneeAfter ?? 0}/5 · {getDeltaText(pre?.knee, post.kneeAfter)}</div>
             </div>
             <div>
               <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bel/Boyun sonrası</div>
-              <FieldSelect value={post.spineAfter} onChange={(v) => update("spineAfter", v)} />
+              <SymptomDeltaButtons before={pre?.spine} after={post.spineAfter} onChange={(v) => update("spineAfter", v)} />
+              <div className="panel-meta-text" style={{ marginTop: 6 }}>Önce {pre?.spine || 0}/5 → Sonra {post.spineAfter ?? 0}/5 · {getDeltaText(pre?.spine, post.spineAfter)}</div>
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bir sonraki seans notu</div>
-            <FieldButtons value={post.nextAction} onChange={(v) => update("nextAction", v)} options={[{ value: "aynı", label: "Aynı" }, { value: "azalt", label: "Azalt" }, { value: "swap", label: "Swap" }]} />
+            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bir sonraki aynı gün kararı</div>
+            <FieldButtons value={effectiveNextAction} onChange={(v) => update("nextAction", v)} options={[{ value: "aynı", label: "Aynı" }, { value: "azalt", label: "Azalt" }, { value: "swap", label: "Swap" }]} />
+            <div className="panel-meta-text" style={{ marginTop: 6 }}>Sistem önerisi: {decision.action === "aynı" ? "Aynı" : decision.action === "azalt" ? "Azalt" : "Swap"}</div>
           </div>
 
           {relevantSkills.length > 0 && (
@@ -427,7 +520,7 @@ export function DailyCheckoutPanel({ post, setPost, pre, setPre, daySub, skillPa
           )}
 
           <button
-            onClick={onComplete}
+            onClick={() => onComplete({ nextAction: effectiveNextAction })}
             style={{ ...buttonBase, width: "100%" }}
             className={`panel-complete-btn ${post.completed ? "panel-complete-btn-done" : ""}`}
             data-testid="checkout-complete-button"

@@ -21,6 +21,7 @@ import SupportDrawer from "./hybrid/SupportDrawer";
 import WeekTransitionPanel from "./hybrid/WeekTransitionPanel";
 import {
   DailyCheckoutPanel,
+  SessionPrepCard,
   SkillTracker,
   WeeklyReview,
 } from "./hybrid/panels";
@@ -337,7 +338,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     mode,
     aerobicMinutes: activeVariant.aerobicMinutes || 0,
     pre: { energy: "orta", sleep: "orta", shoulder: 0, knee: 0, spine: 0 },
-    post: { rpe: "7", cardio: "uygun", shoulderAfter: 0, kneeAfter: 0, spineAfter: 0, nextAction: "aynı", completed: false, skillWork: {} },
+    post: { rpe: "7", cardio: "uygun", shoulderAfter: 0, kneeAfter: 0, spineAfter: 0, nextAction: "", completed: false, skillWork: {} },
   };
 
   const updateEntry = (section, updater) => {
@@ -460,7 +461,11 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     setActiveWeek(1);
   };
 
-  const handleCompleteSession = async () => {
+  const handleCompleteSession = async (postPatch = null) => {
+    if (postPatch && typeof postPatch === "object") {
+      updateEntry("post", (prev) => ({ ...prev, ...postPatch }));
+    }
+
     if (currentEntry.post.completed) return;
 
     if (workoutState.started && !workoutState.completed && finishWorkoutRef.current) {
@@ -580,6 +585,12 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             </div>
           )}
 
+          <SessionPrepCard
+            pre={currentEntry.pre}
+            setPre={(updater) => updateEntry("pre", updater)}
+            mode={mode}
+          />
+
           <div style={{ padding: "0 12px 12px" }}>
             <WorkoutTimer
               dayIndex={workoutDayIndex}
@@ -622,7 +633,6 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
           <div ref={checkoutRef}>
             <DailyCheckoutPanel
               pre={currentEntry.pre}
-              setPre={(updater) => updateEntry("pre", updater)}
               post={currentEntry.post}
               setPost={(updater) => updateEntry("post", updater)}
               daySub={day.sub}

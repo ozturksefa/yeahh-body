@@ -373,6 +373,64 @@ export function buildSuggestions(pre, mode) {
   return { suggestions, recommendedMode };
 }
 
+export function getSessionDecision({ pre = {}, post = {} }) {
+  const before = {
+    shoulder: Number(pre.shoulder || 0),
+    knee: Number(pre.knee || 0),
+    spine: Number(pre.spine || 0),
+  };
+  const after = {
+    shoulder: Number(post.shoulderAfter ?? before.shoulder),
+    knee: Number(post.kneeAfter ?? before.knee),
+    spine: Number(post.spineAfter ?? before.spine),
+  };
+
+  const deltas = {
+    shoulder: after.shoulder - before.shoulder,
+    knee: after.knee - before.knee,
+    spine: after.spine - before.spine,
+  };
+
+  const symptomAfterMax = Math.max(after.shoulder, after.knee, after.spine);
+  const symptomDeltaMax = Math.max(deltas.shoulder, deltas.knee, deltas.spine);
+  const rpe = Number(post.rpe || 0);
+  const cardio = post.cardio || "uygun";
+
+  if (symptomAfterMax >= 4 || symptomDeltaMax >= 2) {
+    return {
+      action: "swap",
+      label: "Swap öner",
+      tone: "#FF6B6B",
+      summary: "Semptom belirgin arttı; bir sonraki aynı paternli günde varyasyonu değiştir veya problemli hattı çıkar.",
+    };
+  }
+
+  if (symptomAfterMax >= 3 || symptomDeltaMax >= 1) {
+    return {
+      action: "azalt",
+      label: "Azalt öner",
+      tone: "#FFA726",
+      summary: "Seans tolere edildi ama semptom yükseldi; bir sonraki aynı gün hacmi %20-30 azaltmak daha doğru.",
+    };
+  }
+
+  if (rpe >= 8 || cardio === "fazla") {
+    return {
+      action: "azalt",
+      label: "Azalt öner",
+      tone: "#F4A261",
+      summary: "Seans yükü üst sınıra çıktı; bir sonraki aynı gün aynı hareketleri koruyup dozu küçük düşür.",
+    };
+  }
+
+  return {
+    action: "aynı",
+    label: "Aynı devam",
+    tone: "#2A9D8F",
+    summary: "Yük ve semptomlar kontrol altında; bir sonraki aynı paternli günde planı aynı dozda sürdürebilirsin.",
+  };
+}
+
 export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, skillPaths }) {
   if (!last7.length) {
     return {
