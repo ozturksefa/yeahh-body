@@ -1,5 +1,25 @@
 import { test, expect } from '@playwright/test';
 
+const PAGE_ORDER = ['Program', 'Geçmiş', 'Skill', 'Plan', 'Durum', 'Beslenme'];
+
+async function goToPage(page, label) {
+  for (let index = 0; index < PAGE_ORDER.length + 1; index += 1) {
+    const current = await page.getByTestId('page-nav-current').textContent();
+    if ((current || '').includes(label)) return;
+    await page.getByTestId('page-nav-next').click();
+  }
+  throw new Error(`Page not reached: ${label}`);
+}
+
+async function goToDay(page, dayKey) {
+  for (let index = 0; index < 8; index += 1) {
+    const currentKey = await page.getByTestId('day-nav-current').getAttribute('data-day-key');
+    if (currentKey === dayKey) return;
+    await page.getByTestId('day-nav-next').click();
+  }
+  throw new Error(`Day not reached: ${dayKey}`);
+}
+
 function localDateOffset(days = 0) {
   const date = new Date();
   date.setHours(12, 0, 0, 0);
@@ -25,18 +45,19 @@ test('hybrid app shell loads with primary navigation', async ({ page }) => {
 
   await expect(page.getByText('YEAHH BODY')).toBeVisible();
   await expect(page.getByTestId('program-selector-toggle')).toBeVisible();
-  await expect(page.getByTestId('page-tab-program')).toBeVisible();
-  await expect(page.getByTestId('page-tab-skill')).toBeVisible();
-  await expect(page.getByTestId('page-tab-plan')).toBeVisible();
-  await expect(page.getByTestId('page-tab-status')).toBeVisible();
-  await expect(page.getByTestId('page-tab-nutrition')).toBeVisible();
+  await expect(page.getByTestId('page-nav-prev')).toBeVisible();
+  await expect(page.getByTestId('page-nav-current')).toContainText('Program');
+  await expect(page.getByTestId('page-nav-next')).toBeVisible();
+  await expect(page.getByTestId('day-nav-prev')).toBeVisible();
+  await expect(page.getByTestId('day-nav-current')).toBeVisible();
+  await expect(page.getByTestId('day-nav-next')).toBeVisible();
   await expect(page.getByTestId('program-start-button')).toBeVisible();
 });
 
 test('program start flow opens workout timer and next step', async ({ page }) => {
   await page.goto('/?e2eAuth=1');
 
-  await page.getByRole('button', { name: /SAL Ana Gün/i }).click();
+  await goToDay(page, 'SALI');
 
   await page.getByTestId('program-start-button').click();
   await expect(page.getByText('🏁 8 Haftalık Programa Başla')).toHaveCount(0);
@@ -58,23 +79,23 @@ test('mode switch and tab navigation work across hybrid pages', async ({ page })
   await page.getByRole('button', { name: '🏠 Ev' }).click();
   await expect(page.locator('.day-meta')).toContainText('Ev versiyonu');
 
-  await page.getByTestId('page-tab-skill').click();
+  await goToPage(page, 'Skill');
   await expect(page.getByText('Skill İlerleme')).toBeVisible();
 
-  await page.getByTestId('page-tab-plan').click();
+  await goToPage(page, 'Plan');
   await expect(page.getByText('Program Çizelgesi')).toBeVisible();
 
-  await page.getByTestId('page-tab-status').click();
+  await goToPage(page, 'Durum');
   await expect(page.getByText('Haftalık Özet')).toBeVisible();
 
-  await page.getByTestId('page-tab-nutrition').click();
+  await goToPage(page, 'Beslenme');
   await expect(page.getByRole('button', { name: /Hibrit Gününe Göre Öğün Önerisi/i })).toBeVisible();
 });
 
 test('checkout flow completes and saves the session', async ({ page }) => {
   await page.goto('/?e2eAuth=1');
 
-  await page.getByRole('button', { name: /SAL Ana Gün/i }).click();
+  await goToDay(page, 'SALI');
   await page.getByTestId('program-start-button').click();
   await page.getByTestId('workout-start').click();
 
@@ -122,7 +143,7 @@ test('weekly progression prompt can advance the active week', async ({ page }) =
 test('nutrition quick add flow logs a food entry', async ({ page }) => {
   await page.goto('/?e2eAuth=1');
 
-  await page.getByTestId('page-tab-nutrition').click();
+  await goToPage(page, 'Beslenme');
   await expect(page.getByTestId('nutrition-page')).toBeVisible();
 
   await page.getByTestId('nutrition-quick-toggle').click();
@@ -137,7 +158,7 @@ test('nutrition quick add flow logs a food entry', async ({ page }) => {
 test('skill logging updates weekly contacts and persists the entry', async ({ page }) => {
   await page.goto('/?e2eAuth=1');
 
-  await page.getByRole('button', { name: /SAL Ana Gün/i }).click();
+  await goToDay(page, 'SALI');
   await page.getByTestId('program-start-button').click();
   await page.getByTestId('workout-start').click();
   await page.getByTestId('checkout-jump-button').click();
@@ -148,7 +169,7 @@ test('skill logging updates weekly contacts and persists the entry', async ({ pa
   await page.getByTestId('skill-log-input-handstand').fill('12');
   await page.getByTestId('checkout-complete-button').click();
 
-  await page.getByTestId('page-tab-skill').click();
+  await goToPage(page, 'Skill');
   await expect(page.getByTestId('skill-page')).toBeVisible();
   await expect(page.getByTestId('skill-contacts-handstand')).toContainText('1');
   await expect(page.getByTestId('skill-card-handstand')).toContainText('12 sn');

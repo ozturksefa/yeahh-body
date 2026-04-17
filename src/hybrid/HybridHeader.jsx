@@ -2,12 +2,46 @@ import { buttonBase } from "./shared";
 
 const PAGE_TABS = [
   ["program", "Program"],
-  ["history", "📋 Geçmiş"],
-  ["skill", "🎯 Skill"],
-  ["plan", "8 Hafta"],
-  ["status", "📊 Durum"],
-  ["nutrition", "🍽 Beslenme"],
+  ["history", "Geçmiş"],
+  ["skill", "Skill"],
+  ["plan", "Plan"],
+  ["status", "Durum"],
+  ["nutrition", "Beslenme"],
 ];
+
+const DAY_SHORT = {
+  "Pazartesi": "Pzt",
+  "Salı": "Sal",
+  "Çarşamba": "Çar",
+  "Perşembe": "Per",
+  "Cuma": "Cum",
+  "Cumartesi": "Cmt",
+  "Pazar": "Paz",
+  "PZT": "Pzt",
+  "SALI": "Sal",
+  "ÇARŞAMBA": "Çar",
+  "PERŞEMBE": "Per",
+  "CUMA": "Cum",
+  "CUMARTESİ": "Cmt",
+  "PAZAR": "Paz",
+};
+
+const DAY_LABEL = {
+  "Pazartesi": "Pazartesi",
+  "Salı": "Salı",
+  "Çarşamba": "Çarşamba",
+  "Perşembe": "Perşembe",
+  "Cuma": "Cuma",
+  "Cumartesi": "Cumartesi",
+  "Pazar": "Pazar",
+  "PZT": "Pazartesi",
+  "SALI": "Salı",
+  "ÇARŞAMBA": "Çarşamba",
+  "PERŞEMBE": "Perşembe",
+  "CUMA": "Cuma",
+  "CUMARTESİ": "Cumartesi",
+  "PAZAR": "Pazar",
+};
 
 /**
  * Pure-presentational top section of HybridView:
@@ -30,6 +64,17 @@ export default function HybridHeader({
   day,
   mode,
 }) {
+  const pageIndex = Math.max(0, PAGE_TABS.findIndex(([id]) => id === page));
+  const currentPageLabel = PAGE_TABS[pageIndex]?.[1] || "Program";
+  const prevPage = () => setPage(PAGE_TABS[(pageIndex - 1 + PAGE_TABS.length) % PAGE_TABS.length][0]);
+  const nextPage = () => setPage(PAGE_TABS[(pageIndex + 1) % PAGE_TABS.length][0]);
+
+  const prevDayIndex = (selectedDay - 1 + allDays.length) % allDays.length;
+  const nextDayIndex = (selectedDay + 1) % allDays.length;
+  const dayLabel = DAY_LABEL[day.sub] || day.sub;
+  const dayType = day.type === "training" ? "Ana Gün" : "Off Day";
+  const dayFocus = day.focus || "Bugünün akışı";
+
   return (
     <header className="hdr">
       <div className="hdr-top">
@@ -39,52 +84,56 @@ export default function HybridHeader({
       <div className="prog-title">{programName}</div>
       {ProgramSelector && <ProgramSelector />}
 
-      <nav className="page-nav" role="tablist" aria-label="Ana sayfa bölümleri">
-        {PAGE_TABS.map(([id, label]) => (
-          <button
-            key={id}
-            role="tab"
-            aria-selected={page === id}
-            aria-label={label.replace(/[^\p{L}\p{N}\s]/gu, "").trim()}
-            data-testid={`page-tab-${id}`}
-            className={`page-tab ${page === id ? "page-tab-active" : ""}`}
-            onClick={() => setPage(id)}
-          >
-            {label}
-          </button>
-        ))}
+      <nav className="switcher-bar" aria-label="Ana sayfa bölümleri">
+        <button type="button" className="switcher-nav-btn" data-testid="page-nav-prev" onClick={prevPage}>‹</button>
+        <div className="switcher-main-btn" data-testid="page-nav-current">
+          <span className="switcher-main-label">{currentPageLabel}</span>
+        </div>
+        <button type="button" className="switcher-nav-btn" data-testid="page-nav-next" onClick={nextPage}>›</button>
       </nav>
 
       {showDayTabs ? (
         <>
-          <div className="tabs" aria-label="Hafta günleri">
-            {allDays.map((item, index) => (
-              <button
-                key={item.sub}
-                aria-pressed={selectedDay === index}
-                className={`tab ${selectedDay === index ? "tab-active" : ""}`}
-                style={selectedDay === index ? { background: item.color } : item.sub === todaySub ? { boxShadow: "inset 0 0 0 1px rgba(79,195,247,.55)" } : {}}
-                onClick={() => handleDayChange(index)}
-              >
-                <div className="tab-t">{item.sub.slice(0, 3)}</div>
-                <div className="tab-s">{item.sub === todaySub ? "Bugün" : item.type === "training" ? "Ana Gün" : "Off"}</div>
-              </button>
-            ))}
+          <div className="switcher-bar switcher-bar-day" aria-label="Hafta günleri">
+            <button
+              type="button"
+              className="switcher-nav-btn"
+              data-testid="day-nav-prev"
+              onClick={() => handleDayChange(prevDayIndex)}
+            >
+              ‹
+            </button>
+
+            <div
+              className={`switcher-main-btn switcher-main-btn-day ${day.type === "training" ? "switcher-main-btn-training" : "switcher-main-btn-off"}`}
+              data-testid="day-nav-current"
+              data-day-key={day.sub}
+            >
+              <span className="switcher-main-label">{dayLabel}</span>
+              <span className="switcher-meta-line">
+                <span className="switcher-type">{dayType}</span>
+                <span className="switcher-sep">·</span>
+                <span className="switcher-focus">{dayFocus}</span>
+                {day.sub === todaySub && <span className="switcher-today-dot" aria-hidden />}
+              </span>
+            </div>
+
+            <button
+              type="button"
+              className="switcher-nav-btn"
+              data-testid="day-nav-next"
+              onClick={() => handleDayChange(nextDayIndex)}
+            >
+              ›
+            </button>
           </div>
 
           {selectedDay !== todayIndex && (
-            <div style={{ paddingTop: 8 }}>
+            <div className="today-return-wrap">
               <button
                 onClick={() => handleDayChange(todayIndex)}
-                style={{
-                  ...buttonBase,
-                  width: "100%",
-                  background: "rgba(79,195,247,.1)",
-                  borderColor: "rgba(79,195,247,.32)",
-                  color: "#fff",
-                  padding: "10px 12px",
-                  fontSize: 12,
-                }}
+                style={{ ...buttonBase }}
+                className="today-return-btn"
               >
                 📍 Bugünün programına dön · {todaySub}
               </button>
