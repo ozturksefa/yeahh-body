@@ -33,38 +33,40 @@ export default function SupportDrawer({ day, program }) {
         >
           <div>
             <div style={{ fontSize: 11, color: "#7A7A84", fontWeight: 700, letterSpacing: ".08em", textTransform: "uppercase" }}>
-              Ek Araçlar
+              Ayarlar
             </div>
             <div style={{ fontSize: 14, fontWeight: 800, color: "#fff", marginTop: 4 }}>
-              Bildirim ayarı, rehber ve ek kontrol paneli
+              Bildirim ve ekstra araçlar
             </div>
-            <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.5, marginTop: 4 }}>
-              Ana akış için zorunlu değil; ihtiyaç olduğunda aç.
+            <div style={{ fontSize: 11, color: "#C4C4CC", lineHeight: 1.45, marginTop: 4 }}>
+              Program için zorunlu değil.
             </div>
           </div>
           <div style={{ color: "#7A7A84", fontSize: 18 }}>{open ? "−" : "+"}</div>
         </button>
 
         {open && (
-          <div style={{ padding: "0 0 12px" }}>
-            <div style={{ padding: "0 12px 8px" }}>
-              <PushSettingsCard />
-            </div>
-            <div style={{ padding: "0 12px" }}>
-              <details className="tracker-more">
-                <summary>Gün rehberi</summary>
-                <div className="tracker-more-body" style={{ padding: 0, paddingTop: 10 }}>
-                  <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" embedded />
-                </div>
-              </details>
+          <div style={{ padding: "0 12px 12px" }}>
+            <PushSettingsCard />
 
-              <details className="tracker-more" style={{ marginTop: 8 }}>
-                <summary>Denetim profili</summary>
-                <div className="tracker-more-body" style={{ padding: 0, paddingTop: 10 }}>
-                  <CoachControlPanel program={program} embedded />
-                </div>
-              </details>
-            </div>
+            <details className="tracker-more" style={{ marginTop: 8 }}>
+              <summary>Diğer araçlar</summary>
+              <div className="tracker-more-body" style={{ padding: 0, paddingTop: 10, display: "grid", gap: 8 }}>
+                <details className="tracker-more">
+                  <summary>Gün rehberi</summary>
+                  <div className="tracker-more-body" style={{ padding: 0, paddingTop: 10 }}>
+                    <DayCoachGuide day={day} guides={HYBRID_COACH_GUIDES} title="Hibrit Gün Rehberi" embedded />
+                  </div>
+                </details>
+
+                <details className="tracker-more">
+                  <summary>Denetim profili</summary>
+                  <div className="tracker-more-body" style={{ padding: 0, paddingTop: 10 }}>
+                    <CoachControlPanel program={program} embedded />
+                  </div>
+                </details>
+              </div>
+            </details>
           </div>
         )}
       </div>

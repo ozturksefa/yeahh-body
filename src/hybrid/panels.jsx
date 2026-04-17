@@ -416,40 +416,41 @@ export function DailyCheckoutPanel({ post, setPost, pre, daySub, skillPaths, ski
               Seans Kararı
             </div>
             <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 4 }}>{decision.label}</div>
-            <div style={{ fontSize: 12, color: "#C4C4CC", lineHeight: 1.5, marginTop: 6 }}>
-              {decision.summary}
+            <div className="panel-meta-text" style={{ marginTop: 6 }}>{decision.summary}</div>
+          </div>
+
+          <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
+            <div>
+              <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Genel RPE</div>
+              <FieldButtons value={post.rpe} onChange={(v) => update("rpe", v)} options={[6, 7, 8].map((v) => ({ value: String(v), label: String(v) }))} />
+            </div>
+            <div>
+              <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Kondisyon</div>
+              <FieldButtons value={post.cardio} onChange={(v) => update("cardio", v)} options={[{ value: "rahat", label: "Rahat" }, { value: "uygun", label: "Uygun" }, { value: "fazla", label: "Fazla" }]} />
             </div>
           </div>
 
-          <div>
-            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Genel RPE</div>
-            <FieldButtons value={post.rpe} onChange={(v) => update("rpe", v)} options={[6, 7, 8].map((v) => ({ value: String(v), label: String(v) }))} />
-          </div>
-          <div>
-            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Kondisyon hissi</div>
-            <FieldButtons value={post.cardio} onChange={(v) => update("cardio", v)} options={[{ value: "rahat", label: "Rahat" }, { value: "uygun", label: "Uygun" }, { value: "fazla", label: "Fazla" }]} />
-          </div>
-          <div style={{ display: "grid", gridTemplateColumns: "repeat(3, minmax(0, 1fr))", gap: 8 }}>
+          <div style={{ display: "grid", gap: 8 }}>
             <div>
               <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Omuz sonrası</div>
               <SymptomDeltaButtons before={pre?.shoulder} after={post.shoulderAfter} onChange={(v) => update("shoulderAfter", v)} />
-              <div className="panel-meta-text" style={{ marginTop: 6 }}>Önce {pre?.shoulder || 0}/5 → Sonra {post.shoulderAfter ?? 0}/5 · {getDeltaText(pre?.shoulder, post.shoulderAfter)}</div>
+              <div className="panel-meta-text" style={{ marginTop: 4 }}>{pre?.shoulder || 0}/5 → {post.shoulderAfter ?? 0}/5 · {getDeltaText(pre?.shoulder, post.shoulderAfter)}</div>
             </div>
             <div>
               <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Diz sonrası</div>
               <SymptomDeltaButtons before={pre?.knee} after={post.kneeAfter} onChange={(v) => update("kneeAfter", v)} />
-              <div className="panel-meta-text" style={{ marginTop: 6 }}>Önce {pre?.knee || 0}/5 → Sonra {post.kneeAfter ?? 0}/5 · {getDeltaText(pre?.knee, post.kneeAfter)}</div>
+              <div className="panel-meta-text" style={{ marginTop: 4 }}>{pre?.knee || 0}/5 → {post.kneeAfter ?? 0}/5 · {getDeltaText(pre?.knee, post.kneeAfter)}</div>
             </div>
             <div>
               <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bel/Boyun sonrası</div>
               <SymptomDeltaButtons before={pre?.spine} after={post.spineAfter} onChange={(v) => update("spineAfter", v)} />
-              <div className="panel-meta-text" style={{ marginTop: 6 }}>Önce {pre?.spine || 0}/5 → Sonra {post.spineAfter ?? 0}/5 · {getDeltaText(pre?.spine, post.spineAfter)}</div>
+              <div className="panel-meta-text" style={{ marginTop: 4 }}>{pre?.spine || 0}/5 → {post.spineAfter ?? 0}/5 · {getDeltaText(pre?.spine, post.spineAfter)}</div>
             </div>
           </div>
           <div>
-            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Bir sonraki aynı gün kararı</div>
+            <div style={{ fontSize: 11, color: "#7A7A84", marginBottom: 6 }}>Sonraki aynı gün</div>
             <FieldButtons value={effectiveNextAction} onChange={(v) => update("nextAction", v)} options={[{ value: "aynı", label: "Aynı" }, { value: "azalt", label: "Azalt" }, { value: "swap", label: "Swap" }]} />
-            <div className="panel-meta-text" style={{ marginTop: 6 }}>Sistem önerisi: {decision.action === "aynı" ? "Aynı" : decision.action === "azalt" ? "Azalt" : "Swap"}</div>
+            <div className="panel-meta-text" style={{ marginTop: 4 }}>Öneri: {decision.action === "aynı" ? "Aynı" : decision.action === "azalt" ? "Azalt" : "Swap"}</div>
           </div>
 
           {relevantSkills.length > 0 && (
