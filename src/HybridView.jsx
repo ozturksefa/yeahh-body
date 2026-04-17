@@ -239,9 +239,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     window.setTimeout(() => {
       const node = document.querySelector(`[data-ex-key="${key}"]`);
       if (!node) return;
-      const headerHeight = document.querySelector(".hdr")?.offsetHeight || 0;
       const top = node.getBoundingClientRect().top + window.scrollY;
-      window.scrollTo({ top: Math.max(top - headerHeight - 8, 0), behavior: "smooth" });
+      window.scrollTo({ top: Math.max(top - 12, 0), behavior: "smooth" });
     }, 140);
   };
 
