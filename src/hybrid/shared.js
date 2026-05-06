@@ -110,6 +110,146 @@ export function getWeekExecutionNote(weekProfile) {
   }
 }
 
+function normalizeText(...values) {
+  return values.filter(Boolean).join(" ").toLowerCase();
+}
+
+function hasAny(text, tokens) {
+  return tokens.some((token) => text.includes(token));
+}
+
+function asEntryArray(entries = []) {
+  return Array.isArray(entries) ? entries : Object.values(entries || {});
+}
+
+export function getRecentCompletedEntries(entries = [], today = formatLocalDate(new Date()), daysBack = 6) {
+  const cutoff = shiftLocalDate(today, -daysBack);
+  return asEntryArray(entries)
+    .filter((entry) => (
+      !!entry?.post?.completed
+      && entry.date >= cutoff
+      && entry.date <= today
+    ))
+    .sort((a, b) => b.date.localeCompare(a.date));
+}
+
+function isTimedSetSuffix(suffix = "") {
+  const text = String(suffix).toLowerCase();
+  return text.includes("sn") || text.includes("dakika") || text.includes("dk");
+}
+
+function isProtectedDoseBlock(block = {}) {
+  const text = normalizeText(block.name);
+  return hasAny(text, [
+    "isinma",
+    "isınma",
+    "mobilite",
+    "bakim",
+    "bakım",
+    "soğuma",
+    "soguma",
+    "esneme",
+    "reset",
+    "hazırlık",
+    "hazirlik",
+  ]);
+}
+
+function isPowerDoseBlock(block = {}) {
+  return normalizeText(block.name).includes("power");
+}
+
+function isStrengthDoseBlock(block = {}) {
+  const text = normalizeText(block.name);
+  return hasAny(text, ["kuvvet", "hacim", "loaded carry"]);
+}
+
+function isThresholdExercise(exercise = {}, block = {}) {
+  const text = normalizeText(exercise.name, exercise.sets, exercise.muscle, exercise.warn, block.name, ...(exercise.how || []));
+  return text.includes("threshold") || text.includes("interval");
+}
+
+function reduceSetLabel(setsLabel, minFloor = 2) {
+  const parsed = parseSetRange(setsLabel);
+  if (!parsed || isTimedSetSuffix(parsed.suffix)) return setsLabel;
+
+  const nextMin = parsed.min <= minFloor ? parsed.min : parsed.min - 1;
+  const rawMax = parsed.max <= minFloor ? parsed.max : parsed.max - 1;
+  const nextMax = Math.max(nextMin, rawMax);
+  return formatSetRange(nextMin, nextMax, parsed.suffix);
+}
+
+function appendDoseWarning(warn, text) {
+  if (!warn) return text;
+  if (warn.includes(text)) return warn;
+  return `${warn} ${text}`;
+}
+
+function applyControlledExerciseDose(exercise, block, decision) {
+  if (!isStrengthDoseBlock(block) || isProtectedDoseBlock(block)) return exercise;
+  const nextSets = reduceSetLabel(exercise.sets, 2);
+  if (nextSets === exercise.sets) return exercise;
+
+  return {
+    ...exercise,
+    sets: nextSets,
+    warn: appendDoseWarning(
+      exercise.warn,
+      decision.status === "recovery"
+        ? "Recovery modu: yük artırma; RPE 6-7 bandında bırak."
+        : "Kontrollü doz: bugün 1 set eksik ve RPE 7 üstü yok."
+    ),
+  };
+}
+
+function applyZone2Dose(exercise, decision) {
+  const isBike = normalizeText(exercise.name, exercise.how?.join(" ")).includes("bike");
+  const name = isBike ? "Zone 2 Bike Protokolü" : "Zone 2 Yürüyüş Protokolü";
+  return {
+    ...exercise,
+    name,
+    sets: decision.status === "recovery" ? "20-30 dakika Zone 2" : "15-25 dakika Zone 2",
+    muscle: String(exercise.muscle || "").replace(/threshold/gi, "Zone 2"),
+    how: [
+      "RPE 5-6; konuşabilir tempo",
+      "Interval/threshold yok",
+      isBike ? "Bike varsayılan; diz rahat dönsün" : "Incline walk veya rahat yürüyüş seç",
+    ],
+    warn: "Bugünün dozu threshold yerine Zone 2 uygular.",
+  };
+}
+
+export function applyPassiveDoseToVariant(variant, decision) {
+  const status = decision?.status || "normal";
+  if (!variant) return variant;
+  if (status === "normal") {
+    return { ...variant, passiveDose: decision };
+  }
+
+  const blocks = (variant.blocks || [])
+    .map((block) => {
+      if (status === "recovery" && isPowerDoseBlock(block)) return null;
+
+      const exercises = (block.exercises || []).map((exercise) => {
+        const zone2Exercise = isThresholdExercise(exercise, block)
+          ? applyZone2Dose(exercise, decision)
+          : exercise;
+
+        return applyControlledExerciseDose(zone2Exercise, block, decision);
+      });
+
+      return { ...block, exercises };
+    })
+    .filter((block) => block && block.exercises.length > 0);
+
+  return {
+    ...variant,
+    passiveDose: decision,
+    weekExecutionNote: [variant.weekExecutionNote, decision.executionNote].filter(Boolean).join(" · "),
+    blocks,
+  };
+}
+
 export function applyWeekToExercise(exercise, weekProfile) {
   const parsed = parseSetRange(exercise.sets);
   if (!parsed) return exercise;
@@ -223,6 +363,123 @@ function getMaxSymptomDelta(entry) {
   const kneeDelta = Number(entry.post?.kneeAfter ?? entry.pre?.knee ?? 0) - Number(entry.pre?.knee ?? 0);
   const spineDelta = Number(entry.post?.spineAfter ?? entry.pre?.spine ?? 0) - Number(entry.pre?.spine ?? 0);
   return Math.max(shoulderDelta, kneeDelta, spineDelta);
+}
+
+export function getPassiveRecoveryDecision({ entries = [], today = formatLocalDate(new Date()), weekReadiness = null } = {}) {
+  const recent = getRecentCompletedEntries(entries, today);
+  const latest = recent[0] || null;
+  const latestRpe = Number(latest?.post?.rpe || 0);
+  const latestCardio = latest?.post?.cardio || "";
+  const latestAction = latest?.post?.nextAction || "aynı";
+  const latestSymptomDelta = latest ? getMaxSymptomDelta(latest) : 0;
+  const latestSymptomMax = latest ? getMaxSymptom(latest) : 0;
+  const rpeValues = recent.map((entry) => Number(entry.post?.rpe || 0)).filter(Boolean);
+  const avgRpe = average(rpeValues);
+  const hardSessions = recent.filter((entry) => Number(entry.post?.rpe || 0) >= 8).length;
+  const excessiveCardio = recent.filter((entry) => entry.post?.cardio === "fazla").length;
+  const reduceOrSwap = recent.filter((entry) => ["azalt", "swap"].includes(entry.post?.nextAction)).length;
+  const redSymptomSessions = recent.filter((entry) => getMaxSymptom(entry) >= 4).length;
+  const symptomRiseSessions = recent.filter((entry) => getMaxSymptomDelta(entry) >= 1).length;
+  const bigSymptomRiseSessions = recent.filter((entry) => getMaxSymptomDelta(entry) >= 2).length;
+
+  const metrics = {
+    recentSessions: recent.length,
+    latestRpe,
+    latestCardio,
+    latestAction,
+    latestSymptomDelta,
+    latestSymptomMax,
+    avgRpe,
+    hardSessions,
+    excessiveCardio,
+    reduceOrSwap,
+    redSymptomSessions,
+    symptomRiseSessions,
+    bigSymptomRiseSessions,
+    weekStatus: weekReadiness?.status || "active",
+  };
+
+  if (!recent.length) {
+    return {
+      status: "normal",
+      label: "Normal Doz",
+      tone: "#2A9D8F",
+      summary: "Son 7 günde yorgunluk verisi yok; plan yazıldığı dozda başlar.",
+      executionNote: "Pasif doz: veri yoksa normal plan.",
+      actions: ["RPE 6-8 bandını koru.", "Check-out kaydı geldikçe sistem dozu otomatik yorumlar."],
+      reasons: ["Veri yok"],
+      metrics,
+    };
+  }
+
+  const recoveryReasons = [
+    redSymptomSessions > 0 ? `${redSymptomSessions} seansta semptom 4/5 seviyesine çıktı.` : null,
+    bigSymptomRiseSessions > 0 ? `${bigSymptomRiseSessions} seansta semptom +2 arttı.` : null,
+    reduceOrSwap >= 2 ? `${reduceOrSwap} seansta azalt/swap işareti var.` : null,
+    weekReadiness?.status === "deload" ? "Haftalık readiness dozu düşür diyor." : null,
+  ].filter(Boolean);
+
+  if (recoveryReasons.length > 0) {
+    return {
+      status: "recovery",
+      label: "Recovery Modu",
+      tone: "#FF6B6B",
+      summary: "Toparlanma sinyali kırmızı; bugün ağır/power/threshold baskısı kaldırılır.",
+      executionNote: "Pasif doz: recovery modu; power yok, threshold yerine Zone 2.",
+      actions: [
+        "Power bloklarını atla.",
+        "Kuvveti düşük yoğunlukta tut; RPE 6-7 üstüne çıkma.",
+        "Threshold yerine Zone 2 uygula.",
+      ],
+      reasons: recoveryReasons,
+      metrics,
+    };
+  }
+
+  const controlledReasons = [
+    latestRpe >= 8 ? `Son seans RPE ${latestRpe}.` : null,
+    latestCardio === "fazla" ? "Son seansta kondisyon fazla geldi." : null,
+    latestSymptomDelta >= 1 ? `Son seansta semptom +${latestSymptomDelta} arttı.` : null,
+    ["azalt", "swap"].includes(latestAction) ? `Sonraki aksiyon: ${latestAction}.` : null,
+    hardSessions >= 2 ? `${hardSessions} seans RPE 8+.` : null,
+    excessiveCardio > 0 ? `${excessiveCardio} seansta kondisyon fazla.` : null,
+    symptomRiseSessions > 0 ? `${symptomRiseSessions} seansta semptom yükseldi.` : null,
+    weekReadiness?.status === "hold" ? "Haftalık readiness bir hafta daha tut diyor." : null,
+  ].filter(Boolean);
+
+  if (controlledReasons.length > 0) {
+    return {
+      status: "kontrollü",
+      label: "Kontrollü Doz",
+      tone: "#FFA726",
+      summary: "Yorgunluk sınırda; bugün ana kuvvet/aksesuar dozunu küçük düşür.",
+      executionNote: "Pasif doz: kontrollü; kuvvette 1 set eksik, RPE cap 7.",
+      actions: [
+        "Ana kuvvet/aksesuar hareketlerinde 1 set düş.",
+        "RPE 7 üstüne çıkma.",
+        "Threshold varsa Zone 2'ye çevir.",
+      ],
+      reasons: controlledReasons,
+      metrics,
+    };
+  }
+
+  return {
+    status: "normal",
+    label: "Normal Doz",
+    tone: "#2A9D8F",
+    summary: "Son kayıtlar temiz; bugünkü plan yazıldığı dozda uygulanabilir.",
+    executionNote: "Pasif doz: normal plan.",
+    actions: [
+      "RPE 6-8 bandını koru.",
+      "Hareket kalitesi bozulursa aynı gün kontrollü doza dön.",
+    ],
+    reasons: [
+      avgRpe ? `Ortalama RPE ${avgRpe}.` : "RPE sinyali temiz.",
+      "Semptom kırmızı bölgede değil.",
+    ],
+    metrics,
+  };
 }
 
 export function getWeekReadiness({ completedEntries = [], trainingDays = [], repGoalMet = false, daysElapsed = 0 } = {}) {
@@ -557,26 +814,45 @@ export function getSessionDecision({ pre = {}, post = {} }) {
   };
 }
 
-export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, skillPaths }) {
+export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, skillPaths, weekProgress = null }) {
+  const evidence = [];
   if (!last7.length) {
     return {
       label: "Veri bekleniyor",
       tone: "#7A7A84",
       summary: "Henüz yeterli seans yok; önce 2-3 tamamlanmış kayıt topla.",
       actions: ["Bu hafta öncelik düzenli giriş yapmak ve check-out kayıtlarını tamamlamak."],
+      evidence: ["Son 7 günde tamamlanmış seans kaydı yok."],
     };
   }
 
   const actionVotes = last7.filter((entry) => ["azalt", "swap"].includes(entry.post?.nextAction)).length;
   const tooMuchCardio = last7.filter((entry) => entry.post?.cardio === "fazla").length;
   const hardSessions = last7.filter((entry) => Number(entry.post?.rpe || 0) >= 8).length;
+  const symptomRiseSessions = last7.filter((entry) => getMaxSymptomDelta(entry) >= 1).length;
+  const redSymptomSessions = last7.filter((entry) => getMaxSymptom(entry) >= 4).length;
   const avgSymptoms = Math.max(totals.avgShoulder || 0, totals.avgKnee || 0, totals.avgSpine || 0);
   const lowSkillContacts = Object.entries(skillContacts)
     .filter(([key, count]) => count < 2 && skillPaths[key]?.weeklyGoal?.includes("2"))
     .map(([key]) => key);
+  const readinessMetrics = weekProgress?.readiness?.metrics || {};
+
+  evidence.push(`${last7.length} seans tamamlandı.`);
+  if (totals.avgRpe) evidence.push(`Ortalama RPE ${totals.avgRpe}.`);
+  if (hardSessions) evidence.push(`${hardSessions} seans RPE 8+.`);
+  if (tooMuchCardio) evidence.push(`${tooMuchCardio} seansta kondisyon fazla.`);
+  if (symptomRiseSessions) evidence.push(`${symptomRiseSessions} seansta semptom artışı var.`);
+  if (redSymptomSessions) evidence.push(`${redSymptomSessions} seansta semptom 4/5.`);
+  if (actionVotes) evidence.push(`${actionVotes} azalt/swap işareti var.`);
+  if (weekProgress && !weekProgress.repGoalMet) evidence.push("Rep/kalite hedefi tam tutulmadı.");
+  if (readinessMetrics.completedStrengthSessions !== undefined && readinessMetrics.minStrengthSessions !== undefined) {
+    evidence.push(`${readinessMetrics.completedStrengthSessions}/${readinessMetrics.minStrengthSessions} kuvvet günü tamamlandı.`);
+  }
+
+  const withEvidence = (decision) => ({ ...decision, evidence });
 
   if (activeWeek?.week === 5) {
-    return {
+    return withEvidence({
       label: "Deload uygula",
       tone: "#4FC3F7",
       summary: "Takvim deload haftasında; toparlanmayı öne al ve hacim kovalamayı bırak.",
@@ -585,11 +861,11 @@ export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, sk
         tooMuchCardio >= 2 ? "Kondisyonu rahat tempoda tut; interval sertliğini düşür." : "Kondisyonu Zone 2 / rahat tempo bandında koru.",
         avgSymptoms >= 2.5 ? "Semptomlar yüksek; skill ve diz/omuz dozunu bir kademe geri çek." : "Amaç taze çıkmak; bu haftayı iyi hisle kapat.",
       ],
-    };
+    });
   }
 
   if (avgSymptoms >= 3.2 || actionVotes >= 2 || (hardSessions >= 2 && tooMuchCardio >= 2)) {
-    return {
+    return withEvidence({
       label: "Deload öner",
       tone: "#FF6B6B",
       summary: "Yük birikimi toparlanmanın önüne geçmiş görünüyor; kısa bir geri çekilme mantıklı.",
@@ -598,11 +874,11 @@ export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, sk
         "Overhead/skill ve diz hassas hareketlerinde regress kullan.",
         "Kondisyonu interval yerine çoğunlukla Zone 2 çizgisinde tut.",
       ],
-    };
+    });
   }
 
   if (avgSymptoms >= 2.5 || actionVotes >= 1 || tooMuchCardio >= 2 || totals.avgRpe >= 7.8) {
-    return {
+    return withEvidence({
       label: "1 set azalt",
       tone: "#FFA726",
       summary: "Program çalışıyor ama yük sınırına yaklaşmışsın; küçük hacim düşüşü daha temiz ilerletir.",
@@ -611,11 +887,11 @@ export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, sk
         "Skill’de max yaklaşımı yerine submax kaliteyi koru.",
         "Kondisyonu aynı tut ama sertlik seviyesini bir tık düşür.",
       ],
-    };
+    });
   }
 
   if (last7.length < 3 || totals.aerobic < 120) {
-    return {
+    return withEvidence({
       label: "Hacmi sabit tut",
       tone: "#4FC3F7",
       summary: "Henüz karar verecek kadar ritim oturmamış; önce sürekliliği tamamla.",
@@ -624,12 +900,12 @@ export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, sk
         "Aerobik dakikayı 150 dk/haftaya yaklaştır.",
         "İlerlemeden önce en az 1 hafta daha veri topla.",
       ],
-    };
+    });
   }
 
   if (avgSymptoms <= 2 && totals.avgRpe <= 7.2 && totals.aerobic >= 150) {
     const skillAction = lowSkillContacts.length ? "Skill temasını 2 kaliteli güne tamamla; yükü skill’den değil ana hareketlerden artır." : "Ana hareketlerde küçük tekrar artışı düşünebilirsin.";
-    return {
+    return withEvidence({
       label: "Devam et",
       tone: "#00C853",
       summary: "Toparlanma, aerobik ve semptom dengesi iyi; program şu an sana hizmet ediyor.",
@@ -638,10 +914,10 @@ export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, sk
         skillAction,
         "RPE 6-8 bandını bozma; failure kovalamadan ilerle.",
       ],
-    };
+    });
   }
 
-  return {
+  return withEvidence({
     label: "Hacmi sabit tut",
     tone: "#4FC3F7",
     summary: "Genel tablo dengeli ama ilerleme için henüz net yeşil ışık yok; mevcut dozu korumak daha akıllı.",
@@ -650,5 +926,5 @@ export function getWeeklyDecision({ last7, totals, skillContacts, activeWeek, sk
       "Aerobik ve skill temasını yazılı hedefe tamamla.",
       "İlerlemeyi ancak ertesi gün toparlanman iyi kaldığında düşün.",
     ],
-  };
+  });
 }

@@ -14,6 +14,7 @@ export default function ActiveSessionBar({
   elapsedSeconds,
   workoutStarted,
   nextStepHint,
+  passiveDecision,
   onNextStep,
   onJumpToCheckout,
 }) {
@@ -34,6 +35,9 @@ export default function ActiveSessionBar({
     ? currentExercise.blockName
     : null;
   const upcomingText = nextStepHint?.exerciseName || null;
+  const doseText = passiveDecision?.status && passiveDecision.status !== "normal"
+    ? `Doz: ${passiveDecision.label}`
+    : null;
 
   const canAdvance = !!nextStepHint;
 
@@ -73,6 +77,11 @@ export default function ActiveSessionBar({
           {upcomingText && (
             <div style={{ fontSize: 11, color: "#7CC7FF", marginTop: 4, lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
               Sıradaki: {upcomingText}
+            </div>
+          )}
+          {doseText && (
+            <div style={{ fontSize: 11, color: passiveDecision.tone || "#FFA726", marginTop: 4, lineHeight: 1.4, whiteSpace: "nowrap", overflow: "hidden", textOverflow: "ellipsis" }}>
+              {doseText}
             </div>
           )}
         </div>

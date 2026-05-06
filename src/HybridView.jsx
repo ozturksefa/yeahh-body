@@ -26,6 +26,7 @@ import {
   WeeklyReview,
 } from "./hybrid/panels";
 import {
+  applyPassiveDoseToVariant,
   applyWeekToVariant,
   buildDefaultSkillState,
   buttonBase,
@@ -33,6 +34,7 @@ import {
   ENTRIES_KEY,
   getTodayContext,
   getTodayIndex,
+  getPassiveRecoveryDecision,
   getWeekReadiness,
   getWorkoutRepGoalMet,
   getWeekProgress,
@@ -98,10 +100,49 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
   const workoutDayIndex = selectedDay + (mode === "gym" ? 400 : 300);
   const weekProfile = PROGRAM_HYBRID.periodization.find((item) => item.week === activeWeek) || PROGRAM_HYBRID.periodization[0];
   const baseVariant = getHybridDayVariant(day, mode);
-  const activeVariant = useMemo(() => applyWeekToVariant(baseVariant, weekProfile), [baseVariant, weekProfile]);
+  const weekVariant = useMemo(() => applyWeekToVariant(baseVariant, weekProfile), [baseVariant, weekProfile]);
   const entryDate = todayContext.key;
   const entryKey = `${entryDate}|${day.sub}|${mode}`;
   const hasWorkoutInput = useMemo(() => Object.keys(workoutSnapshot?.exercises || {}).length > 0, [workoutSnapshot]);
+  const weekProgressBase = useMemo(() => getWeekProgress({
+    entries: allEntries,
+    startDate,
+    activeWeek,
+    today: todayContext.key,
+    weekLog,
+    trainingDays: allDays,
+  }), [activeWeek, allDays, allEntries, startDate, todayContext.key, weekLog]);
+  const weekProgress = useMemo(() => {
+    const repGoalMet = getWorkoutRepGoalMet({
+      completedEntries: weekProgressBase.completedEntries,
+      completedWorkouts: weekCompletedWorkouts,
+      allDays,
+      resolveVariant: (daySub, entryMode) => {
+        const targetDay = allDays.find((item) => item.sub === daySub);
+        if (!targetDay) return null;
+        return applyWeekToVariant(getHybridDayVariant(targetDay, entryMode), weekProfile);
+      },
+    });
+    return {
+      ...weekProgressBase,
+      repGoalMet,
+      readiness: getWeekReadiness({
+        completedEntries: weekProgressBase.completedEntries,
+        trainingDays: allDays,
+        repGoalMet,
+        daysElapsed: weekProgressBase.daysElapsed,
+      }),
+    };
+  }, [allDays, weekCompletedWorkouts, weekProfile, weekProgressBase]);
+  const passiveRecoveryDecision = useMemo(() => getPassiveRecoveryDecision({
+    entries: allEntries,
+    today: todayContext.key,
+    weekReadiness: weekProgress.readiness,
+  }), [allEntries, todayContext.key, weekProgress.readiness]);
+  const activeVariant = useMemo(
+    () => applyPassiveDoseToVariant(weekVariant, passiveRecoveryDecision),
+    [passiveRecoveryDecision, weekVariant]
+  );
   const blockProgress = useMemo(() => {
     const exercises = workoutSnapshot?.exercises || {};
     return Object.fromEntries(
@@ -151,36 +192,6 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
       exerciseName: exercise.name,
     };
   }, [activeVariant.blocks, expandedEx]);
-  const weekProgressBase = useMemo(() => getWeekProgress({
-    entries: allEntries,
-    startDate,
-    activeWeek,
-    today: todayContext.key,
-    weekLog,
-    trainingDays: allDays,
-  }), [activeWeek, allDays, allEntries, startDate, todayContext.key, weekLog]);
-  const weekProgress = useMemo(() => {
-    const repGoalMet = getWorkoutRepGoalMet({
-      completedEntries: weekProgressBase.completedEntries,
-      completedWorkouts: weekCompletedWorkouts,
-      allDays,
-      resolveVariant: (daySub, entryMode) => {
-        const targetDay = allDays.find((item) => item.sub === daySub);
-        if (!targetDay) return null;
-        return applyWeekToVariant(getHybridDayVariant(targetDay, entryMode), weekProfile);
-      },
-    });
-    return {
-      ...weekProgressBase,
-      repGoalMet,
-      readiness: getWeekReadiness({
-        completedEntries: weekProgressBase.completedEntries,
-        trainingDays: allDays,
-        repGoalMet,
-        daysElapsed: weekProgressBase.daysElapsed,
-      }),
-    };
-  }, [allDays, weekCompletedWorkouts, weekProfile, weekProgressBase]);
   const nextWeekProfile = PROGRAM_HYBRID.periodization.find((item) => item.week === activeWeek + 1) || null;
   const nextWeekPreview = useMemo(
     () => (nextWeekProfile ? getWeekShiftPreview(baseVariant, weekProfile, nextWeekProfile) : null),
@@ -599,6 +610,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             pre={currentEntry.pre}
             setPre={(updater) => updateEntry("pre", updater)}
             mode={mode}
+            passiveDecision={passiveRecoveryDecision}
           />
 
           <div style={{ padding: "0 12px 12px" }}>
@@ -648,6 +660,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
               daySub={day.sub}
               skillPaths={PROGRAM_HYBRID.skillPaths}
               skillState={skillState}
+              passiveDecision={passiveRecoveryDecision}
               onComplete={handleCompleteSession}
             />
           </div>
@@ -689,6 +702,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
             elapsedSeconds={elapsedSeconds}
             workoutStarted={workoutState.started}
             nextStepHint={nextStepHint}
+            passiveDecision={passiveRecoveryDecision}
             onNextStep={() => {
               if (expandedEx) {
                 const target = findNextExerciseFrom(expandedEx, workoutSnapshot?.exercises || {});
@@ -727,7 +741,7 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
 
       {page === "status" && (
         <>
-          <WeeklyReview entries={Object.values(entries)} activeWeek={weekProfile} />
+          <WeeklyReview entries={Object.values(entries)} activeWeek={weekProfile} weekProgress={weekProgress} />
           <Suspense fallback={lazyFallback}>
             <main className="main" style={{ paddingTop: 0 }}>
               <Dashboard />

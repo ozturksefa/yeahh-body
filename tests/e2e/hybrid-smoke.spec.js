@@ -209,3 +209,64 @@ test('selected hybrid mode persists after reload', async ({ page }) => {
   const savedMode = await page.evaluate(() => localStorage.getItem('yb_hybrid_mode'));
   expect(savedMode).toBe('gym');
 });
+
+test('passive dose card stays normal without extra user input', async ({ page }) => {
+  await page.goto('/?e2eAuth=1');
+
+  await expect(page.getByTestId('passive-dose-card')).toBeVisible();
+  await expect(page.getByTestId('passive-dose-card')).toContainText('Normal Doz');
+  await expect(page.getByText('Antrenman Öncesi Check-in')).toHaveCount(0);
+});
+
+test('passive dose card switches to controlled dose from high fatigue storage', async ({ page }) => {
+  const date = localDateOffset(-1);
+  const entries = {
+    [`${date}|SALI|home`]: {
+      date,
+      day: 'SALI',
+      mode: 'home',
+      pre: { shoulder: 0, knee: 0, spine: 0 },
+      post: { completed: true, rpe: '8', cardio: 'uygun', shoulderAfter: 0, kneeAfter: 0, spineAfter: 0, nextAction: 'aynı' },
+    },
+  };
+
+  await page.addInitScript((seedEntries) => {
+    sessionStorage.setItem('yb_e2e_seeded', '1');
+    localStorage.setItem('yb_hybrid_entries_v1', JSON.stringify(seedEntries));
+  }, entries);
+
+  await page.goto('/?e2eAuth=1');
+  await goToDay(page, 'SALI');
+
+  await expect(page.getByTestId('passive-dose-card')).toBeVisible();
+  await expect(page.getByTestId('passive-dose-card')).toContainText('Kontrollü Doz');
+  await expect(page.getByTestId('passive-dose-card')).toContainText('RPE 7');
+});
+
+test('passive recovery mode removes power pressure and points threshold to Zone 2', async ({ page }) => {
+  const date = localDateOffset(-1);
+  const entries = {
+    [`${date}|SALI|home`]: {
+      date,
+      day: 'SALI',
+      mode: 'home',
+      pre: { shoulder: 0, knee: 0, spine: 0 },
+      post: { completed: true, rpe: '7', cardio: 'uygun', shoulderAfter: 4, kneeAfter: 0, spineAfter: 0, nextAction: 'aynı' },
+    },
+  };
+
+  await page.addInitScript((seedEntries) => {
+    sessionStorage.setItem('yb_e2e_seeded', '1');
+    localStorage.setItem('yb_hybrid_entries_v1', JSON.stringify(seedEntries));
+  }, entries);
+
+  await page.goto('/?e2eAuth=1');
+  await goToDay(page, 'CUMARTESİ');
+
+  await expect(page.getByTestId('passive-dose-card')).toContainText('Recovery Modu');
+  await expect(page.getByTestId('passive-dose-card')).toContainText('Threshold yerine Zone 2');
+  await expect(page.getByText(/POWER — Atletik Hız/i)).toHaveCount(0);
+
+  await page.getByRole('button', { name: /CORE \+ KONDİSYON/i }).click();
+  await expect(page.getByText(/Zone 2 .* Protokolü/i)).toBeVisible();
+});
