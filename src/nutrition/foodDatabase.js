@@ -47,6 +47,7 @@ export const QUICK_FOODS = [
   { name: "Kuru fasulye (200g pişmiş)", cal: 240, pro: 16, carb: 40, fat: 1, cat: "Protein" },
   { name: "Nohut (200g pişmiş)", cal: 280, pro: 14, carb: 46, fat: 4, cat: "Protein" },
   { name: "Mercimek (200g pişmiş)", cal: 200, pro: 18, carb: 32, fat: 1, cat: "Protein" },
+  { name: "Leblebi (40g)", cal: 150, pro: 8, carb: 24, fat: 2, cat: "Karb" },
   // Karb
   { name: "Pirinç pilavı (150g)", cal: 195, pro: 4, carb: 42, fat: 1, cat: "Karb" },
   { name: "Pirinç pilavı (200g)", cal: 260, pro: 5, carb: 56, fat: 1, cat: "Karb" },

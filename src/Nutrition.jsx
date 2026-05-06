@@ -3,6 +3,7 @@ import "./Nutrition.css";
 import { shiftLocalDate } from "./dateUtils";
 import MealRecommendation from "./MealRecommendation";
 import { PROGRAM3 } from "./data3";
+import HomeKitchenPanel from "./nutrition/HomeKitchenPanel";
 import MacroRing from "./nutrition/MacroRing";
 import {
   CATEGORIES,
@@ -95,6 +96,24 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
     setSearch("");
     setShowQuick(false);
     if (navigator.vibrate) navigator.vibrate(15);
+  };
+
+  const addMeal = (meal) => {
+    if (!meal?.foods?.length) return;
+    const now = Date.now();
+    const time = new Date().toLocaleTimeString("tr-TR", { hour: "2-digit", minute: "2-digit" });
+    const mealLabel = getMealLabel();
+    const nextItems = meal.foods.map((food, index) => ({
+      ...food,
+      id: now + index,
+      time,
+      meal: mealLabel,
+      source: "home-kitchen",
+    }));
+    const next = [...entries, ...nextItems];
+    setEntries(next);
+    saveEntries(activeDate, next);
+    if (navigator.vibrate) navigator.vibrate(20);
   };
 
   const handleFoodTap = (food) => {
@@ -237,6 +256,13 @@ export default function NutritionTracker({ currentDay = null, currentMode = null
 
       {isToday && nutritionContext && (
         <>
+          <HomeKitchenPanel
+            nutritionContext={nutritionContext}
+            targets={targets}
+            totals={totals}
+            onAddMeal={addMeal}
+          />
+
           <button data-testid="nutrition-meal-toggle" className="nutri-quick-toggle"
             onClick={() => setShowMealRec(s => !s)}>
             {showMealRec ? "✕ Öğün Önerisini Kapat" : "🍽 Hibrit Gününe Göre Öğün Önerisi"}

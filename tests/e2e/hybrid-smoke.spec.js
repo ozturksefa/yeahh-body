@@ -145,6 +145,7 @@ test('nutrition quick add flow logs a food entry', async ({ page }) => {
 
   await goToPage(page, 'Beslenme');
   await expect(page.getByTestId('nutrition-page')).toBeVisible();
+  await expect(page.getByTestId('home-kitchen-panel')).toBeVisible();
 
   await page.getByTestId('nutrition-quick-toggle').click();
   await page.getByTestId('nutrition-food-0').click();
@@ -153,6 +154,20 @@ test('nutrition quick add flow logs a food entry', async ({ page }) => {
 
   await expect(page.getByTestId('nutrition-log')).toBeVisible();
   await expect(page.getByTestId('nutrition-log').getByText(/Yumurta \(1 adet\)/i)).toBeVisible();
+});
+
+test('home kitchen panel adds a simple pantry meal', async ({ page }) => {
+  const today = localDateOffset(0);
+  await page.goto('/?e2eAuth=1');
+
+  await goToPage(page, 'Beslenme');
+  await expect(page.getByTestId('home-kitchen-panel')).toBeVisible();
+  await expect(page.getByTestId('home-meal-0')).toBeVisible();
+  await page.getByTestId('home-meal-add-0').click();
+
+  await expect(page.getByTestId('nutrition-log')).toBeVisible();
+  const entries = await page.evaluate((dateKey) => JSON.parse(localStorage.getItem(`yb_nutrition_${dateKey}`) || '[]'), today);
+  expect(entries.some((entry) => entry?.source === 'home-kitchen')).toBeTruthy();
 });
 
 test('skill logging updates weekly contacts and persists the entry', async ({ page }) => {

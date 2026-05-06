@@ -1,7 +1,9 @@
 import { useEffect, useMemo, useState } from "react";
 import { saveExerciseSets, loadExerciseSets, suggestWeight, getHistory } from "./tracker";
 import ExertionRating from "./ExertionRating";
+import { loadRPE } from "./exertionRatingStore";
 import NumericPad from "./NumericPad";
+import { loadProgressionMemoryEntry, recordProgressionMemory } from "./progressionMemory";
 import { isUpper, parseSets } from "./setTrackerUtils";
 
 function emitWorkoutUpdate() {
@@ -61,6 +63,7 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
   const [activeSetIndex, setActiveSetIndex] = useState(0);
   const [transitionNote, setTransitionNote] = useState("");
   const [padField, setPadField] = useState(null); // "weight" | "reps" | null
+  const [progressionMemory, setProgressionMemory] = useState(null);
 
   useEffect(() => {
     if (!shouldRender) return;
@@ -86,7 +89,7 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
         const prefillWeight = sug?.weight > 0
           ? Number(sug.weight)
           : Number(previousFirstSet?.weight || 0);
-        const prefillReps = Number(targetReps) || Number(previousFirstSet?.reps || 0);
+        const prefillReps = Number(sug?.reps || targetReps) || Number(previousFirstSet?.reps || 0);
         if (prefillWeight > 0 || prefillReps > 0) {
           nextSets = Array.from({ length: setCount }, () => ({
             weight: prefillWeight,
@@ -99,6 +102,7 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
       setSets(nextSets);
       setSuggestion(sug);
       setHistoryData(hist);
+      setProgressionMemory(loadProgressionMemoryEntry(ex.name));
 
       const firstUndone = nextSets.findIndex((set) => !set.done);
       setActiveSetIndex(firstUndone === -1 ? Math.max(nextSets.length - 1, 0) : firstUndone);
@@ -140,6 +144,20 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
     return Math.max(step, Math.round((recommendedWorkingWeight * multiplier) / step) * step);
   }, [bodyweightStyle, ex.name, recommendedWorkingWeight]);
 
+  const recordMemoryForSets = (nextSets, rpeValue = loadRPE(ex.name, dayIndex)) => {
+    if (!shouldRender || !nextSets.length || !nextSets.every((set) => set.done)) return null;
+    const entry = recordProgressionMemory({
+      exerciseName: ex.name,
+      blockName,
+      sets: nextSets,
+      targetReps,
+      isUpperBody: isUpper(ex.name),
+      rpe: rpeValue,
+    });
+    setProgressionMemory(entry);
+    return entry;
+  };
+
   // (Removed auto-focus to native keyboard — the numeric pad overlay replaces
   // the standard number input, so there is no ref to focus.)
 
@@ -148,6 +166,7 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
   const persistSets = (nextSets) => {
     setSets(nextSets);
     saveExerciseSets(dayIndex, ex.name, nextSets);
+    recordMemoryForSets(nextSets);
     emitWorkoutUpdate();
   };
 
@@ -298,6 +317,14 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
         <div className="tracker-transition-note">{transitionNote}</div>
       )}
 
+      {progressionMemory?.decision && (
+        <div className={`tracker-memory-strip tracker-memory-${progressionMemory.decision.status}`}>
+          <div className="tracker-memory-kicker">Hafıza</div>
+          <div className="tracker-memory-main">{progressionMemory.decision.label}</div>
+          <div className="tracker-memory-sub">{progressionMemory.decision.reason}</div>
+        </div>
+      )}
+
       <div className="tracker-hero">
         <button
           type="button"
@@ -413,7 +440,13 @@ function SetTracker({ ex, dayIndex, blockName, onAllDone }) {
         </div>
       </details>
 
-      {allDone && <ExertionRating exerciseName={ex.name} dayIndex={dayIndex} />}
+      {allDone && (
+        <ExertionRating
+          exerciseName={ex.name}
+          dayIndex={dayIndex}
+          onChange={(rpeValue) => recordMemoryForSets(sets, rpeValue)}
+        />
+      )}
     </div>
   );
 }
