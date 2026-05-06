@@ -1,5 +1,6 @@
 import { describe, expect, it } from 'vitest';
 import { PROGRAM_HYBRID } from '../../src/dataHybrid.js';
+import { getGifUrl, getYouTubeShortId } from '../../src/videoMap.js';
 
 function activeHybridExercises() {
   const rows = [];
@@ -50,6 +51,16 @@ describe('hybrid exercise alternatives', () => {
     }
 
     expect(issues).toEqual([]);
+  });
+
+  it('covers every active hybrid movement and alternative with inline media', () => {
+    const missing = [];
+
+    for (const name of activeNameCorpus()) {
+      if (!getGifUrl(name) && !getYouTubeShortId(name)) missing.push(name);
+    }
+
+    expect(missing.sort()).toEqual([]);
   });
 
   it('retains the useful Torso Limbs exercise families as safe alternatives', () => {

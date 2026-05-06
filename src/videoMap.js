@@ -612,13 +612,24 @@ const YT_SHORT_MAP = {
   "Wall Tibialis Raise": "PotNJd0qZDM",
 
   // Audit v2 round — remaining gaps filled by user-curated shorts
+  "90/90 Breathing": "UEFMfaFrJn0",
+  "Crocodile Breathing": "1Tvs6kXRzU8",
   "Dead Hang": "dOCQjaasbGs",
   "Dead Hang (Şartlı)": "dOCQjaasbGs",
+  "Diaphragmatic Breathing": "v0Yj9HjgR64",
+  "Downward Dog Hold": "UsTTTYbBdQg",
+  "Hızlı Yürüyüş": "EpvXcGONfkk",
+  "Incline Walk": "HwXYMPGjlUg",
   "Pike Hold": "eG20L9cl81w",
   "Pike Hold + Shoulder Shift": "eG20L9cl81w",
+  "Prone Cobra": "keErJXdp2lE",
+  "Rahat Yürüyüş": "5dzHyouB6Ms",
   "Rower": "cGy29PC4oPk",
   "Rower — Progresif Threshold Protokolü": "cGy29PC4oPk",
   "Shoulder Cross Stretch": "uWitbjDWp8c",
+  "Straight Leg Calf Raise": "sNqa1ad2qIQ",
+  "Towel Curl Isometric": "9YrTANkzU4U",
+  "Zone 2 / Threshold Yürüyüş Protokolü": "GLFP8_-RWe4",
 };
 
 export function getYouTubeShortId(name) {
@@ -640,7 +651,7 @@ export function getYouTubeShortEmbedUrl(videoId) {
 }
 
 export function getYouTubeShortWatchUrl(videoId) {
-  return `https://www.youtube.com/shorts/${videoId}`;
+  return `https://www.youtube.com/watch?v=${videoId}`;
 }
 
 export function getGifUrl(name) {
@@ -652,7 +663,7 @@ export function getGifUrl(name) {
 }
 
 export function hasExerciseGif(name) {
-  return !!getGifUrl(name);
+  return !!getGifUrl(name) || !!getYouTubeShortId(name);
 }
 
 function resolveId(name) {
