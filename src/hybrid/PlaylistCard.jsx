@@ -141,8 +141,6 @@ export default function PlaylistCard({ dayName }) {
         ) : (
           <a
             href={musicSearchUrl(entry.searchQuery)}
-            target="_blank"
-            rel="noopener noreferrer"
             className="playlist-btn playlist-btn-primary"
           >
             🎧 YT Music'te Aç
@@ -153,8 +151,6 @@ export default function PlaylistCard({ dayName }) {
           <>
             <a
               href={playlistMusicUrl(entry.playlistId)}
-              target="_blank"
-              rel="noopener noreferrer"
               className="playlist-btn playlist-btn-secondary"
               aria-label="YouTube Music'te aç"
             >
@@ -163,8 +159,6 @@ export default function PlaylistCard({ dayName }) {
 
             <a
               href={playlistWatchUrl(entry.playlistId)}
-              target="_blank"
-              rel="noopener noreferrer"
               className="playlist-btn playlist-btn-secondary"
               aria-label="YouTube'da aç"
             >

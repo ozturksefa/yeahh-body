@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { getHistory } from "../tracker";
 import ExerciseGif from "../Gif";
+import { hasExerciseGif } from "../videoMap";
 
 /**
  * Full-screen "zoom-in" for a single exercise. Opened by long-pressing
@@ -95,10 +96,15 @@ export default function ExerciseDetailModal({ exercise, onClose }) {
               <div className="exd-section-label">ALTERNATİFLER</div>
               <div className="exd-alts">
                 {exercise.alts.map((alt, i) => (
-                  <div key={i} className="exd-alt">
+                  <div key={`${alt}-${i}`} className="exd-alt">
                     <div className="exd-alt-name">{alt}</div>
                     {exercise.alt_reasons?.[i] && (
                       <div className="exd-alt-why">{exercise.alt_reasons[i]}</div>
+                    )}
+                    {hasExerciseGif(alt) && (
+                      <div className="exd-alt-media">
+                        <ExerciseGif name={alt} />
+                      </div>
                     )}
                   </div>
                 ))}

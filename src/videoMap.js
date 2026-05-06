@@ -184,6 +184,7 @@ const GIF_MAP = {
   "Cable Reverse Curl":              "eOG0r6v",  // cable reverse curl
   "Cable Reverse Fly":               "PQcUlDi",  // cable supine reverse fly
   "Child's Pose to Cobra Pose (MAC+)": "XPUDTt7",  // pike-to-cobra push-up
+  "Child's Pose to Cobra Pose":       "XPUDTt7",  // pike-to-cobra push-up
   "Chin Up":                         "MaMuGH6",  // lever assisted chin-up
   "Close Grip Pulldown":             "4LoWllp",  // band fixed back close grip pulldown
   "Close Grip Push Up":              "8K7m2SS",  // medicine ball close grip push up
@@ -478,6 +479,10 @@ const YT_QUERY_MAP = {
   "Incline Walk": "incline treadmill walking posture form",
   "Bird Dog": "bird dog exercise form neutral spine",
   "Copenhagen Plank (Sandalye)": "copenhagen plank chair progression form",
+  "Crocodile Breathing": "crocodile breathing exercise diaphragm form",
+  "Diaphragmatic Breathing": "diaphragmatic breathing exercise form",
+  "Downward Dog Hold": "downward dog hold stretch form",
+  "90/90 Breathing": "90 90 breathing exercise rib cage pelvis position",
   "Tek Ayak Denge Hold": "single leg balance hold exercise form",
   "Single Leg Balance Reach (Y-Balance)": "y balance reach test exercise form",
   "Wall Sit": "wall sit exercise form knee friendly",
@@ -488,6 +493,9 @@ const YT_QUERY_MAP = {
   "Bridge Walkout": "bridge walkout hamstring exercise form",
   "Prone Cobra": "prone cobra exercise form scapular retraction",
   "Close Grip Push Up": "close grip push up exercise form",
+  "Medicine Ball Chest Pass": "medicine ball chest pass wall throw form",
+  "Rahat Yürüyüş": "easy walk cool down posture breathing",
+  "Zone 2 / Threshold Yürüyüş Protokolü": "zone 2 walking treadmill technique threshold walking workout",
 };
 
 // Alias layer — maps new hybrid-program exercise names to their closest
@@ -496,6 +504,61 @@ const YT_QUERY_MAP = {
 // database. Removed entries below are handled either by YT_SHORT_MAP
 // (preferred, user-curated) or fall through to getYouTubeSearchUrl.
 const GIF_ALIAS = {
+  // ATHLETIC HYBRID (aktif program) — yeni isimleri mevcut doğru GIF'lere bağla
+  "90/90 Hip Switch": "90/90 Hip Stretch",
+  "Ankle Rocker": "Ankle Mobility (duvara karşı)",
+  "Bike / Rower Threshold Protokolü": "Stationary Bike",
+  "Cable Clavicular Fly": "Cable Fly",
+  "45 Degree Hip Extension": "Bench Thoracic Extension",
+  "Close Grip Incline Push-up": "Incline Push Up",
+  "DB Curl": "Incline Dumbbell Curl",
+  "DB Curl veya Towel Curl": "Incline Dumbbell Curl",
+  "DB Floor Press (tek kol)": "Floor Press",
+  "DB Floor Press veya Incline Push-up": "Floor Press",
+  "DB Floor Triceps Extension": "Skull Crusher",
+  "DB Goblet Wall Sit": "Dumbbell Goblet Squat",
+  "DB Hip Thrust": "Hip Thrust",
+  "Farmer Carry": "Suitcase Carry",
+  "High Incline Smith Machine Press": "Incline Dumbbell Press",
+  "High Row Machine": "Chest Supported Row",
+  "Kelso Shrug Machine": "Chest Supported Row",
+  "Incline Walk veya Stationary Bike": "Stationary Bike",
+  "Lengthened DB Curl": "Incline Dumbbell Curl",
+  "Leg Press Groove Set": "Leg Press",
+  "Leg Press Kısa ROM": "Leg Press",
+  "Light Kettlebell Swing": "Kettlebell Swing",
+  "Neutral Grip Lat Pulldown": "Lat Pulldown",
+  "Neutral Machine Press veya Floor Press": "Floor Press",
+  "Pallof Alternatifi: Side Plank": "Side Plank",
+  "Pec Deck Fly": "Cable Fly",
+  "Plate Loaded Flat Chest Press": "Cable Chest Press",
+  "Romanian Deadlift Hafif veya Hip Thrust": "Romanian Deadlift",
+  "Rope Pushdown": "Triceps Pushdown",
+  "Scapular Pulldown": "Straight Arm Pulldown",
+  "Scapular Push-up": "Scapula Push Up",
+  "Scott Curl Machine": "Cable Curl",
+  "Seated Leg Curl": "Machine Seated Leg Curl",
+  "Seated Lateral Raise Machine": "Lateral Raise",
+  "Single Arm Cable Pushdown": "Triceps Pushdown",
+  "Single Arm Lat Pulldown": "Single Arm Pulldown",
+  "Single Leg RDL Hafif DB": "Single Leg RDL",
+  "Speed Incline Push-up": "Incline Push Up",
+  "Speed Machine Chest Press": "Cable Chest Press",
+  "Stationary Bike veya Incline Walk": "Stationary Bike",
+  "Standing Single Arm Lateral Raise": "Cable Lateral Raise",
+  "Straight Bar Pushdown": "Triceps Pushdown",
+  "Straight Leg Calf Raise": "Standing Calf Raise",
+  "Supported Low Step-up": "Dumbbell Step Up",
+  "Supported Low Step-up veya Kısa ROM Split Squat": "Dumbbell Step Up",
+  "Tall Plank Shoulder Tap": "Scapula Push Up",
+  "T Bar Row Machine": "Chest Supported Row",
+  "Tek Kol DB Row": "DB Row Single Arm",
+  "Tek Kol DB Row (5-8kg)": "DB Row Single Arm",
+  "Tek Kol DB Row veya Inverted Row": "DB Row Single Arm",
+  "Towel Row (Ayak Dirençli)": "Ring Row",
+  "Wall Push-up": "Incline Push Up",
+  "Wide Grip Lat Pulldown": "Lat Pulldown",
+
   // POWER (yeni eklenenler)
   "Explosive Hip Thrust": "Hip Thrust",
   "Explosive Hip Thrust (Barbell veya Plate)": "Hip Thrust",
@@ -541,6 +604,7 @@ const YT_SHORT_MAP = {
   "Chin Tuck": "0tWxFbOHvRo",
   "Close Grip Push Up": "zWWqJZzn2Xg",
   "Hip Circle": "C4MDREc9ERg",
+  "Medicine Ball Chest Pass": "0nAIDOVnGoo",
   "Medicine Ball Chest Pass (Duvara, 3-5kg)": "0nAIDOVnGoo",
   "Scapular Wall Slide": "OtgQDv7u1TM",
   "Standing Calf Raise": "sNqa1ad2qIQ",
@@ -575,12 +639,20 @@ export function getYouTubeShortEmbedUrl(videoId) {
   return `https://www.youtube-nocookie.com/embed/${videoId}?loop=1&playlist=${videoId}&rel=0&modestbranding=1`;
 }
 
+export function getYouTubeShortWatchUrl(videoId) {
+  return `https://www.youtube.com/shorts/${videoId}`;
+}
+
 export function getGifUrl(name) {
   if (FORCE_YT_FALLBACK.has(name)) return null;
   const val = resolveId(name);
   if (!val) return null;
   if (Array.isArray(val)) return val.map(id => `${GIF_BASE}${id}.gif`);
   return `${GIF_BASE}${val}.gif`;
+}
+
+export function hasExerciseGif(name) {
+  return !!getGifUrl(name);
 }
 
 function resolveId(name) {

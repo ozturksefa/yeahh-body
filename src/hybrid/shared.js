@@ -210,6 +210,132 @@ function getRecoveryBasedGoalMet(completedEntries = []) {
   return successCount / completedEntries.length >= 0.75;
 }
 
+function getMaxSymptom(entry) {
+  return Math.max(
+    Number(entry.post?.shoulderAfter ?? entry.pre?.shoulder ?? 0),
+    Number(entry.post?.kneeAfter ?? entry.pre?.knee ?? 0),
+    Number(entry.post?.spineAfter ?? entry.pre?.spine ?? 0)
+  );
+}
+
+function getMaxSymptomDelta(entry) {
+  const shoulderDelta = Number(entry.post?.shoulderAfter ?? entry.pre?.shoulder ?? 0) - Number(entry.pre?.shoulder ?? 0);
+  const kneeDelta = Number(entry.post?.kneeAfter ?? entry.pre?.knee ?? 0) - Number(entry.pre?.knee ?? 0);
+  const spineDelta = Number(entry.post?.spineAfter ?? entry.pre?.spine ?? 0) - Number(entry.pre?.spine ?? 0);
+  return Math.max(shoulderDelta, kneeDelta, spineDelta);
+}
+
+export function getWeekReadiness({ completedEntries = [], trainingDays = [], repGoalMet = false, daysElapsed = 0 } = {}) {
+  const targetTrainingDays = trainingDays.filter((day) => day.type === "training");
+  const strengthDays = targetTrainingDays.filter((day) => !String(day.focus || "").toLowerCase().includes("zone 2"));
+  const strengthDaySet = new Set(strengthDays.map((day) => day.sub));
+  const sessionCount = completedEntries.length;
+  const completedStrengthSessions = completedEntries.filter((entry) => strengthDaySet.has(entry.day)).length;
+  const minSessions = Math.max(1, (targetTrainingDays.length || 4) - 1);
+  const minStrengthSessions = Math.min(2, strengthDaySet.size || 2);
+
+  const rpeValues = completedEntries.map((entry) => Number(entry.post?.rpe || 0)).filter(Boolean);
+  const avgRpe = average(rpeValues);
+  const hardSessions = completedEntries.filter((entry) => Number(entry.post?.rpe || 0) >= 8).length;
+  const excessiveCardio = completedEntries.filter((entry) => entry.post?.cardio === "fazla").length;
+  const reduceOrSwap = completedEntries.filter((entry) => ["azalt", "swap"].includes(entry.post?.nextAction)).length;
+  const highSymptomSessions = completedEntries.filter((entry) => getMaxSymptom(entry) >= 3).length;
+  const redSymptomSessions = completedEntries.filter((entry) => getMaxSymptom(entry) >= 4).length;
+  const symptomRiseSessions = completedEntries.filter((entry) => getMaxSymptomDelta(entry) >= 1).length;
+  const bigSymptomRiseSessions = completedEntries.filter((entry) => getMaxSymptomDelta(entry) >= 2).length;
+
+  const metrics = {
+    sessionCount,
+    completedStrengthSessions,
+    minSessions,
+    minStrengthSessions,
+    avgRpe,
+    hardSessions,
+    excessiveCardio,
+    reduceOrSwap,
+    highSymptomSessions,
+    redSymptomSessions,
+    symptomRiseSessions,
+    bigSymptomRiseSessions,
+    daysElapsed,
+  };
+
+  if (!sessionCount) {
+    return {
+      status: "repeat",
+      canAdvance: false,
+      label: "Veri yok",
+      tone: "#FFA726",
+      summary: "Hafta dolmuş olabilir ama tamamlanmış seans yok; üst haftaya geçmek yerine bu haftayı başlat.",
+      checks: ["En az 3 ana kayıt ve 2 kuvvet günü tamamlanmalı."],
+      metrics,
+    };
+  }
+
+  if (sessionCount < minSessions || completedStrengthSessions < minStrengthSessions) {
+    return {
+      status: "repeat",
+      canAdvance: false,
+      label: "Aynı haftada kal",
+      tone: "#FFA726",
+      summary: "Haftanın ana uyaranı eksik kaldı; üst haftaya geçmek yerine aynı haftayı tamamlamak daha doğru.",
+      checks: [
+        `${sessionCount}/${minSessions} ana kayıt tamamlandı.`,
+        `${completedStrengthSessions}/${minStrengthSessions} kuvvet günü tamamlandı.`,
+      ],
+      metrics,
+    };
+  }
+
+  if (redSymptomSessions > 0 || bigSymptomRiseSessions > 0 || reduceOrSwap >= 2) {
+    return {
+      status: "deload",
+      canAdvance: false,
+      label: "Geçme, dozu düşür",
+      tone: "#FF6B6B",
+      summary: "Semptom veya azalt/swap sinyali yüksek; üst haftaya çıkmak yerine aynı haftayı daha düşük dozla tekrar et.",
+      checks: [
+        redSymptomSessions > 0 ? `${redSymptomSessions} seansta semptom 4/5 seviyesine çıktı.` : null,
+        bigSymptomRiseSessions > 0 ? `${bigSymptomRiseSessions} seansta semptom artışı belirgin.` : null,
+        reduceOrSwap >= 2 ? `${reduceOrSwap} seansta azalt/swap işareti var.` : null,
+      ].filter(Boolean),
+      metrics,
+    };
+  }
+
+  if (!repGoalMet || hardSessions >= 2 || excessiveCardio > 0 || highSymptomSessions >= 2 || symptomRiseSessions >= 2) {
+    return {
+      status: "hold",
+      canAdvance: false,
+      label: "Bir hafta daha tut",
+      tone: "#FFA726",
+      summary: "İlerleme var ama kalite/toparlanma sinyalleri tam yeşil değil; aynı haftayı daha temiz tamamla.",
+      checks: [
+        !repGoalMet ? "Rep/kalite hedefi tam tutulmadı." : null,
+        hardSessions >= 2 ? `${hardSessions} seans RPE 8 seviyesinde.` : null,
+        excessiveCardio > 0 ? "Kondisyon en az bir seansta fazla geldi." : null,
+        highSymptomSessions >= 2 ? `${highSymptomSessions} seansta semptom 3/5 veya üstü.` : null,
+        symptomRiseSessions >= 2 ? `${symptomRiseSessions} seansta semptom yükseldi.` : null,
+      ].filter(Boolean),
+      metrics,
+    };
+  }
+
+  return {
+    status: "advance",
+    canAdvance: true,
+    label: "Geçmeye hazır",
+    tone: "#00C853",
+    summary: "Haftanın ana uyaranı tamamlandı, kalite hedefi tuttu ve toparlanma sinyalleri uygun.",
+    checks: [
+      `${sessionCount}/${minSessions} ana kayıt tamamlandı.`,
+      `${completedStrengthSessions}/${minStrengthSessions} kuvvet günü tamamlandı.`,
+      avgRpe ? `Ortalama RPE ${avgRpe}.` : "RPE sinyali uygun.",
+    ],
+    metrics,
+  };
+}
+
 export function getExerciseRepFloor(setsLabel = "") {
   const parsed = parseSetRange(setsLabel);
   if (!parsed) return null;

@@ -1,6 +1,7 @@
 import { useState, useRef } from "react";
 import { calcExerciseCalories, calcBlockCalories, getUserWeight } from "./calorieCalc";
 import ExerciseGif from "./Gif";
+import { hasExerciseGif } from "./videoMap";
 import SetTracker from "./SetTracker";
 import ExerciseNote from "./ExerciseNote";
 import SkillTimer from "./SkillTimer";
@@ -184,17 +185,24 @@ function ExerciseCard({ ex, exerciseKey, blockColor, isOpen, onToggle, dayIndex,
                 const isActive = swappedName === a;
                 const reason = ex.alt_reasons?.[i];
                 return (
-                  <button key={i} className={`alt-btn ${isActive ? "alt-btn-active" : ""}`}
-                    onClick={() => isActive ? handleRevert() : handleSwap(a)}>
-                    <div className="alt-btn-inner">
-                      <div className="alt-btn-top">
-                        <span className="alt-n">{isActive ? "✓" : `${i + 1}.`}</span>
-                        <span className="alt-name">{a}</span>
-                        <span className="alt-action">{isActive ? "Geri Al" : "Seç"}</span>
+                  <div key={`${a}-${i}`} className="alt-option">
+                    <button className={`alt-btn ${isActive ? "alt-btn-active" : ""}`}
+                      onClick={() => isActive ? handleRevert() : handleSwap(a)}>
+                      <div className="alt-btn-inner">
+                        <div className="alt-btn-top">
+                          <span className="alt-n">{isActive ? "✓" : `${i + 1}.`}</span>
+                          <span className="alt-name">{a}</span>
+                          <span className="alt-action">{isActive ? "Geri Al" : "Seç"}</span>
+                        </div>
+                        {reason && <div className="alt-reason">{reason}</div>}
                       </div>
-                      {reason && <div className="alt-reason">{reason}</div>}
-                    </div>
-                  </button>
+                    </button>
+                    {hasExerciseGif(a) && (
+                      <div className="alt-media-preview">
+                        <ExerciseGif name={a} />
+                      </div>
+                    )}
+                  </div>
                 );
               })}
             </div>

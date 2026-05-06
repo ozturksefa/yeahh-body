@@ -153,30 +153,30 @@ export const HYBRID_COACH_GUIDES = {
     ],
   },
   "PAZAR": {
-    goal: "Toparlanmak, hafif kuvvetle sistemi açık tutmak ve aerobik tabanı büyütmek.",
+    goal: "Haftayı gerçek ama düşük yoğunluklu antrenmanla kapatmak: toparlanma kuvveti, core/carry ve Zone 2.",
     before: [
-      "Bugünü test gününe çevirmeyeceğine emin misin?",
+      "Bugünü ağır telafi gününe çevirmeden antrenman disipliniyle yapabilecek misin?",
       "Cumartesi sonrası en çok hangi bölge yorgun?",
-      "Zone 2'yi sabırla yapabilecek misin?",
+      "Kuvvet setlerinde RIR 3-4 bırakıp Zone 2'yi konuşabilir tempoda sürdürebilecek misin?",
     ],
     how: [
-      "Bugün sayıları değil toparlanmayı kovalarsın.",
-      "Hafif row, core ve glute işi sadece bakım dozu taşır.",
-      "Uzun aerobik blok haftanın toparlayıcı çimentosudur.",
+      "Bugün kuvvet var: glute/posterior chain, upper back, calf ve carry/core hafif dozda çalışır.",
+      "Setler temiz ve submax kalır; pompalanmak var ama failure yok.",
+      "Zone 2 bloğu antrenmanı tamamlar; threshold veya sprint yapılmaz.",
     ],
     scale: [
-      "Cumartesi sert geçtiyse hafif kuvvet bloklarını yarıya indir.",
-      "Diz hassassa yürüyüş yerine bike kullan.",
-      "Boyun rahatsızsa support veya pike temasını tamamen çıkar.",
+      "Cumartesi sert geçtiyse toparlanma kuvveti hareketlerinden 1 set çıkar.",
+      "Diz hassassa leg extension/uzun yürüyüş yerine wall sit veya bike kullan.",
+      "Bel-boyun rahatsızsa rower kullanma; carry yükünü azalt ve bird dog hareketini kısa ROM ile yap.",
     ],
     redFlags: [
-      "Bugünü max test gibi yapma isteği.",
+      "Bugünü ikinci Cumartesi gibi ağır full body gününe çevirme isteği.",
+      "Kuvvet bloğunda RPE'nin 7 üstüne çıkması.",
       "Aerobik blokta ağrının nefesin önüne geçmesi.",
     ],
     finish: [
-      "Yeni haftaya daha hazır hissediyor musun?",
-      "Pazar gerçekten toparlanma gibi geçti mi?",
+      "Antrenman yaptıktan sonra yeni haftaya daha hazır hissediyor musun?",
+      "Toparlanma kuvveti setleri temiz kaldı mı, yoksa yük biriktirdi mi?",
     ],
   },
 };
-
