@@ -33,6 +33,7 @@ import {
   ENTRIES_KEY,
   getTodayContext,
   getTodayIndex,
+  getWeekReadiness,
   getWorkoutRepGoalMet,
   getWeekProgress,
   getWeekShiftPreview,
@@ -158,9 +159,8 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
     weekLog,
     trainingDays: allDays,
   }), [activeWeek, allDays, allEntries, startDate, todayContext.key, weekLog]);
-  const weekProgress = useMemo(() => ({
-    ...weekProgressBase,
-    repGoalMet: getWorkoutRepGoalMet({
+  const weekProgress = useMemo(() => {
+    const repGoalMet = getWorkoutRepGoalMet({
       completedEntries: weekProgressBase.completedEntries,
       completedWorkouts: weekCompletedWorkouts,
       allDays,
@@ -169,8 +169,18 @@ export default function HybridView({ logout, ProgramSelector, lockedMode = null 
         if (!targetDay) return null;
         return applyWeekToVariant(getHybridDayVariant(targetDay, entryMode), weekProfile);
       },
-    }),
-  }), [allDays, weekCompletedWorkouts, weekProfile, weekProgressBase]);
+    });
+    return {
+      ...weekProgressBase,
+      repGoalMet,
+      readiness: getWeekReadiness({
+        completedEntries: weekProgressBase.completedEntries,
+        trainingDays: allDays,
+        repGoalMet,
+        daysElapsed: weekProgressBase.daysElapsed,
+      }),
+    };
+  }, [allDays, weekCompletedWorkouts, weekProfile, weekProgressBase]);
   const nextWeekProfile = PROGRAM_HYBRID.periodization.find((item) => item.week === activeWeek + 1) || null;
   const nextWeekPreview = useMemo(
     () => (nextWeekProfile ? getWeekShiftPreview(baseVariant, weekProfile, nextWeekProfile) : null),

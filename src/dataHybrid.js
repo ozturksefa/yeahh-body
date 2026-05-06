@@ -1,12 +1,69 @@
-const ex = (name, sets, muscle, how, options = {}) => ({
+const defaultAlt = (alts, alt_reasons) => ({ alts, alt_reasons });
+
+const DEFAULT_EXERCISE_ALTERNATIVES = {
+  "90/90 Hip Stretch": defaultAlt(["Pigeon Pose", "Supine Hip Rotation"], ["Aynı kalça kapsülü hedefi, daha pasif ve rahat", "Sırtüstü daha düşük eşik mobilite seçeneği"]),
+  "90/90 Hip Switch": defaultAlt(["90/90 Hip Stretch", "Supine Hip Rotation"], ["Dinamik geçiş yorarsa statik kalça açılımı", "Bel-kalça kontrolünü daha kolay tutar"]),
+  "Above Head Chest Stretch": defaultAlt(["Doorway Chest Stretch", "Wall Chest Stretch"], ["Göğüs önünü daha kontrollü açar", "Omuz açısı daha kolay ayarlanır"]),
+  "Ankle Circles": defaultAlt(["Ankle Rocker", "Wall Tibialis Raise"], ["Daha fonksiyonel dorsifleksiyon hazırlığı", "Ayak bileği ön hattını aktif ısıtır"]),
+  "Ankle Rocker": defaultAlt(["Ankle Mobility (duvara karşı)", "Ankle Circles"], ["Aynı dorsifleksiyon hedefini daha ölçülebilir yapar", "Daha hafif eklem dolaşımı seçeneği"]),
+  "Band External Rotation": defaultAlt(["External Rotation (Towel/Yerçekimi)", "Cable External Rotation"], ["Band yoksa düşük yük cuff aktivasyonu", "Salonda daha ölçülebilir dış rotasyon"]),
+  "Band Hip Abduction": defaultAlt(["Side-lying Hip Abduction", "Clamshell"], ["Bandsiz glute med alternatifi", "Kalça dış rotasyonunu daha düşük eşikte çalıştırır"]),
+  "Band Pull Apart": defaultAlt(["Face Pull (hafif)", "Cable Reverse Fly"], ["Skapula ve arka omuz hedefini korur", "Salonda kontrollü arka omuz seçeneği"]),
+  "Bear Crawl Hold": defaultAlt(["Dead Bug", "Tall Plank Shoulder Tap"], ["Bel-boyun yorulursa zeminde core kontrolü", "Omuz-core entegrasyonunu daha basit tutar"]),
+  "Bird Dog": defaultAlt(["Dead Bug", "Pallof Press"], ["Anti-extension hattını daha stabil zeminde korur", "Anti-rotasyon hedefini ayakta/kabloda sürdürür"]),
+  "Cat-Cow Mobilite": defaultAlt(["Child's Pose to Cobra Pose", "Supine Spinal Twist"], ["Omurga akışını daha geniş ama kontrollü taşır", "Bel hassassa daha pasif rahatlatma"]),
+  "Child's Pose": defaultAlt(["Latissimus Stretch Assisted", "Supine Spinal Twist"], ["Lat ve torasik hattı daha hedefli açar", "Bel rahatlatmayı sırtüstü yapar"]),
+  "Chin Tuck": defaultAlt(["SCM Stretch", "Neck Side Stretch"], ["Boyun ön-yan hattını gevşetir", "Servikal gerilimi düşük dozda azaltır"]),
+  "Couch Stretch": defaultAlt(["Half Kneeling Hip Flexor Stretch", "Standing Quad Stretch"], ["Kalça fleksörü hedefini dizde daha az basınçla verir", "Diz rahatsızsa ayakta daha güvenli"]),
+  "Crocodile Breathing": defaultAlt(["Diaphragmatic Breathing", "90/90 Breathing"], ["Aynı diyafram hedefi, pozisyon daha kolay", "Bel rahatken kaburga-pelvis kontrolü daha net"]),
+  "Dead Bug": defaultAlt(["Bird Dog", "Pallof Press"], ["Sırtüstü zor gelirse dört ayak stabilite", "Core hedefini anti-rotasyon yönüne taşır"]),
+  "Doorway Chest Stretch": defaultAlt(["Wall Chest Stretch", "Above Head Chest Stretch"], ["Omuz açısını daha kolay ayarlatır", "Göğüs-lat hattını birlikte rahatlatır"]),
+  "External Rotation (Towel/Yerçekimi)": defaultAlt(["Band External Rotation", "Cable External Rotation"], ["Band varsa cuff aktivasyonu daha net", "Salonda yükü daha ölçülebilir yapar"]),
+  "Foam Roller Upper Back Roll": defaultAlt(["Bench Thoracic Extension", "Open Book Stretch"], ["Torasik ekstansiyonu daha kontrollü verir", "Rotasyonla torasik hareketi korur"]),
+  "Glute Bridge": defaultAlt(["Banded Glute Bridge", "Floor Bridge"], ["Band varsa glute med katkısı ekler", "Aynı paternin en sade regresyonu"]),
+  "Hip Circle": defaultAlt(["90/90 Hip Switch", "World Greatest Stretch"], ["Kalça rotasyonunu daha kontrollü yapar", "Kalça-torasik hazırlığı tek akışta toplar"]),
+  "Hip Hinge Drill": defaultAlt(["Good Morning (vücut ağırlığı)", "Romanian Deadlift (çok hafif)"], ["Yüksüz hinge pratiği", "Form oturduysa hafif yükle aynı patern"]),
+  "Incline Walk": defaultAlt(["Hızlı Yürüyüş", "Stationary Bike"], ["Dışarıda aynı düşük darbeli aerobik hedef", "Ayak bileği/diz yorulursa bike daha stabil"]),
+  "Latissimus Stretch Assisted": defaultAlt(["Prayer Pose on Bench", "Chair Lat Stretch"], ["Aynı lat açısını bench üstünde verir", "Daha basit destekli lat açılımı"]),
+  "Leg Press Groove Set": defaultAlt(["Wall Sit", "Goblet Squat (ağırlıksız)"], ["Diz hassassa izometrik çizgi kontrolü", "Makine yoksa kısa ROM hareket provası"]),
+  "Neck Side Stretch": defaultAlt(["Upper Trap Stretch", "SCM Stretch"], ["Boyun-üst trapez hattı için yakın alternatif", "Ön-yan boyun gerginliğini azaltır"]),
+  "Open Book Stretch": defaultAlt(["Supine Spinal Twist", "Thoracic Extension"], ["Rotasyonu daha pasif ve rahatlatıcı yapar", "Torasik ekstansiyon hedefi öne çıkarsa"]),
+  "Pallof Alternatifi: Side Plank": defaultAlt(["Pallof Press", "Dead Bug"], ["Ekipman varsa asıl anti-rotasyon seçeneği", "Yorgun günde daha düşük eşik core"]),
+  "Pallof Press": defaultAlt(["Side Plank", "Dead Bug"], ["Kablo/band yoksa lateral core hedefi", "Bel-boyun hassassa zeminde stabilite"]),
+  "Prone Cobra": defaultAlt(["Band Pull Apart", "Face Pull (hafif)"], ["Skapula retraksiyonunu daha dinamik çalıştırır", "Salonda arka omuz ve alt trapez desteği"]),
+  "Rahat Yürüyüş": defaultAlt(["Hızlı Yürüyüş", "Stationary Bike"], ["Gün iyi hissediliyorsa aynı hedefin canlı versiyonu", "Düşük darbeli salon alternatifi"]),
+  "Scapular Pulldown": defaultAlt(["Straight Arm Pulldown", "Band Straight Arm Pulldown"], ["Lat-skapula depresyonunu daha belirgin yapar", "Kablo yoksa bandla aynı patern"]),
+  "Scapular Push-up": defaultAlt(["Scapular Wall Slide", "Band Pull Apart"], ["Omuz yükünü azaltarak skapula kontrolü", "Arka omuz ve retraksiyon desteği"]),
+  "Scapular Wall Slide": defaultAlt(["Band Pull Apart", "Scapular Push-up"], ["Skapula kontrolünü arka omuzla destekler", "Serratus hedefini yerde korur"]),
+  "Shoulder CARs": defaultAlt(["Scapular Wall Slide", "Band Pull Apart"], ["Omuz dairesi sıkıştırıyorsa daha doğrusal kontrol", "Arka omuz-skapula hazırlığı"]),
+  "Side Plank": defaultAlt(["Dead Bug", "Pallof Press"], ["Lateral hat yorarsa daha düşük eşik core", "Ekipman varsa anti-rotasyon alternatifi"]),
+  "Side-lying Hip Abduction": defaultAlt(["Band Hip Abduction", "Clamshell"], ["Salonda/bandla glute med yükü", "Daha küçük ROM kalça stabilite seçeneği"]),
+  "Soleus Stretch (diz bükülü)": defaultAlt(["Standing Calf Stretch", "Ankle Mobility (duvara karşı)"], ["Baldır hattını daha genel rahatlatır", "Ayak bileği açısını daha aktif taşır"]),
+  "Standing Calf Raise": defaultAlt(["Single Leg Calf Raise", "Straight Leg Calf Raise"], ["Ekipman yoksa tek taraflı progresyon", "Torso Limbs calf hattını korur"]),
+  "Standing Calf Stretch": defaultAlt(["Soleus Stretch (diz bükülü)", "Kettlebell Ankle Static Stretch"], ["Diz bükülü soleus odağı", "Ayak bileği dorsifleksiyonunu daha hedefli açar"]),
+  "Stationary Bike": defaultAlt(["Incline Walk", "Hızlı Yürüyüş"], ["Bike doluysa düşük darbeli salon alternatifi", "Dışarıda aynı Zone 2 hedefi"]),
+  "Supine Hamstring Stretch": defaultAlt(["Lying Hamstring Stretch w/ Band", "Hamstring Stretch"], ["Bandla arka bacağı daha kontrollü açar", "Aynı hedefin daha sade versiyonu"]),
+  "Supine Spinal Twist": defaultAlt(["Open Book Stretch", "90/90 Hip Stretch"], ["Torasik rotasyonu daha aktif kontrol eder", "Bel rahatlatmayı kalça kapsülüne taşır"]),
+  "Upper Trap Stretch": defaultAlt(["Neck Side Stretch", "SCM Stretch"], ["Aynı boyun yan hat rahatlatma", "Ön-yan boyun gerginliği baskınsa"]),
+  "Wall Tibialis Raise": defaultAlt(["Ankle Rocker", "Standing Calf Raise"], ["Ayak bileği hazırlığını hareket açıklığına taşır", "Alt bacak aktivasyonunu posterior hatta dengeler"]),
+  "World Greatest Stretch": defaultAlt(["90/90 Hip Switch", "Open Book Stretch"], ["Kalça rotasyonu hedefini daha kontrollü yapar", "Torasik rotasyonu diz yükü olmadan korur"]),
+  "Wrist Circles": defaultAlt(["Wrist Rotation", "Wrist Flexion & Extension"], ["Aynı bilek ısısını farklı isimle korur", "Bilek fleksiyon-ekstansiyon hazırlığını netleştirir"]),
+};
+
+const ex = (name, sets, muscle, how, options = {}) => {
+  const defaults = DEFAULT_EXERCISE_ALTERNATIVES[name] || {};
+  const alts = options.alts?.length ? options.alts : (defaults.alts || []);
+  const alt_reasons = options.alt_reasons?.length ? options.alt_reasons : (defaults.alt_reasons || []);
+
+  return ({
   name,
   sets,
   muscle,
   how,
   avoid: options.avoid || null,
   warn: options.warn || null,
-  alts: options.alts || [],
-  alt_reasons: options.alt_reasons || [],
+  alts,
+  alt_reasons,
   // `unilateral: true` tells the UI to surface the right-side asymmetry
   // protocol inline on this exercise (badge + inline hint). Only set
   // for strength unilateral work where left/right performance gap
@@ -15,6 +72,7 @@ const ex = (name, sets, muscle, how, options = {}) => ({
   unilateral: options.unilateral || false,
   trackable: options.trackable,
 });
+};
 
 const passiveEx = (name, sets, muscle, how, options = {}) => ex(name, sets, muscle, how, {
   ...options,
@@ -23,39 +81,109 @@ const passiveEx = (name, sets, muscle, how, options = {}) => ex(name, sets, musc
 
 const block = (name, color, exercises) => ({ name, color, exercises });
 
-const offdayCooldownBlock = () => block("🧊 SOĞUMA — Hafif Kapat", "#264653", [
-  passiveEx("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Burundan nefes al", "Omuzları gevşet", "Karnı yumuşat"], { warn: "Amaç nabzı düşürüp sistemi sakin kapatmak" }),
-  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Kaburgayı dışarı itme", "Nefesi uzat", "Omuzu sıkıştırma"]),
+const offdayCooldownBlock = () => block("🧊 SOĞUMA — Sinir Sistemi Kapat", "#264653", [
+  passiveEx("Supine Spinal Twist", "2 × 5 nefes (her taraf)", "Bel + torasik rahatlama", ["Dizleri yumuşak bırak", "Nefesi uzat", "Zorlama yok"], { warn: "Amaç gevşemek; mobilite kazanmak için bastırma" }),
+  passiveEx("Neck Side Stretch", "2 × 20sn (her taraf)", "Boyun yan hat", ["Omzu aşağıda tut", "Çekişi hafif bırak"]),
 ]);
 
 const upperCooldownBlock = () => block("🧊 SOĞUMA — Üst Gövde Boşalt", "#264653", [
-  passiveEx("Child's Pose", "2 × 20sn", "Nefes + sırt rahatlama", ["Burundan nefes al", "Kolları uzatırken boynu gevşet"]),
-  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Göğüs önünü nazikçe aç", "Kaburgayı dışarı itme"]),
-  passiveEx("Shoulder Cross Stretch", "2 × 20sn", "Arka omuz", ["Omuzu kulağa çekme", "Gerilimi boyna taşıma"]),
+  passiveEx("Latissimus Stretch Assisted", "2 × 25sn", "Lat + torasik yan hat", ["Kalçayı geriye al", "Boynu serbest bırak"]),
+  passiveEx("Doorway Chest Stretch", "2 × 25sn", "Göğüs önü", ["Kaburgayı dışarı itme", "Omuzu sıkıştırma"]),
+  passiveEx("Neck Side Stretch", "2 × 20sn (her taraf)", "Boyun + üst trapez", ["Omuzu kulağa çekme", "Nefesi uzat"]),
 ]);
 
 const lowerCooldownBlock = () => block("🧊 SOĞUMA — Alt Gövde Boşalt", "#264653", [
-  passiveEx("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça kapsülü", ["Gövdeden yüklenme", "Ağrısız aralıkta kal", "Nefesi uzat"]),
-  passiveEx("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Dizi hafif yumuşak tut", "Çekişi agresif yapma"]),
-  passiveEx("Child's Pose", "2 × 20sn", "Bel + nefes", ["Belini bırak", "Omuzları yumuşat"]),
+  passiveEx("Couch Stretch", "2 × 25sn (her taraf)", "Kalça fleksör + quad", ["Pelvisi hafif içeri al", "Dizi rahatsız etme"]),
+  passiveEx("Supine Hamstring Stretch", "2 × 25sn (her taraf)", "Arka bacak", ["Dizi hafif yumuşak tut", "Çekişi agresif yapma"]),
+  passiveEx("Soleus Stretch (diz bükülü)", "2 × 20sn (her taraf)", "Soleus + ayak bileği", ["Diz hafif bükülü", "Topuk yerde"]),
 ]);
 
-const volumeCooldownBlock = () => block("🧊 SOĞUMA — Hacim Günü Kapat", "#264653", [
-  passiveEx("Child's Pose", "2 × 20sn", "Nefes + torasik rahatlama", ["Nefesi uzat", "Omuz ve bel hattını gevşet"]),
-  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Press sonrası göğüs önünü aç", "Omuzu sıkıştırma"]),
-  passiveEx("Supine Hamstring Stretch", "2 × 20sn (her taraf)", "Arka bacak", ["Posterior chain'i rahatlat", "Nefesi uzat"]),
+const volumeCooldownBlock = () => block("🧊 SOĞUMA — Full Body Kapat", "#264653", [
+  passiveEx("90/90 Hip Stretch", "2 × 25sn (her taraf)", "Kalça kapsülü", ["Nazik açıl", "Ağrısız aralıkta kal"]),
+  passiveEx("Above Head Chest Stretch", "2 × 25sn", "Göğüs + lat", ["Kaburga kapalı", "Omuzu sıkıştırma"]),
+  passiveEx("Supine Spinal Twist", "2 × 5 nefes (her taraf)", "Bel + nefes", ["Nefesi uzat", "Sistemi sakin kapat"]),
 ]);
 
-const recoveryCooldownBlock = () => block("🧊 SOĞUMA — Recovery Kapat", "#264653", [
-  passiveEx("Child's Pose", "2 × 20sn", "Nefes + sistem sakinleşmesi", ["Burundan nefes al", "Seansı sakin bitir"]),
-  passiveEx("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça rahatlatma", ["Nazik açıl", "Ağrısız aralıkta kal"]),
-  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Uzun nefesle gevşe"]),
+const recoveryCooldownBlock = () => block("🧊 SOĞUMA — Zone 2 Kapat", "#264653", [
+  passiveEx("Standing Calf Stretch", "2 × 25sn (her taraf)", "Calf", ["Topuk yerde", "Nefesi uzat"]),
+  passiveEx("Child's Pose", "2 × 5 nefes", "Bel + nefes", ["Nefesi uzat", "Omuzları yumuşat"]),
+  passiveEx("Doorway Chest Stretch", "2 × 20sn", "Göğüs önü", ["Kaburga kapalı", "Omzu sıkıştırma"]),
 ]);
 
-const recoveryWarmupBlock = () => block("🔥 ISINMA — Hafif Hazırlık", "#CC5500", [
-  passiveEx("Cat-Cow Mobilite", "2 × 6-8", "Omurga hazırlık", ["Acele etme", "Nefesle ak"]),
-  passiveEx("Hip Circle", "2 × 8-10", "Kalça hazırlık", ["Belden değil kalçadan dön"]),
-  passiveEx("Shoulder Cross Stretch", "2 × 15-20sn", "Omuz hazırlık", ["Omuzu kulağa çekme"]),
+const recoveryWarmupBlock = () => block("🔥 ISINMA — Zone 2 Hazırlık", "#CC5500", [
+  passiveEx("Rahat Yürüyüş", "4-5 dakika", "Nabız yükseltme", ["RPE 3-4", "Adımı rahat tut"]),
+  passiveEx("Ankle Circles", "2 × 8 (her taraf)", "Ayak bileği", ["Yavaş daire", "Ağrı yok"]),
+  passiveEx("Standing Calf Raise", "2 × 10", "Alt bacak aktivasyon", ["Üstte kısa dur", "Kontrollü indir"]),
+]);
+
+const zone2GymWarmupBlock = () => block("🔥 ISINMA — Zone 2 Hazırlık", "#CC5500", [
+  passiveEx("Stationary Bike", "4-5 dakika kolay", "Nabız yükseltme", ["RPE 3-4", "Diz rahat dönsün"]),
+  passiveEx("Ankle Circles", "2 × 8 (her taraf)", "Ayak bileği", ["Yavaş daire", "Ağrı yok"]),
+  passiveEx("Standing Calf Raise", "2 × 10", "Alt bacak aktivasyon", ["Üstte kısa dur", "Kontrollü indir"]),
+]);
+
+const longZone2HomeWarmupBlock = () => block("🔥 ISINMA — Uzun Zone 2 Hazırlık", "#CC5500", [
+  passiveEx("Rahat Yürüyüş", "5 dakika", "Nabız yükseltme", ["RPE 3-4", "Adımı yumuşat"]),
+  passiveEx("Hip Circle", "2 × 8 (her taraf)", "Kalça hazırlık", ["Belden değil kalçadan dön"]),
+  passiveEx("Standing Calf Raise", "2 × 10", "Alt bacak aktivasyon", ["Üstte kısa dur", "Kontrollü indir"]),
+]);
+
+const longZone2GymWarmupBlock = () => block("🔥 ISINMA — Uzun Zone 2 Hazırlık", "#CC5500", [
+  passiveEx("Incline Walk", "5 dakika kolay", "Genel ısı", ["RPE 3-4", "Darbe yok"]),
+  passiveEx("Hip Circle", "2 × 8 (her taraf)", "Kalça hazırlık", ["Belden değil kalçadan dön"]),
+  passiveEx("Standing Calf Raise", "2 × 10", "Alt bacak aktivasyon", ["Üstte kısa dur", "Kontrollü indir"]),
+]);
+
+const longZone2CooldownBlock = () => block("🧘 ESNEME — Uzun Kapat", "#264653", [
+  passiveEx("Couch Stretch", "2 × 30sn (her taraf)", "Kalça fleksör + quad", ["Pelvisi hafif içeri al", "Dizi rahatsız etme"]),
+  passiveEx("Supine Hamstring Stretch", "2 × 30sn (her taraf)", "Arka bacak", ["Dizi hafif yumuşak tut", "Agresif çekme yok"]),
+  passiveEx("Standing Calf Stretch", "2 × 30sn (her taraf)", "Calf", ["Topuk yerde", "Nefesi uzat"]),
+  passiveEx("Latissimus Stretch Assisted", "2 × 25sn", "Lat + torasik yan hat", ["Omuzları gevşet", "Boynu serbest bırak"]),
+  passiveEx("Child's Pose", "2 × 5 nefes", "Toparlanma nefesi", ["Nefesi uzat", "Sistemi sakin kapat"]),
+]);
+
+const sundayActiveRecoveryBlock = () => block("🛡 BAKIM + AKTİF MOBİLİTE — Core + Eklem", "#2A9D8F", [
+  passiveEx("Open Book Stretch", "2 × 6 (her taraf)", "Torasik rotasyon", ["Kalçayı sabit tut", "Nefesle dön", "Boynu zorlamadan izle"]),
+  passiveEx("Bird Dog", "2 × 6 (her taraf)", "Anti-rotasyon + bel kontrolü", ["Yavaş uzat", "Bel sabit", "Boyun nötr"]),
+  passiveEx("Prone Cobra", "2 × 8-10", "Alt trapez + postür", ["Göğsü hafif kaldır", "Kürekleri geriye-aşağı topla", "Belden aşırı kalkma"], { warn: "Kifoz/postür desteği; boyun geriye kırılmaz" }),
+  passiveEx("Ankle Circles", "2 × 8 (her taraf)", "Ayak bileği dolaşımı", ["Yavaş daire", "Ağrı yok", "Baldırı sıkma"]),
+]);
+
+const torsoWarmupHomeBlock = () => block("🔥 ISINMA — Torso Hazırlık", "#CC5500", [
+  passiveEx("Cat-Cow Mobilite", "2 × 6", "Omurga ritmi", ["Nefesle ak", "Boynu nötr tut"]),
+  passiveEx("Open Book Stretch", "2 × 6 (her taraf)", "Torasik rotasyon", ["Kalçayı sabit tut", "Ağrısız dön"]),
+  passiveEx("Shoulder CARs", "2 × 4 (her taraf)", "Omuz kapsülü", ["Küçük ve kontrollü daire", "Sıkışma yok"]),
+  passiveEx("Wrist Circles", "2 × 20sn", "Bilek hazırlığı", ["Kontrollü daireler"]),
+]);
+
+const torsoWarmupGymBlock = () => block("🔥 ISINMA — Torso Hazırlık", "#CC5500", [
+  passiveEx("Foam Roller Upper Back Roll", "2 × 25sn", "Torasik ekstansiyon", ["Kısa geçişler", "Belden yuvarlanma"]),
+  passiveEx("Open Book Stretch", "2 × 6 (her taraf)", "Torasik rotasyon", ["Kalçayı sabit tut", "Ağrısız dön"]),
+  passiveEx("Band Pull Apart", "2 × 12", "Skapula + arka omuz", ["Kaburga kapalı", "Omzu kulağa çekme"]),
+]);
+
+const lowerWarmupHomeBlock = () => block("🔥 ISINMA — Alt Gövde Hazırlık", "#CC5500", [
+  passiveEx("World Greatest Stretch", "2 × 4 (her taraf)", "Kalça + torasik açılım", ["Kısa ROM", "Dizi zorlamadan dön"]),
+  passiveEx("90/90 Hip Switch", "2 × 6 (her taraf)", "Kalça rotasyonu", ["Gövdeden kopma", "Ağrı yok"]),
+  passiveEx("Ankle Rocker", "2 × 8 (her taraf)", "Ayak bileği", ["Dizi ağrısız öne taşı"]),
+]);
+
+const lowerWarmupGymBlock = () => block("🔥 ISINMA — Alt Gövde Hazırlık", "#CC5500", [
+  passiveEx("Stationary Bike", "5 dakika kolay", "Diz kanlanma + genel ısı", ["RPE 3-4", "Kadans rahat"]),
+  passiveEx("90/90 Hip Switch", "2 × 6 (her taraf)", "Kalça rotasyonu", ["Nazik dön", "Ağrı yok"]),
+  passiveEx("Ankle Rocker", "2 × 8 (her taraf)", "Ayak bileği", ["Topuk yerde", "Diz çizgisini koru"]),
+]);
+
+const athleticWarmupHomeBlock = () => block("🔥 ISINMA — Athletic Hazırlık", "#CC5500", [
+  passiveEx("World Greatest Stretch", "2 × 4 (her taraf)", "Full body mobilite", ["Akıcı ilerle", "Ağrısız aralık"]),
+  passiveEx("Bear Crawl Hold", "2 × 15sn", "Omuz + core entegrasyon", ["Yeri aktif it", "Bel çukurunu büyütme"]),
+  passiveEx("Wrist Circles", "2 × 20sn", "Bilek + support hazırlık", ["Kontrollü daireler", "Ağrı yok"]),
+]);
+
+const athleticWarmupGymBlock = () => block("🔥 ISINMA — Athletic Hazırlık", "#CC5500", [
+  passiveEx("Incline Walk", "4 dakika kolay", "Genel ısı", ["RPE 3-4", "Kademeli aç"]),
+  passiveEx("World Greatest Stretch", "2 × 4 (her taraf)", "Full body mobilite", ["Akıcı ilerle", "Dizi zorlamadan dön"]),
+  passiveEx("Band Pull Apart", "2 × 12", "Skapula hazırlık", ["Kaburga kapalı", "Omuzlar aşağıda"]),
 ]);
 
 const careBlockHome = () => block("🛡 BAKIM — Omuz & Boyun", "#7B241C", [
@@ -70,24 +198,454 @@ const careBlockGym = () => block("🛡 BAKIM — Omuz & Boyun", "#7B241C", [
   passiveEx("Chin Tuck", "2 × 12", "Boyun stabilite", ["2 sn tut", "Boynu nötral hisset"]),
 ]);
 
+const lowerCareBlockHome = () => block("🛡 BAKIM — Diz + Kalça", "#7B241C", [
+  passiveEx("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Topuklar yerde", "Parmak uçlarını yukarı çek"]),
+  passiveEx("Side-lying Hip Abduction", "2 × 10-12 (her taraf)", "Glute med + pelvis kontrolü", ["Kalçayı geriye devirmeden kaldır", "Tempo sakin"]),
+  passiveEx("Glute Bridge", "2 × 10", "Glute aktivasyon", ["Belden değil kalçadan it", "Üstte 1 sn sık"]),
+]);
+
+const lowerCareBlockGym = () => block("🛡 BAKIM — Diz + Kalça", "#7B241C", [
+  passiveEx("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Parmak uçlarını yukarı çek", "Sekme yok"]),
+  passiveEx("Band Hip Abduction", "2 × 12-15", "Glute med + diz hattı", ["Dizleri dışa aç", "Belden sallanma"]),
+  passiveEx("Glute Bridge", "2 × 10", "Glute aktivasyon", ["Kaburga kapalı", "Belden itme"]),
+]);
+
+const fullBodyCareHomeBlock = () => block("🛡 BAKIM — Omuz + Kalça Bağlantı", "#7B241C", [
+  passiveEx("External Rotation (Towel/Yerçekimi)", "2 × 12", "Rotator cuff", ["Dirsek sabit", "Tempo yavaş"]),
+  passiveEx("Side-lying Hip Abduction", "2 × 10 (her taraf)", "Glute med", ["Kalçayı sabit tut", "Kısa temiz ROM"]),
+  passiveEx("Scapular Push-up", "2 × 8", "Serratus + skapula", ["Dirsekleri bükme", "Yeri aktif it"]),
+]);
+
+const fullBodyCareGymBlock = () => block("🛡 BAKIM — Omuz + Kalça Bağlantı", "#7B241C", [
+  passiveEx("Band External Rotation", "2 × 12", "Rotator cuff", ["Dirsek sabit", "Yavaş aç-kapat"]),
+  passiveEx("Band Hip Abduction", "2 × 12", "Glute med", ["Diz çizgisini koru", "Belden sallanma"]),
+  passiveEx("Scapular Push-up", "2 × 8", "Serratus + skapula", ["Dirsekleri bükme", "Yeri aktif it"]),
+]);
+
+const ATHLETIC_HYBRID_DAYS = [
+  {
+    id: 1,
+    sub: "PAZARTESİ",
+    focus: "Reset + Mobilite",
+    type: "offday",
+    color: "#2A9D8F",
+    intent: "Haftaya yükle değil; eklem, nefes ve sinir sistemini düzenleyerek gir.",
+    variants: {
+      home: {
+        duration: "~18 dk",
+        aerobicMinutes: 0,
+        modeNote: "Ev versiyonu: tam dinlenme ana seçenek; sadece kısa reset yeterli.",
+        injury: "⚠️ Bugün kuvvet yok. Ağrı varsa hareket aralığını küçült ve yürüyüşü opsiyonel bırak.",
+        blocks: [
+          block("🧩 RESET — Nefes + Mobilite", "#2A9D8F", [
+            passiveEx("Crocodile Breathing", "2 × 5 nefes", "Diyafram + kaburga kontrolü", ["Yüzüstü yat", "Nefesi bele ve yan kaburgaya gönder", "Boynu gevşek tut"]),
+            passiveEx("Cat-Cow Mobilite", "2 × 6-8", "Omurga hazırlık", ["Acele etme", "Bel-boynu zorlamadan ak"]),
+            passiveEx("90/90 Hip Switch", "2 × 6 (her taraf)", "Kalça rotasyonu", ["Gövdeden kopma", "Ağrısız aralıkta kal"]),
+            passiveEx("Shoulder CARs", "2 × 5 (her taraf)", "Omuz kapsülü", ["Küçük ve kontrollü daire", "Omzu kulağa sıkıştırma"]),
+          ]),
+          block("🛡 BAKIM — Eklem Hijyeni", "#7B241C", [
+            passiveEx("Chin Tuck", "2 × 10", "Boyun stabilite", ["Çeneyi hafif geri al", "2 sn tut", "Boynu aşağı kırma"]),
+            passiveEx("Scapular Wall Slide", "2 × 8-10", "Skapula kontrolü", ["Kaburgayı kapalı tut", "Yavaş kay"]),
+            passiveEx("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Topuklar yerde", "Parmak uçlarını yukarı çek"]),
+          ]),
+          block("🚶 OPSİYONEL AKIŞ", "#990000", [
+            passiveEx("Rahat Yürüyüş", "10-15 dakika", "Kan akışı", ["RPE 3-4", "Ter kovalamadan açıl"], { warn: "Yorgunsan tamamen atla" }),
+          ]),
+          offdayCooldownBlock(),
+        ],
+      },
+      gym: {
+        duration: "~20 dk",
+        aerobicMinutes: 0,
+        modeNote: "Macfit versiyonu: salona gitsen de bugün yüklenme yok; reset günü.",
+        injury: "⚠️ Makine veya ağırlık ekleme. Amaç yarına hazır kalmak.",
+        blocks: [
+          block("🧩 RESET — Nefes + Mobilite", "#2A9D8F", [
+            passiveEx("Crocodile Breathing", "2 × 5 nefes", "Diyafram + kaburga kontrolü", ["Nefesi uzat", "Omuzları gevşet"]),
+            passiveEx("Foam Roller Upper Back Roll", "2 × 30sn", "Torasik hazırlık", ["Kısa geçişler", "Belden yuvarlanma"]),
+            passiveEx("90/90 Hip Switch", "2 × 6 (her taraf)", "Kalça rotasyonu", ["Nazik dön", "Ağrı yok"]),
+          ]),
+          block("🛡 BAKIM — Eklem Hijyeni", "#7B241C", [
+            passiveEx("Shoulder CARs", "2 × 4 (her taraf)", "Omuz kapsülü", ["Küçük ve kontrollü daire", "Sıkışma yok"]),
+            passiveEx("Scapular Wall Slide", "2 × 8-10", "Skapula kontrolü", ["Kaburga kapalı", "Boyun uzun"]),
+            passiveEx("Wall Tibialis Raise", "2 × 12-15", "Tibialis anterior", ["Hareketi sekmeden bitir"]),
+          ]),
+          block("🚴 OPSİYONEL AKIŞ", "#990000", [
+            passiveEx("Stationary Bike", "10-15 dakika", "Kan akışı", ["RPE 3-4", "Diz rahat dönsün"], { warn: "Yorgunsan tamamen atla" }),
+          ]),
+          offdayCooldownBlock(),
+        ],
+      },
+    },
+  },
+  {
+    id: 2,
+    sub: "SALI",
+    focus: "Torso Kuvvet + Kontrollü Power",
+    type: "training",
+    color: "#D41920",
+    intent: "Haftanın taze gününde göğüs-sırt kuvveti, postür ve omuz dostu power çalışılır.",
+    variants: {
+      home: {
+        duration: "~65 dk",
+        aerobicMinutes: 15,
+        modeNote: "Ev versiyonu: tek DB ve vücut ağırlığıyla ölçülebilir torso kuvvet günü.",
+        injury: "⚠️ Omuz ağrısı 3/10 üstüyse power ve pike'ı çıkar; row + incline press + core ile kal.",
+        blocks: [
+          torsoWarmupHomeBlock(),
+          careBlockHome(),
+          block("🤸 TEKNİK — Skapula + Overhead Temas", "#8338EC", [
+            passiveEx("Scapular Push-up", "2 × 8-10", "Serratus + skapula", ["Dirsekleri bükme", "Yeri aktif it"]),
+            ex("Pike Hold", "2 × 10-15sn", "Omuz + core", ["Kaburgayı kapat", "Boynu nötr tut"], { warn: "Skill değil teknik temas; ağrı varsa downward dog'a dön", alts: ["Downward Dog Hold"], alt_reasons: ["Omuz açısını yumuşatıp aynı teknik teması korur"] }),
+          ]),
+          block("⚡ POWER — Üst Gövde Hız", "#FFD166", [
+            ex("Speed Incline Push-up", "3 × 5", "Patlayıcı itiş", ["İniş kontrollü", "İtiş hızlı", "Failure yok"], { warn: "Hafta 1'de 2 set veya atla. Omuz iyi değilse çıkar.", alts: ["Wall Push-up Explosive"], alt_reasons: ["Açıyı yükseltmek omuz stresini düşürür"] }),
+          ]),
+          block("💪 KUVVET — Torso Ana İş", "#F4A261", [
+            ex("Inverted Row (Masa Altı)", "4 × 6-10", "Sırt + biceps", ["Göğsü masaya çek", "Boynu öne uzatma", "Üstte 1 sn sık"], { warn: "Ana çekiş; RIR 2 bırak", alts: ["Tek Kol DB Row (5-8kg)", "Towel Row (Ayak Dirençli)"], alt_reasons: ["Dumbbell varsa yük ölçümü daha net", "Masa güvenli değilse towel row kullan"] }),
+            ex("Incline Push-up", "4 × 8-12", "Göğüs + triceps", ["Dirsek 30-45°", "Omuz öne düşmesin", "Temiz ROM"], { warn: "Ana press; RIR 2 bırak", alts: ["DB Floor Press (tek kol)", "Wall Push-up"], alt_reasons: ["Tek DB ile omuz dostu press", "Omuz hassassa açıyı yükselt"] }),
+            ex("Tek Kol DB Row", "3 × 10-12 (her taraf)", "Lat + upper back", ["Bench/masa desteği al", "Dirseği kalçaya çek", "3 sn kontrollü indir"], { warn: "Torso hacmi ve postür desteği", unilateral: true, alts: ["Inverted Row (Masa Altı)", "Towel Row (Ayak Dirençli)", "Chest Supported Row"], alt_reasons: ["Vücut ağırlığıyla aynı yatay çekiş hattı", "Masa güvenli değilse ekipmansız çekiş", "Salondaysan Torso Limbs row slotu"] }),
+            ex("DB Floor Press (tek kol)", "3 × 8-10 (her taraf)", "Göğüs + triceps", ["Omuzu yere yerleştir", "Dirseği kontrollü indir", "Kaburga kapalı"], { warn: "Push hacmi; omuzda sıkışma varsa incline push-up'a dön", unilateral: true, alts: ["Incline Push-up", "Plate Loaded Flat Chest Press"], alt_reasons: ["Evde omuz açısını kolaylaştırır", "Salondaysan stabil makine press alternatifi"] }),
+            ex("DB Lateral Raise", "2 × 12-15", "Yan omuz", ["Hafif yük", "Skapular planda kaldır", "Ağrısız aralık"], { warn: "Atletik görüntü için küçük hacim; failure yok", alts: ["Seated Lateral Raise Machine", "Standing Single Arm Lateral Raise"], alt_reasons: ["Torso Limbs'teki stabil yan omuz seçeneği", "Kabloyla tek taraflı omuz hattı"] }),
+          ]),
+          block("🧠 CORE + KONDİSYON", "#1F618D", [
+            passiveEx("Dead Bug", "2 × 8-10 (her taraf)", "Anti-extension core", ["Bel boşluğunu sabit tut", "Yavaş uzat"]),
+            ex("Hızlı Yürüyüş", "15 dakika Zone 2", "Aerobik baz", ["RPE 5", "Konuşabilir tempo"], { warn: "Kuvvet sonrası kısa dayanıklılık dokunuşu", alts: ["Incline Walk", "Stationary Bike"], alt_reasons: ["Düşük darbeli salon yürüyüşü", "Diz/ayak bileği yorgunsa bike daha stabil"] }),
+          ]),
+          upperCooldownBlock(),
+        ],
+      },
+      gym: {
+        duration: "~70 dk",
+        aerobicMinutes: 15,
+        modeNote: "Macfit versiyonu: makine ve kabloyla ölçülebilir torso kuvvet günü.",
+        injury: "⚠️ Omuz hassassa overhead yok; neutral press, row ve pulldown hattında kal.",
+        blocks: [
+          torsoWarmupGymBlock(),
+          careBlockGym(),
+          block("🤸 TEKNİK — Çekiş + Skapula", "#8338EC", [
+            passiveEx("Scapular Pulldown", "2 × 10", "Alt trapez + lat aktivasyon", ["Dirsek bükmeden omuzu aşağı çek", "Boyun uzun"]),
+            ex("Pike Hold", "2 × 10-15sn", "Omuz + core", ["Kaburga kapalı", "Submax tut"], { warn: "Omuz iyi değilse atla", alts: ["Tall Plank Shoulder Tap"], alt_reasons: ["Overhead açısını azaltıp omuz-core kontrolünü korur"] }),
+          ]),
+          block("⚡ POWER — Göğüs Hızı", "#FFD166", [
+            ex("Medicine Ball Chest Pass", "3 × 5", "Patlayıcı itiş", ["Göğüs hizasında tut", "Duvara hızlı it", "Topu yumuşak karşıla"], { warn: "Hafta 1'de 2 set veya atla. Overhead yok.", alts: ["Speed Machine Chest Press"], alt_reasons: ["Med ball yoksa hafif makinede hızlı concentric"] }),
+          ]),
+          block("💪 KUVVET — Torso Ana İş", "#F4A261", [
+            ex("Chest Supported Row", "4 × 6-10", "Upper back + lat", ["Bench desteğini kullan", "Üstte 1 sn sık", "Boyun nötr"], { warn: "Ana çekiş; RIR 2", alts: ["T Bar Row Machine", "High Row Machine", "Kelso Shrug Machine", "Seated Cable Row (Single Arm)"], alt_reasons: ["Torso Limbs'in ağır row slotu", "Upper back'i daha stabil yükler", "Torso B'deki Kelso shrug / skapula retraksiyon slotu", "Tek taraflı asimetri takibi sağlar"] }),
+            ex("Neutral Machine Press veya Floor Press", "4 × 6-10", "Göğüs + triceps", ["Omuzları geriye yerleştir", "Dirsekleri kontrollü indir"], { warn: "Ana press; dip yok, failure yok", alts: ["Plate Loaded Flat Chest Press", "High Incline Smith Machine Press", "Cable Chest Press"], alt_reasons: ["Torso Limbs flat press hattı", "Omuz iyi günlerde üst göğüs açısı", "Daha serbest, omuz dostu kablo alternatifi"] }),
+            ex("Neutral Grip Lat Pulldown", "3 × 8-12", "Lat", ["Dirseği aşağı çek", "Gövdeyi savurma", "Omzu kulağa kaçırma"], { warn: "Wide grip yerine omuz dostu neutral hat", alts: ["Single Arm Lat Pulldown", "Wide Grip Lat Pulldown"], alt_reasons: ["Lat'i tek taraflı ve kontrollü hissettirir", "Sadece omuz rahatken Torso Limbs geniş tutuş varyasyonu"] }),
+            ex("Cable Lateral Raise", "2 × 12-15", "Yan omuz", ["Hafif kilo", "Skapular planda kaldır", "Ağrısız aralık"], { alts: ["Seated Lateral Raise Machine", "Standing Single Arm Lateral Raise"], alt_reasons: ["Makine stabilitesiyle yan omuz hacmi", "Tek taraflı kablo/dumbbell varyasyonu"] }),
+            ex("Cable Fly", "2 × 10-12", "Pec", ["Kolları kilitleme", "Göğüste sık", "Omuz öne düşmesin"], { warn: "Press sonrası hipertrofi desteği; RIR 2-3", alts: ["Cable Clavicular Fly", "Pec Deck Fly"], alt_reasons: ["Torso Limbs üst göğüs fly açısı", "Kablo doluysa stabil makine seçeneği"] }),
+          ]),
+          block("🧠 CORE + KONDİSYON", "#1F618D", [
+            passiveEx("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon core", ["Göğüs hizasında it", "2 sn bekle"]),
+            ex("Stationary Bike", "15 dakika Zone 2", "Aerobik baz", ["RPE 5", "Diz rahat dönsün"], { alts: ["Incline Walk"], alt_reasons: ["Bike dizde hoş değilse yürüyüşe dön"] }),
+          ]),
+          upperCooldownBlock(),
+        ],
+      },
+    },
+  },
+  {
+    id: 3,
+    sub: "ÇARŞAMBA",
+    focus: "Zone 2 + Mobilite",
+    type: "offday",
+    color: "#3C91E6",
+    intent: "Salı kuvvetini emdirirken aerobik tabanı büyüt.",
+    variants: {
+      home: {
+        duration: "~45 dk",
+        aerobicMinutes: 45,
+        modeNote: "Ev versiyonu: uzun kolay yürüyüş ve kısa mobilite.",
+        injury: "⚠️ Bugün tempo değil; nefes rahat kalmalı. Diz rahatsızsa süreyi böl.",
+        blocks: [
+          recoveryWarmupBlock(),
+          block("🚶 KONDİSYON — Zone 2", "#990000", [
+            ex("Hızlı Yürüyüş", "40-45 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Konuşabilir tempo", "Koşuya dönme"], { warn: "Dayanıklılığın ana hacmi burada", alts: ["Incline Walk", "Stationary Bike"], alt_reasons: ["Düşük darbeli salon yürüyüşü", "Diz/ayak bileği yorgunsa bike"] }),
+          ]),
+          block("🧠 CORE — Düşük Doz Stabilite", "#1F618D", [
+            passiveEx("Dead Bug", "2 × 8 (her taraf)", "Anti-extension core", ["Bel sabit", "Yavaş uzat"]),
+            passiveEx("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
+          ]),
+          recoveryCooldownBlock(),
+        ],
+      },
+      gym: {
+        duration: "~45 dk",
+        aerobicMinutes: 45,
+        modeNote: "Macfit versiyonu: bike veya incline walk ile düşük darbeli Zone 2.",
+        injury: "⚠️ Rower bugün varsayılan değil; bel-boyun çok iyi değilse bike/incline seç.",
+        blocks: [
+          zone2GymWarmupBlock(),
+          block("🚴 KONDİSYON — Zone 2", "#990000", [
+            ex("Stationary Bike veya Incline Walk", "40-45 dakika Zone 2", "Aerobik baz", ["RPE 5-6", "Nefes kontrollü", "Darbe yok"], { alts: ["Hızlı Yürüyüş", "Rower"], alt_reasons: ["Dışarıda aynı Zone 2 hedefi", "Bel-boyun tamamen sakinse rower kullanılabilir"] }),
+          ]),
+          block("🧠 CORE — Düşük Doz Stabilite", "#1F618D", [
+            passiveEx("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon core", ["2 sn bekle", "Kaburga kapalı"]),
+            passiveEx("Side Plank", "2 × 20-30sn (her taraf)", "Lateral core", ["Kısa ve temiz"]),
+          ]),
+          recoveryCooldownBlock(),
+        ],
+      },
+    },
+  },
+  {
+    id: 4,
+    sub: "PERŞEMBE",
+    focus: "Limbs Kuvvet + Alt Gövde Kontrol",
+    type: "training",
+    color: "#118AB2",
+    intent: "Quad, glute, hamstring, alt bacak ve kolları sakatlık toleransına göre güçlendir.",
+    variants: {
+      home: {
+        duration: "~70 dk",
+        aerobicMinutes: 0,
+        modeNote: "Ev versiyonu: tek DB, tempo ve unilateral kontrolle limbs kuvvet günü.",
+        injury: "⚠️ Diz 3/10 üstüyse step-up/lunge yerine wall sit + hip thrust hattına dön.",
+        blocks: [
+          lowerWarmupHomeBlock(),
+          lowerCareBlockHome(),
+          block("🤸 TEKNİK — Hinge + Diz Hattı", "#8338EC", [
+            passiveEx("Hip Hinge Drill", "2 × 8", "Hinge tekniği", ["Kalçayı geriye gönder", "Bel nötr"]),
+            ex("Supported Low Step-up", "2 × 6 (her bacak)", "Diz kontrolü", ["Alçak basamak", "Destek al", "Diz çizgisini koru"], { warn: "Teknik set; ağrı varsa wall sit'e dön", alts: ["Wall Sit"], alt_reasons: ["Diz fleksiyonunu sabit ve ağrısız açıya indirir"] }),
+          ]),
+          block("⚡ POWER — Kalça Hızı", "#FFD166", [
+            ex("Explosive Hip Thrust", "3 × 6", "Hip power + glute", ["Yukarı hızlı it", "İniş 2 sn kontrollü", "Bel hiperextansiyonu yok"], { warn: "Hafta 1'de 2 set veya atla. Form bozulursa set biter.", alts: ["Glute Bridge", "Hip Thrust (hafif)"], alt_reasons: ["Power günü kötü hissedilirse düşük riskli regresyon", "Salonda hafif teknik set"] }),
+          ]),
+          block("💪 KUVVET — Limbs Ana İş", "#F4A261", [
+            ex("DB Hip Thrust", "4 × 8-12", "Glute max", ["DB pelvis üstünde", "Üstte 1 sn sık", "Kaburga kapalı"], { warn: "Ana alt gövde lift'i", alts: ["Glute Bridge", "Hip Thrust"], alt_reasons: ["Bel/diz hassas günlerde zeminde daha güvenli", "Salondaysan aynı paterni daha ölçülebilir yükle"] }),
+            ex("Supported Low Step-up veya Kısa ROM Split Squat", "3 × 6-8 (her bacak)", "Quad + glute", ["Kısa ROM", "Ağrısız açı", "Yavaş iniş"], { warn: "Diz toleransı belirler", alts: ["DB Goblet Wall Sit"], alt_reasons: ["Diz bükme irritasyon yaparsa izometriye dön"], unilateral: true }),
+            ex("Single Leg RDL", "3 × 8 (her bacak)", "Hamstring + glute + denge", ["Duvardan destek al", "Kalçadan menteşelen", "Boynu nötr tut"], { warn: "Bel hissedersen ROM'u kısalt", unilateral: true, alts: ["Romanian Deadlift (çok hafif)", "Good Morning (vücut ağırlığı)"], alt_reasons: ["Denge limitliyse bilateral hinge", "Sadece paterni öğretmek için yükü çıkar"] }),
+            ex("Bridge Walkout", "2 × 6-8", "Hamstring curl hattı", ["Köprüde kal", "Topukları yavaş uzağa yürüt", "Bel düşmesin"], { alts: ["Swiss Ball Hamstring Curl", "Seated Leg Curl"], alt_reasons: ["Evde top varsa daha net hamstring curl", "Salondaysan Torso Limbs leg curl slotu"] }),
+            ex("DB Curl", "2 × 10-12 (her kol)", "Biceps", ["Dirsek sabit", "3 sn kontrollü indir"], { alts: ["Scott Curl Machine", "Lengthened DB Curl", "Towel Curl Isometric"], alt_reasons: ["Torso Limbs stabil curl seçeneği", "Uzun pozisyonda biceps uyaranı", "Ekipmansız izometrik seçenek"] }),
+            ex("Close Grip Incline Push-up", "2 × 8-12", "Triceps", ["Eller omuz genişliğine yakın", "Omuz öne düşmesin"], { alts: ["DB Floor Triceps Extension", "Straight Bar Pushdown"], alt_reasons: ["Omuz rahatsa yerde hafif extension yapılabilir", "Salondaysan omuz dostu kablo pushdown"] }),
+          ]),
+          block("🧠 CORE — Lateral Hat", "#1F618D", [
+            passiveEx("Side Plank", "2 × 30sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
+            passiveEx("Bird Dog", "2 × 8 (her taraf)", "Anti-rotasyon", ["Yavaş uzat", "Bel sabit"]),
+          ]),
+          lowerCooldownBlock(),
+        ],
+      },
+      gym: {
+        duration: "~72 dk",
+        aerobicMinutes: 0,
+        modeNote: "Macfit versiyonu: makinelerle ölçülebilir alt gövde ve kol kuvvet günü.",
+        injury: "⚠️ Hack squat ve derin squat yok. Leg press kısa, ağrısız ROM'da kalır.",
+        blocks: [
+          lowerWarmupGymBlock(),
+          lowerCareBlockGym(),
+          block("🤸 TEKNİK — Diz + Hinge", "#8338EC", [
+            passiveEx("Leg Press Groove Set", "2 × 10 hafif", "Diz hattı", ["Kısa ROM", "Diz çizgisini koru", "Ağırlık değil teknik"]),
+            passiveEx("Hip Hinge Drill", "2 × 8", "Hinge tekniği", ["Bel nötr", "Kalça geriye"]),
+          ]),
+          block("⚡ POWER — Kalça Hızı", "#FFD166", [
+            ex("Explosive Hip Thrust", "3 × 5-6", "Hip power + glute", ["Yukarı hızlı", "İniş kontrollü", "Form bozulunca dur"], { warn: "Hafta 1'de 2 set veya atla", alts: ["Light Kettlebell Swing"], alt_reasons: ["Sadece bel tamamen sakinse ve form oturduysa"] }),
+          ]),
+          block("💪 KUVVET — Limbs Ana İş", "#F4A261", [
+            ex("Hip Thrust", "4 × 6-10", "Glute max", ["Üstte 1 sn sık", "Bel hiperextansiyonu yok"], { warn: "Ana alt gövde lift'i; RIR 2", alts: ["DB Hip Thrust", "45 Degree Hip Extension"], alt_reasons: ["Yoğun salon gününde daha hafif aynı patern", "Bel nötr kalabiliyorsa posterior zincir tamamlayıcı"] }),
+            ex("Leg Press Kısa ROM", "3 × 8-10", "Quad", ["Ayak basışı stabil", "Derine inme", "Ağrısız açı"], { warn: "Menisküs toleransı belirler", alts: ["Wall Sit", "Leg Extension Machine (hafif)", "Hip Thrust"], alt_reasons: ["Diz sinyal verirse izometriye dön", "Ağrısız kısa ROM'da quad uyaranı", "Quad günü tolere edilmiyorsa glute dominant hatta dön"] }),
+            ex("Seated Leg Curl", "3 × 8-12", "Hamstring", ["Kalçayı minderden kaldırma", "Topuğu kontrollü çek"], { alts: ["Machine Lying Leg Curl", "Swiss Ball Hamstring Curl"], alt_reasons: ["Torso Limbs'teki ikinci leg curl varyasyonu", "Makine doluysa düşük riskli curl hattı"] }),
+            ex("Single Leg RDL Hafif DB", "2 × 8 (her bacak)", "Hamstring + glute + denge", ["Hafif yük", "Denge için destek al", "Boyun nötr"], { unilateral: true, alts: ["45 Degree Hip Extension", "Romanian Deadlift (çok hafif)"], alt_reasons: ["Dengeyi çıkartıp posterior zinciri korur", "Daha basit bilateral hinge"] }),
+            ex("Standing Calf Raise", "3 × 10-15", "Calf", ["Alt pozisyonda 2 sn bekle", "Yarım tekrar yapma"], { alts: ["Straight Leg Calf Raise", "Single Leg Calf Raise"], alt_reasons: ["Torso Limbs calf slotu", "Makine yoksa tek taraflı yükleme"] }),
+            ex("Cable Curl", "2 × 10-12", "Biceps", ["Dirsek sabit", "Tempo kontrollü"], { alts: ["Scott Curl Machine", "Lengthened DB Curl"], alt_reasons: ["Torso Limbs stabil curl seçeneği", "Uzun pozisyonda biceps uyaranı"] }),
+            ex("Rope Pushdown", "2 × 10-12", "Triceps", ["Dirsek gövdeye yakın", "Omuz yükselmesin"], { warn: "Overhead extension yerine omuz dostu seçenek", alts: ["Straight Bar Pushdown", "Single Arm Cable Pushdown"], alt_reasons: ["Torso Limbs pushdown varyasyonu", "Tek taraflı dirsek hattı kontrolü"] }),
+          ]),
+          block("🧠 CORE — Lateral Hat", "#1F618D", [
+            passiveEx("Side Plank", "2 × 30-40sn (her taraf)", "Lateral core", ["Kalça çizgini koru"]),
+            passiveEx("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon", ["2 sn bekle"]),
+          ]),
+          lowerCooldownBlock(),
+        ],
+      },
+    },
+  },
+  {
+    id: 5,
+    sub: "CUMA",
+    focus: "Tam Dinlenme + Kısa Bakım",
+    type: "offday",
+    color: "#06D6A0",
+    intent: "Cumartesi atletik güne taze girmek için yorgunluk biriktirme.",
+    variants: {
+      home: {
+        duration: "~12 dk",
+        aerobicMinutes: 0,
+        modeNote: "Ev versiyonu: tam dinlenme önerilir; sadece kısa bakım opsiyonel.",
+        injury: "⚠️ Bugün eksik antrenmanı telafi etme günü değil.",
+        blocks: [
+          block("🧩 OPSİYONEL BAKIM", "#2A9D8F", [
+            passiveEx("Crocodile Breathing", "2 × 5 nefes", "Nefes + gevşeme", ["Nefesi uzat", "Omuzları bırak"]),
+            passiveEx("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça kapsülü", ["Nazik açıl", "Ağrısız aralık"]),
+            passiveEx("Upper Trap Stretch", "2 × 20sn (her taraf)", "Üst trapez", ["Omzu aşağıda tut", "Hafif çekiş"]),
+          ]),
+        ],
+      },
+      gym: {
+        duration: "~12 dk",
+        aerobicMinutes: 0,
+        modeNote: "Macfit versiyonu: salona gidersen bile sadece bakım; yük yok.",
+        injury: "⚠️ Antrenman yapma isteğini Cumartesiye sakla.",
+        blocks: [
+          block("🧩 OPSİYONEL BAKIM", "#2A9D8F", [
+            passiveEx("Crocodile Breathing", "2 × 5 nefes", "Nefes + gevşeme", ["Nefesi uzat"]),
+            passiveEx("90/90 Hip Stretch", "2 × 20sn (her taraf)", "Kalça kapsülü", ["Nazik açıl", "Ağrısız aralık"]),
+            passiveEx("Upper Trap Stretch", "2 × 20sn (her taraf)", "Üst trapez", ["Omzu aşağıda tut", "Hafif çekiş"]),
+          ]),
+        ],
+      },
+    },
+  },
+  {
+    id: 6,
+    sub: "CUMARTESİ",
+    focus: "Athletic Full Body + Threshold",
+    type: "training",
+    color: "#F77F00",
+    intent: "Power, full body kuvvet, carry ve kontrollü kondisyon aynı güne toplanır.",
+    variants: {
+      home: {
+        duration: "~78 dk",
+        aerobicMinutes: 30,
+        modeNote: "Ev versiyonu: atletik full body, carry ve düşük darbeli kondisyon günü.",
+        injury: "⚠️ Bugün ego yok. Diz/omuz/bel sinyal verirse power ve threshold'u Zone 2'ye çevir.",
+        blocks: [
+          athleticWarmupHomeBlock(),
+          fullBodyCareHomeBlock(),
+          block("🤸 TEKNİK — Skill Teması", "#8338EC", [
+            ex("Pike Hold", "2 × 12-15sn", "Omuz + core", ["Submax tut", "Kaburga kapalı"], { warn: "Handstand kovalamıyoruz; teknik temas", alts: ["Downward Dog Hold", "Tall Plank Shoulder Tap"], alt_reasons: ["Omuz açısı daha yumuşak teknik temas", "Overhead baskısını azaltır"] }),
+            ex("L-sit Tuck Hold", "2 × 8-10sn", "Core + support", ["Omuzları aşağı bas", "Kalça düşmesin"], { warn: "Support ağrılıysa dead bug'a dön", alts: ["Dead Bug"], alt_reasons: ["Support baskısını kaldırıp anterior core hedefini korur"] }),
+          ]),
+          block("⚡ POWER — Atletik Hız", "#FFD166", [
+            ex("Explosive Hip Thrust", "3 × 5-6", "Hip power + posterior", ["Yukarı hızlı", "İniş kontrollü", "Form bozulunca dur"], { warn: "Hafta 1'de 2 set veya atla", alts: ["Glute Bridge", "Hip Thrust (hafif)"], alt_reasons: ["Power yerine düşük riskli glute aktivasyonu", "Salonda hafif teknik set"] }),
+            ex("Speed Incline Push-up", "3 × 5", "Üst gövde power", ["İtiş hızlı", "İniş kontrollü", "Failure yok"], { alts: ["Wall Push-up Explosive", "Speed Machine Chest Press"], alt_reasons: ["Omuz stresini azaltır", "Salonda hafif hızlı press alternatifi"] }),
+          ]),
+          block("💪 KUVVET — Athletic Full Body", "#F4A261", [
+            ex("DB Hip Thrust", "3 × 8-12", "Glute max", ["Üstte 1 sn sık", "Belden itme"], { alts: ["Glute Bridge", "Hip Thrust"], alt_reasons: ["Yorgun gün regresyonu", "Salonda ölçülebilir aynı patern"] }),
+            ex("Tek Kol DB Row veya Inverted Row", "3 × 8-12", "Sırt + lat", ["Boyun nötr", "Üstte sık", "Kontrollü indir"], { unilateral: true, alts: ["Towel Row (Ayak Dirençli)", "Chest Supported Row", "T Bar Row Machine"], alt_reasons: ["Evde güvenli çekiş alternatifi", "Salonda stabil upper back seçeneği", "Torso Limbs row slotu"] }),
+            ex("DB Floor Press veya Incline Push-up", "3 × 8-12", "Göğüs + triceps", ["Omuz dostu açı", "RIR 2 bırak"], { alts: ["Plate Loaded Flat Chest Press", "Cable Chest Press"], alt_reasons: ["Salonda stabil flat press", "Omuz açısını daha rahat ayarlama"] }),
+            ex("Suitcase Carry", "3 × 30sn (her taraf)", "Grip + anti-lateral core", ["Gövde yana eğilmesin", "Adım kısa", "Omuzlar aşağıda"], { warn: "Atletik gövde ve postür için ana taşıma", unilateral: true, alts: ["Farmer Carry", "Farmer Carry (Ağır Çanta / Su Bidonu)"], alt_reasons: ["Çift taraflı daha ağır taşıma", "Ev ekipmanıyla aynı carry amacı"] }),
+            ex("DB Lateral Raise", "2 × 12-15", "Yan omuz", ["Hafif yük", "Ağrısız aralık"], { alts: ["Seated Lateral Raise Machine", "Standing Single Arm Lateral Raise"], alt_reasons: ["Torso Limbs yan omuz makine seçeneği", "Tek taraflı kontrollü varyasyon"] }),
+            ex("DB Curl veya Towel Curl", "2 × 10-12", "Biceps", ["Dirsek sabit", "Kontrollü tempo"], { alts: ["Scott Curl Machine", "Lengthened DB Curl", "Cable Curl"], alt_reasons: ["Torso Limbs stabil curl seçeneği", "Uzun pozisyon biceps uyaranı", "Salonda ölçülebilir kablo alternatifi"] }),
+          ]),
+          block("🧠 CORE + KONDİSYON", "#1F618D", [
+            passiveEx("Pallof Alternatifi: Side Plank", "2 × 30sn (her taraf)", "Anti-rotasyon/lateral core", ["Kalça çizgini koru"]),
+            ex("Zone 2 / Threshold Yürüyüş Protokolü", "Haftaya göre değişir", "Dayanıklılık + threshold", ["Hafta 1-3: 25-30 dk Zone 2", "Hafta 4-6: 2 × 4 dk RPE 7 + 15 dk Zone 2", "Hafta 7-8: 4 × 4 dk RPE 7-8 + 8-10 dk Zone 2", "Koşu yok; hızlı yürüyüş veya bike seç"], { warn: "O gün yorgunsan her haftada pure Zone 2'ye dön", alts: ["Stationary Bike", "Incline Walk"], alt_reasons: ["Threshold için düşük darbeli stabil seçenek", "Koşusuz yürüyüş protokolünü salona taşır"] }),
+          ]),
+          volumeCooldownBlock(),
+        ],
+      },
+      gym: {
+        duration: "~82 dk",
+        aerobicMinutes: 30,
+        modeNote: "Macfit versiyonu: power, full body kuvvet, carry ve threshold tek atletik güne toplanır.",
+        injury: "⚠️ Rower şartlı. Bel-boyun iyi değilse threshold bike'da yapılır.",
+        blocks: [
+          athleticWarmupGymBlock(),
+          fullBodyCareGymBlock(),
+          block("🤸 TEKNİK — Skill Teması", "#8338EC", [
+            ex("Pike Hold", "2 × 12-15sn", "Omuz + core", ["Submax tut", "Kaburga kapalı"], { alts: ["Downward Dog Hold", "Tall Plank Shoulder Tap"], alt_reasons: ["Omuz açısı daha yumuşak teknik temas", "Overhead baskısını azaltır"] }),
+            ex("L-sit Tuck Hold", "2 × 8-10sn", "Core + support", ["Omuzları aşağı bas"], { alts: ["Dead Bug"], alt_reasons: ["Support omuzda baskı yaparsa zemine dön"] }),
+          ]),
+          block("⚡ POWER — Atletik Hız", "#FFD166", [
+            ex("Medicine Ball Chest Pass", "3 × 5", "Üst gövde power", ["Göğüs hizası", "Duvara hızlı it", "Topu yumuşak karşıla"], { alts: ["Speed Machine Chest Press"], alt_reasons: ["Med ball yoksa hafif makinede hızlı concentric"] }),
+            ex("Explosive Hip Thrust", "3 × 5-6", "Hip power", ["Yukarı hızlı", "İniş kontrollü", "Bel nötr"], { warn: "Hafta 1'de 2 set veya atla", alts: ["Light Kettlebell Swing", "Glute Bridge"], alt_reasons: ["Sadece bel tamamen sakinse ve form oturduysa", "Power yerine düşük riskli regresyon"] }),
+          ]),
+          block("💪 KUVVET — Athletic Full Body", "#F4A261", [
+            ex("Chest Supported Row", "3 × 8-10", "Upper back + lat", ["Bench desteği", "Üstte sık", "Boyun nötr"], { alts: ["T Bar Row Machine", "High Row Machine", "Kelso Shrug Machine", "Seated Cable Row (Single Arm)"], alt_reasons: ["Torso Limbs ağır row slotu", "Upper back'i stabil yükler", "Torso B'deki Kelso shrug / skapula retraksiyon slotu", "Tek taraflı asimetri takibi"] }),
+            ex("Neutral Machine Press veya Floor Press", "3 × 8-10", "Göğüs + triceps", ["Omuzları yerleştir", "Kontrollü indir"], { alts: ["Plate Loaded Flat Chest Press", "High Incline Smith Machine Press", "Cable Chest Press"], alt_reasons: ["Torso Limbs flat press hattı", "Omuz iyi günlerde üst göğüs açısı", "Kabloyla daha serbest omuz açısı"] }),
+            ex("Romanian Deadlift Hafif veya Hip Thrust", "3 × 8-10", "Posterior chain", ["Kalçadan menteşelen", "Bel nötr", "RIR 2"], { warn: "Bel hassassa hip thrust seç", alts: ["Hip Thrust", "45 Degree Hip Extension"], alt_reasons: ["Bel hassas günlerde aynı glute amacı", "Hinge iyi hissediliyorsa daha kontrollü posterior seçenek"] }),
+            ex("Neutral Grip Lat Pulldown", "3 × 8-12", "Lat", ["Dirsekleri aşağı çek", "Gövdeyi savurma"], { alts: ["Single Arm Lat Pulldown", "Wide Grip Lat Pulldown"], alt_reasons: ["Tek taraflı lat hissi ve asimetri kontrolü", "Sadece omuz rahatken Torso Limbs geniş tutuş varyasyonu"] }),
+            ex("Farmer Carry", "3 × 30-40sn", "Grip + core + locomotion", ["Omuzlar aşağıda", "Kaburga kapalı", "Adım kısa"], { alts: ["Suitcase Carry", "Trap Bar Carry"], alt_reasons: ["Tek taraflı anti-lateral core odağı", "Salonda ağır ama stabil carry"] }),
+            ex("Cable Lateral Raise", "2 × 12-15", "Yan omuz", ["Hafif yük", "Ağrısız aralık"], { alts: ["Seated Lateral Raise Machine", "Standing Single Arm Lateral Raise"], alt_reasons: ["Torso Limbs yan omuz makine seçeneği", "Tek taraflı kontrollü varyasyon"] }),
+          ]),
+          block("🧠 CORE + KONDİSYON", "#1F618D", [
+            passiveEx("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon core", ["2 sn bekle", "Kaburga kapalı"]),
+            ex("Bike / Rower Threshold Protokolü", "Haftaya göre değişir", "Dayanıklılık + threshold", ["Hafta 1-3: 25-30 dk Zone 2", "Hafta 4-6: 2 × 4 dk RPE 7 + 15 dk Zone 2", "Hafta 7-8: 4 × 4 dk RPE 7-8 + 8-10 dk Zone 2", "Bike varsayılan; rower sadece bel-boyun sakinse"], { warn: "Kuvvet sonrası tek yüksek yoğunluk bloğu budur", alts: ["Incline Walk", "Stationary Bike"], alt_reasons: ["Koşusuz yürüyüş threshold alternatifi", "Bike varsayılan güvenli seçenek"] }),
+          ]),
+          volumeCooldownBlock(),
+        ],
+      },
+    },
+  },
+  {
+    id: 7,
+    sub: "PAZAR",
+    focus: "Toparlanma Kuvveti + Zone 2",
+    type: "training",
+    color: "#8338EC",
+    intent: "Haftayı gerçek ama düşük yoğunluklu antrenmanla kapat: hafif kuvvet, core/carry ve Zone 2.",
+    variants: {
+      home: {
+        duration: "~75-85 dk",
+        aerobicMinutes: 40,
+        modeNote: "Ev versiyonu: pazar artık sadece kondisyon değil; hafif posterior chain, row, calf, core/carry ve Zone 2 var.",
+        injury: "⚠️ Pazar antrenman günüdür ama ağır gün değildir. Cumartesi yorgunluğu yüksekse kuvvet setlerinden 1 set çıkar, Zone 2'yi 25-30 dakikaya indir.",
+        blocks: [
+          longZone2HomeWarmupBlock(),
+          sundayActiveRecoveryBlock(),
+          block("💪 KUVVET — Toparlanma Kuvveti", "#F4A261", [
+            ex("Glute Bridge / Hip Thrust", "3 × 12-15", "Glute + posterior chain", ["Üstte 1 sn sık", "Belden değil kalçadan it", "RIR 3-4 bırak"], { warn: "Amaç kası uyarmak; Cumartesi yükünü tekrar etmek değil", alts: ["DB Hip Thrust", "Glute Bridge"], alt_reasons: ["Evde yük eklemek istersen aynı patern", "Bel yorgunsa en sade regresyon"] }),
+            ex("Tek Kol DB Row", "2 × 10-12 (her taraf)", "Upper back + lat", ["Destek al", "Boyun nötr", "Üstte kısa sık"], { warn: "Postür ve sırt hacmi için hafif çekiş", unilateral: true, alts: ["Inverted Row (Masa Altı)", "Towel Row (Ayak Dirençli)", "Chest Supported Row"], alt_reasons: ["Vücut ağırlığıyla aynı yatay çekiş", "Masa güvenli değilse ekipmansız seçenek", "Salondaysan daha stabil row"] }),
+            ex("Standing Calf Raise", "2 × 12-15", "Calf + ayak bileği", ["Alt pozisyonda 1-2 sn bekle", "Yarım tekrar yapma", "Kontrollü çık"], { warn: "Yürüyüş kapasitesi ve alt bacak dayanıklılığı için destek" }),
+          ]),
+          block("🧠 CORE + TAŞIMA", "#1F618D", [
+            passiveEx("Side Plank", "2 × 25-35sn (her taraf)", "Lateral core", ["Kalça çizgisini koru", "Nefesi tutma"]),
+            ex("Suitcase Carry", "2 × 30sn (her taraf)", "Grip + anti-lateral core", ["Gövde yana eğilmesin", "Omuzlar aşağıda", "Adım kısa"], { warn: "Atletik gövde ve postür için düşük hacimli taşıma", unilateral: true, alts: ["Farmer Carry", "Farmer Carry (Ağır Çanta / Su Bidonu)"], alt_reasons: ["Çift taraflı daha stabil carry", "Ev ekipmanıyla aynı hedef"] }),
+          ]),
+          block("🚶 KONDİSYON — Uzun Zone 2", "#990000", [
+            ex("Hızlı Yürüyüş", "35-45 dakika Zone 2", "Aerobik baz + toparlanma", ["RPE 5-6", "Konuşabilir tempo", "Koşu yok"], { warn: "Kuvvet sonrası düşük yoğunluklu dayanıklılık; threshold değil", alts: ["Incline Walk", "Stationary Bike"], alt_reasons: ["Düşük darbeli salon yürüyüşü", "Uzun günlerde diz/ayak bileği daha rahat olabilir"] }),
+          ]),
+          longZone2CooldownBlock(),
+        ],
+      },
+      gym: {
+        duration: "~80-90 dk",
+        aerobicMinutes: 40,
+        modeNote: "Macfit versiyonu: pazar gerçek antrenman günüdür; hafif makine kuvveti, core/carry ve Zone 2 ile biter.",
+        injury: "⚠️ Bugün ağır leg day veya torso day değil. RPE 5-6, RIR 3-4; Cumartesi sert geçtiyse kuvvet bloklarından 1 set çıkar.",
+        blocks: [
+          longZone2GymWarmupBlock(),
+          sundayActiveRecoveryBlock(),
+          block("💪 KUVVET — Toparlanma Kuvveti", "#F4A261", [
+            ex("Chest Supported Row", "2 × 10-12", "Upper back + lat", ["Bench desteği", "Üstte sık", "Boyun nötr"], { warn: "Postür ve sırt hacmi için hafif çekiş", alts: ["T Bar Row Machine", "High Row Machine", "Kelso Shrug Machine", "Seated Cable Row (Single Arm)"], alt_reasons: ["Torso Limbs ağır row slotunun hafif versiyonu", "Upper back'i stabil yükler", "Skapula retraksiyon odağı", "Tek taraflı asimetri takibi"] }),
+            ex("Hip Thrust", "3 × 10-12", "Glute max", ["Üstte 1 sn sık", "Bel hiperextansiyonu yok", "RIR 3-4 bırak"], { warn: "Hafif posterior chain; Cumartesi yükünü tekrar etme", alts: ["DB Hip Thrust", "45 Degree Hip Extension"], alt_reasons: ["Yükü düşürmek istersen aynı patern", "Bel nötr kalıyorsa kontrollü posterior seçenek"] }),
+            ex("Leg Extension Machine (hafif)", "2 × 12-15", "Quad", ["Tepe noktada 1 sn dur", "Kısa-ağrısız ROM", "Dizi kilitleme"], { warn: "Torso Limbs quad dokunuşu; menisküs sinyal verirse çıkar", alts: ["Wall Sit", "Leg Press Kısa ROM"], alt_reasons: ["Diz sinyal verirse izometrik seç", "İyi günlerde kısa ROM quad paternine dön"] }),
+            ex("Standing Calf Raise", "2 × 12-15", "Calf + ayak bileği", ["Alt pozisyonda 1-2 sn bekle", "Kontrollü çık", "Yarım tekrar yapma"], { warn: "Yürüyüş ve alt bacak dayanıklılığı için destek" }),
+          ]),
+          block("🧠 CORE + TAŞIMA", "#1F618D", [
+            passiveEx("Pallof Press", "2 × 10 (her taraf)", "Anti-rotasyon core", ["2 sn bekle", "Kaburga kapalı"]),
+            ex("Farmer Carry", "2 × 30-40sn", "Grip + core + postür", ["Omuzlar aşağıda", "Kaburga kapalı", "Adım kısa"], { warn: "Atletik gövde ve postür için düşük hacimli taşıma", alts: ["Suitcase Carry", "Trap Bar Carry"], alt_reasons: ["Tek taraflı anti-lateral core odağı", "Salonda ağır ama stabil carry"] }),
+          ]),
+          block("🚴 KONDİSYON — Uzun Zone 2", "#990000", [
+            ex("Incline Walk veya Stationary Bike", "35-45 dakika Zone 2", "Aerobik baz + toparlanma", ["RPE 5-6", "Konuşabilir tempo", "Darbe yok"], { alts: ["Hızlı Yürüyüş", "Rower"], alt_reasons: ["Dışarıda aynı Zone 2 hedefi", "Bel-boyun tamamen sakinse ve teknik bozulmuyorsa"] }),
+          ]),
+          longZone2CooldownBlock(),
+        ],
+      },
+    },
+  },
+];
+
 export const PROGRAM_HYBRID = {
   meta: {
     name: "Hibrit Performans Sistemi",
-    phase: "Faz 1 — Dayanıklılık Tabanı + Güvenli Relatif Kuvvet",
+    phase: "Faz 1 — Güç + Dayanıklılık + Atletik Vücut",
     weeks: "Hafta 1–8",
-    description: "Tek haftalık omurga, iki uygulama yolu. Aynı günün amacı korunur; o gün Ev veya Macfit seçilerek aynı sistemi farklı ekipmanla uygularsın.",
+    description: "Net haftalık omurga: Torso kuvvet, Limbs kuvvet, Athletic full body, Pazar toparlanma kuvveti + Zone 2 ve aralarda bilinçli toparlanma.",
   },
 
   coachProfile: {
     title: "Hibrit Denetim Profili",
     athlete: "Erkek · yeni baba · kontrollü alt-orta seviye sporcu",
-    schedule: "4 ana gün + 3 aktif off gün · Ev ve Macfit paralel kullanılabilir",
+    schedule: "4 antrenman günü: 3 ana kuvvet + 1 toparlanma kuvveti/Zone 2; 1 aktif dayanıklılık günü + 2 reset/dinlenme günü",
     priorities: [
-      "1. Hibrit performans: dayanıklılık + kontrollü patlayıcı güç",
-      "2. Relatif kuvvet (RPE 6-8, failure yok)",
-      "3. Work capacity (iş kapasitesi) + threshold aerobik",
-      "4. Kontrol + denge + postür",
-      "İkincil skill: Handstand + L-sit",
+      "1. Güçlenme: torso, limbs, full body ve pazar toparlanma kuvveti hareketlerinde ölçülebilir ilerleme",
+      "2. Dayanıklılık: Zone 2 hacmi + haftada tek kontrollü threshold teması",
+      "3. Atletik vücut: sırt-göğüs-omuz-glute/leg dengesi, carry ve core stabilite",
+      "4. Eklem güvenliği: diz, omuz, bel-boyun toleransına göre regresyon",
+      "İkincil skill: pike ve L-sit sadece teknik temas",
     ],
     constraints: [
       "Menisküs: koşu, zıplama ve derin diz fleksiyon yükü kısıtlı",
@@ -99,19 +657,19 @@ export const PROGRAM_HYBRID = {
 
   hybridModel: {
     title: "Hibrit Performans Mantığı",
-    subtitle: "4 nitelik aynı fazda birlikte geliştirilir; her biri progrese edilir ama max değil.",
+    subtitle: "Her günün tek ana rolü var; bloklar ısınma, bakım, teknik, power, kuvvet, core, kondisyon ve soğuma sırasıyla ilerler.",
     pillars: [
-      { id: "strength", label: "Relatif Kuvvet", dose: "4 gün × RPE 6-8 · failure yok", focus: "Hip thrust, row, press, single-leg kontrol" },
-      { id: "endurance", label: "Dayanıklılık (Zone 2)", dose: "150-175 dk/hafta · rahat konuşma tempo", focus: "Walk, bike, rower, incline walk" },
-      { id: "threshold", label: "Threshold + VO2 (Progresif)", dose: "H1-3 yok · H4-6 8dk · H7-8 16dk · RPE 7-8", focus: "Rower veya bike — pure Zone 2'den kademeli çıkış" },
-      { id: "power", label: "Güvenli Patlayıcı Güç", dose: "H1 yok · H2+ iki blok/hafta · submax hız", focus: "Explosive Hip Thrust, med ball, farmer carry, bike sprint" },
+      { id: "strength", label: "Kuvvet", dose: "Salı + Perşembe + Cumartesi ana · Pazar hafif · RIR 2-4", focus: "Row, press, hip thrust, leg press/step-up, carry" },
+      { id: "endurance", label: "Dayanıklılık", dose: "Zone 2 toplam 120-160 dk/hafta", focus: "Çarşamba + Cumartesi/Pazar düşük darbeli yürüyüş/bike/incline; rower şartlı" },
+      { id: "threshold", label: "Threshold", dose: "Sadece Cumartesi · H4+ progresif", focus: "Bike varsayılan; rower bel-boyun sakinse" },
+      { id: "power", label: "Atletik Power", dose: "Salı üst power + Perşembe/Saturday hip power · submax", focus: "Speed push-up, med ball chest pass, explosive hip thrust" },
     ],
     rules: [
-      "Patlayıcı hareketler submax ve form korunduğu sürece yapılır; form bozulunca set biter.",
-      "KB swing + med ball gibi power araçları SAL + PER'de — aerobik öncesi.",
-      "Threshold (CMT rower) → Zone 2 (uzun kolay) sırası: yorgunluk yönü doğru olsun.",
-      "Interference effect: kuvvet ve threshold aynı gün olunca aralarında 4+ saat ideal, yoksa kuvvet önce.",
-      "Power blok günleri arka arkaya olmaz; SAL ve PER arasında 1 off günü var.",
+      "Ana kuvvet setlerinde failure yok; çoğu sette RIR 2, yalnızca iyi günlerde son set RIR 1 olabilir.",
+      "Power blokları kısa ve taze yapılır; form bozulursa set biter.",
+      "Threshold haftada tek bloktur ve kuvvetten sonra yapılır; yorgun günlerde pure Zone 2'ye dönülür.",
+      "Pazar antrenman günüdür ama ağır gün değildir: recovery strength + core/carry + Zone 2 içerir; failure içermez.",
+      "Pazartesi ve Cuma kaçırılan antrenmanı telafi etmek için kullanılmaz.",
     ],
     references: [
       "Alex Viada — Complete Human Performance (The Hybrid Athlete)",
@@ -144,23 +702,23 @@ export const PROGRAM_HYBRID = {
 
   controlCenter: {
     badges: [
-      { label: "Aerobik Hedef", value: "150–210 dk/hafta", tone: "good" },
-      { label: "Kuvvet Günleri", value: "4 ana gün", tone: "good" },
-      { label: "Skill Dozu", value: "2–3 hafif temas", tone: "warn" },
+      { label: "Aerobik Hedef", value: "140–180 dk/hafta", tone: "good" },
+      { label: "Kuvvet Günleri", value: "3 ana gün", tone: "good" },
+      { label: "Skill Dozu", value: "2 hafif temas", tone: "warn" },
       { label: "Diz Politikası", value: "Derin fleksiyon yok", tone: "good" },
       { label: "Omuz Politikası", value: "Dip yok, overhead şartlı", tone: "warn" },
-      { label: "Pazar Rolü", value: "Recovery + Zone 2", tone: "good" },
+      { label: "Pazar Rolü", value: "Toparlanma Kuvveti + Zone 2", tone: "good" },
       { label: "Ev Ekipmanı", value: "1× sabit 5kg + 1× ayarlanabilir 4-8kg DB", tone: "good" },
     ],
     rules: [
-      "Ana kuvvet setleri RPE 6-8 aralığında kalır; failure yok.",
+      "Ana kuvvet setleri RPE 6-8 aralığında kalır; failure yok, çoğu sette RIR 2 bırak.",
       "Ağrı 2/10'u geçerse aynı paterni daha kolay varyasyona çevir.",
       "Uyku kötü ve enerji düşükse her ana bloktan 1 set çıkar.",
-      "Skill setleri submax yapılır; maksimum süre kovalanmaz.",
-      "Patlayıcı hareketler (explosive hip thrust, med ball, carry) submax hızda ve form korunduğu sürece yapılır; bir tekrar bozulursa set biter.",
-      "HAFTA 1 = adaptasyon. Power bloğu ve threshold rower HAFTA 2'den itibaren devreye alınır — vücut yeni paterne hazırlansın.",
+      "Skill setleri teknik temas olarak kalır; maksimum süre kovalanmaz.",
+      "Patlayıcı hareketler submax hızda ve form korunduğu sürece yapılır; bir tekrar bozulursa set biter.",
+      "HAFTA 1 = adaptasyon. Power blokları 2 set yapılabilir, threshold yoktur.",
       "Primary hip power: Explosive Hip Thrust. KB Swing sadece bel tamamen sakinse ve forma güven tamsa alternatif.",
-      "Threshold rower progresif: Hafta 1-3 pure Zone 2, Hafta 4-6 2×4dk, Hafta 7-8 tam 4×4dk.",
+      "Threshold progresif: Hafta 1-3 pure Zone 2, Hafta 4-6 2×4dk, Hafta 7-8 4×4dk.",
       "Koşu, zıplama, dip, ağır swing ve agresif rollout bu fazda yok.",
       "Ev modunda tek dumbbell var → bilateral yerine unilateral + asymmetric (suitcase/offset) yüklü varyantları tercih et. Yük yerine tempo (3-1-1 eccentric) ve rep range ile progresyon yap.",
     ],
@@ -217,7 +775,7 @@ export const PROGRAM_HYBRID = {
   skillPaths: {
     handstand: {
       name: "Handstand Hattı",
-      frequency: "Haftada 2 ana + 1 hafif temas",
+      frequency: "Haftada 1-2 hafif teknik temas",
       caution: "Omuz veya boyun 3/5 üstüyse bir alt seviyede kal veya skill'i atla.",
       steps: [
         { level: 1, name: "Pike Hold", target: "3 × 15sn", metric: "seconds", goalValue: 15, detail: "Omuz aktivasyonu ve kaburga kontrolü" },
@@ -226,12 +784,12 @@ export const PROGRAM_HYBRID = {
         { level: 4, name: "Wall Handstand Hold", target: "3 × 12-15sn", metric: "seconds", goalValue: 12, detail: "Ağrısızsa süreyi uzat" },
       ],
       successRule: "3 başarılı temas + semptom 2/5 altında + hedef süreye yakın performans",
-      weeklyGoal: "2 kaliteli temas günü",
-      trackedDays: ["SALI", "CUMARTESİ", "PAZARTESİ"],
+      weeklyGoal: "1-2 kaliteli temas günü",
+      trackedDays: ["SALI", "CUMARTESİ"],
     },
     lsit: {
       name: "L-sit / Support Hattı",
-      frequency: "Haftada 2 ana + 1 hafif temas",
+      frequency: "Haftada 1-2 hafif teknik temas",
       caution: "Omuz veya bilek support basıncını tolere etmiyorsa zemin tuck'a dön.",
       steps: [
         { level: 1, name: "Tuck Support", target: "3 × 8sn", metric: "seconds", goalValue: 8, detail: "Omuz depresyonu ve support kontrolü" },
@@ -240,12 +798,14 @@ export const PROGRAM_HYBRID = {
         { level: 4, name: "L-sit Tek Bacak Açılım", target: "3 × 3-5 tekrar", metric: "reps", goalValue: 3, detail: "Ağrısızsa kademeli açılım" },
       ],
       successRule: "3 başarılı temas + support pozisyonunda ağrı olmaması + hedef sürede temiz kontrol",
-      weeklyGoal: "2 kaliteli temas günü",
-      trackedDays: ["PERŞEMBE", "CUMARTESİ", "ÇARŞAMBA"],
+      weeklyGoal: "1-2 kaliteli temas günü",
+      trackedDays: ["PERŞEMBE", "CUMARTESİ"],
     },
   },
 
-  days: [
+  days: ATHLETIC_HYBRID_DAYS,
+
+  legacyDays: [
     {
       id: 1,
       sub: "PAZARTESİ",

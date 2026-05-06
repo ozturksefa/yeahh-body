@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { getGifUrl, getYouTubeSearchUrl, getYouTubeShortId, getYouTubeShortEmbedUrl } from "./videoMap";
+import { getGifUrl, getYouTubeSearchUrl, getYouTubeShortId, getYouTubeShortEmbedUrl, getYouTubeShortWatchUrl } from "./videoMap";
 
 const MULTI_LABELS = {
   "Dumbbell 4 Ways Lateral Raise": ["Öne Kaldırma", "Yana Kaldırma", "Arkaya Kaldırma", "Çapraz Kaldırma"],
@@ -70,15 +70,24 @@ function YtShortEmbed({ videoId, name }) {
   // exercise "plays" the same way a GIF does. Small enough to sit in-line
   // with the rest of the workout card.
   return (
-    <div className="gif-wrap gif-short-wrap">
-      <iframe
-        className="gif-short-frame"
-        src={getYouTubeShortEmbedUrl(videoId)}
-        title={name || "Egzersiz videosu"}
-        allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
-        allowFullScreen
-        loading="lazy"
-      />
+    <div className="exercise-media-stack">
+      <a href={getYouTubeShortWatchUrl(videoId)} className="exercise-media-link">
+        <span className="exercise-media-link-icon">▶</span>
+        <span className="exercise-media-link-text">
+          YouTube Short'u aç
+          <small>{name}</small>
+        </span>
+      </a>
+      <div className="gif-wrap gif-short-wrap">
+        <iframe
+          className="gif-short-frame"
+          src={getYouTubeShortEmbedUrl(videoId)}
+          title={name || "Egzersiz videosu"}
+          allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+          allowFullScreen
+          loading="lazy"
+        />
+      </div>
     </div>
   );
 }
@@ -87,7 +96,7 @@ function YtFallback({ name }) {
   const ytUrl = getYouTubeSearchUrl(name);
   return (
     <div className="gif-wrap gif-fallback">
-      <a href={ytUrl} target="_blank" rel="noopener noreferrer" className="gif-yt-link">
+      <a href={ytUrl} className="gif-yt-link">
         <span className="gif-yt-icon">▶</span>
         <span className="gif-yt-text">{name}<br/><small>YouTube'da izle</small></span>
       </a>
@@ -95,7 +104,20 @@ function YtFallback({ name }) {
   );
 }
 
-function ExerciseGif({ name }) {
+export function ExerciseVideoLink({ name }) {
+  const ytUrl = getYouTubeSearchUrl(name);
+  return (
+    <a href={ytUrl} className="exercise-media-link">
+      <span className="exercise-media-link-icon">▶</span>
+      <span className="exercise-media-link-text">
+        YouTube form videosu
+        <small>{name}</small>
+      </span>
+    </a>
+  );
+}
+
+function ExerciseGif({ name, showVideoLink = true }) {
   const gifUrl = getGifUrl(name);
 
   // Priority: GIF > user-curated YT Short > search-link fallback.
@@ -110,17 +132,23 @@ function ExerciseGif({ name }) {
   if (Array.isArray(gifUrl)) {
     const labels = MULTI_LABELS[name] || [];
     return (
-      <div className="gif-wrap gif-multi">
-        {gifUrl.map((url, i) => (
-          <SingleGif key={`${name}-${url}-${i}`} url={url} label={labels[i] || null} exerciseName={i === 0 ? name : null} />
-        ))}
+      <div className="exercise-media-stack">
+        {showVideoLink && <ExerciseVideoLink name={name} />}
+        <div className="gif-wrap gif-multi">
+          {gifUrl.map((url, i) => (
+            <SingleGif key={`${name}-${url}-${i}`} url={url} label={labels[i] || null} exerciseName={i === 0 ? name : null} />
+          ))}
+        </div>
       </div>
     );
   }
 
   return (
-    <div className="gif-wrap">
-      <SingleGif key={`${name}-${gifUrl}`} url={gifUrl} exerciseName={name} />
+    <div className="exercise-media-stack">
+      {showVideoLink && <ExerciseVideoLink name={name} />}
+      <div className="gif-wrap">
+        <SingleGif key={`${name}-${gifUrl}`} url={gifUrl} exerciseName={name} />
+      </div>
     </div>
   );
 }
