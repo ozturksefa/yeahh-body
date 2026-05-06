@@ -1,12 +1,13 @@
 import { useState } from "react";
 import { RPE_LEVELS, loadRPE, saveRPE } from "./exertionRatingStore";
 
-function ExertionRating({ exerciseName, dayIndex }) {
+function ExertionRating({ exerciseName, dayIndex, onChange }) {
   const [rating, setRating] = useState(() => loadRPE(exerciseName, dayIndex));
 
   const select = (val) => {
     setRating(val);
     saveRPE(exerciseName, dayIndex, val);
+    if (onChange) onChange(val);
     if (navigator.vibrate) navigator.vibrate(15);
   };
 

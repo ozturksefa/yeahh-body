@@ -6,6 +6,8 @@ dist/
 .env.local
 .env.*.local
 devserver.log
+vite-dev.log
+Torso Limbs Youtube (Antrenman).csv
 test-results/
 playwright-report/
 .claude/

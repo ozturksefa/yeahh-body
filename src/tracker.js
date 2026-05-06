@@ -1,6 +1,7 @@
 // Takip Sistemi — Supabase + localStorage fallback
 import { supabase } from './supabaseClient';
 import { formatLocalDate } from './dateUtils';
+import { getStoredProgressionSuggestion } from './progressionMemory';
 
 function todayStr() {
   return formatLocalDate(new Date());
@@ -207,6 +208,9 @@ function getRPEForSession(exerciseName, dayIndex) {
 }
 
 export async function suggestWeight(exerciseName, targetSets, targetReps, isUpperBody, dayIndex) {
+  const memorySuggestion = getStoredProgressionSuggestion(exerciseName);
+  if (memorySuggestion) return memorySuggestion;
+
   const history = await getHistory(exerciseName, 4);
   if (history.length === 0) return null;
 

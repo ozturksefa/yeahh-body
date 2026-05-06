@@ -151,19 +151,19 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
     return (
       <div className="meal-rec">
         <div className="meal-fasted">
-          <div className="meal-fasted-icon">🚫🍽</div>
-          <div className="meal-fasted-title">Antrenman öncesi yeme</div>
+          <div className="meal-fasted-icon">Yakın Öğün</div>
+          <div className="meal-fasted-title">Antrenmana yakın hafif tut</div>
           <div className="meal-fasted-desc">
-            Antrenman bittikten sonra <strong>~{hour + 1}:00</strong>'de ilk öğünü ye.
+            Büyük öğünü antrenman sonrasına bırak; ilk uygun ana öğün yaklaşık <strong>{hour + 1}:00</strong>.
           </div>
           <div className="meal-fasted-tips">
-            <div>✅ Su içebilirsin — bol su</div>
-            <div>✅ Siyah kahve veya yeşil çay — performans artırır</div>
-            <div>✅ Elektrolit tuz — terliyorsan ekle</div>
-            <div>✅ Antrenman biter bitmez protein + karb hazır olsun</div>
+            <div>Su veya sade kahve yeterli olabilir.</div>
+            <div>Açsan küçük seçenek: muz, ayran veya yoğurt.</div>
+            <div>Yağlı ve çok büyük öğünü antrenman sonrasına bırak.</div>
+            <div>Antrenman sonrası normal protein + karb öğünü kur.</div>
           </div>
           <div className="meal-fasted-note">
-            Fasted antrenman → insulin düşük → yağ yakımı yüksek. Antrenman sonrası ilk öğün kritik.
+            Amaç mideyi yormadan antrenmana girmek; çok aç kalman gerekmiyor.
           </div>
         </div>
         <div className="meal-rec-title">Bugünün ev tipi beslenme akışı</div>
@@ -208,19 +208,19 @@ export default function MealRecommendation({ day, targets, totals, dayTypeOverri
                 ⏰ Antrenmana <strong>{minsToWorkout < 60
                   ? `${minsToWorkout} dk`
                   : `${Math.floor(minsToWorkout/60)}s ${minsToWorkout%60}dk`} kaldı</strong>
-                {" — "}Yeme, sadece su 💧
+                {" — "}ağır öğün yerine hafif tut.
               </div>
             );
           }
           if (minsToWorkout <= 0 && minsToWorkout > -60) {
-            return <div className="meal-workout-timer">🏋️ Antrenman sürüyor — biter bitmez ye</div>;
+            return <div className="meal-workout-timer">Antrenman sürüyor — sonrasında sade bir öğün kur.</div>;
           }
           if (minsToWorkout <= -60 && minsToWorkout > -180) {
-            return <div className="meal-workout-timer">✅ Antrenman bitti — protein + karb penceresi açık, hemen ye!</div>;
+            return <div className="meal-workout-timer">Antrenman bitti — ilk uygun öğünde protein + karb ekle.</div>;
           }
           return (
             <div className="meal-workout-timer">
-              🏋️ Antrenman: {isWeekend ? "09:00" : "07:00"} — antrenman öncesi yemek yok
+              Antrenman: {isWeekend ? "09:00" : "07:00"} — yaklaştıkça öğünü hafiflet.
             </div>
           );
         })()}
