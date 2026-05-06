@@ -66,7 +66,7 @@ function SingleGif({ url, label, exerciseName }) {
 }
 
 function YtShortEmbed({ videoId, name }) {
-  // User-curated YouTube Short — render as a looping inline iframe so the
+  // User-curated YouTube clip — render as a looping inline iframe so the
   // exercise "plays" the same way a GIF does. Small enough to sit in-line
   // with the rest of the workout card.
   return (
@@ -74,7 +74,7 @@ function YtShortEmbed({ videoId, name }) {
       <a href={getYouTubeShortWatchUrl(videoId)} className="exercise-media-link">
         <span className="exercise-media-link-icon">▶</span>
         <span className="exercise-media-link-text">
-          YouTube Short'u aç
+          Form videosunu aç
           <small>{name}</small>
         </span>
       </a>
