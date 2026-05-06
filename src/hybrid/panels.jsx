@@ -90,6 +90,31 @@ export function SectionCard({ title, children, accent = "#7A7A84", ...props }) {
   );
 }
 
+function PassiveDoseCard({ decision }) {
+  if (!decision) return null;
+
+  return (
+    <SectionCard title="Bugünün Dozu" accent={decision.tone} data-testid="passive-dose-card" data-passive-dose-status={decision.status}>
+      <div style={{ display: "grid", gap: 8 }}>
+        <div className="panel-status-box" style={{ borderColor: `${decision.tone}44` }}>
+          <div style={{ fontSize: 13, color: decision.tone, fontWeight: 900 }}>{decision.label}</div>
+          <div className="panel-detail-text" style={{ marginTop: 6 }}>{decision.summary}</div>
+        </div>
+        <div style={{ display: "grid", gap: 5 }}>
+          {(decision.actions || []).slice(0, 3).map((item) => (
+            <div key={item} className="panel-detail-text">• {item}</div>
+          ))}
+        </div>
+        {decision.reasons?.length > 0 && (
+          <div className="panel-meta-text">
+            Neden: {decision.reasons.slice(0, 2).join(" ")}
+          </div>
+        )}
+      </div>
+    </SectionCard>
+  );
+}
+
 export function SkillTracker({ skillPaths, entries, skillState, onSetSkillLevel }) {
   const last7 = useMemo(() => {
     const cutoff = new Date();
@@ -295,7 +320,7 @@ export function DailyCheckinPanel({ day, mode, setMode, activeVariant, pre, setP
   );
 }
 
-export function SessionPrepCard({ pre, setPre, mode }) {
+export function SessionPrepCard({ pre, setPre, mode, passiveDecision }) {
   const { suggestions } = buildSuggestions(pre, mode);
   const primarySuggestion = suggestions[0];
 
@@ -320,7 +345,9 @@ export function SessionPrepCard({ pre, setPre, mode }) {
   const hasFlag = pre.energy === "düşük" || Number(pre.shoulder || 0) >= 3 || Number(pre.knee || 0) >= 3 || Number(pre.spine || 0) >= 3;
 
   return (
-    <div style={{ padding: "0 12px 12px" }}>
+    <div style={{ padding: "0 12px 12px", display: "grid", gap: 10 }}>
+      <PassiveDoseCard decision={passiveDecision} />
+
       <SectionCard title="Bugün Notu" accent={primarySuggestion?.tone || "#4FC3F7"}>
         <div style={{ display: "grid", gap: 8 }}>
           <div className="panel-choice-row">
@@ -380,7 +407,7 @@ export function SessionPrepCard({ pre, setPre, mode }) {
   );
 }
 
-export function DailyCheckoutPanel({ post, setPost, pre, daySub, skillPaths, skillState, onComplete }) {
+export function DailyCheckoutPanel({ post, setPost, pre, daySub, skillPaths, skillState, passiveDecision, onComplete }) {
   const update = (field, value) => setPost((prev) => ({ ...prev, [field]: value }));
   const relevantSkills = getRelevantSkillsForDay(daySub, skillPaths);
   const decision = getSessionDecision({ pre, post });
@@ -417,6 +444,11 @@ export function DailyCheckoutPanel({ post, setPost, pre, daySub, skillPaths, ski
             </div>
             <div style={{ fontSize: 13, fontWeight: 800, color: "#fff", marginTop: 4 }}>{decision.label}</div>
             <div className="panel-meta-text" style={{ marginTop: 6 }}>{decision.summary}</div>
+            {passiveDecision && (
+              <div className="panel-meta-text" style={{ marginTop: 6 }}>
+                Bugünün dozu: {passiveDecision.label}
+              </div>
+            )}
           </div>
 
           <div style={{ display: "grid", gridTemplateColumns: "repeat(2, minmax(0, 1fr))", gap: 8 }}>
@@ -534,7 +566,7 @@ export function DailyCheckoutPanel({ post, setPost, pre, daySub, skillPaths, ski
   );
 }
 
-export function WeeklyReview({ entries, activeWeek }) {
+export function WeeklyReview({ entries, activeWeek, weekProgress }) {
   const last7 = useMemo(() => {
     const cutoff = new Date();
     cutoff.setDate(cutoff.getDate() - 6);
@@ -569,7 +601,7 @@ export function WeeklyReview({ entries, activeWeek }) {
     ])
   );
 
-  const decision = getWeeklyDecision({ last7, totals, skillContacts, activeWeek, skillPaths: PROGRAM_HYBRID.skillPaths });
+  const decision = getWeeklyDecision({ last7, totals, skillContacts, activeWeek, skillPaths: PROGRAM_HYBRID.skillPaths, weekProgress });
 
   return (
     <div className="panel-stack" style={{ padding: "10px 12px 12px" }}>
@@ -601,6 +633,11 @@ export function WeeklyReview({ entries, activeWeek }) {
           {decision.actions.map((item) => (
             <div key={item} className="panel-detail-text">• {item}</div>
           ))}
+          {decision.evidence?.length > 0 && (
+            <div className="panel-note-box" style={{ minHeight: 0 }}>
+              {decision.evidence.slice(0, 4).join(" ")}
+            </div>
+          )}
         </div>
       </SectionCard>
 
